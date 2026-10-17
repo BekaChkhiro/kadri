@@ -15,6 +15,10 @@ SCENES = {
     "sink": ("sink-trap.png", "repair.tsx"),
     "gym": ("gym-lat-pulldown.png", "gym.tsx"),
     "car": ("car-engine.png", "car.tsx"),
+    "chemistry": ("chem-titration.png", "chemistry.tsx"),
+    "microscope": ("microscope.png", "microscope.tsx"),
+    "psychology": ("psych-eyetracker.png", "psychology.tsx"),
+    "laundry": ("washing-machine.png", "laundry.tsx"),
 }
 
 

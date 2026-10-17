@@ -16,14 +16,16 @@ def ground_truth(scene):
     text = source.read_text()
     constants = {name: int(n) for name, n in re.findall(r"const ([A-Z_]+) = (\d+);", text)}
     shapes = json5.loads(re.search(r"const (?:parts|machine) = (\[.*?\]);", text, re.S)[1])
-    steps_text = re.search(r"const steps: Step\[\] = (\[.*?\n\]);", text, re.S)[1]
+    steps_text = re.search(r"const steps:\s*(?:Step|GuideStep)\[\]\s*=\s*(\[.*?\n\]);", text, re.S)[1]
     # Substitute only focus/avoid identifier arrays; never alter human text.
     def replace(match):
         values = [constants[name.strip()] for name in match[2].split(",") if name.strip()]
         return match[1] + json.dumps(values)
     steps_text = re.sub(r"((?:focus|avoid):\s*)\[([^]]*)\]", replace, steps_text)
+    steps_text = re.sub(r"extra:\s*<[^>]+/>,?", "", steps_text)
     steps = json5.loads(steps_text)
-    dimensions = (1024, 1536) if scene == "sink" else (941, 1672)
+    dim_match = re.search(r"\((\d+)[×x](\d+)\)", text)
+    dimensions = (int(dim_match[1]), int(dim_match[2])) if dim_match else ((1024, 1536) if scene in ("sink", "microscope", "laundry") else (941, 1672))
     names = {value: name for name, value in constants.items()}
     return {"source": str(source.relative_to(ROOT)), "source_sha256": digest(source),
             "design_size": dimensions, "parts": [{"name": names[i], "path": path} for i, path in enumerate(shapes)],
