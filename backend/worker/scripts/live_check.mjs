@@ -2,17 +2,22 @@
 // Live check of /ai/parts and /ai/steps against the real OpenAI API (PAID).
 //
 //   set -a; source <path>/experiments/som-test/.env; set +a
-//   node scripts/live_check.mjs [--runs 1] [--cap 3] [--port 8797] [--url http://127.0.0.1:8797]
+//   node scripts/live_check.mjs [--runs 1] [--cap 3] [--port 8797] [--url http://127.0.0.1:8797] [--token <session>]
 //
-// Without --url it writes OPENAI_API_KEY into .dev.vars (gitignored) and starts
-// `wrangler dev --local scripts/live_entry.ts`. Every call is reserved in
+// The AI routes need a session: without --url it writes OPENAI_API_KEY (and a
+// random SESSION_SECRET if missing) into .dev.vars (gitignored), applies the D1
+// migrations locally, starts `wrangler dev --local` (src/index.ts) and signs a
+// dev token with scripts/dev_token.mjs. With --url pass --token (or
+// KADRI_SESSION_TOKEN); otherwise .dev.vars' SESSION_SECRET is used. Every call is reserved in
 // scripts/ledger.json (gitignored) before it is sent and settled with the
 // returned costUsd; nothing is sent once the cap would be exceeded.
 // Results: scripts/out/live_check.json. The key is never printed.
 import { spawn, execFileSync } from "node:child_process";
+import { randomBytes } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { devToken, devVarsSecret } from "./dev_token.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const worker = resolve(here, "..");
@@ -98,6 +103,7 @@ function ensureDevVars(key) {
   const path = join(worker, ".dev.vars");
   const lines = existsSync(path) ? readFileSync(path, "utf8").split("\n").filter((l) => l && !l.startsWith("OPENAI_API_KEY=")) : [];
   lines.push(`OPENAI_API_KEY=${key}`);
+  if (!lines.some((l) => l.startsWith("SESSION_SECRET="))) lines.push(`SESSION_SECRET=${randomBytes(32).toString("hex")}`);
   writeFileSync(path, lines.join("\n") + "\n", { mode: 0o600 });
 }
 
@@ -122,7 +128,7 @@ async function partsCall(f, run) {
   const t0 = performance.now();
   const res = await fetch(`${base}/ai/parts`, {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
     body: JSON.stringify({ image: f.image, instructions: f.instructions }),
   });
   const wallMs = performance.now() - t0;
@@ -137,7 +143,7 @@ async function stepsCall(f, parts) {
   const t0 = performance.now();
   const res = await fetch(`${base}/ai/steps`, {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
     body: JSON.stringify({ object: parts.object, parts: parts.parts, instructions: f.instructions, image: f.image }),
   });
   if (!res.ok) {
@@ -172,7 +178,8 @@ if (!args.url) {
     process.exit(2);
   }
   ensureDevVars(key);
-  child = spawn("npx", ["wrangler", "dev", "scripts/live_entry.ts", "--local", "--ip", "127.0.0.1", "--port", String(port)], {
+  execFileSync("npx", ["wrangler", "d1", "migrations", "apply", "DB", "--local"], { cwd: worker, stdio: "ignore", env: { ...process.env, CI: "1" } });
+  child = spawn("npx", ["wrangler", "dev", "--local", "--ip", "127.0.0.1", "--port", String(port)], {
     cwd: worker,
     stdio: ["ignore", "pipe", "pipe"],
     env: { ...process.env, OPENAI_API_KEY: "" },
@@ -182,6 +189,9 @@ if (!args.url) {
   child.stderr.on("data", (d) => log.push(String(d)));
   child.on("exit", () => writeFileSync(join(tmp, "wrangler.log"), log.join("")));
 }
+
+// A fresh user per run, so earlier runs do not count towards DAILY_SESSION_LIMIT.
+const token = args.token ?? process.env.KADRI_SESSION_TOKEN ?? devToken({ secret: devVarsSecret(), sub: `live-check-${Date.now()}`, email: "live-check@example.com" });
 
 const report = { at: new Date().toISOString(), base, runs, cap, scenes: [], steps: null };
 try {

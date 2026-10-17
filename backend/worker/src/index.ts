@@ -3,10 +3,11 @@ import type { Env } from "./env";
 import { json } from "./errors";
 import { registerHistoryRoutes } from "./history";
 import { Router } from "./router";
+import { mountGuardedAiRoutes } from "./routes/ai";
 
 export { requireSession } from "./session";
 
-export const router = registerHistoryRoutes(new Router())
+export const router = mountGuardedAiRoutes(registerHistoryRoutes(new Router()))
   .get("/health", ({ env }) =>
     json({
       ok: true,

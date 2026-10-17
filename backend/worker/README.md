@@ -133,6 +133,12 @@ Key-ები არასდროს git-ში — მხოლოდ `.dev.v
 `gpt-6-astra`), effort `AI_EFFORT` (default `low`; `minimal` არ მუშაობს). ფასიან მოთხოვნაზე retry არ ხდება.
 `AI_PROVIDER=hybrid` ჯერ მხოლოდ ინტერფეისია და 501-ს აბრუნებს.
 
+`src/index.ts` რთავს `mountGuardedAiRoutes`-ს: ორივე route-ს სჭირდება `Authorization: Bearer <session>` (401);
+`/ai/parts` ამოწმებს დღიურ ლიმიტს (429 + `Retry-After`, router `LimitError`-ის headers-ს ატარებს), `AI_TIMEOUT_MS` → 504
+`ai_timeout`, ყოველი ფასიანი ცდა (`ok|error|timeout`) `usage`-ში იწერება; `/ai/steps` — ლიმიტის გარეშე, timeout მთელ
+stream-ზე (`event: error` `ai_timeout`), usage `ctx.waitUntil`-ით stream-ის ბოლოს. ორივე იღებს არასავალდებულო `sessionId`-ს.
+`mountAiRoutes` (დაუცველი) მხოლოდ ტესტებისთვისაა.
+
 - `POST /ai/parts` — multipart (`image` JPEG ფაილი + `instructions`) ან JSON `{image: base64, instructions}`;
   JPEG, დიდი გვერდი ≤768px, ≤2 MB. `instructions` — ტექსტი ან `[{title, text}]`. პასუხი:
   `{object, parts:[{id, name, box}], model, usage, costUsd, latencyMs}`; box 0–1000 XYXY, ID-ები სერვერზე
@@ -153,6 +159,8 @@ set -a; source ../../experiments/som-test/.env; set +a      # key-ს არ ბ
 node scripts/live_check.mjs --runs 3 --cap 3 --port 8797
 ```
 
-სკრიპტი key-ს `.dev.vars`-ში წერს, უშვებს `wrangler dev --local scripts/live_entry.ts`-ს, ყოველ გამოძახებას
+სკრიპტი key-ს (და, თუ არ არის, შემთხვევით `SESSION_SECRET`-ს) `.dev.vars`-ში წერს, ლოკალურად უშვებს D1 migration-ებს და
+`wrangler dev --local`-ს (`src/index.ts`), session token-ს `scripts/dev_token.mjs`-ით აწერს (ხელით:
+`node scripts/dev_token.mjs --sub dev-user`; `--url`-ისთვის `--token`). ყოველ გამოძახებას
 წინასწარ აჯავშნის `scripts/ledger.json`-ში და cap-ზე ჩერდება. შედეგები: `scripts/out/live_check.json`
 (gitignored), ანგარიში — `docs/AI_LIVE_CHECK.md`.

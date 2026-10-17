@@ -3,16 +3,22 @@
  * with boxes (0–1000 XYXY) and server-assigned IDs p1..pN.
  *
  * Body: multipart/form-data (`image` JPEG file, `instructions` text or JSON
- * list) or JSON `{ image: base64 | data URL, instructions }`.
+ * list, optional `sessionId`) or JSON `{ image: base64 | data URL, instructions, sessionId? }`.
  */
 import { json } from "../errors";
 import type { Handler } from "../router";
 import { aiErrors } from "./errors";
 import { checkedJpegBase64, fromBase64 } from "./image";
-import { partsProvider, type PartsInput } from "./provider";
+import { partsProvider, type PartsInput, type PartsResult } from "./provider";
 import { parseInstructions } from "./validate";
 
-async function readBody(request: Request): Promise<{ image: Uint8Array | null; instructions: unknown }> {
+interface PartsBody {
+  image: Uint8Array | null;
+  instructions: unknown;
+  sessionId: unknown;
+}
+
+async function readBody(request: Request): Promise<PartsBody> {
   const type = request.headers.get("content-type") ?? "";
   if (type.startsWith("multipart/form-data")) {
     let form: FormData;
@@ -23,7 +29,7 @@ async function readBody(request: Request): Promise<{ image: Uint8Array | null; i
     }
     const file = form.get("image");
     const image = typeof file === "object" && file !== null ? new Uint8Array(await (file as Blob).arrayBuffer()) : null;
-    return { image, instructions: form.get("instructions") };
+    return { image, instructions: form.get("instructions"), sessionId: form.get("sessionId") };
   }
   if (type.startsWith("application/json")) {
     let body: Record<string, unknown>;
@@ -33,20 +39,31 @@ async function readBody(request: Request): Promise<{ image: Uint8Array | null; i
       throw aiErrors.badRequest("JSON ვერ წავიკითხე");
     }
     const image = typeof body?.image === "string" ? fromBase64(body.image) : null;
-    return { image, instructions: body?.instructions };
+    return { image, instructions: body?.instructions, sessionId: body?.sessionId };
   }
   throw aiErrors.badRequest("საჭიროა multipart/form-data ან application/json");
 }
 
-export async function readPartsInput(request: Request): Promise<PartsInput> {
-  const { image, instructions } = await readBody(request);
-  return { imageBase64: checkedJpegBase64(image), instructions: parseInstructions(instructions) };
+/** Optional client session ID (history), used only to tag the usage row. */
+export function parseSessionId(raw: unknown): string | null {
+  if (raw === undefined || raw === null || raw === "") return null;
+  if (typeof raw !== "string" || raw.length > 128) throw aiErrors.badRequest("sessionId არასწორია");
+  return raw;
 }
 
-export const partsHandler: Handler = async ({ request, env }) => {
-  const provider = partsProvider(env);
-  const input = await readPartsInput(request);
-  const result = await provider.parts(input, request.signal);
+export async function readPartsRequest(request: Request): Promise<{ input: PartsInput; sessionId: string | null }> {
+  const { image, instructions, sessionId } = await readBody(request);
+  return {
+    input: { imageBase64: checkedJpegBase64(image), instructions: parseInstructions(instructions) },
+    sessionId: parseSessionId(sessionId),
+  };
+}
+
+export async function readPartsInput(request: Request): Promise<PartsInput> {
+  return (await readPartsRequest(request)).input;
+}
+
+export function partsResponse(result: PartsResult): Response {
   return json({
     object: result.object,
     parts: result.parts,
@@ -55,4 +72,11 @@ export const partsHandler: Handler = async ({ request, env }) => {
     costUsd: result.costUsd,
     latencyMs: result.latencyMs,
   });
+}
+
+/** Bare stage handler: no auth, limit or usage. The app mounts the guarded one (src/routes/ai.ts). */
+export const partsHandler: Handler = async ({ request, env }) => {
+  const provider = partsProvider(env);
+  const input = await readPartsInput(request);
+  return partsResponse(await provider.parts(input, request.signal));
 };

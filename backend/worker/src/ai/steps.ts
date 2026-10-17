@@ -2,7 +2,7 @@
  * POST /ai/steps — stage 2 of Astra C: object + the phone's parts (p1..pN)
  * + instructions → steps, streamed as SSE while the model is still writing.
  *
- * Body (JSON): { object, parts: [{id, name, box}], instructions, count?, image? }
+ * Body (JSON): { object, parts: [{id, name, box}], instructions, count?, image?, sessionId? }
  * `image` (JPEG base64, optional) is attached like the experiment does.
  *
  * Events: `step` {index, title, text, focus, avoid, markers, arrows, tools, warn}
@@ -14,10 +14,11 @@ import type { Handler } from "../router";
 import { sseResponse } from "../sse";
 import { aiErrors } from "./errors";
 import { checkedJpegBase64, fromBase64 } from "./image";
-import { stepsProvider, type StepsInput } from "./provider";
+import { parseSessionId } from "./parts";
+import { stepsProvider, type StepsEvent, type StepsInput, type StepsProvider } from "./provider";
 import { MAX_STEPS, parseInstructions, parseParts } from "./validate";
 
-export async function readStepsInput(request: Request): Promise<StepsInput> {
+export async function readStepsRequest(request: Request): Promise<{ input: StepsInput; sessionId: string | null }> {
   if (!(request.headers.get("content-type") ?? "").startsWith("application/json")) {
     throw aiErrors.badRequest("საჭიროა application/json");
   }
@@ -42,15 +43,35 @@ export async function readStepsInput(request: Request): Promise<StepsInput> {
   if (body.image !== undefined && body.image !== null) {
     imageBase64 = checkedJpegBase64(typeof body.image === "string" ? fromBase64(body.image) : null);
   }
-  return { object: body.object, parts, instructions, count, imageBase64 };
+  return {
+    input: { object: body.object, parts, instructions, count, imageBase64 },
+    sessionId: parseSessionId(body.sessionId),
+  };
 }
 
-export const stepsHandler: Handler = async ({ request, env }) => {
-  const provider = stepsProvider(env);
-  const input = await readStepsInput(request);
+export async function readStepsInput(request: Request): Promise<StepsInput> {
+  return (await readStepsRequest(request)).input;
+}
+
+export type StepsDone = Extract<StepsEvent, { type: "done" }>;
+
+/** How a steps stream ended: `done` (sent), an `error` event, or the client went away. */
+export type StepsOutcome = { kind: "done"; done: StepsDone } | { kind: "error"; error: ApiError } | { kind: "gone" };
+
+export interface StepsStreamOptions {
+  signal?: AbortSignal;
+  /** True when `signal` fired because of our own deadline; the error event becomes ai_timeout. */
+  timedOut?: () => boolean;
+  /** Called once, after the last event was written. */
+  onEnd?: (outcome: StepsOutcome) => void;
+}
+
+export function stepsStream(provider: StepsProvider, input: StepsInput, opts: StepsStreamOptions = {}): Response {
   return sseResponse(async (send) => {
+    let outcome: StepsOutcome = { kind: "gone" };
     try {
-      for await (const ev of provider.steps(input, request.signal)) {
+      for await (const ev of provider.steps(input, opts.signal)) {
+        if (ev.type === "done") outcome = { kind: "done", done: ev };
         const ok =
           ev.type === "step"
             ? await send("step", { index: ev.index, ...ev.step })
@@ -66,9 +87,19 @@ export const stepsHandler: Handler = async ({ request, env }) => {
         if (!ok) return;
       }
     } catch (err) {
-      const e = err instanceof ApiError ? err : aiErrors.upstream();
+      const e = opts.timedOut?.() ? aiErrors.timeout() : err instanceof ApiError ? err : aiErrors.upstream();
       if (!(err instanceof ApiError)) console.error("ai/steps failed", err);
+      outcome = { kind: "error", error: e };
       await send("error", { code: e.code, message: e.message });
+    } finally {
+      opts.onEnd?.(outcome);
     }
   });
+}
+
+/** Bare stage handler: no auth or usage. The app mounts the guarded one (src/routes/ai.ts). */
+export const stepsHandler: Handler = async ({ request, env }) => {
+  const provider = stepsProvider(env);
+  const input = await readStepsInput(request);
+  return stepsStream(provider, input, { signal: request.signal });
 };

@@ -1,5 +1,6 @@
 import type { Env } from "./env";
 import { ApiError, errorResponse } from "./errors";
+import { LimitError } from "./limits";
 
 export type Params = Record<string, string>;
 
@@ -75,7 +76,7 @@ export class Router {
       }
       throw ApiError.notFound();
     } catch (err) {
-      if (err instanceof ApiError) return errorResponse(err);
+      if (err instanceof ApiError) return errorResponse(err, err instanceof LimitError ? err.headers : undefined);
       console.error("unhandled error", err);
       return errorResponse(ApiError.internal());
     }
