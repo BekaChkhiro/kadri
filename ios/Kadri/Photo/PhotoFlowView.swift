@@ -112,7 +112,7 @@ struct PhotoFlowView: View {
             } panel: {
                 switch session.model.phase {
                 case .idle, .describing:
-                    DescribeBar(text: Binding(get: { description }, set: { session.model.updateText($0) }), inPhotoPanel: true) {
+                    PhotoDescribePanel(text: Binding(get: { description }, set: { session.model.updateText($0) })) {
                         session.submit(description)
                     }
                 case .scanning(let startedAt):
