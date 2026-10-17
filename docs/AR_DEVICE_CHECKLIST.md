@@ -45,9 +45,13 @@
 
 ## T3.7 — MeshWrap
 
-კომპონენტი ამ ეტაპზე დამოუკიდებელია: ARDebugView/Flow-ში ჩართვა ცალკე ინტეგრაციაა. Xcode Canvas-ში გახსენით `MeshWrapPreview` (idle/focus/avoid/reduced motion); ჩართვა/გამორთვით გაიმეორეთ სკანი, Picker-ით შეცვალეთ მდგომარეობა და ფოტოზე თრევით შეამოწმეთ მხოლოდ affine transform-ის განახლება. fixture არის აპში ჩაშენებული `sink/input.png` + `coreml_p1…p5.png`.
+MeshWrap ჩართულია ARDebugView-სა და SessionFlowView-ში. AR დებაგში ჩართეთ „ბადე“, შემდეგ „შეხება“ ან „კადრი“ → „სატესტო box-ები“. „ბადის რეჟიმი“ პირველ ნაწილს idle → focus → avoid ციკლით ცვლის; focus/avoid-ზე Spotlight ჩანს. სტატუს-ბარის კამერის fps და ცალკე UI fps შეადარეთ. Xcode Canvas-ში გახსენით `MeshWrapPreview` (idle/focus/avoid/reduced motion); ჩართვა/გამორთვით გაიმეორეთ სკანი, Picker-ით შეცვალეთ მდგომარეობა და ფოტოზე თრევით შეამოწმეთ მხოლოდ affine transform-ის განახლება. fixture არის აპში ჩაშენებული `sink/input.png` + `coreml_p1…p5.png`.
 
-ინტეგრაციის შემდეგ ორივე ტელეფონზე შეამოწმეთ:
+სესიაში parts-ის მიღება მაშინვე იწყებს steps SSE-ს. ფონური SAM თითო დასრულებულ ნაწილს ცალკე აწვდის tracker-ს: მასკამდე label ჩანს, შემდეგ 1.3-წამიანი scan, უკვე steps ფაზაშიც. ყოველი ნაწილის triangulation actor-ზე ქეშირდება; კადრზე მხოლოდ affine transform იცვლება. avoid პრიორიტეტულია focus-თან გადაკვეთისას. ახალი სესია ასუფთავებს ქეშს; დროებით ხედიდან გასვლა სკანს არ იმეორებს.
+
+Simulator hosted MockKadriAPI შემოწმება (2026-10-17, iPhone 17): baseline **60 fps**, სამი ბადით/Spotlight-ით სკანის დასრულების შემდეგ **60 fps** (CADisplayLink). სქრინშოტები: `/tmp/kadri-mesh-flow-{parts,focus,avoid}.png`; გვიანი მასკა steps ფაზაში, next/previous გადასვლა შემოწმებულია. ეს fixture/SAM contour-ის ინექციაა; ფასიანი staging მოთხოვნა არ შესრულებულა. პირველი გაშვების 42.3 fps მოიცავდა scan/screenshot დატვირთვას; steady-state გაზომვა ცალკეა. ტელეფონზე ინსტალაცია ამ ინტეგრაციისას არ შესრულებულა.
+
+ორივე ტელეფონზე შეამოწმეთ:
 
 1. SAM-ის ყოველი ახალი mask-ის მიღებისას ერთხელ ააგეთ `MeshTriangulation.triangulate(width:height:pixels:configuration:)`, შედეგი შეინახეთ. `MeshWrap(mesh:transform:state:appeared:)`-ს ყოველ კადრზე მხოლოდ keyframe→ეკრანის affine transform მიეცით. ძველ მასკას ახალი ბადის მომზადებამდე ნუ გააქრობთ. გეომეტრიის გამოთვლა მთავარი thread-ის გარეთ უნდა მოხდეს.
 2. გამოჩენისას სკანი ~1.3 წამში ზემოდან ქვემოთ გადის; მას მიჰყვება შევსება/ბადე/კონტური. სკანი თავისით არ მეორდება. გამოჩენის გამორთვა/ხელახლა ჩართვა სკანს იმეორებს. კამერის მოძრაობა სკანს არ უნდა იწყებდეს თავიდან.

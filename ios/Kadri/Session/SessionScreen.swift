@@ -7,10 +7,12 @@ struct SessionScreen<Background: View>: View {
     @Bindable var model: SessionModel
     let keyframeProvider: @Sendable () async throws -> Data
     private let background: Background
+    private let showsPartsOverlay: Bool
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     init(model: SessionModel, keyframeProvider: @escaping @Sendable () async throws -> Data,
-         @ViewBuilder background: () -> Background) {
+         showsPartsOverlay: Bool = true, @ViewBuilder background: () -> Background) {
+        self.showsPartsOverlay = showsPartsOverlay
         self.model = model
         self.keyframeProvider = keyframeProvider
         self.background = background()
@@ -22,7 +24,7 @@ struct SessionScreen<Background: View>: View {
             LinearGradient(colors: [.black.opacity(0.3), .clear], startPoint: .top, endPoint: .bottom)
                 .frame(height: 150).frame(maxHeight: .infinity, alignment: .top)
                 .ignoresSafeArea().allowsHitTesting(false)
-            if case .parts(let result) = model.phase {
+            if showsPartsOverlay, case .parts(let result) = model.phase {
                 PartsRevealView(parts: result.parts).ignoresSafeArea().ignoresSafeArea(.keyboard)
             }
             if case .scanning(let startedAt) = model.phase {

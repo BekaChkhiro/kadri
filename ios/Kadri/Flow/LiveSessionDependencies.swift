@@ -39,6 +39,7 @@ struct FlowMarker: Identifiable {
 final class LiveSessionDependencies: ObservableObject {
     let controller = ARSessionController()
     let anchors = PartAnchors()
+    let tracker = PartTracker()
     let model: SessionModel
     let mockImage: UIImage?
     @Published private(set) var masks: [String: Mask] = [:]
@@ -53,12 +54,12 @@ final class LiveSessionDependencies: ObservableObject {
     private let authError: (any Error)?
     var imageSize: CGSize { keyframe?.size ?? mockImage?.size ?? CGSize(width: 576, height: 768) }
 
-    init() {
+    init(api: (any KadriAPI)? = nil) {
         let config = APIConfig.fromBundle() ?? APIConfig(baseURL: URL(string: "https://kadri-worker-staging.bekachkhirodze1.workers.dev")!)
         let storage: any TokenStorage
         do { storage = try DevAuth.storage(); authError = nil }
         catch { storage = InMemoryTokenStorage(); authError = error }
-        model = SessionModel(api: KadriClient(config: config, auth: AuthStore(config: config, storage: storage)))
+        model = SessionModel(api: api ?? KadriClient(config: config, auth: AuthStore(config: config, storage: storage)))
         #if DEBUG && targetEnvironment(simulator)
         if ProcessInfo.processInfo.arguments.contains("--mock-keyframe"),
            let url = Bundle.main.url(forResource: "input", withExtension: "png", subdirectory: "sink") {
@@ -125,6 +126,7 @@ final class LiveSessionDependencies: ObservableObject {
     private func clearCapture() {
         segmentationTask?.cancel(); segmentationTask = nil
         anchors.clear(session: controller.session)
+        tracker.stop()
         keyframe = nil; jpeg = nil; masks = [:]; segmentationStatus = nil
         preparedResult = nil; partsReceived = nil; recordedFirstStep = false
     }
@@ -133,25 +135,42 @@ final class LiveSessionDependencies: ObservableObject {
         guard let jpeg else { return }
         segmentationTask = Task { [weak self] in
             do {
-                let result = try await Self.segmentImage(jpeg, parts: parts)
-                try Task.checkCancellation()
-                self?.masks = result
+                try await Self.segmentImage(jpeg, parts: parts) { [weak self] part, mask, contour in
+                    guard !Task.isCancelled else { return }
+                    await self?.receive(part: part, mask: mask, contour: contour)
+                }
             } catch is CancellationError { }
-            catch { self?.segmentationStatus = "კონტურები მიუწვდომელია" }
+            catch { if !Task.isCancelled { self?.segmentationStatus = "კონტურები მიუწვდომელია" } }
         }
     }
 
-    nonisolated private static func segmentImage(_ data: Data, parts: [Part]) async throws -> [String: Mask] {
+    private func receive(part: Part, mask: Mask, contour: TrackedContour) {
+        guard !Task.isCancelled else { return }
+        masks[part.id] = mask
+        tracker.inject(contour, embedMs: 0)
+    }
+
+    nonisolated private static func segmentImage(_ data: Data, parts: [Part],
+        onMask: @Sendable (Part, Mask, TrackedContour) async -> Void) async throws {
         guard let source = CGImageSourceCreateWithData(data as CFData, nil),
               let image = CGImageSourceCreateImageAtIndex(source, 0, nil) else { throw SegmentationError.imageDecodeFailed }
+        #if targetEnvironment(simulator)
+        let segmenter = try Segmenter(computeUnits: .cpuOnly)
+        #else
         let segmenter = try Segmenter()
+        #endif
         let embedding = try await segmenter.embed(image)
-        var masks: [String: Mask] = [:]
         for part in parts {
             try Task.checkCancellation()
-            masks[part.id] = try await segmenter.mask(embedding: embedding, box: PartBox(part))
+            let mask = try await segmenter.mask(embedding: embedding, box: PartBox(part))
+            try Task.checkCancellation()
+            let b = part.box
+            let contour = TrackedContour(id: part.id, polygons: try MaskContours.extract(mask),
+                referenceBox: CGRect(x: CGFloat(b[0])/1000, y: CGFloat(b[1])/1000,
+                                     width: CGFloat(b[2]-b[0])/1000, height: CGFloat(b[3]-b[1])/1000),
+                maskMs: mask.decodeMs + mask.postMs)
+            await onMask(part, mask, contour)
         }
-        return masks
     }
 }
 

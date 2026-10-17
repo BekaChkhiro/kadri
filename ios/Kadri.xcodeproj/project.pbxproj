@@ -47,6 +47,7 @@
 		A87959868343ACCF7F90C6DA /* ARBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA49D98CA7EF7D73C52CB82 /* ARBackgroundView.swift */; };
 		AA688D92A9EC9C0E84545F71 /* SessionPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73919932F619884CCB894798 /* SessionPreviews.swift */; };
 		AB7754BA7224CE2D04DD9517 /* MockKadriAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67531DAC3A9852818926C8F /* MockKadriAPI.swift */; };
+		AB81C54835CCF9D4D3EB6D3A /* MeshWrapIntegrationSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4053B0576EC82DF04A6A97C /* MeshWrapIntegrationSnapshotTests.swift */; };
 		ADE3F74A26977B000BF655B1 /* KadriTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4910DAFAB764B1ABC03FDC1 /* KadriTests.swift */; };
 		B0354A00A763F67E86E883FB /* MeshWrapSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9BCE391233E0A986DDEBC3 /* MeshWrapSnapshotTests.swift */; };
 		B0C7B9CD0B78ADD51ED872B9 /* RealityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 929743E4A7FCA4EBC2F888D7 /* RealityKit.framework */; };
@@ -148,6 +149,7 @@
 		CE20D3D496D409FAC6A6683F /* GoogleAuthController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAuthController.swift; sourceTree = "<group>"; };
 		CE217724C0229633405F9226 /* LiveSessionDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSessionDependencies.swift; sourceTree = "<group>"; };
 		D014C6514CCF1D0423555B9B /* KadriTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = KadriTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4053B0576EC82DF04A6A97C /* MeshWrapIntegrationSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrapIntegrationSnapshotTests.swift; sourceTree = "<group>"; };
 		D624A7ABF50F3C99DA5D0ADF /* SessionPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPresentationTests.swift; sourceTree = "<group>"; };
 		D7CC50C123CF7B32458FEBD3 /* SegmentationBench.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentationBench.swift; sourceTree = "<group>"; };
 		DA953B9A89DCDAF9361C6F66 /* TouchSegmentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchSegmentation.swift; sourceTree = "<group>"; };
@@ -259,6 +261,7 @@
 				C715792D0B8C0680D720655E /* FlowTests.swift */,
 				F4910DAFAB764B1ABC03FDC1 /* KadriTests.swift */,
 				C6CB6CB0B0F28CA4F0F79D82 /* MeshWrapGeometryTests.swift */,
+				D4053B0576EC82DF04A6A97C /* MeshWrapIntegrationSnapshotTests.swift */,
 				24C23715356543CFFCCA0738 /* MeshWrapIntegrationTests.swift */,
 				6A9BCE391233E0A986DDEBC3 /* MeshWrapSnapshotTests.swift */,
 				79684495C6B552237CE68F89 /* SegmentationTests.swift */,
@@ -529,6 +532,7 @@
 				34479821C4275CDA91184BF8 /* FlowTests.swift in Sources */,
 				ADE3F74A26977B000BF655B1 /* KadriTests.swift in Sources */,
 				40A5DA33CD651B2FC3F1EB6A /* MeshWrapGeometryTests.swift in Sources */,
+				AB81C54835CCF9D4D3EB6D3A /* MeshWrapIntegrationSnapshotTests.swift in Sources */,
 				4AA3A55B710B9248322A5234 /* MeshWrapIntegrationTests.swift in Sources */,
 				B0354A00A763F67E86E883FB /* MeshWrapSnapshotTests.swift in Sources */,
 				C480FA751DE36F8B229476CC /* SegmentationTests.swift in Sources */,

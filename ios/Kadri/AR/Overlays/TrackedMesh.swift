@@ -54,9 +54,12 @@ struct TrackedMeshOverlay: View {
         let items = visible
         let highlighted = items.filter { TrackedMesh.state(id: $0.item.id, step: step) != .idle }
         ZStack {
-            ForEach(items, id: \.item.id) { entry in
-                MeshWrap(mesh: entry.item.mesh, transform: entry.transform,
-                         state: TrackedMesh.state(id: entry.item.id, step: step), appeared: true)
+            // Keep identity while temporarily offscreen so returning to view never restarts the scan.
+            ForEach(meshes) { item in
+                let mapping = items.first { $0.item.id == item.id }?.transform
+                MeshWrap(mesh: item.mesh, transform: mapping ?? .identity,
+                         state: TrackedMesh.state(id: item.id, step: step), appeared: true)
+                    .opacity(mapping == nil ? 0 : 1)
             }
         }
         .modifier(SpotlightDim(meshes: highlighted.map(\.item.mesh), transform: .identity,
