@@ -4,7 +4,13 @@ import KadriCore
 
 struct PhotoFlowView: View {
     @StateObject private var session: PhotoSession
-    @State private var camera = false
+    @State private var camera = {
+        #if DEBUG && targetEnvironment(simulator)
+        ProcessInfo.processInfo.arguments.contains("--photo-capture-demo")
+        #else
+        false
+        #endif
+    }()
     @State private var picked: PhotosPickerItem?
     @State private var launchedDemo = false
     #if DEBUG && targetEnvironment(simulator)
@@ -23,7 +29,7 @@ struct PhotoFlowView: View {
         .toolbar(session.image == nil ? .visible : .hidden, for: .navigationBar)
         .onChange(of: session.model.phase) { session.phaseChanged() }
         .fullScreenCover(isPresented: $camera) {
-            PhotoCamera(selected: use).ignoresSafeArea()
+            PhotoCamera(selected: use)
         }
         .task(id: picked) {
             guard let picked else { return }

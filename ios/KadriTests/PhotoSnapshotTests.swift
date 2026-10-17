@@ -71,3 +71,93 @@ final class PhotoSnapshotTests: XCTestCase {
         }
     }
 }
+
+
+extension PhotoSnapshotTests {
+    func testCaptureBeforeAndAfterShot() async throws {
+        #if targetEnvironment(simulator)
+        let camera = PhotoCaptureCamera()
+        let host = UIHostingController(rootView: PhotoCamera(camera: camera, selected: { _ in }))
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let previous = scene.windows.first(where: \.isKeyWindow)
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = host
+        window.makeKeyAndVisible()
+        defer {
+            camera.stop()
+            window.isHidden = true
+            window.rootViewController = nil
+            window.windowScene = nil
+            previous?.makeKeyAndVisible()
+        }
+        let directory = URL(fileURLWithPath: "/tmp/kadri-capture")
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        for name in ["before-shot", "after-shot"] {
+            host.view.frame = window.bounds
+            host.view.layoutIfNeeded()
+            try await Task.sleep(for: .milliseconds(500))
+            XCTAssertTrue(camera.ready)
+            if name == "after-shot" {
+                camera.capture()
+                XCTAssertNotNil(camera.image)
+                XCTAssertEqual(camera.image?.size.width, camera.image?.size.height)
+                XCTAssertEqual(camera.image?.imageOrientation, .up)
+                try await Task.sleep(for: .milliseconds(500))
+            } else {
+                XCTAssertNil(camera.image)
+            }
+            var rendered = false
+            let image = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in
+                rendered = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+            }
+            XCTAssertTrue(rendered)
+            try XCTUnwrap(image.pngData()).write(to: directory.appendingPathComponent("snapshot-\(name).png"))
+            let attachment = XCTAttachment(image: image)
+            attachment.name = name
+            attachment.lifetime = .keepAlways
+            add(attachment)
+        }
+        let first = try XCTUnwrap(camera.image)
+        camera.capture()
+        XCTAssertNotNil(camera.image)
+        XCTAssertFalse(first === camera.image, "Retake must replace the frozen frame")
+        #endif
+    }
+
+    func testCaptureSquareNormalizesEveryEXIFOrientation() throws {
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        let source = UIGraphicsImageRenderer(size: CGSize(width: 8, height: 4), format: format).image { context in
+            UIColor.green.setFill()
+            context.fill(CGRect(x: 0, y: 0, width: 8, height: 4))
+            UIColor.red.setFill()
+            context.fill(CGRect(x: 2, y: 0, width: 4, height: 2))
+            UIColor.blue.setFill()
+            context.fill(CGRect(x: 2, y: 2, width: 4, height: 2))
+        }
+        let cg = try XCTUnwrap(source.cgImage)
+        // Expected red sample after applying each EXIF rotation/mirroring.
+        let cases: [(UIImage.Orientation, CGPoint)] = [
+            (.up, CGPoint(x: 1, y: 0)), (.upMirrored, CGPoint(x: 1, y: 0)),
+            (.down, CGPoint(x: 1, y: 3)), (.downMirrored, CGPoint(x: 1, y: 3)),
+            (.left, CGPoint(x: 0, y: 1)), (.right, CGPoint(x: 3, y: 1)),
+            (.leftMirrored, CGPoint(x: 0, y: 1)), (.rightMirrored, CGPoint(x: 3, y: 1))
+        ]
+        for (orientation, redPoint) in cases {
+            let cropped = PhotoCaptureCamera.square(UIImage(cgImage: cg, scale: 1, orientation: orientation))
+            XCTAssertEqual(cropped.size, CGSize(width: 4, height: 4))
+            XCTAssertEqual(cropped.imageOrientation, .up)
+            let pixels = try XCTUnwrap(cropped.cgImage)
+            var rgba = [UInt8](repeating: 0, count: 4 * 4 * 4)
+            let context = try XCTUnwrap(CGContext(data: &rgba, width: 4, height: 4, bitsPerComponent: 8,
+                bytesPerRow: 16, space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+            context.draw(pixels, in: CGRect(x: 0, y: 0, width: 4, height: 4))
+            let offset = (Int(redPoint.y) * 4 + Int(redPoint.x)) * 4
+            XCTAssertGreaterThan(rgba[offset], 240, "Red must rotate correctly: \(orientation)")
+            for offset in stride(from: 0, to: rgba.count, by: 4) {
+                XCTAssertLessThan(rgba[offset + 1], 10, "Green edges must be outside the central crop")
+            }
+        }
+    }
+}
