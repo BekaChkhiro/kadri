@@ -498,20 +498,42 @@ final class SessionModelTests: XCTestCase {
         model.continueWithPhoto { Fixtures.keyframe }
         await model.workTask?.value
         XCTAssertEqual(model.phase, .error(.network, retryFrom: .scan))
+        XCTAssertEqual(model.completedRounds.count, 1, "a round-2 scan error keeps round 1")
+        XCTAssertEqual(model.allSteps, Array(Fixtures.steps[...1]))
+        XCTAssertEqual(model.stepOffset, 2)
         model.retry()
         await model.workTask?.value
         XCTAssertEqual(model.phase, .parts(Self.round2Parts))
         XCTAssertEqual(api.partsCalls.map(\.context?.round), [nil, 2, 2])
+        XCTAssertEqual(api.stepsCalls.count, 1, "scan retry asks only for parts")
 
         model.startSteps()
         await waitUntil { self.api.stepsCalls.count == 2 }
         api.stepsContinuation(1).finish(throwing: URLError(.networkConnectionLost))
         await model.workTask?.value
+        XCTAssertTrue(isError(.steps))
+        XCTAssertEqual(model.allSteps, Array(Fixtures.steps[...1]), "a round-2 steps error keeps round 1's steps")
         model.retry()
         await waitUntil { self.api.stepsCalls.count == 3 }
         XCTAssertEqual(api.stepsCalls[2].context?.round, 2)
+        XCTAssertEqual(api.partsCalls.count, 3, "steps retry does not scan again")
         XCTAssertEqual(model.currentStepIndex, 2)
         XCTAssertEqual(model.completedRounds.count, 1)
+    }
+
+    func testCancellingRoundTwoErrorReturnsToRoundOne() async {
+        await reachNeedsPhoto()
+        api.setParts(.failure(URLError(.notConnectedToInternet)))
+        model.continueWithPhoto { Fixtures.keyframe }
+        await model.workTask?.value
+        XCTAssertTrue(isError(.scan))
+        model.cancel()
+        XCTAssertEqual(model.phase, .steps(Fixtures.parts, Array(Fixtures.steps[...1]), streaming: false))
+        XCTAssertEqual(model.round, 1)
+        XCTAssertEqual(model.continuation, Self.needsPhoto)
+        XCTAssertTrue(model.canContinueWithPhoto)
+        XCTAssertEqual(model.currentStep, Fixtures.steps[1])
+        XCTAssertEqual(api.partsCalls.count, 2)
     }
 
     func testCancellingRoundTwoScanReturnsToRoundOne() async {

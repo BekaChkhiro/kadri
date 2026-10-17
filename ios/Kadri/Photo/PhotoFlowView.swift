@@ -129,19 +129,31 @@ struct PhotoFlowView: View {
                         session.submit(description)
                     }
                 case .error(let error, _):
+                    // A later round's failure keeps the earlier rounds: retry repeats only the last request,
+                    // and "წინა ნაბიჯებზე" returns to the previous round's finished steps.
+                    let round = session.model.round
                     VStack(alignment: .leading, spacing: 12) {
                         ScrollView {
                             VStack(alignment: .leading, spacing: 12) {
-                                Text("ვერ გავაგრძელე").font(.kadri(21, weight: .semibold))
+                                Text(round > 1 ? "ფოტო \(round) ვერ დამუშავდა" : "ვერ გავაგრძელე")
+                                    .font(.kadri(21, weight: .semibold))
                                 Text(error.localizedDescription).font(.kadri(14.5))
+                                if round > 1 {
+                                    Text("წინა \(session.model.stepOffset) ნაბიჯი შენახულია.").font(.kadri(14.5))
+                                }
                             }.frame(maxWidth: .infinity, alignment: .leading)
                         }
                         if error == .unauthorized {
                             PhotoAuthActions(retry: session.model.retry)
                         } else {
                             Button("თავიდან", action: session.model.retry).buttonStyle(SessionButtonStyle())
+                                .accessibilityHint("ბოლო მოთხოვნას გაიმეორებს")
                         }
-                        Button("სხვა ფოტო", action: session.retake).buttonStyle(SessionButtonStyle(primary: false))
+                        if round > 1 {
+                            Button("წინა ნაბიჯებზე", action: session.model.cancel).buttonStyle(SessionButtonStyle(primary: false))
+                        } else {
+                            Button("სხვა ფოტო", action: session.retake).buttonStyle(SessionButtonStyle(primary: false))
+                        }
                     }.padding(16)
                 default: EmptyView()
                 }

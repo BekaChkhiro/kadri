@@ -75,6 +75,42 @@ final class PhotoMultiRoundTests: XCTestCase {
         XCTAssertTrue(session.displayedImage === firstImage)
     }
 
+    func testRoundTwoFailureKeepsThePreviousSteps() async throws {
+        let session = PhotoSession(api: FailingRoundTwoAPI())
+        let model = session.model
+        let host = UIHostingController(rootView: PhotoFlowView(session: session).environment(\.meshWrapReduceMotion, true))
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let previousWindow = scene.windows.first(where: \.isKeyWindow)
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = host
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; previousWindow?.makeKeyAndVisible() }
+
+        session.selectDemo()
+        session.submit("ნიჟარა ჟონავს")
+        try await waitForFinishedSteps(session)
+        let firstImage = try XCTUnwrap(session.image)
+        let firstSteps = model.allSteps
+        session.continueWithDemo()
+        try await poll(2, "round 2 scan header") { Self.element(in: host.view, label: "ფოტო 2") != nil }
+
+        try await poll(5, "round 2 error") {
+            if case .error = model.phase { return true }
+            return false
+        }
+        XCTAssertEqual(model.allSteps, firstSteps)
+        try await poll(2, "error screen") { Self.element(in: host.view, label: "ფოტო 2 ვერ დამუშავდა") != nil }
+        XCTAssertNotNil(Self.element(in: host.view, label: "წინა \(firstSteps.count) ნაბიჯი შენახულია."))
+        XCTAssertNotNil(Self.element(in: host.view, label: "თავიდან"))
+        let back = try XCTUnwrap(Self.element(in: host.view, label: "წინა ნაბიჯებზე"))
+
+        XCTAssertTrue(back.accessibilityActivate())
+        try await poll(2, "round 1 steps") { session.phaseChanged(); return model.round == 1 && session.image === firstImage }
+        XCTAssertEqual(model.allSteps, firstSteps)
+        XCTAssertTrue(model.canContinueWithPhoto)
+    }
+
     func testScreens() async throws {
         let directory = URL(fileURLWithPath: "/tmp/kadri-photo-shots-square")
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
@@ -185,5 +221,22 @@ final class PhotoMultiRoundTests: XCTestCase {
             if let found = element(in: child, label: label) { return found }
         }
         return nil
+    }
+}
+
+/// The multi-photo mock, except that the second photo's scan fails after a short wait.
+private final class FailingRoundTwoAPI: KadriAPI, @unchecked Sendable {
+    private let base = MockKadriAPI(scanDelay: .milliseconds(5), stepDelay: .milliseconds(5), multiPhoto: true)
+
+    func parts(keyframe: Data, instructions: String, context: SessionContext?) async throws -> PartsResult {
+        guard context == nil else {
+            try await Task.sleep(for: .milliseconds(800))
+            throw URLError(.notConnectedToInternet)
+        }
+        return try await base.parts(keyframe: keyframe, instructions: instructions, context: context)
+    }
+
+    func steps(object: String, parts: [Part], instructions: String, context: SessionContext?) -> AsyncThrowingStream<StepEvent, Error> {
+        base.steps(object: object, parts: parts, instructions: instructions, context: context)
     }
 }
