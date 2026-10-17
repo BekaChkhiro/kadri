@@ -36,49 +36,49 @@ struct PhotoStepCard: View {
     let index: Int
     let count: Int
     let streaming: Bool
-    let caption: String?
     var previous: () -> Void
     var next: () -> Void
     var finish: () -> Void
     var needsPhoto = false
     var requestPhoto: () -> Void = {}
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     private var presentation: PhotoStepPresentation {
         .state(index: index, count: count, streaming: streaming, needsPhoto: needsPhoto)
+    }
+
+    private var swap: AnyTransition {
+        reduceMotion ? .opacity : .asymmetric(insertion: .opacity.combined(with: .offset(y: 8)), removal: .opacity)
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-                    HStack(spacing: 8) {
-                        Text(SessionPresentation.progress(index: index, count: count, streaming: streaming))
-                            .font(.kadri(13, weight: .semibold)).foregroundStyle(Theme.Colors.brand[600]!)
-                            .layoutPriority(1)
-                        Spacer(minLength: 0)
-                        if let caption {
-                            Text(caption).font(.kadri(12, weight: .medium))
-                                .foregroundStyle(Theme.Colors.ink[500]!).lineLimit(1)
-                        }
-                    }
+                    Text(SessionPresentation.progress(index: index, count: count, streaming: streaming))
+                        .font(.kadri(13, weight: .semibold)).foregroundStyle(Theme.Colors.brand[600]!)
                     HStack(spacing: 4) {
                         ForEach(0..<max(count, 1), id: \.self) { item in
-                            Capsule().fill(item <= index && count > 0 ? Theme.Colors.brand[500]! : Theme.Colors.ink[900]!.opacity(0.1))
-                                .frame(height: 4)
+                            Capsule().fill(barColor(item)).frame(height: 4)
                         }
-                    }.accessibilityHidden(true).padding(.top, 10)
-                    content.padding(.top, 14)
-                        .frame(maxWidth: .infinity, minHeight: 150, alignment: .topLeading)
+                    }
+                    .animation(.easeOut(duration: 0.2), value: index)
+                    .accessibilityHidden(true).padding(.top, 10)
+                    // Overlapping old and new content keeps the footer still while steps swap.
+                    ZStack(alignment: .topLeading) {
+                        content.id(index).transition(swap)
+                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                    }
+                    .animation(.easeOut(duration: 0.2), value: index)
+                    .padding(.top, 16)
+                    .frame(maxWidth: .infinity, minHeight: 178, alignment: .topLeading)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 16)
             }
             .scrollBounceBehavior(.basedOnSize)
             HStack(spacing: 8) {
-                Button {} label: {
-                    Image(systemName: "mic").font(.system(size: 20))
-                }
-                .buttonStyle(SessionButtonStyle(primary: false)).frame(width: 48)
-                .disabled(true).accessibilityLabel("ხმით კითხვა — მალე")
                 Button(action: previous) { Text("უკან").padding(.horizontal, 2) }
                     .buttonStyle(SessionButtonStyle(primary: false)).fixedSize(horizontal: true, vertical: false)
                     .disabled(index == 0 || count == 0)
@@ -105,12 +105,19 @@ struct PhotoStepCard: View {
                 .disabled(presentation.disabled)
                 .accessibilityLabel(presentation.title)
                 .accessibilityHint(presentation.hint)
-            }.padding(.top, 16)
+            }.padding(.top, 12).padding(.horizontal, 16)
 
         }
         .foregroundStyle(Theme.Colors.ink[900]!)
-        .padding(16)
+        .padding(.vertical, 16)
         .transaction { $0.animation = nil }
+    }
+
+    private func barColor(_ item: Int) -> Color {
+        guard count > 0 else { return Theme.Colors.ink[900]!.opacity(0.1) }
+        if item < index { return Theme.Colors.brand[300]! }
+        if item == index { return Theme.Colors.brand[500]! }
+        return Theme.Colors.ink[900]!.opacity(0.1)
     }
 
     static func displayTitle(_ title: String) -> String {
@@ -120,25 +127,29 @@ struct PhotoStepCard: View {
     @ViewBuilder private var content: some View {
         if let step {
             VStack(alignment: .leading, spacing: 0) {
-                HStack(spacing: 10) {
+                HStack(spacing: 12) {
                     if let symbol = PhotoIcon.action(step.icon) {
-                        Image(systemName: symbol).font(.system(size: 15, weight: .medium))
-                            .foregroundStyle(.white).frame(width: 32, height: 32)
-                            .background(step.icon == "warning" ? Color(hex: "#dc2626") : Theme.Colors.brand[500]!, in: Circle())
+                        Image(systemName: symbol).font(.system(size: 22, weight: .medium))
+                            .foregroundStyle(.white).frame(width: 44, height: 44)
+                            .background(step.icon == "warning" ? Color(hex: "#dc2626") : Theme.Colors.brand[500]!,
+                                        in: RoundedRectangle(cornerRadius: 14))
+                            .shadow(Theme.Shadow.pop)
                             .accessibilityHidden(true)
                     }
                     Text(Self.displayTitle(step.title)).font(.kadri(21, weight: .semibold)).tracking(-0.3)
+                        .lineSpacing(2).fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                 }
                 Text(step.text).font(.kadri(14.5)).lineSpacing(4)
-                    .foregroundStyle(Theme.Colors.ink[600]!).fixedSize(horizontal: false, vertical: true).padding(.top, 6)
+                    .foregroundStyle(Theme.Colors.ink[600]!).fixedSize(horizontal: false, vertical: true).padding(.top, 10)
                 let tools = step.toolItems ?? step.tools.map { StepTool(label: $0) }
                 if !tools.isEmpty {
                     PhotoToolsLayout {
                         ForEach(Array(tools.prefix(3).enumerated()), id: \.offset) { _, tool in
-                                HStack(spacing: 5) {
+                                HStack(spacing: 6) {
                                     if let symbol = PhotoIcon.tool(tool.icon) {
-                                        Image(systemName: symbol).font(.system(size: 12, weight: .medium))
+                                        Image(systemName: symbol).font(.system(size: 14))
+                                            .foregroundStyle(Theme.Colors.ink[500]!)
                                             .accessibilityHidden(true)
                                     }
                                     Text(tool.label).font(.kadri(12.5, weight: .medium))
@@ -151,11 +162,16 @@ struct PhotoStepCard: View {
                     }.padding(.top, 12)
                 }
                 if let tip = step.tip {
-                    Text(tip).font(.kadri(12.5)).foregroundStyle(Theme.Colors.brand[800]!)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 12).padding(.vertical, 8)
-                        .background(Theme.Colors.brand[50]!, in: RoundedRectangle(cornerRadius: 12))
-                        .padding(.top, 12)
+                    HStack(alignment: .top, spacing: 8) {
+                        Image(systemName: "lightbulb").font(.system(size: 16)).accessibilityHidden(true)
+                        Text(tip).font(.kadri(12.5)).lineSpacing(2).fixedSize(horizontal: false, vertical: true)
+                    }
+                    .foregroundStyle(Theme.Colors.brand[800]!)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 12).padding(.vertical, 8)
+                    .background(Theme.Colors.brand[50]!, in: RoundedRectangle(cornerRadius: 12))
+                    .accessibilityElement(children: .combine)
+                    .padding(.top, 12)
                 }
                 if let warn = step.warn {
                     Text(warn)

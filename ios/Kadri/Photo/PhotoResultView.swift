@@ -72,7 +72,7 @@ struct PhotoResultView: View {
                                  demo: continueDemo, back: { showingPhotoRequest = false })
             } else {
                 PhotoStepCard(step: step, index: index, count: count, streaming: streaming,
-                              caption: object, previous: previous, next: next, finish: finish,
+                              previous: previous, next: next, finish: finish,
                               needsPhoto: photoRequest != nil, requestPhoto: { showingPhotoRequest = true })
             }
         }
