@@ -150,6 +150,11 @@ struct PhotoFlowView: View {
                     .overlay(alignment: .topLeading) {
                         if scanning { PhotoChip(text: "ვასკანერებ…", symbol: "scope").padding(12) }
                     }
+                    .contentShape(Rectangle())
+                    // Tapping the photo closes the description keyboard.
+                    .onTapGesture {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    }
             }
         } panel: {
             panel()

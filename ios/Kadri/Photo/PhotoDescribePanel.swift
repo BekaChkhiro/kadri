@@ -31,8 +31,11 @@ struct PhotoDescribePanel: View {
                     .padding(.top, 16)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
+                .onTapGesture { focused = false }
             }
             .scrollBounceBehavior(.basedOnSize)
+            .scrollDismissesKeyboard(.immediately)
             input
         }
         .padding(16)
