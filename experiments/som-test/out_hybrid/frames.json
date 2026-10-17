@@ -1,0 +1,222 @@
+[
+  {
+    "key": "c_astra_tracking/car/original",
+    "scene": "car",
+    "kind": "original",
+    "baseline": "out_realism/c_astra_tracking/car/car-engine/original/run_1",
+    "input": "out_hybrid/inputs/c_astra_tracking/car/original/input.png",
+    "sha256": "5c4eab459627f0f885bb212133e8dd20fda8302d279016908e9028db445d6e11",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_tracking/car/shift_left",
+    "scene": "car",
+    "kind": "shift_left",
+    "baseline": "out_realism/c_astra_tracking/car/car-engine/shift_left/run_1",
+    "input": "out_hybrid/inputs/c_astra_tracking/car/shift_left/input.png",
+    "sha256": "fdb419da67075f5097e25a1ecf18a352dc442025d5d801f5146d6d40a19b7050",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_tracking/car/shift_right",
+    "scene": "car",
+    "kind": "shift_right",
+    "baseline": "out_realism/c_astra_tracking/car/car-engine/shift_right/run_1",
+    "input": "out_hybrid/inputs/c_astra_tracking/car/shift_right/input.png",
+    "sha256": "56d97c0fe8a4ba29d72a23e30d34342366a9385cd73b0adc7c0949ed831fa611",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_tracking/chemistry/original",
+    "scene": "chemistry",
+    "kind": "original",
+    "baseline": "out_realism/c_astra_tracking/chemistry/chem-titration/original/run_1",
+    "input": "out_hybrid/inputs/c_astra_tracking/chemistry/original/input.png",
+    "sha256": "04291ef1fd0fba42d51d040ae5c62887c5b891cdfd6ba8c56ac0752c7d5ef21f",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_tracking/chemistry/shift_left",
+    "scene": "chemistry",
+    "kind": "shift_left",
+    "baseline": "out_realism/c_astra_tracking/chemistry/chem-titration/shift_left/run_1",
+    "input": "out_hybrid/inputs/c_astra_tracking/chemistry/shift_left/input.png",
+    "sha256": "7d26447fb4ab545a9db0062532043aee8c8a5ce3c8ff07b1a1ed47fbaf3bb34a",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_tracking/chemistry/shift_right",
+    "scene": "chemistry",
+    "kind": "shift_right",
+    "baseline": "out_realism/c_astra_tracking/chemistry/chem-titration/shift_right/run_1",
+    "input": "out_hybrid/inputs/c_astra_tracking/chemistry/shift_right/input.png",
+    "sha256": "09fb06dac96f6c68547908bfb8f56e7211e624de3259477d3092a5d45e72e2e8",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_tracking/gym/original",
+    "scene": "gym",
+    "kind": "original",
+    "baseline": "out_realism/c_astra_tracking/gym/gym-lat-pulldown/original/run_1",
+    "input": "out_hybrid/inputs/c_astra_tracking/gym/original/input.png",
+    "sha256": "91e42df5b872b844e4d0f3ee60fae865aba9050d4808dcb8dca5d2ec98868db6",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_tracking/gym/shift_left",
+    "scene": "gym",
+    "kind": "shift_left",
+    "baseline": "out_realism/c_astra_tracking/gym/gym-lat-pulldown/shift_left/run_1",
+    "input": "out_hybrid/inputs/c_astra_tracking/gym/shift_left/input.png",
+    "sha256": "f8236fb8a3476f5e86bc9bcd9aef1c76add7e4e546b1e747b2a9129161f2d948",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_tracking/gym/shift_right",
+    "scene": "gym",
+    "kind": "shift_right",
+    "baseline": "out_realism/c_astra_tracking/gym/gym-lat-pulldown/shift_right/run_1",
+    "input": "out_hybrid/inputs/c_astra_tracking/gym/shift_right/input.png",
+    "sha256": "b1a758ab12736b239fd216a3d0b5c1fbcda2a74d010744c6c10debc43ee8d0c5",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_tracking/microscope/original",
+    "scene": "microscope",
+    "kind": "original",
+    "baseline": "out_realism/c_astra_tracking/microscope/microscope/original/run_1",
+    "input": "out_hybrid/inputs/c_astra_tracking/microscope/original/input.png",
+    "sha256": "40b4df125b917986310ea5195b7c21c1e52caee8ccaf33508fb0b151e519c11e",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_tracking/sink/original",
+    "scene": "sink",
+    "kind": "original",
+    "baseline": "out_realism/c_astra_tracking/sink/sink-trap/original/run_1",
+    "input": "out_hybrid/inputs/c_astra_tracking/sink/original/input.png",
+    "sha256": "6afad3a44011e136c01cf1bcccaa90919a7a887f348729290f2835db4d345d36",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_tracking/sink/shift_left",
+    "scene": "sink",
+    "kind": "shift_left",
+    "baseline": "out_realism/c_astra_tracking/sink/sink-trap/shift_left/run_1",
+    "input": "out_hybrid/inputs/c_astra_tracking/sink/shift_left/input.png",
+    "sha256": "76b566693e4ad3727c016bd2dc49afaf181a41510ec07eda303314562b78462b",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_tracking/sink/shift_right",
+    "scene": "sink",
+    "kind": "shift_right",
+    "baseline": "out_realism/c_astra_tracking/sink/sink-trap/shift_right/run_1",
+    "input": "out_hybrid/inputs/c_astra_tracking/sink/shift_right/input.png",
+    "sha256": "6c86675358242ca996c764e6bf46b925c2f97870decc39553af5525724f2d19e",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_stress/car/dark_noise",
+    "scene": "car",
+    "kind": "dark_noise",
+    "baseline": "out_realism/c_astra_stress/car/car-engine/dark_noise/run_1",
+    "input": "out_hybrid/inputs/c_astra_stress/car/dark_noise/input.png",
+    "sha256": "e39ca8d4ff536b40e38b6d42c66afb78aec36faa9f5261975f53854795cdbb20",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_stress/car/motion_blur",
+    "scene": "car",
+    "kind": "motion_blur",
+    "baseline": "out_realism/c_astra_stress/car/car-engine/motion_blur/run_1",
+    "input": "out_hybrid/inputs/c_astra_stress/car/motion_blur/input.png",
+    "sha256": "0bcd317de1a80a405e5f092535e5d475d2f05a34d0c1d3a5bb5b956662fce715",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_stress/car/occlusion",
+    "scene": "car",
+    "kind": "occlusion",
+    "baseline": "out_realism/c_astra_stress/car/car-engine/occlusion/run_1",
+    "input": "out_hybrid/inputs/c_astra_stress/car/occlusion/input.png",
+    "sha256": "972707012e4bc5f67563f6f7d044d41798b7c25eeaa67503838d8156a9bd27a4",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_stress/gym/dark_noise",
+    "scene": "gym",
+    "kind": "dark_noise",
+    "baseline": "out_realism/c_astra_stress/gym/gym-lat-pulldown/dark_noise/run_1",
+    "input": "out_hybrid/inputs/c_astra_stress/gym/dark_noise/input.png",
+    "sha256": "ca0a52f501430c7110493b7cb58f00fd44357b7ccdbdc3aea7c2d40ba5c7f804",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_stress/gym/motion_blur",
+    "scene": "gym",
+    "kind": "motion_blur",
+    "baseline": "out_realism/c_astra_stress/gym/gym-lat-pulldown/motion_blur/run_1",
+    "input": "out_hybrid/inputs/c_astra_stress/gym/motion_blur/input.png",
+    "sha256": "61c54e7347f8a4b84312e21c4b984c472e10274d265f2796d1870550faa0c9f1",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_stress/gym/occlusion",
+    "scene": "gym",
+    "kind": "occlusion",
+    "baseline": "out_realism/c_astra_stress/gym/gym-lat-pulldown/occlusion/run_1",
+    "input": "out_hybrid/inputs/c_astra_stress/gym/occlusion/input.png",
+    "sha256": "2ce2b70befd8d53aba7b9084247cf0efe8579d87bf20ff0544fd76ad28f87698",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_stress/sink/dark_noise",
+    "scene": "sink",
+    "kind": "dark_noise",
+    "baseline": "out_realism/c_astra_stress/sink/sink-trap/dark_noise/run_1",
+    "input": "out_hybrid/inputs/c_astra_stress/sink/dark_noise/input.png",
+    "sha256": "281b551e14fd86208ab2f437698350ecb8db0fa99f03bcf54854c90c8bea2eae",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_stress/sink/motion_blur",
+    "scene": "sink",
+    "kind": "motion_blur",
+    "baseline": "out_realism/c_astra_stress/sink/sink-trap/motion_blur/run_1",
+    "input": "out_hybrid/inputs/c_astra_stress/sink/motion_blur/input.png",
+    "sha256": "e24688598d6de36559f98983cca13b25c7f86edc9679341f1cfc55c57d260957",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  },
+  {
+    "key": "c_astra_stress/sink/occlusion",
+    "scene": "sink",
+    "kind": "occlusion",
+    "baseline": "out_realism/c_astra_stress/sink/sink-trap/occlusion/run_1",
+    "input": "out_hybrid/inputs/c_astra_stress/sink/occlusion/input.png",
+    "sha256": "34ab520f8ff2a757c48c027953f1d52d37f9a8ec9af2b1d74682b6193fecba6c",
+    "historical_request_hash_verified": true,
+    "existing_thumbnail_verified": true
+  }
+]

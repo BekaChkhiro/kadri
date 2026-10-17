@@ -1,0 +1,23 @@
+{
+  "seconds": 22.893733417000476,
+  "time_to_first_step_seconds": 7.970785958999841,
+  "usage": {
+    "input_tokens": 3014,
+    "input_tokens_details": {
+      "cache_write_tokens": 3011,
+      "cached_tokens": 0
+    },
+    "output_tokens": 1253,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 4267
+  },
+  "estimated_usd": 0.1003175,
+  "reserved_usd": 0.28621,
+  "price_source": "https://developers.openai.com/api/docs/pricing",
+  "price_checked": "2026-10-17",
+  "model": "gpt-6-astra",
+  "returned_model": "gpt-6-astra",
+  "status": "completed"
+}

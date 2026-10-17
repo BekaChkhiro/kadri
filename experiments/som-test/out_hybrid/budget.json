@@ -1,0 +1,13 @@
+{
+  "limit": 2.5,
+  "requests": {
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/sink/original/parts_request": {
+      "state": "settled",
+      "usd": 0.00226275
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/sink/original/steps_request": {
+      "state": "settled",
+      "usd": 0.1003175
+    }
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "n": 1,
+  "rows": [
+    {
+      "frame": "c_astra_tracking/sink/original",
+      "scene": "sink",
+      "kind": "original",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 6.98087120800119,
+        "time_to_first_outline_seconds": 17.97772616600014,
+        "time_to_first_step_from_start_seconds": 25.952303666999796,
+        "total_seconds": 41.06313787500039,
+        "sam_seconds": 10.950632750000295,
+        "gemini_count_seconds": 1.6843042919990694,
+        "gemini_usd": 0.00226275,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 1.3704823340012808,
+        "parts_preflight_seconds": 0.7961861670009966,
+        "steps_preflight_seconds": 0.5742961670002842,
+        "real_wall_time_to_first_box_seconds": 7.491504999999961,
+        "first_box_full_response_seconds": 7.491504999999961,
+        "first_box_model_only_seconds": 6.695318832998964,
+        "time_to_parts_response_seconds": 7.491504999999961,
+        "time_to_first_outline_seconds": 13.577731291999953,
+        "time_to_first_step_seconds": 6.923170125000979,
+        "time_to_first_step_from_start_seconds": 20.50725041700025,
+        "sam_seconds": 5.900890332999552,
+        "steps_seconds": 25.240574542000104,
+        "total_seconds": 38.97181629199986,
+        "adapter_wall_seconds": 38.97322516700115,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "focus_iou": 0.6003506878877799,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": true,
+          "focus_iou": 0.0,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "focus_iou": 0.7038619556285949,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "focus_iou": 0.4311351805998395,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "focus_iou": 0.16540351622464447,
+          "avoid_iou": 1.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "focus_iou": 0.2757483234283845,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": true,
+          "focus_iou": 0.0,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "focus_iou": 0.7040078843626807,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "focus_iou": 0.8264212706829089,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "focus_iou": 0.18826940182954283,
+          "avoid_iou": 1.0
+        }
+      ],
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 3,
+            "current": 3,
+            "iou": 0.9689922480620153,
+            "phone_id": "phone_4",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 2,
+            "current": 2,
+            "iou": 0.6618759455370646,
+            "phone_id": "phone_3",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_6",
+          "phone_7",
+          "phone_3",
+          "phone_4"
+        ],
+        "unmatched": [
+          0,
+          1
+        ],
+        "dropout": [
+          0,
+          1,
+          4
+        ],
+        "raw_id_stability": 1.0,
+        "raw_label_stability": 0.0
+      }
+    }
+  ],
+  "hybrid": {
+    "first_box": {
+      "n": 1,
+      "p50": 6.98087120800119,
+      "p90": 6.98087120800119
+    },
+    "outline": {
+      "n": 1,
+      "p50": 17.97772616600014,
+      "p90": 17.97772616600014
+    },
+    "first_step": {
+      "n": 1,
+      "p50": 25.952303666999796,
+      "p90": 25.952303666999796
+    },
+    "total": {
+      "n": 1,
+      "p50": 41.06313787500039,
+      "p90": 41.06313787500039
+    },
+    "steps": 5,
+    "empty_focus": 1,
+    "focus_iou": 0.38015026806817176,
+    "avoid_iou": 0.6
+  },
+  "astra": {
+    "first_box": {
+      "n": 1,
+      "p50": 7.491504999999961,
+      "p90": 7.491504999999961
+    },
+    "outline": {
+      "n": 1,
+      "p50": 13.577731291999953,
+      "p90": 13.577731291999953
+    },
+    "first_step": {
+      "n": 1,
+      "p50": 20.50725041700025,
+      "p90": 20.50725041700025
+    },
+    "total": {
+      "n": 1,
+      "p50": 38.97181629199986,
+      "p90": 38.97181629199986
+    },
+    "steps": 5,
+    "empty_focus": 1,
+    "focus_iou": 0.3988893760607034,
+    "avoid_iou": 0.8
+  },
+  "cost": {
+    "gemini": 0.00226275,
+    "openai": 0.1003175
+  },
+  "unsettled": 0
+}
