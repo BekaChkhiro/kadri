@@ -10,6 +10,8 @@ final class PhotoSession: ObservableObject {
     @Published private(set) var meshes: [TrackedMesh] = []
     @Published private(set) var segmentationStatus: String?
     @Published var selectionError: String?
+    /// When the first description was sent; the done screen counts the session's minutes from it.
+    @Published private(set) var startedAt: Date?
     private var jpeg: Data?
     /// Worker `/ai/parts` rejects keyframes whose long side exceeds 768 px; boxes are 0–1000 so they still map onto `jpeg`.
     /// Both copies are the same centre square, so the photo always fills a square photo area.
@@ -109,8 +111,15 @@ final class PhotoSession: ObservableObject {
         model.updateText(example.prefill)
     }
 
+    /// Whole minutes since the first description, at least one.
+    func minutes(at now: Date = Date()) -> Int {
+        guard let startedAt else { return 1 }
+        return max(1, Int(ceil(now.timeIntervalSince(startedAt) / 60)))
+    }
+
     func submit(_ text: String) {
         guard let apiJPEG else { return }
+        if startedAt == nil { startedAt = Date() }
         model.updateText(text)
         let failure = isMock ? nil : authError
         model.submit { if let failure { throw failure }; return apiJPEG }
@@ -138,7 +147,7 @@ final class PhotoSession: ObservableObject {
 
     func retake() {
         cancelSegmentation()
-        image = nil; jpeg = nil; apiJPEG = nil; preparedResult = nil; rounds = []
+        image = nil; jpeg = nil; apiJPEG = nil; preparedResult = nil; rounds = []; startedAt = nil
         model.beginDescribing()
     }
 

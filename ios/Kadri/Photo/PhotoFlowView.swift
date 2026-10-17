@@ -101,7 +101,9 @@ struct PhotoFlowView: View {
         case .steps(let result, _, let streaming):
             resultView(image, result: result, count: session.model.allSteps.count, streaming: streaming)
         case .done(let result, _):
-            resultView(image, result: result, count: session.model.allSteps.count, streaming: false, completed: true)
+            PhotoDoneView(object: result.object, steps: session.model.allSteps, photos: session.model.round,
+                          minutes: session.minutes(), thumbnail: image,
+                          close: session.retake, newPhoto: session.retake)
         case .scanning(let startedAt):
             TimelineView(.periodic(from: startedAt, by: 1)) { context in
                 photoScreen(image, title: SessionPresentation.scanStatus(elapsed: context.date.timeIntervalSince(startedAt)),
