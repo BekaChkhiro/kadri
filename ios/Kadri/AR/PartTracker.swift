@@ -3,6 +3,9 @@ import CoreImage
 import ImageIO
 import KadriCore
 import Combine
+import os
+
+private let samLog = Logger(subsystem: "ge.kadri", category: "ar")
 
 private struct ContourBatch: Sendable {
     let contours: [TrackedContour]
@@ -37,6 +40,7 @@ private actor ContourProcessor {
             model = try Segmenter()
             #endif
             segmenter = model
+            samLog.notice("ge.kadri sam-load ms=\(Int(model.loadMs))")
         }
         let embedding = try await model.embed(image)
         var contours: [TrackedContour] = []
