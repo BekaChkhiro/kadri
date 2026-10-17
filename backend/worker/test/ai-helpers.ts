@@ -57,3 +57,16 @@ export function diagnosticContinuation(fields: Record<string, unknown> = {}) {
     how: null, cause: null, summary: null, ...fields,
   };
 }
+
+export const knowledgeEnv: Env = {
+  ...testEnv, KNOWLEDGE_HUB_ENABLED: "true",
+  KNOWLEDGE_HUB_URL: "https://knowledge.example.test/mcp", KNOWLEDGE_HUB_KEY: "knowledge-test-key",
+};
+
+export function knowledgeResponse(): Response {
+  return Response.json({ jsonrpc: "2.0", id: 1, result: { structuredContent: { results: [
+    { record: { id: "ka-1", title_ka: "მაცივრის შემოწმება", title: "Ignored title",
+      summary_ka: "შეამოწმეთ კვება.", scope_note: "მხოლოდ გარედან." } },
+    { record: { id: "en-1", title: "Cooling checks", summary: "Check ventilation.", limitations: "External checks only." } },
+  ] } } });
+}

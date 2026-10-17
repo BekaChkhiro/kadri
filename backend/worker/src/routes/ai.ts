@@ -1,3 +1,4 @@
+import { lookupKnowledge } from "../ai/knowledge";
 import { partsHandler, partsResponse, readPartsRequest } from "../ai/parts";
 import { aiErrors } from "../ai/errors";
 import { DEFAULT_MODEL } from "../ai/openai";
@@ -80,6 +81,9 @@ export const guardedStepsHandler: Handler = async ({ request, env, ctx }) => {
   const { sub } = await requireSession(request, env);
   const provider = stepsProvider(env, aiTimeoutMs(env), aiFirstStepTimeoutMs(env));
   const { input, sessionId } = await readStepsRequest(request);
+  input.knowledge = await lookupKnowledge(env, {
+    object: input.object, instructions: input.instructions, answers: input.context?.answers,
+  }, request.signal);
   const base = { userId: sub, sessionId, stage: "steps", provider: provider.name, model: env.AI_MODEL || DEFAULT_MODEL } as const;
   const limit = deadline(aiTimeoutMs(env), request.signal);
   const retried: StepsProvider = {

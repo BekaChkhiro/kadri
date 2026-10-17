@@ -8,6 +8,9 @@ export interface Env {
   /** Build/release identifier; falls back to "dev" when unset. */
   VERSION?: string;
   OPENAI_API_KEY?: string;
+  KNOWLEDGE_HUB_ENABLED?: string;
+  KNOWLEDGE_HUB_URL?: string;
+  KNOWLEDGE_HUB_KEY?: string;
   /** Responses API model for the Astra stages; defaults to gpt-6-astra. */
   AI_MODEL?: string;
   /** Reasoning effort; defaults to "low" (gpt-6-astra rejects "minimal"). */

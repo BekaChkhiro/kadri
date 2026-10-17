@@ -7,7 +7,7 @@ import { router } from "../src/index";
 import { recordUsage } from "../src/limits";
 import { issueSession } from "../src/session";
 import { readSse } from "../src/sse";
-import { b64, diagnosticContinuation, fakeJpeg, mockFetch, responseBody } from "./ai-helpers";
+import { b64, knowledgeEnv, knowledgeResponse, diagnosticContinuation, fakeJpeg, mockFetch, responseBody } from "./ai-helpers";
 import { env, migrate, testEnv } from "./auth-helpers";
 
 const aiEnv: Env = { ...testEnv, AI_PROVIDER: "astra", OPENAI_API_KEY: "test-key" };
@@ -445,4 +445,45 @@ it("diagnostic follow-ups keep steps usage and honor the configured answer limit
   expect(rows.slice(1)).toMatchObject([
     { status: "ok", session_id: "diagnostic-1" }, { status: "ok", session_id: "diagnostic-1" },
   ]);
+});
+
+describe("steps knowledge wiring", () => {
+  it("looks up once before both retry attempts and excludes photos", async () => {
+    let lookups = 0;
+    let attempts = 0;
+    mockFetch((url, init) => {
+      if (url === knowledgeEnv.KNOWLEDGE_HUB_URL) {
+        lookups++;
+        const args = JSON.parse(String(init.body)).params.arguments;
+        expect(args.query).toContain("ჩართულია?: დიახ");
+        expect(String(init.body)).not.toContain("image");
+        expect(String(init.body)).not.toContain(b64(fakeJpeg(64, 64)));
+        return knowledgeResponse();
+      }
+      expect(lookups).toBe(1);
+      return ++attempts === 1 ? stepsResponse({}) : stepsResponse(stepsResult);
+    });
+    const res = await post("/ai/steps", {
+      object: "მაცივარი", parts, instructions, image: b64(fakeJpeg(64, 64)),
+      context: { round: 1, doneSteps: [], answers: [{ question: "ჩართულია?", answer: "დიახ" }] },
+    }, await token("knowledge-retry"), knowledgeEnv);
+    expect((await events(res)).map(e => e.event)).toEqual(["step", "done"]);
+    expect(lookups).toBe(1);
+    expect(attempts).toBe(2);
+  });
+
+  it("continues steps after a knowledge timeout", async () => {
+    let aborted = false;
+    mockFetch((url, init) => {
+      if (url === knowledgeEnv.KNOWLEDGE_HUB_URL) {
+        init.signal?.addEventListener("abort", () => { aborted = true; });
+        return abortingFetch(init);
+      }
+      return stepsResponse(stepsResult);
+    });
+    const res = await post("/ai/steps", { object: "მაცივარი", parts, instructions },
+      await token("knowledge-timeout"), knowledgeEnv);
+    expect((await events(res)).map(e => e.event)).toEqual(["step", "done"]);
+    expect(aborted).toBe(true);
+  });
 });

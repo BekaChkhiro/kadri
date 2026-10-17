@@ -3,6 +3,7 @@
  * gpt-6-astra for both stages). `hybrid` (Gemini stage 1) is an interface
  * placeholder only — its quality is not confirmed.
  */
+import type { KnowledgeHit } from "./knowledge";
 import { answerTurnLimit, DEFAULT_ANSWER_TURN_LIMIT } from "../limits";
 import type { Env } from "../env";
 import { ApiError } from "../errors";
@@ -50,6 +51,7 @@ export interface PartsProvider {
 }
 
 export interface StepsInput {
+  knowledge?: KnowledgeHit[];
   capabilities?: readonly string[];
   object: string;
   /** The phone's parts; their IDs are the only ones the schema allows. */
