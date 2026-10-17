@@ -22,18 +22,24 @@ import { devToken, devVarsSecret } from "./dev_token.mjs";
 const here = dirname(fileURLToPath(import.meta.url));
 const worker = resolve(here, "..");
 const repo = resolve(worker, "../..");
-const realism = join(repo, "experiments/som-test/out_realism/c_astra_tracking");
+let realism = join(repo, "experiments/som-test/out_realism/c_astra_tracking");
 const SCENES = [
   { scene: "sink", slug: "sink-trap" },
   { scene: "car", slug: "car-engine" },
   { scene: "gym", slug: "gym-lat-pulldown" },
 ];
 // Upper bounds per call: 16k input at $10/1M + max output at $50/1M (vision.py PRICES).
-const RESERVE = { parts: (16000 * 10 + 1200 * 50) / 1e6, steps: (20000 * 10 + 2200 * 50) / 1e6 };
+let RESERVE = { parts: (16000 * 10 + 1200 * 50) / 1e6, steps: (20000 * 10 + 2200 * 50) / 1e6 };
 
 const args = Object.fromEntries(
   process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith("--") ? [...acc, [a.slice(2), all[i + 1]]] : acc), []),
 );
+if (args.realism) realism = resolve(args.realism);
+const provider = args.provider;
+if (provider !== undefined && !["astra", "gemini"].includes(provider)) throw new Error("invalid --provider");
+// Gemini: reserve two attempts (guarded retry), including all thinking/output tokens.
+const geminiAttemptReserve = (16000 * 0.75 + 8192 * 3.75) / 1e6;
+if (provider === "gemini") RESERVE = { parts: 2 * geminiAttemptReserve, steps: 2 * geminiAttemptReserve };
 const runs = Number(args.runs ?? 1);
 const cap = Number(args.cap ?? 3);
 const port = Number(args.port ?? 8797);
@@ -54,7 +60,7 @@ function reserve(label, amount) {
 }
 function settle(ticket, cost) {
   if (typeof cost === "number" && Number.isFinite(cost) && cost >= 0) {
-    Object.assign(ledger.entries[ticket], { charged_usd: cost, status: "usage_estimated" });
+    Object.assign(ledger.entries[ticket], { charged_usd: cost + (provider === "gemini" ? geminiAttemptReserve : 0), reported_usd: cost, status: provider === "gemini" ? "usage_plus_retry_reserve" : "usage_estimated" });
   }
   saveLedger();
 }
@@ -129,7 +135,7 @@ async function partsCall(f, run) {
   const res = await fetch(`${base}/ai/parts`, {
     method: "POST",
     headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
-    body: JSON.stringify({ image: f.image, instructions: f.instructions }),
+    body: JSON.stringify({ image: f.image, instructions: f.instructions, ...(provider && { provider }) }),
   });
   const wallMs = performance.now() - t0;
   const body = await res.json();
@@ -144,7 +150,7 @@ async function stepsCall(f, parts) {
   const res = await fetch(`${base}/ai/steps`, {
     method: "POST",
     headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
-    body: JSON.stringify({ object: parts.object, parts: parts.parts, instructions: f.instructions, image: f.image }),
+    body: JSON.stringify({ object: parts.object, parts: parts.parts, instructions: f.instructions, image: f.image, ...(provider && { provider }) }),
   });
   if (!res.ok) {
     settle(ticket, null);
@@ -193,7 +199,7 @@ if (!args.url) {
 // A fresh user per run, so earlier runs do not count towards DAILY_SESSION_LIMIT.
 const token = args.token ?? process.env.KADRI_SESSION_TOKEN ?? devToken({ secret: devVarsSecret(), sub: `live-check-${Date.now()}`, email: "live-check@example.com" });
 
-const report = { at: new Date().toISOString(), base, runs, cap, scenes: [], steps: null };
+const report = { provider: provider ?? "astra", at: new Date().toISOString(), base, runs, cap, scenes: [], steps: null };
 try {
   await waitHealth(base, 90_000);
   const frames = SCENES.map(frame);
@@ -253,7 +259,7 @@ try {
     p50PartsWallMs: median(all.map((r) => r.wallMs)),
     ledgerSpentUsd: spent(),
   };
-  writeFileSync(join(tmp, "live_check.json"), JSON.stringify(report, null, 2));
+  writeFileSync(join(tmp, provider ? `live_check_${provider}.json` : "live_check.json"), JSON.stringify(report, null, 2));
   console.log("summary", JSON.stringify(report.summary));
   child?.kill("SIGINT");
 }

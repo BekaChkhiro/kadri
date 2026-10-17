@@ -3,7 +3,8 @@ import { partsHandler, partsResponse, readPartsRequest } from "../ai/parts";
 import { aiErrors } from "../ai/errors";
 import { DEFAULT_MODEL } from "../ai/openai";
 import type { Usage } from "../ai/pricing";
-import { deadline, partsProvider, stepsProvider, type StepsProvider } from "../ai/provider";
+import { GEMINI_MODEL } from "../ai/gemini";
+import { selectedEnv, deadline, partsProvider, stepsProvider, type StepsProvider } from "../ai/provider";
 import { readStepsRequest, stepsHandler, stepsStream } from "../ai/steps";
 import type { Env } from "../env";
 import { ApiError } from "../errors";
@@ -49,9 +50,9 @@ function retryable(err: unknown, signal: AbortSignal): err is ApiError {
 export const guardedPartsHandler: Handler = async ({ request, env }) => {
   const { sub } = await requireSession(request, env);
   await assertDailyLimit(env, sub);
-  const provider = partsProvider(env, aiAttemptTimeoutMs(env));
-  const { input, sessionId } = await readPartsRequest(request);
-  const base = { userId: sub, sessionId, stage: "parts", provider: provider.name, model: env.AI_MODEL || DEFAULT_MODEL } as const;
+  const { input, sessionId, provider: requested } = await readPartsRequest(request);
+  const provider = partsProvider(selectedEnv(env, requested), aiAttemptTimeoutMs(env));
+  const base = { userId: sub, sessionId, stage: "parts", provider: provider.name, model: provider.name === "gemini" ? GEMINI_MODEL : env.AI_MODEL || DEFAULT_MODEL } as const;
   const limit = deadline(aiTimeoutMs(env), request.signal);
   try {
     for (let attempt = 0; ; attempt++) {
@@ -79,12 +80,12 @@ export const guardedPartsHandler: Handler = async ({ request, env }) => {
 /** Authenticated steps: retry before the first step only, within one total stream deadline. */
 export const guardedStepsHandler: Handler = async ({ request, env, ctx }) => {
   const { sub } = await requireSession(request, env);
-  const provider = stepsProvider(env, aiTimeoutMs(env), aiFirstStepTimeoutMs(env));
-  const { input, sessionId } = await readStepsRequest(request);
+  const { input, sessionId, provider: requested } = await readStepsRequest(request);
+  const provider = stepsProvider(selectedEnv(env, requested), aiTimeoutMs(env), aiFirstStepTimeoutMs(env));
   input.knowledge = await lookupKnowledge(env, {
     object: input.object, instructions: input.instructions, answers: input.context?.answers,
   }, request.signal);
-  const base = { userId: sub, sessionId, stage: "steps", provider: provider.name, model: env.AI_MODEL || DEFAULT_MODEL } as const;
+  const base = { userId: sub, sessionId, stage: "steps", provider: provider.name, model: provider.name === "gemini" ? GEMINI_MODEL : env.AI_MODEL || DEFAULT_MODEL } as const;
   const limit = deadline(aiTimeoutMs(env), request.signal);
   const retried: StepsProvider = {
     name: provider.name,

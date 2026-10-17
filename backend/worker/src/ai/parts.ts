@@ -12,7 +12,7 @@ import { json } from "../errors";
 import type { Handler } from "../router";
 import { aiErrors } from "./errors";
 import { checkedJpegBase64, fromBase64 } from "./image";
-import { partsProvider, type PartsInput, type PartsResult } from "./provider";
+import { selectedEnv, partsProvider, type PartsInput, type PartsResult } from "./provider";
 import { parseContext, parseInstructions } from "./validate";
 
 interface PartsBody {
@@ -20,6 +20,7 @@ interface PartsBody {
   instructions: unknown;
   sessionId: unknown;
   context: unknown;
+  provider: unknown;
 }
 
 async function readBody(request: Request): Promise<PartsBody> {
@@ -38,6 +39,7 @@ async function readBody(request: Request): Promise<PartsBody> {
       instructions: form.get("instructions"),
       sessionId: form.get("sessionId"),
       context: form.get("context"),
+      provider: form.get("provider"),
     };
   }
   if (type.startsWith("application/json")) {
@@ -48,7 +50,7 @@ async function readBody(request: Request): Promise<PartsBody> {
       throw aiErrors.badRequest("JSON ვერ წავიკითხე");
     }
     const image = typeof body?.image === "string" ? fromBase64(body.image) : null;
-    return { image, instructions: body?.instructions, sessionId: body?.sessionId, context: body?.context };
+    return { image, instructions: body?.instructions, sessionId: body?.sessionId, context: body?.context, provider: body?.provider };
   }
   throw aiErrors.badRequest("საჭიროა multipart/form-data ან application/json");
 }
@@ -60,7 +62,7 @@ export function parseSessionId(raw: unknown): string | null {
   return raw;
 }
 
-export async function readPartsRequest(request: Request): Promise<{ input: PartsInput; sessionId: string | null }> {
+export async function readPartsRequest(request: Request): Promise<{ input: PartsInput; sessionId: string | null; provider?: unknown }> {
   const body = await readBody(request);
   const imageBase64 = checkedJpegBase64(body.image);
   const instructions = parseInstructions(body.instructions);
@@ -68,6 +70,7 @@ export async function readPartsRequest(request: Request): Promise<{ input: Parts
   return {
     input: { imageBase64, instructions, ...(context && { context }) },
     sessionId: parseSessionId(body.sessionId),
+    provider: body.provider,
   };
 }
 
@@ -88,7 +91,7 @@ export function partsResponse(result: PartsResult): Response {
 
 /** Bare stage handler: no auth, limit or usage. The app mounts the guarded one (src/routes/ai.ts). */
 export const partsHandler: Handler = async ({ request, env }) => {
-  const provider = partsProvider(env);
-  const input = await readPartsInput(request);
+  const { input, provider: requested } = await readPartsRequest(request);
+  const provider = partsProvider(selectedEnv(env, requested));
   return partsResponse(await provider.parts(input, request.signal));
 };

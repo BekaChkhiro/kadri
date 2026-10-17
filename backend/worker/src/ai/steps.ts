@@ -23,10 +23,10 @@ import { sseResponse } from "../sse";
 import { aiErrors } from "./errors";
 import { checkedJpegBase64, fromBase64 } from "./image";
 import { parseSessionId } from "./parts";
-import { stepsProvider, type StepsEvent, type StepsInput, type StepsProvider } from "./provider";
+import { selectedEnv, stepsProvider, type StepsEvent, type StepsInput, type StepsProvider } from "./provider";
 import { MAX_STEPS, parseCapabilities, parseContext, parseInstructions, parseParts } from "./validate";
 
-export async function readStepsRequest(request: Request): Promise<{ input: StepsInput; sessionId: string | null }> {
+export async function readStepsRequest(request: Request): Promise<{ input: StepsInput; sessionId: string | null; provider?: unknown }> {
   if (!(request.headers.get("content-type") ?? "").startsWith("application/json")) {
     throw aiErrors.badRequest("საჭიროა application/json");
   }
@@ -58,6 +58,7 @@ export async function readStepsRequest(request: Request): Promise<{ input: Steps
   return {
     input: { object: body.object, parts, instructions, count, imageBase64, capabilities, ...(context && { context }) },
     sessionId: parseSessionId(body.sessionId),
+    provider: body.provider,
   };
 }
 
@@ -112,7 +113,7 @@ export function stepsStream(provider: StepsProvider, input: StepsInput, opts: St
 
 /** Bare stage handler: no auth or usage. The app mounts the guarded one (src/routes/ai.ts). */
 export const stepsHandler: Handler = async ({ request, env }) => {
-  const provider = stepsProvider(env);
-  const input = await readStepsInput(request);
+  const { input, provider: requested } = await readStepsRequest(request);
+  const provider = stepsProvider(selectedEnv(env, requested));
   return stepsStream(provider, input, { signal: request.signal });
 };

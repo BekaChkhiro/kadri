@@ -4,6 +4,7 @@
  * output. Checked 2026-10-17; an estimate, not an invoice.
  */
 export const PRICES: Record<string, readonly [number, number, number, number]> = {
+  "gemini-3.8-flash": [0.75, 0.75, 0.75, 3.75],
   "gpt-6-astra": [10, 1, 12.5, 50],
   "gpt-6.1-sol": [2, 0.1, 2.5, 10],
 };

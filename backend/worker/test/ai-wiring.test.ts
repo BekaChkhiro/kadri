@@ -501,3 +501,66 @@ describe("steps knowledge wiring", () => {
     expect(aborted).toBe(true);
   });
 });
+
+describe("guarded Gemini requests", () => {
+  const selected = { GEMINI_API_KEY: "gemini-test", ALLOW_PROVIDER_SELECTION: "true" };
+  const geminiResult = (text: string) => Response.json({ candidates: [{ finishReason: "STOP", content: { parts: [{ text }] } }], usageMetadata: { promptTokenCount: 1000, candidatesTokenCount: 100, thoughtsTokenCount: 50, totalTokenCount: 1150 } });
+  const body = { image: b64(fakeJpeg(20, 20)), instructions: "შეამოწმე", provider: "gemini" };
+
+  it("retries invalid parts JSON once and records Gemini model and thinking cost", async () => {
+    let calls = 0;
+    mockFetch(() => geminiResult(++calls === 1 ? "invalid" : '{"object":"ძრავი","parts":[{"label":"ხუფი","box_2d":[200,100,400,300]}]}'));
+    const res = await post("/ai/parts", body, await token("gemini-retry"), selected);
+    expect(res.status).toBe(200);
+    expect(calls).toBe(2);
+    const rows = await usageOf("gemini-retry");
+    expect(rows.map(r => r.status)).toEqual(["error", "ok"]);
+    expect(rows.map(r => r.model)).toEqual(["gemini-3.8-flash", "gemini-3.8-flash"]);
+    expect(rows[1]!.output_tokens).toBe(150);
+    expect(rows[1]!.cost_usd).toBeCloseTo(0.0013125);
+    const row = await env.DB.prepare("SELECT provider, reasoning_tokens FROM usage WHERE user_id = ? AND status = 'ok'").bind("gemini-retry").first<any>();
+    expect(row).toMatchObject({ provider: "gemini", reasoning_tokens: 50 });
+  });
+
+  it("retries a parts timeout once", async () => {
+    let calls = 0;
+    mockFetch((_url, init) => {
+      if (++calls === 2) return geminiResult('{"object":"o","parts":[]}');
+      return new Promise((_resolve, reject) => init.signal?.addEventListener("abort", () => reject(new Error("aborted"))));
+    });
+    const res = await post("/ai/parts", body, await token("gemini-timeout"), { ...selected, AI_ATTEMPT_TIMEOUT_MS: "10" });
+    expect(res.status).toBe(200);
+    expect(calls).toBe(2);
+  });
+
+  it("rejects selection when gate is off before fetching", async () => {
+    const spy = mockFetch(() => geminiResult("{}"));
+    for (const path of ["/ai/parts", "/ai/steps"]) {
+      const res = await post(path, path.endsWith("parts") ? body : { object: "o", parts, instructions, provider: "gemini" }, await token("gemini-gate"), { ALLOW_PROVIDER_SELECTION: "false" });
+      expect(res.status).toBe(400);
+    }
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it("retries malformed steps before the first step and emits the unchanged SSE contract", async () => {
+    let calls = 0;
+    mockFetch(() => {
+      const text = ++calls === 1 ? "bad" : JSON.stringify({ ...stepsResult, continuation: { kind: "complete", prompt: null, reason: null } });
+      const data = { candidates: [{ finishReason: "STOP", content: { parts: [{ text }] } }], usageMetadata: { promptTokenCount: 1000, candidatesTokenCount: 100, thoughtsTokenCount: 50, totalTokenCount: 1150 } };
+      return new Response(`data: ${JSON.stringify(data)}\n\n`);
+    });
+    const res = await post("/ai/steps", { object: "o", parts, instructions, provider: "gemini" }, await token("gemini-steps-retry"), selected);
+    expect((await events(res)).map(e => e.event)).toEqual(["step", "done"]);
+    expect(calls).toBe(2);
+  });
+});
+
+it("does not retry Gemini after a step has been sent", async () => {
+  const spy = mockFetch(() => {
+    const delta = '{"steps":[' + JSON.stringify(stepsResult.steps[0]) + '],"unknown_parts":[],"continuation":';
+    return new Response(`data: ${JSON.stringify({ candidates: [{ content: { parts: [{ text: delta }] } }] })}\n\ndata: invalid\n\n`);
+  });
+  const res = await post("/ai/steps", { object: "o", parts, instructions, provider: "gemini" }, await token("gemini-no-retry"), { GEMINI_API_KEY: "x", ALLOW_PROVIDER_SELECTION: "true" });
+  expect((await events(res)).map(e => e.event)).toEqual(["step", "error"]);
+  expect(spy).toHaveBeenCalledTimes(1);
+});

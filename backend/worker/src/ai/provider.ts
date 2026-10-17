@@ -1,8 +1,7 @@
-/**
- * AI providers for the two stages. `astra` is the default (Astra C:
- * gpt-6-astra for both stages). `hybrid` (Gemini stage 1) is an interface
- * placeholder only — its quality is not confirmed.
+/** Two-stage providers with shared validation, incremental steps and continuation rules.
+ * Astra is the deployment default; Gemini is selected only through the gated request field.
  */
+import { GEMINI_MODEL, postGemini } from "./gemini";
 import type { KnowledgeHit } from "./knowledge";
 import { answerTurnLimit, DEFAULT_ANSWER_TURN_LIMIT } from "../limits";
 import type { Env } from "../env";
@@ -116,7 +115,10 @@ export function deadline(ms: number, outer?: AbortSignal) {
 }
 
 export class AstraProvider implements PartsProvider, StepsProvider {
-  readonly name = "astra";
+  readonly name: string = "astra";
+  protected post(apiKey: string, payload: Record<string, unknown>, signal: AbortSignal): Promise<Response> {
+    return postResponses(apiKey, payload, signal);
+  }
   constructor(readonly config: AstraConfig) {}
 
   async parts(input: PartsInput, signal?: AbortSignal): Promise<PartsResult> {
@@ -133,7 +135,7 @@ export class AstraProvider implements PartsProvider, StepsProvider {
     const start = Date.now();
     let response: ResponseObject;
     try {
-      const res = await postResponses(apiKey, payload, limit.signal);
+      const res = await this.post(apiKey, payload, limit.signal);
       if (!res.ok) {
         console.error("ai/parts upstream status", res.status, (await res.text()).slice(0, 500));
         throw aiErrors.upstream();
@@ -214,7 +216,7 @@ export class AstraProvider implements PartsProvider, StepsProvider {
     const start = Date.now();
     let firstStepMs: number | null = null;
     try {
-      const res = await postResponses(apiKey, payload, upstreamSignal);
+      const res = await this.post(apiKey, payload, upstreamSignal);
       if (!res.ok || !res.body) {
         console.error("ai/steps upstream status", res.status, (await res.text()).slice(0, 500));
         throw aiErrors.upstream();
@@ -314,10 +316,33 @@ export class AstraProvider implements PartsProvider, StepsProvider {
   }
 }
 
-function astraFor(env: Env, timing: Pick<AstraConfig, "timeoutMs" | "firstStepTimeoutMs"> = {}): AstraProvider {
+export class GeminiProvider extends AstraProvider {
+  override readonly name = "gemini";
+  protected override async post(apiKey: string, payload: Record<string, unknown>, signal: AbortSignal): Promise<Response> {
+    try { return await postGemini(apiKey, payload, signal); }
+    catch (err) {
+      if (err instanceof ApiError) throw err;
+      if (signal.aborted) throw new Error("AI request aborted");
+      throw aiErrors.upstream();
+    }
+  }
+}
+
+/** Selection is opt-in; requests without a provider retain the deployment default. */
+export function selectedEnv(env: Env, requested: unknown): Env {
+  if (requested === undefined || requested === null || requested === "") return env;
+  if (requested !== "astra" && requested !== "gemini") throw aiErrors.badRequest("provider არასწორია");
+  if (env.ALLOW_PROVIDER_SELECTION !== "true") throw aiErrors.badRequest("AI-ის არჩევა ამ გარემოში გამორთულია");
+  return { ...env, AI_PROVIDER: requested };
+}
+
+function providerFor(env: Env, timing: Pick<AstraConfig, "timeoutMs" | "firstStepTimeoutMs"> = {}): AstraProvider {
   switch (env.AI_PROVIDER ?? "astra") {
     case "astra":
       return new AstraProvider({ ...astraConfig(env), ...timing });
+    case "gemini":
+      if (!env.GEMINI_API_KEY) throw aiErrors.notConfigured();
+      return new GeminiProvider({ apiKey: env.GEMINI_API_KEY, model: GEMINI_MODEL, effort: "low", answerTurnLimit: answerTurnLimit(env), ...timing });
     case "hybrid":
       // TODO(hybrid): Gemini stage 1 (parts) behind GEMINI_API_KEY, Astra stage 2.
       // Experimental and not yet quality-confirmed (see experiments/som-test/HYBRID.md).
@@ -328,11 +353,11 @@ function astraFor(env: Env, timing: Pick<AstraConfig, "timeoutMs" | "firstStepTi
 }
 
 export function partsProvider(env: Env, timeoutMs?: number): PartsProvider {
-  return astraFor(env, { timeoutMs });
+  return providerFor(env, { timeoutMs });
 }
 
 export function stepsProvider(env: Env, timeoutMs?: number, firstStepTimeoutMs?: number): StepsProvider {
-  return astraFor(env, { timeoutMs, firstStepTimeoutMs });
+  return providerFor(env, { timeoutMs, firstStepTimeoutMs });
 }
 
 export function astraConfig(env: Env): AstraConfig {

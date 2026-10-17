@@ -24,6 +24,7 @@ compatibility_flags = ["nodejs_compat"]
 [vars]
 AI_PROVIDER = "astra"
 ENVIRONMENT = "dev"
+ALLOW_PROVIDER_SELECTION = "true"
 KNOWLEDGE_HUB_ENABLED = "false"
 DAILY_SESSION_LIMIT = "20"
 AI_TIMEOUT_MS = "60000"
@@ -46,6 +47,7 @@ name = "kadri-worker-staging"
 [env.staging.vars]
 AI_PROVIDER = "astra"
 ENVIRONMENT = "staging"
+ALLOW_PROVIDER_SELECTION = "true"
 KNOWLEDGE_HUB_ENABLED = "true"
 KNOWLEDGE_HUB_URL = "https://knowledge-hub-mcp.onrender.com/mcp"
 # Raised for hands-on testing; production keeps 20.
@@ -70,6 +72,7 @@ name = "kadri-worker-prod"
 [env.production.vars]
 AI_PROVIDER = "astra"
 ENVIRONMENT = "production"
+ALLOW_PROVIDER_SELECTION = "false"
 KNOWLEDGE_HUB_ENABLED = "false"
 DAILY_SESSION_LIMIT = "20"
 AI_TIMEOUT_MS = "60000"

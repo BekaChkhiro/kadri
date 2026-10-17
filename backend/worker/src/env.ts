@@ -1,9 +1,10 @@
-export type AiProvider = "astra" | "hybrid";
+export type AiProvider = "astra" | "hybrid" | "gemini";
 
 export interface Env {
   DB: D1Database;
   PHOTOS: R2Bucket;
   AI_PROVIDER: AiProvider;
+  ALLOW_PROVIDER_SELECTION?: string;
   ENVIRONMENT: string;
   /** Build/release identifier; falls back to "dev" when unset. */
   VERSION?: string;
