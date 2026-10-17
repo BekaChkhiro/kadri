@@ -1,0 +1,429 @@
+{
+  "geometry_proxy_only": true,
+  "groups": [
+    {
+      "model": "gpt-5.4-mini",
+      "scene": "sink",
+      "degradation_comparisons": [
+        {
+          "run": 1,
+          "mode": "dark",
+          "clean_count_before_crop": 5,
+          "raw_count_change": -1,
+          "reference_count": 5,
+          "observed_count": 4,
+          "count_change": -1,
+          "matched": 0,
+          "matched_fraction_reference": 0.0,
+          "matched_fraction_observed": 0.0,
+          "same_id_fraction_matched": null,
+          "same_id_fraction_reference": 0.0,
+          "mean_iou": null,
+          "matches": []
+        },
+        {
+          "run": 1,
+          "mode": "blur",
+          "clean_count_before_crop": 5,
+          "raw_count_change": -1,
+          "reference_count": 5,
+          "observed_count": 4,
+          "count_change": -1,
+          "matched": 3,
+          "matched_fraction_reference": 0.6,
+          "matched_fraction_observed": 0.75,
+          "same_id_fraction_matched": 0.0,
+          "same_id_fraction_reference": 0.0,
+          "mean_iou": 0.7087349387536386,
+          "matches": [
+            {
+              "reference": "p4",
+              "observed": "p3",
+              "iou": 0.8040455120101138,
+              "same_id": false
+            },
+            {
+              "reference": "p2",
+              "observed": "p4",
+              "iou": 0.6940390340721138,
+              "same_id": false
+            },
+            {
+              "reference": "p3",
+              "observed": "p2",
+              "iou": 0.6281202701786884,
+              "same_id": false
+            }
+          ]
+        },
+        {
+          "run": 1,
+          "mode": "tilt",
+          "clean_count_before_crop": 5,
+          "raw_count_change": -1,
+          "reference_count": 5,
+          "observed_count": 4,
+          "count_change": -1,
+          "matched": 1,
+          "matched_fraction_reference": 0.2,
+          "matched_fraction_observed": 0.25,
+          "same_id_fraction_matched": 0.0,
+          "same_id_fraction_reference": 0.0,
+          "mean_iou": 0.7520051121700726,
+          "matches": [
+            {
+              "reference": "p2",
+              "observed": "p3",
+              "iou": 0.7520051121700726,
+              "same_id": false
+            }
+          ]
+        },
+        {
+          "run": 1,
+          "mode": "jpeg",
+          "clean_count_before_crop": 5,
+          "raw_count_change": 0,
+          "reference_count": 5,
+          "observed_count": 5,
+          "count_change": 0,
+          "matched": 1,
+          "matched_fraction_reference": 0.2,
+          "matched_fraction_observed": 0.2,
+          "same_id_fraction_matched": 0.0,
+          "same_id_fraction_reference": 0.0,
+          "mean_iou": 0.7174347681615688,
+          "matches": [
+            {
+              "reference": "p2",
+              "observed": "p1",
+              "iou": 0.7174347681615688,
+              "same_id": false
+            }
+          ]
+        }
+      ],
+      "consistency": {
+        "clean": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        },
+        "dark": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        },
+        "blur": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        },
+        "tilt": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        },
+        "jpeg": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        }
+      }
+    },
+    {
+      "model": "gpt-5.4-mini",
+      "scene": "gym",
+      "degradation_comparisons": [
+        {
+          "run": 1,
+          "mode": "dark",
+          "clean_count_before_crop": 5,
+          "raw_count_change": 1,
+          "reference_count": 5,
+          "observed_count": 6,
+          "count_change": 1,
+          "matched": 0,
+          "matched_fraction_reference": 0.0,
+          "matched_fraction_observed": 0.0,
+          "same_id_fraction_matched": null,
+          "same_id_fraction_reference": 0.0,
+          "mean_iou": null,
+          "matches": []
+        },
+        {
+          "run": 1,
+          "mode": "blur",
+          "clean_count_before_crop": 5,
+          "raw_count_change": -1,
+          "reference_count": 5,
+          "observed_count": 4,
+          "count_change": -1,
+          "matched": 0,
+          "matched_fraction_reference": 0.0,
+          "matched_fraction_observed": 0.0,
+          "same_id_fraction_matched": null,
+          "same_id_fraction_reference": 0.0,
+          "mean_iou": null,
+          "matches": []
+        },
+        {
+          "run": 1,
+          "mode": "tilt",
+          "clean_count_before_crop": 5,
+          "raw_count_change": 0,
+          "reference_count": 5,
+          "observed_count": 5,
+          "count_change": 0,
+          "matched": 0,
+          "matched_fraction_reference": 0.0,
+          "matched_fraction_observed": 0.0,
+          "same_id_fraction_matched": null,
+          "same_id_fraction_reference": 0.0,
+          "mean_iou": null,
+          "matches": []
+        },
+        {
+          "run": 1,
+          "mode": "jpeg",
+          "clean_count_before_crop": 5,
+          "raw_count_change": 0,
+          "reference_count": 5,
+          "observed_count": 5,
+          "count_change": 0,
+          "matched": 0,
+          "matched_fraction_reference": 0.0,
+          "matched_fraction_observed": 0.0,
+          "same_id_fraction_matched": null,
+          "same_id_fraction_reference": 0.0,
+          "mean_iou": null,
+          "matches": []
+        }
+      ],
+      "consistency": {
+        "clean": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        },
+        "dark": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        },
+        "blur": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        },
+        "tilt": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        },
+        "jpeg": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        }
+      }
+    },
+    {
+      "model": "gpt-5.4-mini",
+      "scene": "car",
+      "degradation_comparisons": [
+        {
+          "run": 1,
+          "mode": "dark",
+          "clean_count_before_crop": 1,
+          "raw_count_change": 1,
+          "reference_count": 1,
+          "observed_count": 2,
+          "count_change": 1,
+          "matched": 0,
+          "matched_fraction_reference": 0.0,
+          "matched_fraction_observed": 0.0,
+          "same_id_fraction_matched": null,
+          "same_id_fraction_reference": 0.0,
+          "mean_iou": null,
+          "matches": []
+        },
+        {
+          "run": 1,
+          "mode": "blur",
+          "clean_count_before_crop": 1,
+          "raw_count_change": 1,
+          "reference_count": 1,
+          "observed_count": 2,
+          "count_change": 1,
+          "matched": 1,
+          "matched_fraction_reference": 1.0,
+          "matched_fraction_observed": 0.5,
+          "same_id_fraction_matched": 0.0,
+          "same_id_fraction_reference": 0.0,
+          "mean_iou": 0.5175600739371534,
+          "matches": [
+            {
+              "reference": "p1",
+              "observed": "p2",
+              "iou": 0.5175600739371534,
+              "same_id": false
+            }
+          ]
+        },
+        {
+          "run": 1,
+          "mode": "tilt",
+          "clean_count_before_crop": 1,
+          "raw_count_change": 1,
+          "reference_count": 1,
+          "observed_count": 2,
+          "count_change": 1,
+          "matched": 0,
+          "matched_fraction_reference": 0.0,
+          "matched_fraction_observed": 0.0,
+          "same_id_fraction_matched": null,
+          "same_id_fraction_reference": 0.0,
+          "mean_iou": null,
+          "matches": []
+        },
+        {
+          "run": 1,
+          "mode": "jpeg",
+          "clean_count_before_crop": 1,
+          "raw_count_change": 1,
+          "reference_count": 1,
+          "observed_count": 2,
+          "count_change": 1,
+          "matched": 0,
+          "matched_fraction_reference": 0.0,
+          "matched_fraction_observed": 0.0,
+          "same_id_fraction_matched": null,
+          "same_id_fraction_reference": 0.0,
+          "mean_iou": null,
+          "matches": []
+        }
+      ],
+      "consistency": {
+        "clean": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        },
+        "dark": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        },
+        "blur": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        },
+        "tilt": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        },
+        "jpeg": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "budget_stopped": false,
+  "estimated_spent_usd": 0.24179619999999996
+}

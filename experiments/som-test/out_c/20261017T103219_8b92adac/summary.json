@@ -1,0 +1,103 @@
+{
+  "geometry_proxy_only": true,
+  "groups": [
+    {
+      "model": "gpt-5.4-mini",
+      "scene": "sink",
+      "degradation_comparisons": [],
+      "consistency": {
+        "clean": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 3,
+          "reference_parts_matched_in_all_runs": 0,
+          "reference_parts_with_same_id_in_all_runs": 0,
+          "same_id_fraction_all_runs": 0.0,
+          "pairs": [
+            {
+              "a": 1,
+              "b": 2,
+              "reference_count": 4,
+              "observed_count": 6,
+              "count_change": 2,
+              "matched": 2,
+              "matched_fraction_reference": 0.5,
+              "matched_fraction_observed": 0.3333333333333333,
+              "same_id_fraction_matched": 1.0,
+              "same_id_fraction_reference": 0.5,
+              "mean_iou": 0.6266920890515791,
+              "matches": [
+                {
+                  "reference": "p2",
+                  "observed": "p2",
+                  "iou": 0.6764493625210488,
+                  "same_id": true
+                },
+                {
+                  "reference": "p4",
+                  "observed": "p4",
+                  "iou": 0.5769348155821095,
+                  "same_id": true
+                }
+              ]
+            },
+            {
+              "a": 1,
+              "b": 3,
+              "reference_count": 4,
+              "observed_count": 3,
+              "count_change": -1,
+              "matched": 0,
+              "matched_fraction_reference": 0.0,
+              "matched_fraction_observed": 0.0,
+              "same_id_fraction_matched": null,
+              "same_id_fraction_reference": 0.0,
+              "mean_iou": null,
+              "matches": []
+            },
+            {
+              "a": 2,
+              "b": 3,
+              "reference_count": 6,
+              "observed_count": 3,
+              "count_change": -3,
+              "matched": 3,
+              "matched_fraction_reference": 0.5,
+              "matched_fraction_observed": 1.0,
+              "same_id_fraction_matched": 0.0,
+              "same_id_fraction_reference": 0.0,
+              "mean_iou": 0.595133215430788,
+              "matches": [
+                {
+                  "reference": "p4",
+                  "observed": "p3",
+                  "iou": 0.6825691368370645,
+                  "same_id": false
+                },
+                {
+                  "reference": "p3",
+                  "observed": "p2",
+                  "iou": 0.571731555824875,
+                  "same_id": false
+                },
+                {
+                  "reference": "p2",
+                  "observed": "p1",
+                  "iou": 0.5310989536304244,
+                  "same_id": false
+                }
+              ]
+            }
+          ],
+          "successful_run_numbers": [
+            1,
+            2,
+            3
+          ]
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "budget_stopped": false,
+  "estimated_spent_usd": 0.1226002
+}

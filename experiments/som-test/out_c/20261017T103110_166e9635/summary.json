@@ -1,0 +1,80 @@
+{
+  "geometry_proxy_only": true,
+  "groups": [
+    {
+      "model": "gpt-6-astra",
+      "scene": "sink",
+      "degradation_comparisons": [],
+      "consistency": {
+        "clean": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        }
+      }
+    },
+    {
+      "model": "gpt-5.4-mini",
+      "scene": "sink",
+      "degradation_comparisons": [],
+      "consistency": {
+        "clean": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        }
+      }
+    },
+    {
+      "model": "gpt-5.4-nano",
+      "scene": "sink",
+      "degradation_comparisons": [],
+      "consistency": {
+        "clean": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        }
+      }
+    },
+    {
+      "model": "gpt-4.1-mini",
+      "scene": "sink",
+      "degradation_comparisons": [],
+      "consistency": {
+        "clean": {
+          "method": "Greedy one-to-one box IoU >= 0.5; geometry proxy, not semantic truth",
+          "runs": 1,
+          "reference_parts_matched_in_all_runs": null,
+          "reference_parts_with_same_id_in_all_runs": null,
+          "same_id_fraction_all_runs": null,
+          "pairs": [],
+          "successful_run_numbers": [
+            1
+          ]
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "budget_stopped": false,
+  "estimated_spent_usd": 0.09661945000000001
+}
