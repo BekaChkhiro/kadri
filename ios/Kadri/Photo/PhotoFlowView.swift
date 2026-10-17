@@ -102,33 +102,20 @@ struct PhotoFlowView: View {
             resultView(image, result: result, count: session.model.allSteps.count, streaming: streaming)
         case .done(let result, _):
             resultView(image, result: result, count: session.model.allSteps.count, streaming: false, completed: true)
-        default:
-            PhotoScreenLayout(title: session.model.round > 1 ? "ფოტო \(session.model.round)" : "ფოტო", close: session.retake, newPhoto: session.retake) {
-                GeometryReader { proxy in
-                    Image(uiImage: image).resizable().scaledToFit()
-                        .frame(width: proxy.size.width, height: proxy.size.height)
-                        .background(Theme.Colors.ink[800]!)
+        case .scanning(let startedAt):
+            TimelineView(.periodic(from: startedAt, by: 1)) { context in
+                photoScreen(image, title: SessionPresentation.scanStatus(elapsed: context.date.timeIntervalSince(startedAt)),
+                            subtitle: session.model.instructions.isEmpty ? nil : session.model.instructions, scanning: true) {
+                    PhotoScanPanel(startedAt: startedAt, cancel: session.model.cancel)
                 }
-            } panel: {
+            }
+        default:
+            photoScreen(image, title: session.model.round > 1 ? "ფოტო \(session.model.round)" : "ფოტო") {
                 switch session.model.phase {
                 case .idle, .describing:
                     PhotoDescribePanel(text: Binding(get: { description }, set: { session.model.updateText($0) })) {
                         session.submit(description)
                     }
-                case .scanning(let startedAt):
-                    VStack(spacing: 16) {
-                        ScrollView {
-                            VStack(spacing: 16) {
-                                ProgressView().tint(Theme.Colors.brand[500]!)
-                                TimelineView(.periodic(from: startedAt, by: 1)) { context in
-                                    Text(SessionPresentation.scanStatus(elapsed: context.date.timeIntervalSince(startedAt)))
-                                        .font(.kadri(18, weight: .semibold))
-                                }
-                            }.frame(maxWidth: .infinity).padding(.top, 24)
-                        }
-                        Button("გაუქმება", action: session.model.cancel)
-                            .buttonStyle(SessionButtonStyle(primary: false))
-                    }.padding(16)
                 case .error(let error, _):
                     VStack(alignment: .leading, spacing: 12) {
                         ScrollView {
@@ -147,6 +134,23 @@ struct PhotoFlowView: View {
                 default: EmptyView()
                 }
             }
+        }
+    }
+
+    private func photoScreen<Panel: View>(_ image: UIImage, title: String, subtitle: String? = nil, scanning: Bool = false,
+                                          @ViewBuilder panel: @escaping () -> Panel) -> some View {
+        PhotoScreenLayout(title: title, subtitle: subtitle, close: session.retake, newPhoto: session.retake) {
+            GeometryReader { proxy in
+                Image(uiImage: image).resizable().scaledToFit()
+                    .frame(width: proxy.size.width, height: proxy.size.height)
+                    .background(Theme.Colors.ink[800]!)
+                    .overlay { if scanning { PhotoScanBeam() } }
+                    .overlay(alignment: .topLeading) {
+                        if scanning { PhotoChip(text: "ვასკანერებ…", symbol: "scope").padding(12) }
+                    }
+            }
+        } panel: {
+            panel()
         }
     }
 
