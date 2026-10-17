@@ -1,0 +1,20 @@
+[project]
+name = "kadri-sam-tools"
+version = "0.1.0"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "torch==2.7.0",
+  "torchvision==0.22.0",
+  "coremltools==8.3.0",
+  "numpy==1.26.4",
+  "pillow>=10,<12",
+  "ultralytics==8.3.221",
+  "timm==0.9.16",
+  "einops>=0.8,<0.9",
+  "fvcore==0.1.5.post20221221",
+  "pytest>=8,<9",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
