@@ -55,6 +55,7 @@
 		AA688D92A9EC9C0E84545F71 /* SessionPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73919932F619884CCB894798 /* SessionPreviews.swift */; };
 		AB7754BA7224CE2D04DD9517 /* MockKadriAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67531DAC3A9852818926C8F /* MockKadriAPI.swift */; };
 		AB81C54835CCF9D4D3EB6D3A /* MeshWrapIntegrationSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4053B0576EC82DF04A6A97C /* MeshWrapIntegrationSnapshotTests.swift */; };
+		ACABA84A461827A75426AC70 /* PhotoRequestCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41F57B4F125EDE980214A1E6 /* PhotoRequestCard.swift */; };
 		ADE3F74A26977B000BF655B1 /* KadriTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4910DAFAB764B1ABC03FDC1 /* KadriTests.swift */; };
 		B0354A00A763F67E86E883FB /* MeshWrapSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9BCE391233E0A986DDEBC3 /* MeshWrapSnapshotTests.swift */; };
 		B0C7B9CD0B78ADD51ED872B9 /* RealityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 929743E4A7FCA4EBC2F888D7 /* RealityKit.framework */; };
@@ -122,6 +123,7 @@
 		340983717E658514DD60A10B /* Inter-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Medium.ttf"; sourceTree = "<group>"; };
 		368E6D0243C2B60A429BF23D /* PhotoResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoResultView.swift; sourceTree = "<group>"; };
 		3DE74887511C25C4481B6F46 /* MeshWrapGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrapGeometry.swift; sourceTree = "<group>"; };
+		41F57B4F125EDE980214A1E6 /* PhotoRequestCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRequestCard.swift; sourceTree = "<group>"; };
 		44F8660CE0D9184EC83038C7 /* PhotoSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSnapshotTests.swift; sourceTree = "<group>"; };
 		45B6800C7C6BC6DFD3FD195E /* CoreML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreML.framework; path = System/Library/Frameworks/CoreML.framework; sourceTree = SDKROOT; };
 		4ADA8C9D26AAC7620338D783 /* TrackedMesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedMesh.swift; sourceTree = "<group>"; };
@@ -398,6 +400,7 @@
 				F89FAEC6BDACE10C06F57842 /* PhotoFlowView.swift */,
 				1512A702D1C9EDDCC4FBA982 /* PhotoGeometry.swift */,
 				2B190C91D1A200CF71F39219 /* PhotoOverlays.swift */,
+				41F57B4F125EDE980214A1E6 /* PhotoRequestCard.swift */,
 				368E6D0243C2B60A429BF23D /* PhotoResultView.swift */,
 				A23E1970C2B487CBB0EA08BE /* PhotoSession.swift */,
 				2C59462C2DDEE650A582346E /* PhotoStepCard.swift */,
@@ -620,6 +623,7 @@
 				82D4EB97AFBD4777405B586E /* PhotoFlowView.swift in Sources */,
 				C5214BAAAC982579370A21A8 /* PhotoGeometry.swift in Sources */,
 				9FB1DDE8A787F86E9301E041 /* PhotoOverlays.swift in Sources */,
+				ACABA84A461827A75426AC70 /* PhotoRequestCard.swift in Sources */,
 				6535B01133D4511BA46D932C /* PhotoResultView.swift in Sources */,
 				61C1EFFA721BFCEC5D6412B7 /* PhotoSession.swift in Sources */,
 				C049AD315EE6C3F2DC4528F3 /* PhotoStepCard.swift in Sources */,

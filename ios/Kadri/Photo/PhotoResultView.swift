@@ -1,4 +1,5 @@
 import SwiftUI
+import PhotosUI
 import KadriCore
 
 struct PhotoResultView: View {
@@ -17,8 +18,23 @@ struct PhotoResultView: View {
     var finish: () -> Void
     var completed = false
     var newPhoto: () -> Void = {}
+    /// The round the shown step belongs to, out of every round so far.
+    var round = 1
+    var totalRounds = 1
+    var continuation: StepsContinuation? = nil
+    var continueCamera: () -> Void = {}
+    var picked: Binding<PhotosPickerItem?>? = nil
+    var continueDemo: (() -> Void)? = nil
+    var cameraAvailable = true
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var showingPhotoRequest = false
+
+    private var photoRequest: (prompt: String, reason: String)? {
+        if case .needsPhoto(let prompt, let reason) = continuation { return (prompt, reason) }
+        return nil
+    }
+
     var body: some View {
         PhotoScreenLayout(title: object, close: close, newPhoto: newPhoto) {
             GeometryReader { proxy in
@@ -32,14 +48,11 @@ struct PhotoResultView: View {
                         viewport: proxy.size, visibleHeight: proxy.size.height,
                         scale: transform.a, translationX: transform.tx, translationY: transform.ty)
                         .animation(reduceMotion ? nil : .spring(duration: 0.55), value: transform)
-                    Label(segmentationStatus ?? "\(parts.count) ნაწილი", systemImage: "viewfinder")
-                        .font(.kadri(12, weight: .semibold)).foregroundStyle(.white)
-                        .padding(.horizontal, 10).padding(.vertical, 6)
-                        .background {
-                            Capsule().fill(.ultraThinMaterial)
-                                .overlay(Capsule().fill(Theme.Colors.ink[900]!.opacity(0.55)))
-                        }
-                        .padding(12)
+                    HStack(spacing: 6) {
+                        PhotoChip(text: segmentationStatus ?? "\(parts.count) ნაწილი", symbol: "viewfinder")
+                        if totalRounds > 1 { PhotoChip(text: "ფოტო \(round)", symbol: "photo.stack") }
+                    }
+                    .padding(12)
                 }
             }
         } panel: {
@@ -53,11 +66,33 @@ struct PhotoResultView: View {
                     }
                     Button("ახალი ფოტო", action: newPhoto).buttonStyle(SessionButtonStyle())
                 }.padding(16)
+            } else if showingPhotoRequest, let photoRequest {
+                PhotoRequestCard(round: totalRounds + 1, prompt: photoRequest.prompt, reason: photoRequest.reason,
+                                 cameraAvailable: cameraAvailable, camera: continueCamera, picked: picked,
+                                 demo: continueDemo, back: { showingPhotoRequest = false })
             } else {
                 PhotoStepCard(step: step, index: index, count: count, streaming: streaming,
-                              caption: object, previous: previous, next: next, finish: finish)
+                              caption: object, previous: previous, next: next, finish: finish,
+                              needsPhoto: photoRequest != nil, requestPhoto: { showingPhotoRequest = true })
             }
         }
+        .onChange(of: round) { showingPhotoRequest = false }
+        .onChange(of: index) { showingPhotoRequest = false }
+    }
+}
+
+private struct PhotoChip: View {
+    let text: String
+    let symbol: String
+
+    var body: some View {
+        Label(text, systemImage: symbol)
+            .font(.kadri(12, weight: .semibold)).foregroundStyle(.white)
+            .padding(.horizontal, 10).padding(.vertical, 6)
+            .background {
+                Capsule().fill(.ultraThinMaterial)
+                    .overlay(Capsule().fill(Theme.Colors.ink[900]!.opacity(0.55)))
+            }
     }
 }
 

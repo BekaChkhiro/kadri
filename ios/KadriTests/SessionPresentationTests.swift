@@ -35,4 +35,10 @@ final class SessionPresentationTests: XCTestCase {
         XCTAssertEqual(SessionPresentation.progress(index: 2, count: 3, streaming: false), "ნაბიჯი 3 / 3")
         XCTAssertEqual(SessionPresentation.progress(index: 9, count: 3, streaming: false), "ნაბიჯი 3 / 3")
     }
+
+    func testProgressWaitsForALaterRoundsFirstStep() {
+        XCTAssertEqual(SessionPresentation.progress(index: 3, count: 3, streaming: true), "ნაბიჯი 4 იწერება…")
+        XCTAssertEqual(SessionPresentation.progress(index: 3, count: 6, streaming: false), "ნაბიჯი 4 / 6")
+        XCTAssertEqual(SessionPresentation.progress(index: 3, count: 4, streaming: true), "ნაბიჯი 4 / 4+")
+    }
 }

@@ -2,12 +2,14 @@ import SwiftUI
 import KadriCore
 
 enum PhotoStepPresentation: Equatable {
-    case next, preparing, finish
+    case next, preparing, finish, newPhoto
 
-    static func state(index: Int, count: Int, streaming: Bool) -> Self {
+    /// `needsPhoto`: the finished round asks for another photo, so its last step leads there instead of finishing.
+    static func state(index: Int, count: Int, streaming: Bool, needsPhoto: Bool = false) -> Self {
         guard count > 0 else { return .preparing }
         if index < count - 1 { return .next }
-        return streaming ? .preparing : .finish
+        if streaming { return .preparing }
+        return needsPhoto ? .newPhoto : .finish
     }
 
     var disabled: Bool { self == .preparing }
@@ -16,6 +18,15 @@ enum PhotoStepPresentation: Equatable {
         case .next: "შემდეგი"
         case .preparing: "მზადდება…"
         case .finish: "დასრულება"
+        case .newPhoto: "ახალი ფოტო"
+        }
+    }
+
+    var hint: String {
+        switch self {
+        case .finish: "დაასრულებს სესიას"
+        case .newPhoto: "ახალი ფოტოს გადაღებას მოგთხოვს"
+        default: "შემდეგ ნაბიჯს აჩვენებს"
         }
     }
 }
@@ -29,9 +40,11 @@ struct PhotoStepCard: View {
     var previous: () -> Void
     var next: () -> Void
     var finish: () -> Void
+    var needsPhoto = false
+    var requestPhoto: () -> Void = {}
 
     private var presentation: PhotoStepPresentation {
-        .state(index: index, count: count, streaming: streaming)
+        .state(index: index, count: count, streaming: streaming, needsPhoto: needsPhoto)
     }
 
     var body: some View {
@@ -71,21 +84,27 @@ struct PhotoStepCard: View {
                     .disabled(index == 0 || count == 0)
                     .accessibilityLabel("უკან").accessibilityHint("წინა ნაბიჯს აჩვენებს")
                 Button {
-                    if presentation == .finish { finish() } else { next() }
+                    switch presentation {
+                    case .finish: finish()
+                    case .newPhoto: requestPhoto()
+                    default: next()
+                    }
                 } label: {
                     HStack(spacing: 8) {
                         if presentation == .preparing {
                             ProgressView().controlSize(.small).tint(.white)
                         }
                         Text(presentation.title)
-                        if presentation == .next { Image(systemName: "arrow.right").font(.system(size: 16)) }
+                        if presentation == .next || presentation == .newPhoto {
+                            Image(systemName: "arrow.right").font(.system(size: 16))
+                        }
                     }
                 }
                 .buttonStyle(SessionButtonStyle(primary: true))
                 .shadow(Theme.Shadow.pop)
                 .disabled(presentation.disabled)
                 .accessibilityLabel(presentation.title)
-                .accessibilityHint(presentation == .finish ? "დაასრულებს სესიას" : "შემდეგ ნაბიჯს აჩვენებს")
+                .accessibilityHint(presentation.hint)
             }.padding(.top, 16)
 
         }

@@ -18,6 +18,8 @@ enum SessionPresentation {
 
     static func progress(index: Int, count: Int, streaming: Bool) -> String {
         guard count > 0 else { return "პირველი ნაბიჯი იწერება…" }
+        // A later round's first step: the earlier rounds' steps are counted, the new one is not here yet.
+        if streaming && index >= count { return "ნაბიჯი \(index + 1) იწერება…" }
         let current = min(max(index + 1, 1), count)
         return "ნაბიჯი \(current) / \(count)\(streaming ? "+" : "")"
     }
