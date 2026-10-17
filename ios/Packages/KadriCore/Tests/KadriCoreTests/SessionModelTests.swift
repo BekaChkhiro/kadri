@@ -43,6 +43,34 @@ final class SessionModelTests: XCTestCase {
         await model.workTask?.value
     }
 
+    func testGeminiStaysSelectedAcrossAnswersPhotosAndRetry() async {
+        model.beginDescribing()
+        model.updateText("ჟონავს")
+        model.submit(provider: .gemini) { Fixtures.keyframe }
+        await model.workTask?.value
+        model.startSteps()
+        await finishTurn(0, continuation: answerRequest)
+        model.continueWithAnswer("კი")
+        await finishTurn(1, continuation: .needsPhoto(prompt: "ახლოდან", reason: "შიგნით"))
+        model.continueWithPhoto { Fixtures.keyframe }
+        await model.workTask?.value
+        model.startSteps()
+        await waitUntil { self.api.stepsCalls.count == 3 }
+        api.stepsContinuation(2).finish(throwing: SessionError.timeout)
+        await model.workTask?.value
+        model.retry()
+        await finishTurn(3, continuation: .complete)
+        XCTAssertEqual(model.aiProvider, .gemini)
+        XCTAssertEqual(api.partsCalls.map(\.provider), [.gemini, .gemini])
+        XCTAssertEqual(api.stepsCalls.map(\.provider), [.gemini, .gemini, .gemini, .gemini])
+        model.beginDescribing()
+        model.updateText("ახალი")
+        model.submit { Fixtures.keyframe }
+        await model.workTask?.value
+        XCTAssertEqual(model.aiProvider, .astra)
+        XCTAssertNil(api.partsCalls.last?.provider)
+    }
+
     func testAnswerAndMeasurementKeepPhotoAndGlobalNavigation() async {
         await reachParts()
         model.startSteps()

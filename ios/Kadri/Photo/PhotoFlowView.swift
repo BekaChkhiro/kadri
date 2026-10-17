@@ -127,8 +127,8 @@ struct PhotoFlowView: View {
             photoScreen(image, title: session.model.round > 1 ? "ფოტო \(session.model.round)" : "ფოტო") {
                 switch session.model.phase {
                 case .idle, .describing:
-                    PhotoDescribePanel(text: Binding(get: { description }, set: { session.model.updateText($0) })) {
-                        session.submit(description)
+                    PhotoDescribePanel(text: Binding(get: { description }, set: { session.model.updateText($0) })) { provider in
+                        session.submit(description, provider: provider)
                     }
                 case .error(let error, _):
                     // A later round's failure keeps the earlier rounds: retry repeats only the last request,

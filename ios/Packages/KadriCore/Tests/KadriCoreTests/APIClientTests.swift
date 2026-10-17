@@ -18,6 +18,20 @@ final class APIClientTests: XCTestCase {
         }
     }
 
+    func testGeminiProviderIsSentInBothRequests() async throws {
+        let seen = Locked<[Data]>([])
+        let api = client { request, body in
+            seen.value.append(body)
+            if request.url?.path == "/ai/parts" { return .json(200, #"{"object":"o","parts":[]}"#) }
+            return .json(200, "event: done\ndata: {}\n\n")
+        }
+        _ = try await api.parts(keyframe: jpeg, instructions: "x", context: nil, provider: .gemini)
+        for try await _ in api.steps(object: "o", parts: [], instructions: "x", context: nil, provider: .gemini) {}
+        XCTAssertTrue(String(decoding: seen.value[0], as: UTF8.self).contains("name=\"provider\"\r\n\r\ngemini"))
+        let body = try XCTUnwrap(JSONSerialization.jsonObject(with: seen.value[1]) as? [String: Any])
+        XCTAssertEqual(body["provider"] as? String, "gemini")
+    }
+
     // MARK: parts
 
     func testPartsSendsMultipartWithBearerAndDecodesResult() async throws {

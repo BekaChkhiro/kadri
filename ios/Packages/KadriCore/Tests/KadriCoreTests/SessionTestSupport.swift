@@ -17,11 +17,12 @@ final class MockKadriAPI: KadriAPI, @unchecked Sendable {
         let parts: [Part]
         let instructions: String
         var context: SessionContext? = nil
+        var provider: AIProvider? = nil
     }
 
     private let lock = NSLock()
     private var _partsBehaviors: [PartsBehavior]
-    private var _partsCalls: [(keyframe: Data, instructions: String, context: SessionContext?)] = []
+    private var _partsCalls: [(keyframe: Data, instructions: String, context: SessionContext?, provider: AIProvider?)] = []
     private var _stepsCalls: [StepsCall] = []
     private var _stepsContinuations: [AsyncThrowingStream<StepEvent, Error>.Continuation] = []
     private var _terminatedStreams = 0
@@ -30,7 +31,7 @@ final class MockKadriAPI: KadriAPI, @unchecked Sendable {
         _partsBehaviors = parts
     }
 
-    var partsCalls: [(keyframe: Data, instructions: String, context: SessionContext?)] { lock.withLock { _partsCalls } }
+    var partsCalls: [(keyframe: Data, instructions: String, context: SessionContext?, provider: AIProvider?)] { lock.withLock { _partsCalls } }
     var stepsCalls: [StepsCall] { lock.withLock { _stepsCalls } }
     var terminatedStreams: Int { lock.withLock { _terminatedStreams } }
 
@@ -43,8 +44,11 @@ final class MockKadriAPI: KadriAPI, @unchecked Sendable {
     }
 
     func parts(keyframe: Data, instructions: String, context: SessionContext?) async throws -> PartsResult {
+        try await parts(keyframe: keyframe, instructions: instructions, context: context, provider: nil)
+    }
+    func parts(keyframe: Data, instructions: String, context: SessionContext?, provider: AIProvider?) async throws -> PartsResult {
         let behavior = lock.withLock { () -> PartsBehavior in
-            _partsCalls.append((keyframe, instructions, context))
+            _partsCalls.append((keyframe, instructions, context, provider))
             return _partsBehaviors.count > 1 ? _partsBehaviors.removeFirst() : _partsBehaviors[0]
         }
         switch behavior {
@@ -59,13 +63,16 @@ final class MockKadriAPI: KadriAPI, @unchecked Sendable {
     }
 
     func steps(object: String, parts: [Part], instructions: String, context: SessionContext?) -> AsyncThrowingStream<StepEvent, Error> {
+        steps(object: object, parts: parts, instructions: instructions, context: context, provider: nil)
+    }
+    func steps(object: String, parts: [Part], instructions: String, context: SessionContext?, provider: AIProvider?) -> AsyncThrowingStream<StepEvent, Error> {
         let (stream, continuation) = AsyncThrowingStream<StepEvent, Error>.makeStream()
         continuation.onTermination = { [weak self] _ in
             guard let self else { return }
             self.lock.withLock { self._terminatedStreams += 1 }
         }
         lock.withLock {
-            _stepsCalls.append(StepsCall(object: object, parts: parts, instructions: instructions, context: context))
+            _stepsCalls.append(StepsCall(object: object, parts: parts, instructions: instructions, context: context, provider: provider))
             _stepsContinuations.append(continuation)
         }
         return stream

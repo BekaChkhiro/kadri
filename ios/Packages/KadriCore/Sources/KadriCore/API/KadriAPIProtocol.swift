@@ -146,9 +146,16 @@ public enum StepEvent: Hashable, Sendable {
     case done(StepsUsage?, continuation: StepsContinuation = .complete)
 }
 
+public enum AIProvider: String, Codable, CaseIterable, Sendable {
+    case astra, gemini
+}
+
 /// The Worker's AI endpoints. Implementations throw `SessionError` where they can
 /// (see `SessionError.init(status:body:)`); anything else is mapped by `SessionError.init(_:)`.
 public protocol KadriAPI: Sendable {
+    func parts(keyframe: Data, instructions: String, context: SessionContext?, provider: AIProvider?) async throws -> PartsResult
+    func steps(object: String, parts: [Part], instructions: String, context: SessionContext?, provider: AIProvider?) -> AsyncThrowingStream<StepEvent, Error>
+
     /// `POST /ai/parts` with a JPEG keyframe and the user's short instruction text.
     /// `context` is nil for the first photo of a session.
     func parts(keyframe: Data, instructions: String, context: SessionContext?) async throws -> PartsResult
@@ -158,6 +165,14 @@ public protocol KadriAPI: Sendable {
 }
 
 extension KadriAPI {
+    // Existing preview/test implementations remain source compatible.
+    public func parts(keyframe: Data, instructions: String, context: SessionContext?, provider: AIProvider?) async throws -> PartsResult {
+        try await parts(keyframe: keyframe, instructions: instructions, context: context)
+    }
+    public func steps(object: String, parts: [Part], instructions: String, context: SessionContext?, provider: AIProvider?) -> AsyncThrowingStream<StepEvent, Error> {
+        steps(object: object, parts: parts, instructions: instructions, context: context)
+    }
+
     /// First photo of a session.
     public func parts(keyframe: Data, instructions: String) async throws -> PartsResult {
         try await parts(keyframe: keyframe, instructions: instructions, context: nil)

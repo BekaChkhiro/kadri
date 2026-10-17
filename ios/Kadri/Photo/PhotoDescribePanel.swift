@@ -4,7 +4,8 @@ import KadriCore
 /// The panel under the photo while describing (photo-describe.tsx): suggestion tiles and the input row pinned below.
 struct PhotoDescribePanel: View {
     @Binding var text: String
-    var submit: () -> Void
+    @AppStorage("photoAIProvider") private var provider: AIProvider = .astra
+    var submit: (AIProvider) -> Void
     @FocusState private var focused: Bool
     @State private var appeared = false
 
@@ -36,6 +37,14 @@ struct PhotoDescribePanel: View {
             }
             .scrollBounceBehavior(.basedOnSize)
             .scrollDismissesKeyboard(.immediately)
+            Picker("AI", selection: $provider) {
+                Text("Astra").tag(AIProvider.astra)
+                Text("Gemini").tag(AIProvider.gemini)
+            }
+            .pickerStyle(.segmented)
+            .font(.kadri(13, weight: .semibold))
+            .tint(Theme.Colors.brand[500]!)
+            .accessibilityLabel("AI მოდელი")
             input
         }
         .padding(16)
@@ -99,7 +108,7 @@ struct PhotoDescribePanel: View {
             .animation(.easeOut(duration: 0.15), value: focused)
             Button {
                 focused = false
-                submit()
+                submit(provider)
             } label: {
                 Image(systemName: "arrow.up").font(.system(size: 18, weight: .semibold))
                     .foregroundStyle(isEmpty ? Theme.Colors.ink[400]! : .white)

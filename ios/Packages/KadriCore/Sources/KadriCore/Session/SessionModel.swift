@@ -46,6 +46,7 @@ public final class SessionModel {
     public private(set) var pendingContext: SessionContext?
     /// The trimmed text sent with the last `submit`.
     public private(set) var instructions = ""
+    public private(set) var aiProvider: AIProvider = .astra
     /// Kept across `.error(_, retryFrom: .steps)` so a retry does not scan again.
     public private(set) var partsResult: PartsResult?
     /// Set by the server's done event.
@@ -144,11 +145,12 @@ public final class SessionModel {
 
     /// Sends the current text with a keyframe. Ignored unless describing with non-empty text.
     /// The provider is kept so `retry()` from `.scan` captures a fresh keyframe.
-    public func submit(keyframeProvider: @escaping @Sendable () async throws -> Data) {
+    public func submit(provider: AIProvider = .astra, keyframeProvider: @escaping @Sendable () async throws -> Data) {
         guard case .describing(let text) = phase else { return }
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
         instructions = trimmed
+        aiProvider = provider
         self.keyframeProvider = keyframeProvider
         startScan()
     }
@@ -160,11 +162,12 @@ public final class SessionModel {
         phase = .scanning(startedAt: Date())
         let instructions = instructions
         let context = pendingContext
+        let requestedProvider: AIProvider? = aiProvider == .astra ? nil : aiProvider
         workTask = Task { [weak self, api] in
             do {
                 let keyframe = try await provider()
                 try Task.checkCancellation()
-                let result = try await api.parts(keyframe: keyframe, instructions: instructions, context: context)
+                let result = try await api.parts(keyframe: keyframe, instructions: instructions, context: context, provider: requestedProvider)
                 self?.scanFinished(result, generation: gen)
             } catch {
                 self?.fail(error, retryFrom: .scan, generation: gen)
@@ -202,8 +205,9 @@ public final class SessionModel {
         phase = .steps(result, [], streaming: true)
         let instructions = instructions
         let context = pendingContext
+        let requestedProvider: AIProvider? = aiProvider == .astra ? nil : aiProvider
         workTask = Task { [weak self, api] in
-            let stream = api.steps(object: result.object, parts: result.parts, instructions: instructions, context: context)
+            let stream = api.steps(object: result.object, parts: result.parts, instructions: instructions, context: context, provider: requestedProvider)
             do {
                 for try await event in stream {
                     guard let self, self.handle(event, result: result, generation: gen) else { return }

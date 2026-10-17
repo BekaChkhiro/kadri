@@ -122,12 +122,12 @@ final class PhotoSession: ObservableObject {
         return max(1, Int(ceil(now.timeIntervalSince(startedAt) / 60)))
     }
 
-    func submit(_ text: String) {
+    func submit(_ text: String, provider: AIProvider = .astra) {
         guard let apiJPEG else { return }
         if startedAt == nil { startedAt = Date() }
         model.updateText(text)
         let failure = isMock ? nil : authError
-        model.submit { if let failure { throw failure }; return apiJPEG }
+        model.submit(provider: provider) { if let failure { throw failure }; return apiJPEG }
     }
 
     func phaseChanged() {

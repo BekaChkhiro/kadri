@@ -38,9 +38,14 @@ public struct KadriClient: KadriAPI {
     }
 
     public func parts(keyframe: Data, instructions: String, context: SessionContext?) async throws -> PartsResult {
+        try await parts(keyframe: keyframe, instructions: instructions, context: context, provider: nil)
+    }
+
+    public func parts(keyframe: Data, instructions: String, context: SessionContext?, provider: AIProvider?) async throws -> PartsResult {
         var form = MultipartForm()
         form.addFile(name: "image", filename: "keyframe.jpg", contentType: "image/jpeg", data: keyframe)
         form.addField(name: "instructions", value: instructions)
+        if let provider { form.addField(name: "provider", value: provider.rawValue) }
         if let context {
             form.addField(name: "context", value: String(decoding: try JSONEncoder().encode(context), as: UTF8.self))
         }
@@ -57,11 +62,15 @@ public struct KadriClient: KadriAPI {
         steps(object: object, parts: parts, instructions: instructions, image: nil, context: context)
     }
 
+    public func steps(object: String, parts: [Part], instructions: String, context: SessionContext?, provider: AIProvider?) -> AsyncThrowingStream<StepEvent, Error> {
+        steps(object: object, parts: parts, instructions: instructions, image: nil, context: context, provider: provider)
+    }
+
     /// `POST /ai/steps`; `image` (JPEG) is optional and lets the model look at the frame again.
     public func steps(object: String, parts: [Part], instructions: String, image: Data?,
-                      context: SessionContext? = nil) -> AsyncThrowingStream<StepEvent, Error> {
+                      context: SessionContext? = nil, provider: AIProvider? = nil) -> AsyncThrowingStream<StepEvent, Error> {
         let body = StepsRequest(object: object, parts: parts, instructions: instructions,
-                                image: image?.base64EncodedString(), context: context)
+                                image: image?.base64EncodedString(), context: context, provider: provider)
         return AsyncThrowingStream { continuation in
             let task = Task {
                 do {
@@ -147,6 +156,7 @@ private struct PartsBody: Decodable {
 }
 
 private struct StepsRequest: Encodable {
+    // nil is omitted to preserve the default Astra request.
     let capabilities = ["needs_answer", "needs_measurement", "summary"]
     let object: String
     let parts: [Part]
@@ -154,6 +164,7 @@ private struct StepsRequest: Encodable {
     let image: String?
     /// Omitted when nil (synthesized `encodeIfPresent`).
     let context: SessionContext?
+    let provider: AIProvider?
 }
 
 /// `done` payload: `{unknownParts, usage: {input_tokens, output_tokens, output_tokens_details}, costUsd, latencyMs, firstStepMs, model, continuation}`.
