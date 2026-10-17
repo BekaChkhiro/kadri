@@ -13,12 +13,14 @@ struct ContentView: View {
         NavigationStack(path: $path) {
             ThemePreview()
                 .toolbar {
+                    NavigationLink("სესია", value: "flow")
                     NavigationLink("AR დებაგი", value: "ar")
                     NavigationLink("SAM bench", value: "sam")
                     NavigationLink("შესვლა", value: "signin")
                 }
                 .navigationDestination(for: String.self) { destination in
                     switch destination {
+                    case "flow": SessionFlowView()
                     case "sam": SegmentationBenchView()
                     case "signin": SignInView()
                     default: ARDebugView()

@@ -17,6 +17,7 @@
 		247480935EFF895F6D00FED6 /* SAMDecoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = ED5AEC7A48122B42DFDE0A46 /* SAMDecoder.mlpackage */; };
 		2627612ADB843E044E6BAAD0 /* SessionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8D3F09CEFA43CA7FA54609 /* SessionScreen.swift */; };
 		33E1C5E55081A15398759DE4 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF25B819A4307E63C96B93E /* AppEnvironment.swift */; };
+		34479821C4275CDA91184BF8 /* FlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C715792D0B8C0680D720655E /* FlowTests.swift */; };
 		37789446591D4FB3C98C7948 /* SessionSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BF5F143404E75DF39FED04 /* SessionSnapshotTests.swift */; };
 		387879FE5284A5F25A697DAF /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A07FD3A6DD38BBD488C4C97D /* Inter-Regular.ttf */; };
 		39CD30AE8466CBDF141C4E82 /* sink in Resources */ = {isa = PBXBuildFile; fileRef = 0BC5406AFC56533421633751 /* sink */; };
@@ -26,6 +27,7 @@
 		54F0522C6E62571ABF309D4D /* PartsRevealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5A4C245D4AD9B3997F740D /* PartsRevealView.swift */; };
 		5BE739AD9DDDF79EFA649F4E /* StepCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57C76ED6947A710AECBC58E /* StepCard.swift */; };
 		5C58BFDF78CA098BC961D969 /* ThemePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50FB119A97C98B1472B896A /* ThemePreview.swift */; };
+		62DAABB9EF80E005F447FD50 /* DevAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 870628B4A1D760DA2D9AE62A /* DevAuth.swift */; };
 		6D41E78BA702EF418494A06F /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAC9836272FB003780B518D6 /* Vision.framework */; };
 		729038930CAADDEFED6F3F3A /* SessionPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D624A7ABF50F3C99DA5D0ADF /* SessionPresentationTests.swift */; };
 		72B54F42CA10F4754BFF0864 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84CAC115ECF63FDB03CC26B8 /* Inter-SemiBold.ttf */; };
@@ -36,11 +38,13 @@
 		A00C7230F3B50860C993A69A /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 340983717E658514DD60A10B /* Inter-Medium.ttf */; };
 		A021D80B098F055B3EF12B0B /* PartAnchors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF5D91DF61E491034224AFC /* PartAnchors.swift */; };
 		A03AEF2EEC043EE877C1A3BA /* DescribeBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE6EB632B576D6674E9FB23 /* DescribeBar.swift */; };
+		A87959868343ACCF7F90C6DA /* ARBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA49D98CA7EF7D73C52CB82 /* ARBackgroundView.swift */; };
 		AA688D92A9EC9C0E84545F71 /* SessionPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73919932F619884CCB894798 /* SessionPreviews.swift */; };
 		AB7754BA7224CE2D04DD9517 /* MockKadriAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67531DAC3A9852818926C8F /* MockKadriAPI.swift */; };
 		ADE3F74A26977B000BF655B1 /* KadriTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4910DAFAB764B1ABC03FDC1 /* KadriTests.swift */; };
 		B0C7B9CD0B78ADD51ED872B9 /* RealityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 929743E4A7FCA4EBC2F888D7 /* RealityKit.framework */; };
 		B71D30C9823A5FF91D0A3DBC /* CoreML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45B6800C7C6BC6DFD3FD195E /* CoreML.framework */; };
+		BB51ED262643A1C54A8DAEA2 /* SessionFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFA803FB41D7E1F58FD4454 /* SessionFlowView.swift */; };
 		BD67D4209D70CC5DD7C4D768 /* ARSessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0284BC4ED2FA5475C1184EE9 /* ARSessionController.swift */; };
 		C2FCE5E1F6B2224395E6B37C /* GoogleAuthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20D3D496D409FAC6A6683F /* GoogleAuthController.swift */; };
 		C480FA751DE36F8B229476CC /* SegmentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79684495C6B552237CE68F89 /* SegmentationTests.swift */; };
@@ -57,6 +61,7 @@
 		EB7C06EFA22F9CDF9D49373F /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8094514DAF514E79C36189A3 /* GoogleSignInSwift */; };
 		EBD6116765DBDD0A5D03DE9A /* Fixtures in Resources */ = {isa = PBXBuildFile; fileRef = 6C871271F759749DF134EF13 /* Fixtures */; };
 		EC3A8417B62ECE05AFDFE721 /* ScanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F55593458662C90DBD1A8F7 /* ScanningView.swift */; };
+		ECA9DFF62560910E89F7276B /* LiveSessionDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE217724C0229633405F9226 /* LiveSessionDependencies.swift */; };
 		F32A4ED4B9A9A7AFD3146F19 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 00F79469EF86DA06585D9B45 /* GoogleSignIn */; };
 		F3A6721520CD41B44AAC06CB /* OFL-Inter.txt in Resources */ = {isa = PBXBuildFile; fileRef = EC47E7F74A9863587D696784 /* OFL-Inter.txt */; };
 		F4AAA1A1748F2F3BE3BF4AAD /* NotoSansGeorgian-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24F1F6DCECABEBE28315A574 /* NotoSansGeorgian-Bold.ttf */; };
@@ -105,10 +110,12 @@
 		81BAED9AF7E6D01CD2DF2D75 /* AuthControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthControllerTests.swift; sourceTree = "<group>"; };
 		8241E2AC9AA8786BAEE982AB /* SAMEncoder.mlpackage */ = {isa = PBXFileReference; path = SAMEncoder.mlpackage; sourceTree = "<group>"; };
 		84CAC115ECF63FDB03CC26B8 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
+		870628B4A1D760DA2D9AE62A /* DevAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevAuth.swift; sourceTree = "<group>"; };
 		929743E4A7FCA4EBC2F888D7 /* RealityKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealityKit.framework; path = System/Library/Frameworks/RealityKit.framework; sourceTree = SDKROOT; };
 		9523C8816C1C34AB888CF149 /* PartTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartTracker.swift; sourceTree = "<group>"; };
 		98849AE08F82095210AB2C08 /* Segmenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Segmenter.swift; sourceTree = "<group>"; };
 		9A050936A9DE4965679EB720 /* ARKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARKit.framework; path = System/Library/Frameworks/ARKit.framework; sourceTree = SDKROOT; };
+		9CA49D98CA7EF7D73C52CB82 /* ARBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARBackgroundView.swift; sourceTree = "<group>"; };
 		A00B16E38C3E8EC7B01B52E4 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		A07FD3A6DD38BBD488C4C97D /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
 		A57C76ED6947A710AECBC58E /* StepCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepCard.swift; sourceTree = "<group>"; };
@@ -118,9 +125,12 @@
 		B3D97CD203D0775D8B41AFD6 /* NotoSansGeorgian-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansGeorgian-Medium.ttf"; sourceTree = "<group>"; };
 		B46F495E5E37069B8DAB0CB7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B50FB119A97C98B1472B896A /* ThemePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreview.swift; sourceTree = "<group>"; };
+		BDFA803FB41D7E1F58FD4454 /* SessionFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionFlowView.swift; sourceTree = "<group>"; };
+		C715792D0B8C0680D720655E /* FlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowTests.swift; sourceTree = "<group>"; };
 		CA5147D5C2BA088C9E501729 /* Glass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Glass.swift; sourceTree = "<group>"; };
 		CAC9836272FB003780B518D6 /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
 		CE20D3D496D409FAC6A6683F /* GoogleAuthController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAuthController.swift; sourceTree = "<group>"; };
+		CE217724C0229633405F9226 /* LiveSessionDependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSessionDependencies.swift; sourceTree = "<group>"; };
 		D014C6514CCF1D0423555B9B /* KadriTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = KadriTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D624A7ABF50F3C99DA5D0ADF /* SessionPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPresentationTests.swift; sourceTree = "<group>"; };
 		D7CC50C123CF7B32458FEBD3 /* SegmentationBench.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentationBench.swift; sourceTree = "<group>"; };
@@ -181,6 +191,7 @@
 				26AE2588A54B31F04C7D0DF7 /* AR */,
 				FEBD1F9BFC33BA0433BD23BE /* Auth */,
 				EAF36B7FB440F8813F254796 /* Design */,
+				5E66F25C962EEED5CFFBC6FA /* Flow */,
 				FEB0235438BDD303D3660CCA /* Resources */,
 				ABF72A8CBFCE25F197A6D52A /* Segmentation */,
 				303718F3E800726231EC8190 /* Session */,
@@ -222,6 +233,7 @@
 				81BAED9AF7E6D01CD2DF2D75 /* AuthControllerTests.swift */,
 				07408C7B0A57FE1130BF5537 /* ContourTests.swift */,
 				6C871271F759749DF134EF13 /* Fixtures */,
+				C715792D0B8C0680D720655E /* FlowTests.swift */,
 				F4910DAFAB764B1ABC03FDC1 /* KadriTests.swift */,
 				79684495C6B552237CE68F89 /* SegmentationTests.swift */,
 				D624A7ABF50F3C99DA5D0ADF /* SessionPresentationTests.swift */,
@@ -237,6 +249,17 @@
 				0CF25B819A4307E63C96B93E /* AppEnvironment.swift */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		5E66F25C962EEED5CFFBC6FA /* Flow */ = {
+			isa = PBXGroup;
+			children = (
+				9CA49D98CA7EF7D73C52CB82 /* ARBackgroundView.swift */,
+				870628B4A1D760DA2D9AE62A /* DevAuth.swift */,
+				CE217724C0229633405F9226 /* LiveSessionDependencies.swift */,
+				BDFA803FB41D7E1F58FD4454 /* SessionFlowView.swift */,
+			);
+			path = Flow;
 			sourceTree = "<group>";
 		};
 		7FD44CA17D482AAAEE96ED16 /* Preview */ = {
@@ -465,6 +488,7 @@
 				3B5D76707165FAFED8C89035 /* ARControllerTests.swift in Sources */,
 				135D1D53AEE65DD36F40A63D /* AuthControllerTests.swift in Sources */,
 				EB68B7068C55D089DA53BC10 /* ContourTests.swift in Sources */,
+				34479821C4275CDA91184BF8 /* FlowTests.swift in Sources */,
 				ADE3F74A26977B000BF655B1 /* KadriTests.swift in Sources */,
 				C480FA751DE36F8B229476CC /* SegmentationTests.swift in Sources */,
 				729038930CAADDEFED6F3F3A /* SessionPresentationTests.swift in Sources */,
@@ -476,17 +500,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A87959868343ACCF7F90C6DA /* ARBackgroundView.swift in Sources */,
 				EA71BC0ADF6AB6242FFAB163 /* ARDebugView.swift in Sources */,
 				BD67D4209D70CC5DD7C4D768 /* ARSessionController.swift in Sources */,
 				33E1C5E55081A15398759DE4 /* AppEnvironment.swift in Sources */,
 				E130A68F5F393B8FEE871CA4 /* ContentView.swift in Sources */,
 				D87E546E4D732C3263D4271F /* ContourOverlay.swift in Sources */,
 				A03AEF2EEC043EE877C1A3BA /* DescribeBar.swift in Sources */,
+				62DAABB9EF80E005F447FD50 /* DevAuth.swift in Sources */,
 				DD8E70609914641BAA315643 /* GIDTokenProvider.swift in Sources */,
 				7E63B1D4CFDD42BE7DF2BD56 /* Glass.swift in Sources */,
 				C2FCE5E1F6B2224395E6B37C /* GoogleAuthController.swift in Sources */,
 				D6C97E8C50507362CE0C7B9F /* KadriApp.swift in Sources */,
 				D99995671C2CD82936EFFE51 /* KeyframePicker.swift in Sources */,
+				ECA9DFF62560910E89F7276B /* LiveSessionDependencies.swift in Sources */,
 				AB7754BA7224CE2D04DD9517 /* MockKadriAPI.swift in Sources */,
 				A021D80B098F055B3EF12B0B /* PartAnchors.swift in Sources */,
 				084494FD3093DD288DA33FE8 /* PartTracker.swift in Sources */,
@@ -498,6 +525,7 @@
 				CAC92803A5B7FCAF050E82EB /* SegmentationBench.swift in Sources */,
 				07DA81569ACB3C3CEF357B7A /* SegmentationBenchView.swift in Sources */,
 				EAC14CB5A08766FB56D8EF39 /* Segmenter.swift in Sources */,
+				BB51ED262643A1C54A8DAEA2 /* SessionFlowView.swift in Sources */,
 				89EF43D89D35C3880A687D29 /* SessionPresentation.swift in Sources */,
 				AA688D92A9EC9C0E84545F71 /* SessionPreviews.swift in Sources */,
 				2627612ADB843E044E6BAAD0 /* SessionScreen.swift in Sources */,
