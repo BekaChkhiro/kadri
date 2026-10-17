@@ -371,6 +371,9 @@ public final class SessionModel {
     private func fail(_ error: any Error, retryFrom point: RetryPoint, generation gen: Int) {
         guard gen == generation else { return }
         finishWork()
+        #if DEBUG
+        print("[Kadri] session failed at \(point): \(String(reflecting: error))")
+        #endif
         phase = .error(SessionError(error), retryFrom: point)
     }
 }

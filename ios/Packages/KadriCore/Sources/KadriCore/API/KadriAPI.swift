@@ -68,6 +68,9 @@ public struct KadriClient: KadriAPI {
                     try await streamSteps(body, into: continuation)
                     continuation.finish()
                 } catch {
+                    #if DEBUG
+                    print("[Kadri] /ai/steps failed: \(String(reflecting: error))")
+                    #endif
                     continuation.finish(throwing: SessionError(error))
                 }
             }
@@ -228,6 +231,9 @@ extension URLSession {
         do {
             (data, response) = try await self.data(for: request)
         } catch {
+            #if DEBUG
+            print("[Kadri] \(request.url?.path ?? "?") transport failed: \(String(reflecting: error))")
+            #endif
             throw SessionError(error)
         }
         let status = (response as? HTTPURLResponse)?.statusCode ?? 0
