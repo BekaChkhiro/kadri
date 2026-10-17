@@ -80,11 +80,23 @@ production-ისთვის იგივე `--env production`-ით (`kadri-
 | `withTimeout(ms, signal => …)` | `AbortController`; ვადის გასვლისას signal abort-დება და `504 ai_timeout` („პასუხი დროში ვერ მოვიდა, სცადეთ თავიდან“) |
 | `usageSummary(env, userId, days = 30)` | `{days, sessions, costUsd}` პარამეტრების ეკრანისთვის |
 
-ცვლადები (`wrangler.toml` `[vars]`, სამივე გარემოში): `DAILY_SESSION_LIMIT` (default `20`), `AI_TIMEOUT_MS` (default `60000`).
+ცვლადები (`wrangler.toml` `[vars]`, სამივე გარემოში; კოდშიც იგივე default-ებია):
+`DAILY_SESSION_LIMIT` — `20`; `AI_TIMEOUT_MS` — `60000` (მთელი მოთხოვნა/stream, ორივე ცდის ჩათვლით);
+`AI_ATTEMPT_TIMEOUT_MS` — `20000` (parts-ის თითო ცდა);
+`AI_FIRST_STEP_TIMEOUT_MS` — `25000` (steps-ის თითო ცდა პირველ ნაბიჯამდე).
+Parts-ის ორი ცდა ჯამში 40 წამია, ძველი iOS-ის 45-წამიან scan timeout-ზე ნაკლები;
+steps-ის ორი ცდის პირველი ნაბიჯის ბიუჯეტი 50 წამია, კლიენტის 60-წამიან timeout-ზე ნაკლები.
+პირველი ნაბიჯის შემდეგ 25-წამიანი ვადა ითიშება, მთლიანი stream-ის 60-წამიანი ვადა რჩება.
+ეს AI-ის დროის ბიუჯეტებია; ქსელსა და usage-ის ჩაწერას დარჩენილი დრო ეთმობა.
 სესიად ითვლება ყოველი `parts` ჩანაწერი, მათ შორის `error`/`timeout` — ფასიანი მოთხოვნა მაინც დაიხარჯა.
 
-> **⚠️ ფასიან AI მოთხოვნაზე retry არ ხდება — არც `withTimeout`-ში, არც სერვერზე სხვაგან.** Timeout-ის ან შეცდომის
-> შემდეგ კლიენტი (მომხმარებელი) წყვეტს, სცადოს თუ არა თავიდან; ყოველი ცდა ცალკე ჩაიწერება `usage`-ში.
+> **⚠️ Guarded AI route-ებში ზუსტად ერთი ავტომატური retry ხდება მხოლოდ `ai_invalid_response`-ზე
+> ან provider-ის timeout-ზე (`deadline.timedOut()`).** მეორე ცდის ჩავარდნა აღარ მეორდება.
+> Upstream 4xx/5xx, `ai_incomplete`, კლიენტის abort და მთლიანი მოთხოვნის ვადის გასვლა არ მეორდება.
+> Steps-ზე retry დასაშვებია მხოლოდ პირველი `step` event-ის გაგზავნამდე.
+> ყოველი ფასიანი ცდა ცალკე `usage` row-ია: პირველი `error|timeout`, მეორე `ok|error|timeout`.
+> Parts-ის ორივე row დღიურ ლიმიტშიც ითვლება; ლიმიტი შემოწმდება მოთხოვნის დასაწყისში.
+> Retry-ისას იწერება ერთი ხაზი: `ai/parts retry after <code>` ან `ai/steps retry after <code>`.
 
 `assertDailyLimit` აგდებს `LimitError`-ს (`ApiError` + `headers`); `Retry-After` პასუხამდე რომ მივიდეს, router-მა
 `errorResponse(err, err.headers)` უნდა გამოიძახოს `LimitError`-ისთვის.
@@ -136,14 +148,19 @@ Key-ები არასდროს git-ში — მხოლოდ `.dev.v
 `src/routes/ai.ts` → `aiRoutes()` / `mountAiRoutes(router)`; ლოგიკა `src/ai/`-შია. პრომპტები და strict
 სქემები `experiments/som-test/variant_c.py`-დან სიტყვასიტყვითაა გადმოტანილი (ჩაწერილ Python მოთხოვნებს
 ბაიტ-ბაიტ ემთხვევა) — ტექსტი ახალი ექსპერიმენტის გარეშე არ შეცვალო. მოდელი `AI_MODEL` (default
-`gpt-6-astra`), effort `AI_EFFORT` (default `low`; `minimal` არ მუშაობს). ფასიან მოთხოვნაზე retry არ ხდება.
+`gpt-6-astra`), effort `AI_EFFORT` (default `low`; `minimal` არ მუშაობს). Guarded route-ებში არის ზემოთ აღწერილი ერთი retry მხოლოდ `ai_invalid_response`-სა და provider timeout-ზე.
 `AI_PROVIDER=hybrid` ჯერ მხოლოდ ინტერფეისია და 501-ს აბრუნებს.
 
 `src/index.ts` რთავს `mountGuardedAiRoutes`-ს: ორივე route-ს სჭირდება `Authorization: Bearer <session>` (401);
-`/ai/parts` ამოწმებს დღიურ ლიმიტს (429 + `Retry-After`, router `LimitError`-ის headers-ს ატარებს), `AI_TIMEOUT_MS` → 504
-`ai_timeout`, ყოველი ფასიანი ცდა (`ok|error|timeout`) `usage`-ში იწერება; `/ai/steps` — ლიმიტის გარეშე, timeout მთელ
-stream-ზე (`event: error` `ai_timeout`), usage `ctx.waitUntil`-ით stream-ის ბოლოს. ორივე იღებს არასავალდებულო `sessionId`-ს.
-`mountAiRoutes` (დაუცველი) მხოლოდ ტესტებისთვისაა.
+`/ai/parts` ამოწმებს დღიურ ლიმიტს (429 + `Retry-After`, router `LimitError`-ის headers-ს ატარებს).
+Retry route-ის დონეზეა, provider ადგენს თითო ცდის ვადას: parts — `AI_ATTEMPT_TIMEOUT_MS`,
+steps პირველ ნაბიჯამდე — `AI_FIRST_STEP_TIMEOUT_MS`; მთლიანი მოთხოვნა/stream — `AI_TIMEOUT_MS`.
+ამოწურული parts ცდები აბრუნებს 504 `ai_timeout`-ს, steps — `event: error` `ai_timeout`-ს.
+ყოველი ფასიანი ცდა (`ok|error|timeout`) `usage`-ში ცალკე იწერება;
+steps-ის ჩაწერა `ctx.waitUntil`-ით დაცულია და შემდეგი ცდის დაწყებამდე სრულდება.
+ორივე იღებს არასავალდებულო `sessionId`-ს.
+`mountAiRoutes` (დაუცველი) მხოლოდ ტესტებისა და სკრიპტებისთვისაა: ქცევა უცვლელია,
+retry/auth/usage არ აქვს და provider-ის ძველი 60-წამიანი ვადა რჩება.
 
 - `POST /ai/parts` — multipart (`image` JPEG ფაილი + `instructions`) ან JSON `{image: base64, instructions}`;
   JPEG, დიდი გვერდი ≤768px, ≤2 MB. `instructions` — ტექსტი ან `[{title, text}]`. პასუხი:

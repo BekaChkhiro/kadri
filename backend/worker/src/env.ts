@@ -17,7 +17,7 @@ export interface Env {
   GOOGLE_CLIENT_IDS?: string;
   /** Started sessions per user per UTC day; default 20 (src/limits.ts). */
   DAILY_SESSION_LIMIT?: string;
-  /** Per AI request timeout in ms; default 60000 (src/limits.ts). */
+  /** Total guarded AI request/stream timeout in ms; default 60000 (src/limits.ts). */
   AI_TIMEOUT_MS?: string;
   /** Parts deadline per attempt; default 20000. */
   AI_ATTEMPT_TIMEOUT_MS?: string;

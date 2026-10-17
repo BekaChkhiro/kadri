@@ -1,6 +1,6 @@
 /**
  * OpenAI Responses API payloads, as variant_c.request_stage builds them.
- * No retries: every request is paid.
+ * Single upstream call: guarded AI routes own the eligible retry and log each paid attempt.
  */
 import type { JsonSchema } from "./schema";
 import type { Usage } from "./pricing";

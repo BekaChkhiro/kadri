@@ -131,7 +131,7 @@ export async function usageSummary(env: Env, userId: string, days = 30, now = ne
 
 /**
  * Runs `run` with an AbortSignal that fires after `ms`; on timeout rejects with 504 `ai_timeout`.
- * Never retries — AI requests are paid, so the client decides whether to try again.
+ * This helper does not retry; guarded AI routes own the single eligible retry and per-attempt usage.
  */
 export async function withTimeout<T>(ms: number, run: (signal: AbortSignal) => Promise<T>): Promise<T> {
   const controller = new AbortController();
