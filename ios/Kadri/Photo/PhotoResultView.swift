@@ -16,6 +16,8 @@ struct PhotoResultView: View {
     var previous: () -> Void
     var next: () -> Void
     var finish: () -> Void
+    var completed = false
+    var newPhoto: () -> Void = {}
 
     var body: some View {
         // Inset controls belong to a separate layer: they must never resize the photo coordinate space.
@@ -43,9 +45,17 @@ struct PhotoResultView: View {
             }
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 ScrollView {
-                    PhotoStepCard(step: step, index: index, count: count, streaming: streaming,
-                                  caption: status ?? subtitle, previous: previous, next: next, finish: finish)
-                        .padding(.horizontal, 12).padding(.vertical, 8)
+                    if completed {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("შესრულდა").font(.kadri(21, weight: .semibold))
+                            Text("ყველა ნაბიჯი დასრულებულია.").font(.kadri(14.5))
+                            Button("ახალი ფოტო", action: newPhoto).buttonStyle(SessionButtonStyle())
+                        }.padding(16).glass().padding(.horizontal, 12).padding(.vertical, 8)
+                    } else {
+                        PhotoStepCard(step: step, index: index, count: count, streaming: streaming,
+                                      caption: status ?? subtitle, previous: previous, next: next, finish: finish)
+                            .padding(.horizontal, 12).padding(.vertical, 8)
+                    }
                 }
                 .scrollBounceBehavior(.basedOnSize)
                 .fixedSize(horizontal: false, vertical: true)
