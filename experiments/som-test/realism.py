@@ -254,9 +254,17 @@ def validate_adapter_config(destination, variant, model, source, truth, device, 
     atomic_json(path, config)
 
 
+def validate_model_effort(model, effort):
+    # Confirmed by the campaign's diagnostic count HTTP 400 (2026-10-17).
+    # Do not infer compatibility for other model IDs or effort values.
+    if model == 'gpt-6-astra' and effort == 'minimal':
+        raise ValueError('gpt-6-astra does not support reasoning.effort=minimal; use low or another supported effort')
+
+
 def run_b_adapter(client, model, source, truth, destination, device, budget, rates, process=None):
     """Token-counted preflight and conservative Responses B adapter."""
     import copy
+    validate_model_effort(model, os.getenv('REASONING_EFFORT', 'high'))
     from variant_b import process_run
     if rates is None or len(rates) != 2 or any(not math.isfinite(r) or r <= 0 for r in rates):
         raise ValueError('Explicit conservative input/output USD per million required')
@@ -283,6 +291,7 @@ def run_b_adapter(client, model, source, truth, destination, device, budget, rat
 
             kwargs = copy.deepcopy(kwargs)
             call_model = kwargs.get('model', model)
+            validate_model_effort(call_model, (kwargs.get('reasoning') or {}).get('effort'))
             kwargs['truncation'] = 'disabled'
             count_payload = {
                 'model': call_model,
@@ -586,6 +595,7 @@ class CResumeClientWrapper:
 def run_c_adapter(client, model, source, truth, destination, device, budget, rates,
                   effort='minimal', max_side=768, seed=0, resume=False, process=None, sam=None):
     """Run variant C with counted preflight on both stages, shared budget, partial resume, and timings."""
+    validate_model_effort(model, effort)
     if rates is None or len(rates) != 2 or any(not math.isfinite(r) or r <= 0 for r in rates):
         raise ValueError('Explicit conservative input/output USD per million required')
     destination = Path(destination)

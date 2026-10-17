@@ -189,6 +189,43 @@ class RealismTests(unittest.TestCase):
             self.assertEqual([r['state'] for k, r in rows.items() if k.endswith(':gen')], ['reserved'])
             self.assertEqual(client.responses.create.call_count, 1)
 
+    def test_astra_minimal_rejected_before_process_ledger_or_client(self):
+        for variant in ('b', 'c'):
+            with self.subTest(variant=variant), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                client, budget, process = Mock(), Mock(), Mock()
+                args = (client, 'gpt-6-astra', root / 'img', {}, root / 'run', 'cpu', budget, (10, 50))
+                with patch.dict('os.environ', {'REASONING_EFFORT': 'minimal'}):
+                    with self.assertRaisesRegex(ValueError, 'reasoning.effort=minimal'):
+                        if variant == 'b':
+                            run_b_adapter(*args, process=process)
+                        else:
+                            run_c_adapter(*args, effort='minimal', process=process)
+                self.assertEqual(client.mock_calls, [])
+                self.assertEqual(budget.mock_calls, [])
+                process.assert_not_called()
+                self.assertFalse((root / 'run').exists())
+
+    def test_model_effort_guard_only_blocks_confirmed_pair(self):
+        from realism import validate_model_effort
+        for model, effort in [('gpt-6-astra', value) for value in ('low', 'medium', 'high', 'xhigh', 'max', None)] + [
+                ('unknown-model', 'minimal'), ('gpt-6-astra-future', 'minimal')]:
+            with self.subTest(model=model, effort=effort):
+                validate_model_effort(model, effort)
+
+    def test_b_effective_request_minimal_rejected_before_count_or_reservation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            client = Mock()
+            budget = Budget(root / 'ledger')
+            with patch.object(budget, 'change') as reserve, patch.dict('os.environ', {'REASONING_EFFORT': 'low'}):
+                with self.assertRaisesRegex(ValueError, 'reasoning.effort=minimal'):
+                    run_b_adapter(client, 'gpt-6-astra', root / 'img', {}, root / 'run', 'cpu', budget, (10, 50),
+                        lambda c, *a: c.responses.create(model='gpt-6-astra', reasoning={'effort': 'minimal'}, input=[]))
+                reserve.assert_not_called()
+            client.responses.input_tokens.count.assert_not_called()
+            client.responses.create.assert_not_called()
+
     def test_adapter_settles_and_unknown_price_blocks(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -388,7 +425,7 @@ class RealismTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             client, args, sam = self.c_fixture(root)
-            run_c_adapter(*args, sam=sam)
+            run_c_adapter(*args, effort='low', sam=sam)
             self.assertEqual(client.responses.create.call_count, 2)
             self.assertEqual(client.responses.input_tokens.count.call_count, 2)
             for stage, count_call, create_call in zip(('parts', 'steps'), client.responses.input_tokens.count.call_args_list,
@@ -404,7 +441,7 @@ class RealismTests(unittest.TestCase):
             self.assertAlmostEqual(sum(r['usd'] for r in rows.values()), .05)
             atomic_json(root / 'run/complete.json', {'complete': True})
             metrics = (root / 'run/metrics.json').read_bytes()
-            run_c_adapter(*args, sam=sam, resume=True)
+            run_c_adapter(*args, effort='low', sam=sam, resume=True)
             self.assertEqual(client.responses.create.call_count, 2)
             self.assertEqual((root / 'run/metrics.json').read_bytes(), metrics)
             for field, value in [('model', 'other'), ('device', 'mps'), ('rates', (11, 50)),
@@ -412,13 +449,13 @@ class RealismTests(unittest.TestCase):
                 changed = list(args)
                 changed[{'model': 1, 'device': 5, 'rates': 7, 'budget': 6}[field]] = value
                 with self.subTest(field=field), self.assertRaises(ValueError):
-                    run_c_adapter(*changed, sam=sam, resume=True)
+                    run_c_adapter(*changed, effort='low', sam=sam, resume=True)
             for kw in ({'effort': 'high'}, {'max_side': 512}, {'seed': 99}):
                 with self.assertRaises(ValueError):
-                    run_c_adapter(*args, sam=sam, resume=True, **kw)
+                    run_c_adapter(*args, sam=sam, resume=True, **({'effort': 'low'} | kw))
             Image.new('RGB', (100, 100), 'black').save(args[2])
             with self.assertRaises(ValueError):
-                run_c_adapter(*args, sam=sam, resume=True)
+                run_c_adapter(*args, effort='low', sam=sam, resume=True)
 
     def test_actual_c_partial_resume_preserves_stage_metrics_even_on_failure(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -426,14 +463,14 @@ class RealismTests(unittest.TestCase):
             client, args, sam = self.c_fixture(root)
             with patch('variant_c.segment_boxes', side_effect=RuntimeError('SAM unavailable')):
                 with self.assertRaises(RuntimeError):
-                    run_c_adapter(*args, sam=sam)
+                    run_c_adapter(*args, effort='low', sam=sam)
             path = root / 'run/parts_request/metrics.json'
             original = path.read_bytes()
             with patch('variant_c.segment_boxes', side_effect=RuntimeError('SAM unavailable')):
                 with self.assertRaises(RuntimeError):
-                    run_c_adapter(*args, sam=sam, resume=True)
+                    run_c_adapter(*args, effort='low', sam=sam, resume=True)
             self.assertEqual(path.read_bytes(), original)
-            run_c_adapter(*args, sam=sam, resume=True)
+            run_c_adapter(*args, effort='low', sam=sam, resume=True)
             self.assertEqual(path.read_bytes(), original)
             self.assertEqual(client.responses.create.call_count, 2)
             self.assertEqual(client.responses.input_tokens.count.call_count, 2)
@@ -448,12 +485,12 @@ class RealismTests(unittest.TestCase):
                 root = Path(tmp)
                 client, args, sam = self.c_fixture(root, failure)
                 with self.assertRaises((RuntimeError, ValueError)):
-                    run_c_adapter(*args, sam=sam)
+                    run_c_adapter(*args, effort='low', sam=sam)
                 key = hashlib.sha256(str((root / 'run/steps_request').resolve()).encode()).hexdigest() + ':gen'
                 rows = json.loads((root / 'ledger').read_text())['requests']
                 self.assertEqual(rows[key]['state'], state)
                 with self.assertRaises((RuntimeError, ValueError)):
-                    run_c_adapter(*args, sam=sam, resume=True)
+                    run_c_adapter(*args, effort='low', sam=sam, resume=True)
                 self.assertEqual(client.responses.create.call_count, 2)
                 self.assertEqual(client.responses.input_tokens.count.call_count, 2)
 
@@ -463,10 +500,10 @@ class RealismTests(unittest.TestCase):
             client, args, sam = self.c_fixture(root)
             with patch('variant_c.segment_boxes', side_effect=RuntimeError):
                 with self.assertRaises(RuntimeError):
-                    run_c_adapter(*args, sam=sam)
+                    run_c_adapter(*args, effort='low', sam=sam)
             atomic_json(root / 'run/parts_request/request_hash.json', {'request_hash': 'changed'})
             with self.assertRaises(ValueError):
-                run_c_adapter(*args, sam=sam, resume=True)
+                run_c_adapter(*args, effort='low', sam=sam, resume=True)
             self.assertEqual(client.responses.create.call_count, 1)
 
     def test_invalid_counts_for_b_and_c(self):
@@ -478,7 +515,7 @@ class RealismTests(unittest.TestCase):
                     client.responses.input_tokens.count.return_value = SimpleNamespace(input_tokens=value)
                     with self.assertRaises(ValueError):
                         if variant == 'c':
-                            run_c_adapter(*args, sam=sam)
+                            run_c_adapter(*args, effort='low', sam=sam)
                         else:
                             run_b_adapter(*args, process=lambda c, *a: c.responses.create(model='gpt-6-astra', input=[]))
                     client.responses.create.assert_not_called()
@@ -544,12 +581,12 @@ class RealismTests(unittest.TestCase):
             client, args, sam = self.c_fixture(root)
             args = list(args)
             args[4] = root / 'results/sink/photo/original/run_1'
-            run_c_adapter(*args, sam=sam)
+            run_c_adapter(*args, effort='low', sam=sam)
             paths = [args[4] / f'{stage}_request/metrics.json' for stage in ('parts', 'steps')]
             original = [p.read_bytes() for p in paths]
             atomic_json(args[4].parent / 'transform.json', {'source_to_frame': np.eye(3).tolist(), 'size': [100, 100]})
             self.assertEqual(summarize(root / 'results')['first_box_full_response_seconds']['n'], 1)
-            run_c_adapter(*args, sam=sam, resume=True)
+            run_c_adapter(*args, effort='low', sam=sam, resume=True)
             self.assertEqual([p.read_bytes() for p in paths], original)
             self.assertEqual(client.responses.create.call_count, 2)
             self.assertEqual(client.responses.input_tokens.count.call_count, 2)

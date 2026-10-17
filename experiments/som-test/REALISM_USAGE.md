@@ -5,7 +5,7 @@
 ```sh
 cd experiments/som-test
 uv run python run_realism.py --dry-run --scenes sink gym car
-uv run python run_realism.py --dry-run --variant c --effort minimal --max-side 768 --scenes sink
+uv run python run_realism.py --dry-run --variant c --effort low --max-side 768 --scenes sink
 uv run python run_realism.py --dry-run --real real --scenes sink
 uv run python run_realism.py --offline-summary
 uv run python -m unittest discover -s tests -v
@@ -41,3 +41,5 @@ Count/generation-ის გამონაკლისი დამატებ�
 გამონაკლისი უცვლელად გადაიცემა გამომძახებელს; wrapper retry-ს არ აკეთებს, runner-ის SDK client უკვე `max_retries=0`-ით იქმნება. შეცდომა რეზერვაციას არ ათავისუფლებს, მათ შორის HTTP 400 და უცნობი network შედეგი. იგივე ledger/run-ის ხელახალი გაგზავნა დარჩენილი reservation-ით იბლოკება; diagnostic count-ს ცალკე, ახალი reservation სჭირდება. მოცემულ ცვლილებაზე live API გამოძახება არ შესრულებულა და კამპანიის ledger არ შეცვლილა.
 
 2026-10-17 read-only გამოძიება: პროექტის lock-ით დაყენებულ `openai==2.54.0`-ში `resources/responses/input_tokens.py` შეიცავს `POST /responses/input_tokens`-ს; signature იღებს `reasoning`, `text`, `truncation`. `types/responses/input_token_count_params.py`-ის `Text.format` არის `ResponseFormatTextConfigParam` (schema მხარდაჭერილი კონტრაქტია). საერთო Reasoning ტიპი შეიცავს `minimal`-ს, თუმცა ყველა მოდელი ყველა მნიშვნელობას არ იღებს. [ოფიციალური count reference](https://developers.openai.com/api/reference/python/resources/responses/subresources/input_tokens/methods/count) ასევე აღწერს ამ ველებს და Astra-ს მაგალითს; `truncation` მონიშნულია deprecated-ად, მაგრამ `disabled` აღწერილია default-ად, ხოლო context overflow — შესაძლო 400-ად. ამიტომ SDK route-ის არარსებობა არ დასტურდება. კონკრეტული Astra/minimal/schema კომბინაციის server მხარდაჭერა, payload-ის ვალიდაცია და context overflow მხოლოდ შესაძლო მიზეზებია; დაკარგული error body ზუსტი მიზეზის დასკვნის საშუალებას არ იძლევა. payload fallback და მოდელის ცვლილება არ დამატებულა. საჭიროების შემთხვევაში orchestrator-მა უნდა გაუშვას ერთი კონტროლირებული diagnostic count ახალი reservation-ით და შეამოწმოს სანიტიზებული artifact; generation არ არის საჭირო მიზეზის დასადგენად.
+
+შემდგომი live მტკიცებულება (2026-10-17, orchestrator-ის კონტროლირებული diagnostic count): HTTP 400-მა მიუთითა `reasoning.effort` — `gpt-6-astra` არ იღებს `minimal`-ს; პასუხში ჩამოთვლილია `low`, `medium`, `high`, `xhigh`, `max`. ზემოთ აღწერილი გაურკვევლობა ამ კონკრეტული წყვილისთვის მოხსნილია. B/C adapters ახლა `gpt-6-astra` + `minimal`-ს `ValueError`-ით უარყოფს process/count გამოძახებამდე და ledger-ის გამოყენებამდე; B ამოწმებს გარემოს `REASONING_EFFORT`-ს და ეფექტურ request payload-საც. სხვა მოდელების მხარდაჭერა არ გამოიცნობა. CLI/default უცვლელია: Astra-ს ცდისთვის აშკარად მიუთითეთ `--effort low`, როგორც ზემოთ მოცემულ მაგალითში. ეს მუშაკი API-ს არ იძახებს; live evidence მიღებულია orchestrator-ის ანგარიშიდან.
