@@ -1,0 +1,101 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ios:
+    name: iOS (KadriCore + Kadri tests)
+    runs-on: macos-26
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select newest Xcode 26.x
+        run: |
+          XCODE_APP=$(find /Applications -maxdepth 1 -name 'Xcode_26*.app' | sort -V | tail -n 1)
+          if [ -z "$XCODE_APP" ]; then
+            echo "Xcode 26.x not found, falling back to image default"
+          else
+            sudo xcode-select -s "$XCODE_APP/Contents/Developer"
+          fi
+          xcodebuild -version
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: ios
+        run: xcodegen generate
+
+      - name: KadriCore swift test
+        working-directory: ios/Packages/KadriCore
+        run: swift test
+
+      - name: Pick iPhone simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available --json | python3 -c '
+          import json, sys
+          data = json.load(sys.stdin)["devices"]
+          def ver(rt):
+              tail = rt.rsplit(".", 1)[-1]
+              if not tail.startswith("iOS-"):
+                  return None
+              return tuple(int(p) for p in tail[4:].split("-"))
+          rts = sorted((r for r in data if ver(r)), key=ver, reverse=True)
+          for rt in rts:
+              for d in data[rt]:
+                  if d.get("isAvailable") and d["name"].startswith("iPhone"):
+                      print(d["udid"])
+                      print(rt, d["name"], file=sys.stderr)
+                      sys.exit(0)
+          sys.exit("no available iPhone simulator")
+          ')
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+
+      - name: Cache DerivedData
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: deriveddata-${{ runner.os }}-${{ hashFiles('ios/project.yml', 'ios/Packages/KadriCore/Package.swift') }}
+          restore-keys: deriveddata-${{ runner.os }}-
+
+      - name: xcodebuild test
+        run: |
+          xcodebuild \
+            -project ios/Kadri.xcodeproj \
+            -scheme Kadri \
+            -destination "platform=iOS Simulator,id=${{ steps.sim.outputs.udid }}" \
+            -skipPackagePluginValidation \
+            CODE_SIGNING_ALLOWED=NO \
+            test
+
+  worker:
+    name: Worker (typecheck + vitest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend/worker
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: backend/worker/package-lock.json
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
