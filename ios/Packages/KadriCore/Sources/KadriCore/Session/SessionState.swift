@@ -15,6 +15,25 @@ public enum SessionPhase: Equatable, Sendable {
     case error(SessionError, retryFrom: RetryPoint)
 }
 
+/// One finished photo of a multi-photo session.
+public struct SessionRound: Equatable, Sendable {
+    /// 1-based.
+    public let number: Int
+    /// The prompt the user followed to take this photo; nil for the first one.
+    public let photoPrompt: String?
+    public let result: PartsResult
+    public let steps: [Step]
+    public let continuation: StepsContinuation
+
+    public init(number: Int, photoPrompt: String?, result: PartsResult, steps: [Step], continuation: StepsContinuation) {
+        self.number = number
+        self.photoPrompt = photoPrompt
+        self.result = result
+        self.steps = steps
+        self.continuation = continuation
+    }
+}
+
 /// The stage `SessionModel.retry()` restarts.
 public enum RetryPoint: Equatable, Sendable {
     /// Capture a new keyframe and request parts again.

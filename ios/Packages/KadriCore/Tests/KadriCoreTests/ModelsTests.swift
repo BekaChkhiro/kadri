@@ -49,4 +49,42 @@ final class ModelsTests: XCTestCase {
         XCTAssertNil(empty.icon)
         XCTAssertNil(empty.toolItems)
     }
+
+    // MARK: multi-photo
+
+    private func continuation(_ json: String) throws -> StepsContinuation {
+        try JSONDecoder().decode(StepsContinuation.self, from: Data(json.utf8))
+    }
+
+    func testContinuationDecoding() throws {
+        XCTAssertEqual(try continuation(#"{"kind":"complete"}"#), .complete)
+        XCTAssertEqual(try continuation(#"{"kind":"complete","prompt":null,"reason":null}"#), .complete)
+        XCTAssertEqual(try continuation(#"{"kind":"needs_photo","prompt":"გადაიღე სიფონის შიგნითა მხარე","reason":"არ ჩანს."}"#),
+                       .needsPhoto(prompt: "გადაიღე სიფონის შიგნითა მხარე", reason: "არ ჩანს."))
+        XCTAssertEqual(try continuation(#"{"kind":"needs_photo","prompt":"გადაიღე"}"#), .needsPhoto(prompt: "გადაიღე", reason: ""))
+        XCTAssertEqual(try continuation(#"{"kind":"needs_video","prompt":"x","reason":"y"}"#), .complete, "unknown kind")
+        XCTAssertEqual(try continuation(#"{"kind":"needs_photo","prompt":"  ","reason":"y"}"#), .complete, "blank prompt")
+        XCTAssertEqual(try continuation(#"{"kind":"needs_photo","prompt":null}"#), .complete)
+        XCTAssertEqual(try continuation(#"{}"#), .complete)
+        XCTAssertEqual(try continuation(#""needs_photo""#), .complete, "not an object")
+    }
+
+    func testSessionContextEncodesWireNames() throws {
+        let context = SessionContext(round: 2, photoPrompt: "გადაიღე", doneSteps: ["დაკეტე წყალი", "ჩადგი ვედრო"], previousObject: "ნიჟარის სიფონი")
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(context)) as? [String: Any])
+        XCTAssertEqual(Set(json.keys), ["round", "photoPrompt", "doneSteps", "previousObject"])
+        XCTAssertEqual(json["round"] as? Int, 2)
+        XCTAssertEqual(json["photoPrompt"] as? String, "გადაიღე")
+        XCTAssertEqual(json["doneSteps"] as? [String], ["დაკეტე წყალი", "ჩადგი ვედრო"])
+        XCTAssertEqual(json["previousObject"] as? String, "ნიჟარის სიფონი")
+        XCTAssertEqual(try JSONDecoder().decode(SessionContext.self, from: JSONEncoder().encode(context)), context)
+
+        let bare = SessionContext(round: 3, photoPrompt: "p", doneSteps: [])
+        let bareJSON = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(bare)) as? [String: Any])
+        XCTAssertNil(bareJSON["previousObject"], "nil previousObject is omitted")
+    }
+
+    func testDoneEventDefaultsToComplete() {
+        XCTAssertEqual(StepEvent.done(nil), .done(nil, continuation: .complete))
+    }
 }

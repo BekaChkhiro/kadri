@@ -37,10 +37,13 @@ public struct KadriClient: KadriAPI {
         return try decodeResponse(HealthInfo.self, from: data)
     }
 
-    public func parts(keyframe: Data, instructions: String) async throws -> PartsResult {
+    public func parts(keyframe: Data, instructions: String, context: SessionContext?) async throws -> PartsResult {
         var form = MultipartForm()
         form.addFile(name: "image", filename: "keyframe.jpg", contentType: "image/jpeg", data: keyframe)
         form.addField(name: "instructions", value: instructions)
+        if let context {
+            form.addField(name: "context", value: String(decoding: try JSONEncoder().encode(context), as: UTF8.self))
+        }
 
         var request = try await authorizedRequest("/ai/parts")
         request.setValue(form.contentType, forHTTPHeaderField: "Content-Type")
@@ -50,13 +53,15 @@ public struct KadriClient: KadriAPI {
         return PartsResult(object: body.object, parts: body.parts, latencyMs: body.latencyMs.map { Int($0.rounded()) })
     }
 
-    public func steps(object: String, parts: [Part], instructions: String) -> AsyncThrowingStream<StepEvent, Error> {
-        steps(object: object, parts: parts, instructions: instructions, image: nil)
+    public func steps(object: String, parts: [Part], instructions: String, context: SessionContext?) -> AsyncThrowingStream<StepEvent, Error> {
+        steps(object: object, parts: parts, instructions: instructions, image: nil, context: context)
     }
 
     /// `POST /ai/steps`; `image` (JPEG) is optional and lets the model look at the frame again.
-    public func steps(object: String, parts: [Part], instructions: String, image: Data?) -> AsyncThrowingStream<StepEvent, Error> {
-        let body = StepsRequest(object: object, parts: parts, instructions: instructions, image: image?.base64EncodedString())
+    public func steps(object: String, parts: [Part], instructions: String, image: Data?,
+                      context: SessionContext? = nil) -> AsyncThrowingStream<StepEvent, Error> {
+        let body = StepsRequest(object: object, parts: parts, instructions: instructions,
+                                image: image?.base64EncodedString(), context: context)
         return AsyncThrowingStream { continuation in
             let task = Task {
                 do {
@@ -103,7 +108,7 @@ public struct KadriClient: KadriAPI {
             return false
         case "done":
             let done = try? JSONDecoder().decode(DoneBody.self, from: data)
-            continuation.yield(.done(done?.stepsUsage))
+            continuation.yield(.done(done?.stepsUsage, continuation: done?.continuation ?? .complete))
             return true
         case "error":
             throw Self.streamError(data)
@@ -143,9 +148,11 @@ private struct StepsRequest: Encodable {
     let parts: [Part]
     let instructions: String
     let image: String?
+    /// Omitted when nil (synthesized `encodeIfPresent`).
+    let context: SessionContext?
 }
 
-/// `done` payload: `{unknownParts, usage: {input_tokens, output_tokens, output_tokens_details}, costUsd, latencyMs, firstStepMs, model}`.
+/// `done` payload: `{unknownParts, usage: {input_tokens, output_tokens, output_tokens_details}, costUsd, latencyMs, firstStepMs, model, continuation}`.
 private struct DoneBody: Decodable {
     struct Usage: Decodable {
         struct OutputDetails: Decodable {
@@ -158,6 +165,8 @@ private struct DoneBody: Decodable {
     let usage: Usage?
     let costUsd: Double?
     let latencyMs: Double?
+    /// Missing on Workers older than multi-photo sessions.
+    let continuation: StepsContinuation?
 
     var stepsUsage: StepsUsage {
         StepsUsage(

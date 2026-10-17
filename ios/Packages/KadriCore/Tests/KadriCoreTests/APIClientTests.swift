@@ -44,6 +44,23 @@ final class APIClientTests: XCTestCase {
         XCTAssertTrue(text.contains("name=\"instructions\"\r\n\r\nსიფონი ჟონავს\r\n"))
         XCTAssertTrue(text.hasSuffix("--\(boundary)--\r\n"))
         XCTAssertNotNil(body.range(of: jpeg))
+        XCTAssertFalse(text.contains("name=\"context\""), "round 1 sends no context")
+    }
+
+    func testPartsSendsContextAsJSONField() async throws {
+        let seen = Locked<Data?>(nil)
+        let api = client { _, body in
+            seen.value = body
+            return .json(200, #"{"object":"მოხსნილი სიფონი","parts":[]}"#)
+        }
+        let context = SessionContext(round: 2, photoPrompt: "გადაიღე შიგნითა მხარე", doneSteps: ["დაკეტე წყალი"], previousObject: "ნიჟარის სიფონი")
+        _ = try await api.parts(keyframe: jpeg, instructions: "ჟონავს", context: context)
+
+        let text = String(decoding: try XCTUnwrap(seen.value), as: UTF8.self)
+        let marker = "name=\"context\"\r\n\r\n"
+        let start = try XCTUnwrap(text.range(of: marker)).upperBound
+        let end = try XCTUnwrap(text[start...].range(of: "\r\n")).lowerBound
+        XCTAssertEqual(try JSONDecoder().decode(SessionContext.self, from: Data(text[start..<end].utf8)), context)
     }
 
     func testPartsWithoutAuthSendsNoAuthorization() async throws {
@@ -138,6 +155,32 @@ final class APIClientTests: XCTestCase {
         XCTAssertEqual(json?["instructions"] as? String, "ჟონავს")
         XCTAssertEqual((json?["parts"] as? [[String: Any]])?.map { $0["id"] as? String }, ["p1", "p2"])
         XCTAssertNil(json?["image"])
+        XCTAssertNil(json?["context"], "round 1 sends no context")
+    }
+
+    func testStepsSendsContextAndParsesContinuation() async throws {
+        let seen = Locked<Data?>(nil)
+        let api = client { _, body in
+            seen.value = body
+            return MockURLProtocol.Reply(chunks: [Data("""
+            event: done\ndata: {"unknownParts":[],"costUsd":0.07,"continuation":{"kind":"needs_photo","prompt":"გადაიღე მოხსნილი სიფონი","reason":"შიგნით არ ჩანს."}}\n\n
+            """.utf8)])
+        }
+        let context = SessionContext(round: 2, photoPrompt: "გადაიღე", doneSteps: ["ა", "ბ"], previousObject: "სიფონი")
+        var events: [StepEvent] = []
+        for try await event in api.steps(object: "o", parts: parts, instructions: "i", context: context) { events.append(event) }
+        XCTAssertEqual(events, [.done(StepsUsage(costUsd: 0.07), continuation: .needsPhoto(prompt: "გადაიღე მოხსნილი სიფონი", reason: "შიგნით არ ჩანს."))])
+
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: try XCTUnwrap(seen.value)) as? [String: Any])
+        let sent = try JSONSerialization.data(withJSONObject: try XCTUnwrap(json["context"]))
+        XCTAssertEqual(try JSONDecoder().decode(SessionContext.self, from: sent), context)
+    }
+
+    func testDoneWithCompleteOrOddContinuation() async {
+        let complete = await collect(MockURLProtocol.Reply(chunks: [Data("event: done\ndata: {\"continuation\":{\"kind\":\"complete\",\"prompt\":null,\"reason\":null}}\n\n".utf8)]))
+        XCTAssertEqual(complete.0, [.done(StepsUsage(), continuation: .complete)])
+        let odd = await collect(MockURLProtocol.Reply(chunks: [Data("event: done\ndata: {\"costUsd\":1,\"continuation\":\"later\"}\n\n".utf8)]))
+        XCTAssertEqual(odd.0, [.done(StepsUsage(costUsd: 1), continuation: .complete)], "a malformed continuation keeps the usage")
     }
 
     func testStepsSendsImageAndJSONHeaders() async throws {

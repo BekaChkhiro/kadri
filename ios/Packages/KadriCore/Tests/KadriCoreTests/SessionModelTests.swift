@@ -339,6 +339,207 @@ final class SessionModelTests: XCTestCase {
         model.retry()
         XCTAssertEqual(model.currentStepIndex, 0)
     }
+
+    // MARK: - Multi-photo rounds
+
+    private static let prompt = "გადაიღე მოხსნილი სიფონის შიგნითა მხარე ახლოდან"
+    private static let needsPhoto = StepsContinuation.needsPhoto(prompt: prompt, reason: "შუასადები არ ჩანს.")
+    private static let round2Parts = PartsResult(object: "მოხსნილი სიფონი", parts: [Part(id: "p1", name: "შუასადები", box: [380, 420, 620, 560])])
+    private static let round2Steps = [
+        Step(index: 1, title: "შუასადები", text: "შეამოწმე შუასადები", focus: ["p1"]),
+        Step(index: 2, title: "დაბრუნება", text: "დააბრუნე სიფონი", focus: ["p1"]),
+    ]
+
+    /// Streams `steps` for the current round through stepsCalls[call] and ends with `continuation`.
+    private func streamRound(call: Int, steps: [Step], continuation: StepsContinuation) async {
+        model.startSteps()
+        await waitUntil { self.api.stepsCalls.count == call + 1 }
+        let stream = api.stepsContinuation(call)
+        steps.forEach { stream.yield(.step($0)) }
+        stream.yield(.done(nil, continuation: continuation))
+        await model.workTask?.value
+    }
+
+    /// Round 1 finished with `.needsPhoto`, using the first two fixture steps.
+    private func reachNeedsPhoto() async {
+        await reachParts()
+        await streamRound(call: 0, steps: Array(Fixtures.steps[...1]), continuation: Self.needsPhoto)
+    }
+
+    /// Round 2 scanned and streamed to completion.
+    private func reachRound2Done() async {
+        await reachNeedsPhoto()
+        api.setParts(.success(Self.round2Parts))
+        model.continueWithPhoto { Fixtures.keyframe }
+        await model.workTask?.value
+        await streamRound(call: 1, steps: Self.round2Steps, continuation: .complete)
+    }
+
+    func testRoundOneIsUnchangedAndComplete() async {
+        await reachParts()
+        await streamRound(call: 0, steps: Fixtures.steps, continuation: .complete)
+        XCTAssertEqual(model.round, 1)
+        XCTAssertEqual(model.continuation, .complete)
+        XCTAssertFalse(model.canContinueWithPhoto)
+        XCTAssertNil(model.pendingContext)
+        XCTAssertNil(api.partsCalls[0].context)
+        XCTAssertNil(api.stepsCalls[0].context)
+        XCTAssertEqual(model.allSteps, Fixtures.steps)
+        XCTAssertEqual(model.stepOffset, 0)
+    }
+
+    func testContinuationIsNilWhileStreamingAndCompleteWithoutDone() async {
+        await reachParts()
+        model.startSteps()
+        await waitUntil { self.api.stepsCalls.count == 1 }
+        api.stepsContinuation(0).yield(.step(Fixtures.steps[0]))
+        await waitUntil { self.model.currentStep != nil }
+        XCTAssertNil(model.continuation)
+        api.stepsContinuation(0).finish()
+        await model.workTask?.value
+        XCTAssertEqual(model.continuation, .complete)
+    }
+
+    func testNeedsPhotoAllowsContinuing() async {
+        await reachNeedsPhoto()
+        XCTAssertEqual(model.continuation, Self.needsPhoto)
+        XCTAssertTrue(model.canContinueWithPhoto)
+        model.finish()
+        XCTAssertFalse(model.canContinueWithPhoto, "only from finished steps")
+    }
+
+    func testContinueWithPhotoScansWithContextThenStreamsRoundTwo() async {
+        await reachNeedsPhoto()
+        model.next()
+        api.setParts(.success(Self.round2Parts))
+        let captures = Counter()
+        model.continueWithPhoto { captures.increment(); return Data([1, 2]) }
+        guard case .scanning = model.phase else { return XCTFail("expected scanning, got \(model.phase)") }
+        XCTAssertEqual(model.round, 2)
+        XCTAssertEqual(model.completedRounds, [SessionRound(number: 1, photoPrompt: nil, result: Fixtures.parts,
+                                                            steps: Array(Fixtures.steps[...1]), continuation: Self.needsPhoto)])
+        XCTAssertNil(model.continuation)
+        let context = SessionContext(round: 2, photoPrompt: Self.prompt, doneSteps: ["წყალი", "ქანჩი"], previousObject: "ონკანი")
+        XCTAssertEqual(model.pendingContext, context)
+
+        await model.workTask?.value
+        XCTAssertEqual(model.phase, .parts(Self.round2Parts))
+        XCTAssertEqual(captures.value, 1)
+        XCTAssertEqual(api.partsCalls.count, 2)
+        XCTAssertEqual(api.partsCalls[1].keyframe, Data([1, 2]))
+        XCTAssertEqual(api.partsCalls[1].context, context)
+        XCTAssertEqual(api.partsCalls[1].instructions, "როგორ შევცვალო ონკანის ქანჩი?", "same instructions")
+
+        model.startSteps()
+        await waitUntil { self.api.stepsCalls.count == 2 }
+        XCTAssertEqual(api.stepsCalls[1], .init(object: "მოხსნილი სიფონი", parts: Self.round2Parts.parts,
+                                                instructions: "როგორ შევცვალო ონკანის ქანჩი?", context: context))
+        XCTAssertEqual(model.currentStepIndex, 2, "the new round starts at its first global index")
+        XCTAssertNil(model.currentStep, "no round-2 step yet")
+        api.stepsContinuation(1).yield(.step(Self.round2Steps[0]))
+        await waitUntil { self.model.currentStep != nil }
+        XCTAssertEqual(model.currentStep, Self.round2Steps[0])
+        XCTAssertEqual(model.displayedRound, 2)
+        XCTAssertEqual(model.displayedResult, Self.round2Parts)
+    }
+
+    func testGlobalStepIndexCrossesRounds() async {
+        await reachRound2Done()
+        XCTAssertEqual(model.phase, .steps(Self.round2Parts, Self.round2Steps, streaming: false))
+        XCTAssertEqual(model.stepOffset, 2)
+        XCTAssertEqual(model.allSteps, Array(Fixtures.steps[...1]) + Self.round2Steps)
+        XCTAssertEqual(model.currentStepIndex, 2)
+        XCTAssertEqual(model.continuation, .complete)
+        XCTAssertFalse(model.canContinueWithPhoto)
+
+        model.next()
+        model.next()
+        XCTAssertEqual(model.currentStepIndex, 3, "bounded by allSteps")
+        model.previous()
+        model.previous()
+        XCTAssertEqual(model.currentStepIndex, 1)
+        XCTAssertEqual(model.currentStep, Fixtures.steps[1])
+        XCTAssertEqual(model.displayedRound, 1)
+        XCTAssertEqual(model.displayedResult, Fixtures.parts)
+        model.previous()
+        model.previous()
+        XCTAssertEqual(model.currentStepIndex, 0)
+        model.next()
+        model.next()
+        XCTAssertEqual(model.displayedRound, 2)
+        XCTAssertEqual(model.displayedResult, Self.round2Parts)
+
+        model.finish()
+        XCTAssertEqual(model.phase, .done(Self.round2Parts, Self.round2Steps))
+        XCTAssertEqual(model.allSteps.count, 4)
+    }
+
+    func testLastRoundForcesComplete() async {
+        await reachNeedsPhoto()
+        for round in 2...SessionModel.maxRounds {
+            model.continueWithPhoto { Fixtures.keyframe }
+            await model.workTask?.value
+            XCTAssertEqual(model.round, round)
+            XCTAssertEqual(api.partsCalls.last?.context?.round, round)
+            XCTAssertEqual(api.partsCalls.last?.context?.doneSteps.count, (round - 1) * 2)
+            await streamRound(call: round - 1, steps: Array(Fixtures.steps[...1]), continuation: Self.needsPhoto)
+        }
+        XCTAssertEqual(model.round, 5)
+        XCTAssertEqual(model.continuation, .complete, "round 5 cannot ask for another photo")
+        XCTAssertFalse(model.canContinueWithPhoto)
+        model.continueWithPhoto { Fixtures.keyframe }
+        XCTAssertEqual(api.partsCalls.count, 5)
+        XCTAssertEqual(model.allSteps.count, 10)
+    }
+
+    func testRoundTwoRetriesKeepTheContext() async {
+        await reachNeedsPhoto()
+        api.setParts(.failure(URLError(.notConnectedToInternet)), .success(Self.round2Parts))
+        model.continueWithPhoto { Fixtures.keyframe }
+        await model.workTask?.value
+        XCTAssertEqual(model.phase, .error(.network, retryFrom: .scan))
+        model.retry()
+        await model.workTask?.value
+        XCTAssertEqual(model.phase, .parts(Self.round2Parts))
+        XCTAssertEqual(api.partsCalls.map(\.context?.round), [nil, 2, 2])
+
+        model.startSteps()
+        await waitUntil { self.api.stepsCalls.count == 2 }
+        api.stepsContinuation(1).finish(throwing: URLError(.networkConnectionLost))
+        await model.workTask?.value
+        model.retry()
+        await waitUntil { self.api.stepsCalls.count == 3 }
+        XCTAssertEqual(api.stepsCalls[2].context?.round, 2)
+        XCTAssertEqual(model.currentStepIndex, 2)
+        XCTAssertEqual(model.completedRounds.count, 1)
+    }
+
+    func testCancellingRoundTwoScanReturnsToRoundOne() async {
+        await reachNeedsPhoto()
+        model.next()
+        api.setParts(.hang)
+        model.continueWithPhoto { Fixtures.keyframe }
+        await waitUntil { self.api.partsCalls.count == 2 }
+        model.cancel()
+        XCTAssertEqual(model.phase, .steps(Fixtures.parts, Array(Fixtures.steps[...1]), streaming: false))
+        XCTAssertEqual(model.round, 1)
+        XCTAssertNil(model.pendingContext)
+        XCTAssertEqual(model.continuation, Self.needsPhoto)
+        XCTAssertTrue(model.canContinueWithPhoto)
+        XCTAssertEqual(model.currentStep, Fixtures.steps[1])
+    }
+
+    func testBeginDescribingClearsRounds() async {
+        await reachRound2Done()
+        model.beginDescribing()
+        XCTAssertEqual(model.phase, .describing(text: ""))
+        XCTAssertEqual(model.completedRounds, [])
+        XCTAssertNil(model.continuation)
+        XCTAssertNil(model.pendingContext)
+        XCTAssertEqual(model.round, 1)
+        XCTAssertEqual(model.currentStepIndex, 0)
+        XCTAssertEqual(model.allSteps, [])
+    }
 }
 
 /// Thread-safe counter for `@Sendable` closures.
