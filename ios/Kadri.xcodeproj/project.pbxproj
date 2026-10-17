@@ -75,6 +75,7 @@
 		DD8E70609914641BAA315643 /* GIDTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6AA45E02280C63D8D7D074 /* GIDTokenProvider.swift */; };
 		E0038D0B516C9DAFE18CFBFC /* MeshWrapPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF12F4D98C708EE32218BCF /* MeshWrapPreview.swift */; };
 		E130A68F5F393B8FEE871CA4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543FF004E3F31262D70B1ECA /* ContentView.swift */; };
+		E2D7326CA43EAFCD9CC35B9F /* PhotoAutopilot.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E5B5646238AA2DB44DA103 /* PhotoAutopilot.swift */; };
 		EA71BC0ADF6AB6242FFAB163 /* ARDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3F9A3ED45BED82339BC58F /* ARDebugView.swift */; };
 		EAC14CB5A08766FB56D8EF39 /* Segmenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98849AE08F82095210AB2C08 /* Segmenter.swift */; };
 		EAF7180A4D2ECF039B84CD03 /* KadriCore in Frameworks */ = {isa = PBXBuildFile; productRef = 3B8FE85B572B4ACA38714736 /* KadriCore */; };
@@ -83,6 +84,7 @@
 		EBD6116765DBDD0A5D03DE9A /* Fixtures in Resources */ = {isa = PBXBuildFile; fileRef = 6C871271F759749DF134EF13 /* Fixtures */; };
 		EC3A8417B62ECE05AFDFE721 /* ScanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F55593458662C90DBD1A8F7 /* ScanningView.swift */; };
 		ECA9DFF62560910E89F7276B /* LiveSessionDependencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE217724C0229633405F9226 /* LiveSessionDependencies.swift */; };
+		F1B141686FF19D53FF4EB716 /* PhotoAutopilotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1871C6CA29F7300DBC4AE016 /* PhotoAutopilotTests.swift */; };
 		F32A4ED4B9A9A7AFD3146F19 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 00F79469EF86DA06585D9B45 /* GoogleSignIn */; };
 		F3A6721520CD41B44AAC06CB /* OFL-Inter.txt in Resources */ = {isa = PBXBuildFile; fileRef = EC47E7F74A9863587D696784 /* OFL-Inter.txt */; };
 		F4AAA1A1748F2F3BE3BF4AAD /* NotoSansGeorgian-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24F1F6DCECABEBE28315A574 /* NotoSansGeorgian-Bold.ttf */; };
@@ -113,6 +115,7 @@
 		0CF25B819A4307E63C96B93E /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		0F55593458662C90DBD1A8F7 /* ScanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanningView.swift; sourceTree = "<group>"; };
 		1512A702D1C9EDDCC4FBA982 /* PhotoGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGeometry.swift; sourceTree = "<group>"; };
+		1871C6CA29F7300DBC4AE016 /* PhotoAutopilotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAutopilotTests.swift; sourceTree = "<group>"; };
 		1B5A4C245D4AD9B3997F740D /* PartsRevealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartsRevealView.swift; sourceTree = "<group>"; };
 		24C23715356543CFFCCA0738 /* MeshWrapIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrapIntegrationTests.swift; sourceTree = "<group>"; };
 		24F1F6DCECABEBE28315A574 /* NotoSansGeorgian-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansGeorgian-Bold.ttf"; sourceTree = "<group>"; };
@@ -174,6 +177,7 @@
 		D4053B0576EC82DF04A6A97C /* MeshWrapIntegrationSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrapIntegrationSnapshotTests.swift; sourceTree = "<group>"; };
 		D624A7ABF50F3C99DA5D0ADF /* SessionPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPresentationTests.swift; sourceTree = "<group>"; };
 		D7CC50C123CF7B32458FEBD3 /* SegmentationBench.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentationBench.swift; sourceTree = "<group>"; };
+		D9E5B5646238AA2DB44DA103 /* PhotoAutopilot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAutopilot.swift; sourceTree = "<group>"; };
 		DA953B9A89DCDAF9361C6F66 /* TouchSegmentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchSegmentation.swift; sourceTree = "<group>"; };
 		DC6545EC000C213F047CC832 /* SAMGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SAMGeometry.swift; sourceTree = "<group>"; };
 		DDD4C0E74341F15D5E0088D8 /* MeshWrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrap.swift; sourceTree = "<group>"; };
@@ -289,6 +293,7 @@
 				D4053B0576EC82DF04A6A97C /* MeshWrapIntegrationSnapshotTests.swift */,
 				24C23715356543CFFCCA0738 /* MeshWrapIntegrationTests.swift */,
 				6A9BCE391233E0A986DDEBC3 /* MeshWrapSnapshotTests.swift */,
+				1871C6CA29F7300DBC4AE016 /* PhotoAutopilotTests.swift */,
 				06D7C1BD4975682E54019666 /* PhotoGeometryTests.swift */,
 				3FEFCFD6A8EB1E438B0EAFD9 /* PhotoMultiRoundTests.swift */,
 				44F8660CE0D9184EC83038C7 /* PhotoSnapshotTests.swift */,
@@ -399,6 +404,7 @@
 		C391D9D24B7014744F5FAAF4 /* Photo */ = {
 			isa = PBXGroup;
 			children = (
+				D9E5B5646238AA2DB44DA103 /* PhotoAutopilot.swift */,
 				B1A70C234762767D0C800572 /* PhotoCamera.swift */,
 				F89FAEC6BDACE10C06F57842 /* PhotoFlowView.swift */,
 				1512A702D1C9EDDCC4FBA982 /* PhotoGeometry.swift */,
@@ -588,6 +594,7 @@
 				AB81C54835CCF9D4D3EB6D3A /* MeshWrapIntegrationSnapshotTests.swift in Sources */,
 				4AA3A55B710B9248322A5234 /* MeshWrapIntegrationTests.swift in Sources */,
 				B0354A00A763F67E86E883FB /* MeshWrapSnapshotTests.swift in Sources */,
+				F1B141686FF19D53FF4EB716 /* PhotoAutopilotTests.swift in Sources */,
 				6AFFDEEA94A7F59B951C62FF /* PhotoGeometryTests.swift in Sources */,
 				51B952371BF72EAB9585762B /* PhotoMultiRoundTests.swift in Sources */,
 				F5DACEAE4BBA6C4BADADD714 /* PhotoSnapshotTests.swift in Sources */,
@@ -623,6 +630,7 @@
 				A021D80B098F055B3EF12B0B /* PartAnchors.swift in Sources */,
 				084494FD3093DD288DA33FE8 /* PartTracker.swift in Sources */,
 				54F0522C6E62571ABF309D4D /* PartsRevealView.swift in Sources */,
+				E2D7326CA43EAFCD9CC35B9F /* PhotoAutopilot.swift in Sources */,
 				60C2AB54EE7F78639047B484 /* PhotoCamera.swift in Sources */,
 				82D4EB97AFBD4777405B586E /* PhotoFlowView.swift in Sources */,
 				C5214BAAAC982579370A21A8 /* PhotoGeometry.swift in Sources */,

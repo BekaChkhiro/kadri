@@ -7,6 +7,9 @@ struct PhotoFlowView: View {
     @State private var camera = false
     @State private var picked: PhotosPickerItem?
     @State private var launchedDemo = false
+    #if DEBUG && targetEnvironment(simulator)
+    @State private var autopilot: PhotoAutopilot?
+    #endif
 
     init(session: PhotoSession = PhotoSession()) {
         _session = StateObject(wrappedValue: session)
@@ -48,6 +51,10 @@ struct PhotoFlowView: View {
                 launchedDemo = true
                 session.selectDemo()
                 session.submit("ნიჟარა ჟონავს")
+            }
+            if autopilot == nil, let pilot = PhotoAutopilot.fromArguments(session: session) {
+                autopilot = pilot
+                pilot.start()
             }
             #endif
         }
