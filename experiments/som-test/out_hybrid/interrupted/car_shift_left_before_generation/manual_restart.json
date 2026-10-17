@@ -1,0 +1,5 @@
+{
+  "authorized_by": "user",
+  "reason": "process ended before paid generation; zero reservation",
+  "automatic_retry": false
+}

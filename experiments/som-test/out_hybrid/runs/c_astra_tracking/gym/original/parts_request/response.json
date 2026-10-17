@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ზურგის ჩამოსაქაჩი ტრენაჟორი\",\n  \"parts\": [\n    {\n      \"label\": \"ზედა განიერი მოხრილი სახელური\",\n      \"box_2d\": [72, 97, 118, 903]\n    },\n    {\n      \"label\": \"სავარძლის სიმაღლის მარეგულირებელი ყვითელი ღილაკი ქვედა სადგარზე\",\n      \"box_2d\": [555, 485, 574, 510]\n    },\n    {\n      \"label\": \"წონის ამომრჩევი ყვითელი ქინძისთავი ფილების დასტაზე\",\n      \"box_2d\": [328, 538, 340, 558]\n    },\n    {\n      \"label\": \"შავი რბილი სავარძელი\",\n      \"box_2d\": [471, 372, 532, 626]\n    },\n    {\n      \"label\": \"მუხლების დამჭერი მარცხენა ბალიში\",\n      \"box_2d\": [388, 316, 444, 483]\n    },\n    {\n      \"label\": \"მუხლების დამჭერი მარჯვენა ბალიში\",\n      \"box_2d\": [388, 519, 444, 683]\n    }\n  ]\n}",
+            "thoughtSignature": "EmgKZgFpFH0TVJFzOxrP3ZGJYnI+JGPm3skkC/0HPQ4PSsGdxaGyAFUCo3Dq1Lhpz72QUPLkagusBoNmvYAO7iK+rrO7o04rkEPyHZJ5eY2aP4483UCIz+O82zJKL6yDfZ9cTH2Bh1EYDA=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1679,
+    "candidatesTokenCount": 376,
+    "totalTokenCount": 2055,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 579
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "Q3XTauLPH53-7M8PnsmhoQU"
+}

@@ -1,0 +1,37 @@
+{
+  "seconds": 1.835657584000728,
+  "quality": [
+    {
+      "id": "p1",
+      "box_pixels": [
+        212,
+        220,
+        252,
+        255
+      ],
+      "mask_pixels": 1121,
+      "mask_fraction_inside_box": 0.975914362176628,
+      "box_occupancy": 0.7814285714285715,
+      "mask_to_box_area": 0.8007142857142857,
+      "image_fraction": 0.003378785686728395,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "p2",
+      "box_pixels": [
+        252,
+        278,
+        274,
+        321
+      ],
+      "mask_pixels": 502,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.5306553911205074,
+      "mask_to_box_area": 0.5306553911205074,
+      "image_fraction": 0.0015130690586419753,
+      "empty": false,
+      "too_large": false
+    }
+  ]
+}

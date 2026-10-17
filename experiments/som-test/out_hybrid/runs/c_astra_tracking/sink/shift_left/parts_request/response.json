@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ნიჟარის ქვეშ კანალიზაციისა და წყალმომარაგების სისტემა\",\n  \"parts\": [\n    {\n      \"label\": \"წყლის ჩამკეტი მარცხენა ონკანი (სარქველი)\",\n      \"box_2d\": [215, 0, 345, 112]\n    },\n    {\n      \"label\": \"წყლის ჩამკეტი მარჯვენა ონკანი (სარქველი)\",\n      \"box_2d\": [232, 175, 348, 276]\n    },\n    {\n      \"label\": \"თეთრი პლასტმასის სიფონი (მუხლი)\",\n      \"box_2d\": [108, 230, 510, 622]\n    },\n    {\n      \"label\": \"მარჯვენა შეერთების პლასტმასის ქანჩი (ქვემოდან ჩამოკიდებული წყლის წვეთით)\",\n      \"box_2d\": [266, 584, 401, 706]\n    },\n    {\n      \"label\": \"სიფონის ზედა სამაგრი პლასტმასის ქანჩი\",\n      \"box_2d\": [105, 230, 185, 452]\n    }\n  ]\n}",
+            "thoughtSignature": "EmgKZgFpFH0TOuMk/RJNAMMqYWTmFV6/Ud5c4CJxJuBv5P7nOf9RCbeThtZ8YopM57a+P4vr8RULOzPBYZan4NRiQuSzGtZYdQqh8Frn0LoQUDpLbdxzy9QrYwV+wqz9ISavYupmZlRO3A=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1672,
+    "candidatesTokenCount": 348,
+    "totalTokenCount": 2020,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1080
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 592
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "sXXTasLUJ_mAkdUP8OeAkQM"
+}

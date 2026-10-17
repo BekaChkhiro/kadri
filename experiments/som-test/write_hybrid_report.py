@@ -45,10 +45,11 @@ def main():
         '## ვიზუალური შემოწმება', '']
     notes=load(root/'review/visual_notes.json')
     links={'sink/original':'sink-original-target.jpg', 'car/original':'car-original-avoid.jpg',
-           'chemistry/original':'chemistry-original-step2.jpg', 'gym/original':'gym-original-weight.jpg'}
+           'chemistry/original':'chemistry-original-step2.jpg', 'gym/original':'gym-original-weight.jpg', 'car/motion_blur':'car-motion-blur-avoid.jpg',
+           'car/occlusion':'car-occlusion-target.jpg', 'gym/motion_blur':'gym-motion-blur-weight.jpg'}
     for scene,note in notes.items():
         link=links.get(scene)
-        lines.append(f'- **{scene}**: {note["finding"]}'+(f' [სურათი](out_hybrid/review/{link}).' if link else ''))
+        lines.append(f'- **{scene}**: {note["finding"]}'+(f' [ნაბიჯის სურათი](out_hybrid/review/{link}).' + (f' [ნაწილები Astra-სთან გვერდიგვერდ](out_hybrid/review/{scene.split(chr(47))[0]}-paired-parts.jpg).' if scene.endswith('/original') else '') if link else ''))
     lines += ['', '## ფასი და ბიუჯეტი', '',
         f'ახალი ledger: Gemini **${data["cost"]["gemini"]:.6f}**, OpenAI **${data["cost"]["openai"]:.6f}**, ჯამში **${sum(data["cost"].values()):.6f}**. '+
         f'დაუხურავი რეზერვაციები: {data["unsettled"]}. Ledger-ის თანხა მთელ კამპანიას მოიცავს, მათ შორის დაწყებულ კადრებს; ეს usage-ით დათვლილი შეფასებაა, არა ინვოისი.',
@@ -74,6 +75,14 @@ def main():
         'Offline ანგარიში: `report_hybrid.py`, შემდეგ `write_hybrid_report.py`. '+
         'სურათები input.png და step_*.png commit-ში არ შედის; შერჩეული review JPG-ები ინახება.', '',
         'Offline: 110 ტესტი გაიარა, მათ შორის 5 ახალი hybrid ტესტი და report-ის 2 ტესტი. ეს უკანასკნელი ამოწმებს mask resize-ს, ცარიელ union-ს და ნაბიჯების რაოდენობის აცდენის უარყოფას.']
+    if (root/'blocked.json').exists():
+        block=load(root/'blocked.json')
+        lines += ['', '## დარჩენილი ბლოკერი', '',
+            f'OpenAI-ზე დახარჯულია ${block["openai_settled_usd"]:.6f}; დარჩენილია ${block["openai_remaining_usd"]:.6f}, '+
+            f'მაგრამ sink/motion_blur ეტაპი 2-ის აუცილებელი რეზერვია ${block["next_reservation_usd"]:.6f}. '+
+            'API მოთხოვნა არ გაგზავნილა. ამ კადრის Gemini/SAM დასრულებულია; sink/occlusion არ დაწყებულა. '+
+            'ორი დარჩენილი კადრი შედარებაში არ შედის. ახალი მცდელობა და ბიუჯეტის ცვლილება მომხმარებლის თანხმობას ელოდება. '+
+            '[ზუსტი ბლოკერი](out_hybrid/blocked.json).']
     (HERE/'HYBRID.md').write_text('\n'.join(lines)+'\n')
 
 if __name__=='__main__': main()

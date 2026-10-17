@@ -1,0 +1,5 @@
+inputs/
+*.lock
+runs/**/parts.png
+runs/**/step_*.png
+summary_console.json

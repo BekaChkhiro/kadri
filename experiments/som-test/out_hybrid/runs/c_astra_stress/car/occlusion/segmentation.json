@@ -1,0 +1,21 @@
+{
+  "seconds": 0.8067183340008341,
+  "quality": [
+    {
+      "id": "p1",
+      "box_pixels": [
+        252,
+        278,
+        274,
+        320
+      ],
+      "mask_pixels": 505,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.5465367965367965,
+      "mask_to_box_area": 0.5465367965367965,
+      "image_fraction": 0.0015221113040123457,
+      "empty": false,
+      "too_large": false
+    }
+  ]
+}

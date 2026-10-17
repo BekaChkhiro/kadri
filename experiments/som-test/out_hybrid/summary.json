@@ -1,6 +1,2212 @@
 {
-  "n": 1,
+  "n": 20,
   "rows": [
+    {
+      "frame": "c_astra_tracking/car/original",
+      "scene": "car",
+      "kind": "original",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 6.1274985000000015,
+        "time_to_first_outline_seconds": 7.992422332999922,
+        "time_to_first_step_from_start_seconds": 12.775624333999076,
+        "total_seconds": 22.790488165999705,
+        "sam_seconds": 1.835657584000728,
+        "gemini_count_seconds": 1.770423624999239,
+        "gemini_usd": 0.00180825,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 1.2557300419994135,
+        "parts_preflight_seconds": 0.45831079199888336,
+        "steps_preflight_seconds": 0.7974192500005302,
+        "real_wall_time_to_first_box_seconds": 4.884608667000066,
+        "first_box_full_response_seconds": 4.884608667000066,
+        "first_box_model_only_seconds": 4.4262978750011825,
+        "time_to_parts_response_seconds": 4.884608667000066,
+        "time_to_first_outline_seconds": 6.468326541000351,
+        "time_to_first_step_seconds": 4.837750333999793,
+        "time_to_first_step_from_start_seconds": 11.308236291999492,
+        "sam_seconds": 1.5129786659999809,
+        "steps_seconds": 17.470379291999052,
+        "total_seconds": 24.088557582999783,
+        "adapter_wall_seconds": 24.1819688329997,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "იპოვე ზეთის საზომი",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7369408820769472,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ამოიღე და გაწმინდე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7369408820769472,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "წაიკითხე დონე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7369408820769472,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაამატე ზეთი",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.5716281569048899,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დახურე და გადაამოწმე",
+          "focus": [
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6139017757158854,
+          "avoid_iou": 1.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "იპოვე ზეთის საზომი",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7361502347417841,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ამოიღე და გაწმინდე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7361502347417841,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "წაიკითხე დონე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7361502347417841,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაამატე ზეთი",
+          "focus": [
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.4714041095890411,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დახურე და გადაამოწმე",
+          "focus": [
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.62864,
+          "avoid_iou": 1.0
+        }
+      ],
+      "hybrid_parts": 2,
+      "astra_parts": 2,
+      "astra_generation_usd": 0.1069625,
+      "hybrid_generation_usd": 0.07546325,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 0,
+            "current": 0,
+            "iou": 0.926889995473065,
+            "phone_id": "phone_1",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 1,
+            "current": 1,
+            "iou": 0.9103641456582645,
+            "phone_id": "phone_2",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_1",
+          "phone_2"
+        ],
+        "unmatched": [],
+        "dropout": [],
+        "raw_id_stability": 1.0,
+        "raw_label_stability": 0.0
+      }
+    },
+    {
+      "frame": "c_astra_tracking/car/shift_left",
+      "scene": "car",
+      "kind": "shift_left",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 4.789466917000027,
+        "time_to_first_outline_seconds": 7.355755458000203,
+        "time_to_first_step_from_start_seconds": 12.901791666999998,
+        "total_seconds": 22.821247249999942,
+        "sam_seconds": 2.5228086660008557,
+        "gemini_count_seconds": 1.0259579590001522,
+        "gemini_usd": 0.00193575,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 1.2298110419997101,
+        "parts_preflight_seconds": 0.4432292919991596,
+        "steps_preflight_seconds": 0.7865817500005505,
+        "real_wall_time_to_first_box_seconds": 4.426919542000178,
+        "first_box_full_response_seconds": 4.426919542000178,
+        "first_box_model_only_seconds": 3.9836902500010183,
+        "time_to_parts_response_seconds": 4.426919542000178,
+        "time_to_first_outline_seconds": 5.823765666998952,
+        "time_to_first_step_seconds": 6.0503630839994,
+        "time_to_first_step_from_start_seconds": 11.875756750998335,
+        "sam_seconds": 1.3228619159999653,
+        "steps_seconds": 17.590033999998923,
+        "total_seconds": 23.525224457998775,
+        "adapter_wall_seconds": 23.52604324999993,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "იპოვე ზეთის საზომი",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7439674083359449,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ამოიღე და გაწმინდე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7439674083359449,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "წაიკითხე დონე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7439674083359449,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაამატე ზეთი",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7755972696245734,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დახურე და გადაამოწმე",
+          "focus": [
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7675658470597597,
+          "avoid_iou": 1.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "იპოვე ზეთის საზომი",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7125553914327917,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ამოიღე და გაწმინდე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7125553914327917,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "წაიკითხე დონე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7125553914327917,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაამატე ზეთი",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.600734418420008,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დახურე და გადაამოწმე",
+          "focus": [
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6288537255775946,
+          "avoid_iou": 1.0
+        }
+      ],
+      "hybrid_parts": 2,
+      "astra_parts": 2,
+      "astra_generation_usd": 0.098375,
+      "hybrid_generation_usd": 0.08070325,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 0,
+            "current": 0,
+            "iou": 0.5656797930439786,
+            "phone_id": "phone_1",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_1",
+          "phone_3"
+        ],
+        "unmatched": [
+          1
+        ],
+        "dropout": [
+          1
+        ],
+        "raw_id_stability": 1.0,
+        "raw_label_stability": 0.0
+      }
+    },
+    {
+      "frame": "c_astra_tracking/car/shift_right",
+      "scene": "car",
+      "kind": "shift_right",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 4.983073167000839,
+        "time_to_first_outline_seconds": 6.280594042000303,
+        "time_to_first_step_from_start_seconds": 10.944325165999544,
+        "total_seconds": 21.20797579200007,
+        "sam_seconds": 1.2689252920008585,
+        "gemini_count_seconds": 0.8221690830014268,
+        "gemini_usd": 0.00188325,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 0.9416755829988688,
+        "parts_preflight_seconds": 0.45098329199936416,
+        "steps_preflight_seconds": 0.4906922909995046,
+        "real_wall_time_to_first_box_seconds": 4.730471540999133,
+        "first_box_full_response_seconds": 4.730471540999133,
+        "first_box_model_only_seconds": 4.279488248999769,
+        "time_to_parts_response_seconds": 4.730471540999133,
+        "time_to_first_outline_seconds": 6.982534834000035,
+        "time_to_first_step_seconds": 5.1604686670016235,
+        "time_to_first_step_from_start_seconds": 12.144991792001747,
+        "sam_seconds": 2.159344333000263,
+        "steps_seconds": 15.176170500000808,
+        "total_seconds": 22.294062459000997,
+        "adapter_wall_seconds": 22.295343625000896,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "იპოვე ზეთის საზომი",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7291011942174733,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ამოიღე და გაწმინდე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7291011942174733,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "წაიკითხე დონე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7291011942174733,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაამატე ზეთი",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.8271989429973575,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დახურე და გადაამოწმე",
+          "focus": [
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.8045434751052403,
+          "avoid_iou": 1.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "იპოვე ზეთის საზომი",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.732872407291012,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ამოიღე და გაწმინდე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.732872407291012,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "წაიკითხე დონე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.732872407291012,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაამატე ზეთი",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.5570123589468028,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დახურე და გადაამოწმე",
+          "focus": [
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6018258989348922,
+          "avoid_iou": 1.0
+        }
+      ],
+      "hybrid_parts": 2,
+      "astra_parts": 2,
+      "astra_generation_usd": 0.0922375,
+      "hybrid_generation_usd": 0.07543825,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 1,
+            "current": 1,
+            "iou": 0.9411071849234411,
+            "phone_id": "phone_2",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_3",
+          "phone_2"
+        ],
+        "unmatched": [
+          0
+        ],
+        "dropout": [
+          0
+        ],
+        "raw_id_stability": 1.0,
+        "raw_label_stability": 0.0
+      }
+    },
+    {
+      "frame": "c_astra_tracking/chemistry/original",
+      "scene": "chemistry",
+      "kind": "original",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 8.102695165998739,
+        "time_to_first_outline_seconds": 11.570850624999366,
+        "time_to_first_step_from_start_seconds": 17.698155791998943,
+        "total_seconds": 33.16423129099894,
+        "sam_seconds": 3.423542250000537,
+        "gemini_count_seconds": 0.7885427919991344,
+        "gemini_usd": 0.0029865,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 1.4995408750019124,
+        "parts_preflight_seconds": 0.4445789590008644,
+        "steps_preflight_seconds": 1.054961916001048,
+        "real_wall_time_to_first_box_seconds": 11.210424582999622,
+        "first_box_full_response_seconds": 11.210424582999622,
+        "first_box_model_only_seconds": 10.765845623998757,
+        "time_to_parts_response_seconds": 11.210424582999622,
+        "time_to_first_outline_seconds": 16.29286341599982,
+        "time_to_first_step_seconds": 7.736355916998946,
+        "time_to_first_step_from_start_seconds": 24.035365874999115,
+        "sam_seconds": 4.99270395900021,
+        "steps_seconds": 18.116632457999003,
+        "total_seconds": 34.54307766599959,
+        "adapter_wall_seconds": 34.544198792000316,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "შეავსე ბიურეტი",
+          "focus": [
+            "p4",
+            "p1",
+            "p2"
+          ],
+          "avoid": [
+            "p3"
+          ],
+          "focus_iou": 0.7237513974076201,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოხსენი ძაბრი",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [
+            "p3"
+          ],
+          "focus_iou": 0.0,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "წაიკითხე საწყისი მოცულობა",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p4",
+            "p3"
+          ],
+          "focus_iou": 0.6793080841192193,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაამატე ინდიკატორი",
+          "focus": [
+            "p6",
+            "p5",
+            "p7"
+          ],
+          "avoid": [
+            "p4",
+            "p3"
+          ],
+          "focus_iou": 0.6796198908267874,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ტიტრაცია",
+          "focus": [
+            "p4",
+            "p5"
+          ],
+          "avoid": [
+            "p3"
+          ],
+          "focus_iou": 0.8688273607182707,
+          "avoid_iou": 0.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "შეავსე ბიურეტი",
+          "focus": [
+            "p5",
+            "p1",
+            "p3"
+          ],
+          "avoid": [
+            "p2"
+          ],
+          "focus_iou": 0.7616742596810934,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოხსენი ძაბრი",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [
+            "p2"
+          ],
+          "focus_iou": 0.0,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "წაიკითხე საწყისი მოცულობა",
+          "focus": [
+            "p3"
+          ],
+          "avoid": [
+            "p5"
+          ],
+          "focus_iou": 0.818099710982659,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაამატე ინდიკატორი",
+          "focus": [
+            "p8",
+            "p7",
+            "p9"
+          ],
+          "avoid": [
+            "p6"
+          ],
+          "focus_iou": 0.6795908183632735,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ტიტრაცია",
+          "focus": [
+            "p5",
+            "p7"
+          ],
+          "avoid": [
+            "p2",
+            "p6"
+          ],
+          "focus_iou": 0.8654539792926279,
+          "avoid_iou": 0.0
+        }
+      ],
+      "hybrid_parts": 7,
+      "astra_parts": 9,
+      "astra_generation_usd": 0.11324999999999999,
+      "hybrid_generation_usd": 0.100304,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 3,
+            "current": 2,
+            "iou": 0.9785214000137523,
+            "phone_id": "phone_4",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 6,
+            "current": 4,
+            "iou": 0.9603710524520839,
+            "phone_id": "phone_7",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 8,
+            "current": 6,
+            "iou": 0.9304347826086972,
+            "phone_id": "phone_9",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 4,
+            "current": 3,
+            "iou": 0.9255533199195172,
+            "phone_id": "phone_5",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 7,
+            "current": 5,
+            "iou": 0.8554056305180741,
+            "phone_id": "phone_8",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 0,
+            "current": 0,
+            "iou": 0.7763010408326659,
+            "phone_id": "phone_1",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 2,
+            "current": 1,
+            "iou": 0.641522061284001,
+            "phone_id": "phone_3",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_1",
+          "phone_3",
+          "phone_4",
+          "phone_5",
+          "phone_7",
+          "phone_8",
+          "phone_9"
+        ],
+        "unmatched": [],
+        "dropout": [
+          1,
+          5
+        ],
+        "raw_id_stability": 0.14285714285714285,
+        "raw_label_stability": 0.0
+      }
+    },
+    {
+      "frame": "c_astra_tracking/chemistry/shift_left",
+      "scene": "chemistry",
+      "kind": "shift_left",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 5.784055875001286,
+        "time_to_first_outline_seconds": 9.213363542001389,
+        "time_to_first_step_from_start_seconds": 15.239821917000882,
+        "total_seconds": 27.46035779200065,
+        "sam_seconds": 3.386258833001193,
+        "gemini_count_seconds": 0.7938750000012078,
+        "gemini_usd": 0.0026115,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 0.916735749997315,
+        "parts_preflight_seconds": 0.4224223749988596,
+        "steps_preflight_seconds": 0.4943133749984554,
+        "real_wall_time_to_first_box_seconds": 7.876748291000695,
+        "first_box_full_response_seconds": 7.876748291000695,
+        "first_box_model_only_seconds": 7.454325916001835,
+        "time_to_parts_response_seconds": 7.876748291000695,
+        "time_to_first_outline_seconds": 11.776111541999853,
+        "time_to_first_step_seconds": 4.789488332999099,
+        "time_to_first_step_from_start_seconds": 16.57069458299884,
+        "sam_seconds": 3.8186352500015346,
+        "steps_seconds": 14.981812874999378,
+        "total_seconds": 26.918209999999817,
+        "adapter_wall_seconds": 26.91945300000043,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "შეავსე ბიურეტი",
+          "focus": [
+            "p4",
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7423509474657217,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოხსენი ძაბრი",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.0,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "წაიკითხე საწყისი მოცულობა",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p4"
+          ],
+          "focus_iou": 0.7351718927087268,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაამატე ინდიკატორი",
+          "focus": [
+            "p6",
+            "p5",
+            "p7"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6801575512792697,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ტიტრაცია",
+          "focus": [
+            "p4",
+            "p5"
+          ],
+          "avoid": [],
+          "focus_iou": 0.8492248664903821,
+          "avoid_iou": 1.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "შეავსე ბიურეტი",
+          "focus": [
+            "p3",
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7481978311289412,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოხსენი ძაბრი",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.0,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "წაიკითხე საწყისი მოცულობა",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.8092618342300949,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაამატე ინდიკატორი",
+          "focus": [
+            "p6",
+            "p5",
+            "p7"
+          ],
+          "avoid": [
+            "p4"
+          ],
+          "focus_iou": 0.6794829079762778,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ტიტრაცია",
+          "focus": [
+            "p3",
+            "p5"
+          ],
+          "avoid": [
+            "p4"
+          ],
+          "focus_iou": 0.850686264467889,
+          "avoid_iou": 0.0
+        }
+      ],
+      "hybrid_parts": 7,
+      "astra_parts": 7,
+      "astra_generation_usd": 0.10692499999999999,
+      "hybrid_generation_usd": 0.098554,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 6,
+            "current": 6,
+            "iou": 0.8527220630372496,
+            "phone_id": "phone_7",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 4,
+            "current": 4,
+            "iou": 0.8111594420278987,
+            "phone_id": "phone_5",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 5,
+            "current": 5,
+            "iou": 0.738028169014085,
+            "phone_id": "phone_6",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 2,
+            "current": 3,
+            "iou": 0.6512053707659448,
+            "phone_id": "phone_3",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 0,
+            "current": 0,
+            "iou": 0.5217737124676874,
+            "phone_id": "phone_1",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_1",
+          "phone_8",
+          "phone_9",
+          "phone_3",
+          "phone_5",
+          "phone_6",
+          "phone_7"
+        ],
+        "unmatched": [
+          1,
+          2
+        ],
+        "dropout": [
+          1,
+          3
+        ],
+        "raw_id_stability": 0.8,
+        "raw_label_stability": 0.0
+      }
+    },
+    {
+      "frame": "c_astra_tracking/chemistry/shift_right",
+      "scene": "chemistry",
+      "kind": "shift_right",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 7.149421459000223,
+        "time_to_first_outline_seconds": 10.623344708999866,
+        "time_to_first_step_from_start_seconds": 16.26120633299979,
+        "total_seconds": 28.01825912499953,
+        "sam_seconds": 3.4329317080009787,
+        "gemini_count_seconds": 0.8028225840007508,
+        "gemini_usd": 0.00287025,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 1.0614574159990298,
+        "parts_preflight_seconds": 0.4599514999990788,
+        "steps_preflight_seconds": 0.601505915999951,
+        "real_wall_time_to_first_box_seconds": 13.620705249999446,
+        "first_box_full_response_seconds": 13.620705249999446,
+        "first_box_model_only_seconds": 13.160753750000367,
+        "time_to_parts_response_seconds": 13.620705249999446,
+        "time_to_first_outline_seconds": 18.66305979200115,
+        "time_to_first_step_seconds": 6.510125791999599,
+        "time_to_first_step_from_start_seconds": 25.179173376000108,
+        "sam_seconds": 4.956236625001111,
+        "steps_seconds": 20.3012881249997,
+        "total_seconds": 39.1585110420001,
+        "adapter_wall_seconds": 39.1598404159995,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "შეავსე ბიურეტი",
+          "focus": [
+            "p4",
+            "p1",
+            "p2"
+          ],
+          "avoid": [
+            "p3"
+          ],
+          "focus_iou": 0.7574074074074074,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოხსენი ძაბრი",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [
+            "p3"
+          ],
+          "focus_iou": 0.0,
+          "avoid_iou": 0.000650315867707172
+        },
+        {
+          "empty_focus": false,
+          "title": "წაიკითხე საწყისი მოცულობა",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p4",
+            "p3"
+          ],
+          "focus_iou": 0.7191184254848179,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაამატე ინდიკატორი",
+          "focus": [
+            "p6",
+            "p5",
+            "p7"
+          ],
+          "avoid": [
+            "p4",
+            "p3"
+          ],
+          "focus_iou": 0.6796590339294668,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ტიტრაცია",
+          "focus": [
+            "p4",
+            "p5"
+          ],
+          "avoid": [
+            "p3"
+          ],
+          "focus_iou": 0.854034851156519,
+          "avoid_iou": 0.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "შეავსე ბიურეტი",
+          "focus": [
+            "p5",
+            "p1",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7723121957427853,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოხსენი ძაბრი",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [
+            "p2"
+          ],
+          "focus_iou": 0.0,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "წაიკითხე საწყისი მოცულობა",
+          "focus": [
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.8280502392344498,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაამატე ინდიკატორი",
+          "focus": [
+            "p8",
+            "p7",
+            "p9"
+          ],
+          "avoid": [
+            "p6"
+          ],
+          "focus_iou": 0.6788567045208198,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ტიტრაცია",
+          "focus": [
+            "p5",
+            "p7"
+          ],
+          "avoid": [
+            "p6"
+          ],
+          "focus_iou": 0.855,
+          "avoid_iou": 0.0
+        }
+      ],
+      "hybrid_parts": 7,
+      "astra_parts": 9,
+      "astra_generation_usd": 0.1350125,
+      "hybrid_generation_usd": 0.08816275,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 4,
+            "current": 3,
+            "iou": 0.9709989258861444,
+            "phone_id": "phone_5",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 6,
+            "current": 4,
+            "iou": 0.9230139230139224,
+            "phone_id": "phone_7",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 8,
+            "current": 6,
+            "iou": 0.9015586546349469,
+            "phone_id": "phone_9",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 0,
+            "current": 0,
+            "iou": 0.881118881118881,
+            "phone_id": "phone_1",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 7,
+            "current": 5,
+            "iou": 0.8452982810920117,
+            "phone_id": "phone_8",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 3,
+            "current": 2,
+            "iou": 0.6710553356354755,
+            "phone_id": "phone_4",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_1",
+          "phone_10",
+          "phone_4",
+          "phone_5",
+          "phone_7",
+          "phone_8",
+          "phone_9"
+        ],
+        "unmatched": [
+          1
+        ],
+        "dropout": [
+          1,
+          2,
+          5
+        ],
+        "raw_id_stability": 0.16666666666666666,
+        "raw_label_stability": 0.0
+      }
+    },
+    {
+      "frame": "c_astra_tracking/gym/original",
+      "scene": "gym",
+      "kind": "original",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 5.755333625000276,
+        "time_to_first_outline_seconds": 8.74158479200014,
+        "time_to_first_step_from_start_seconds": 15.117617917001553,
+        "total_seconds": 25.22160816699943,
+        "sam_seconds": 2.9509707920005894,
+        "gemini_count_seconds": 0.8152920420016017,
+        "gemini_usd": 0.00266925,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 1.047829625002123,
+        "parts_preflight_seconds": 0.4666566250016331,
+        "steps_preflight_seconds": 0.58117300000049,
+        "real_wall_time_to_first_box_seconds": 6.893237833000967,
+        "first_box_full_response_seconds": 6.893237833000967,
+        "first_box_model_only_seconds": 6.426581207999334,
+        "time_to_parts_response_seconds": 6.893237833000967,
+        "time_to_first_outline_seconds": 11.000171833999048,
+        "time_to_first_step_seconds": 5.78913512500003,
+        "time_to_first_step_from_start_seconds": 16.794352249999065,
+        "sam_seconds": 4.024221749999924,
+        "steps_seconds": 18.620785249999244,
+        "total_seconds": 29.766010958999686,
+        "adapter_wall_seconds": 29.7672795410017,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაარეგულირე სიმაღლე",
+          "focus": [
+            "p6",
+            "p5"
+          ],
+          "avoid": [
+            "p2"
+          ],
+          "focus_iou": 0.32821068938807124,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "აირჩიე წონა",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p6"
+          ],
+          "focus_iou": 0.008873456790123456,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოკიდე სახელურს",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.5355837623295477,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაჯექი და დაფიქსირდი",
+          "focus": [
+            "p5",
+            "p3",
+            "p4",
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6279435710083057,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ჩამოწიე მკერდამდე",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.31356911434850576,
+          "avoid_iou": 1.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაარეგულირე სიმაღლე",
+          "focus": [
+            "p7",
+            "p6"
+          ],
+          "avoid": [],
+          "focus_iou": 0.3282368249837345,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "აირჩიე წონა",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p3"
+          ],
+          "focus_iou": 0.011111111111111112,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოკიდე სახელურს",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.5355107495185316,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაჯექი და დაფიქსირდი",
+          "focus": [
+            "p6",
+            "p4",
+            "p5",
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6276905814255805,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ჩამოწიე მკერდამდე",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [
+            "p3"
+          ],
+          "focus_iou": 0.3136259602528949,
+          "avoid_iou": 0.0
+        }
+      ],
+      "hybrid_parts": 6,
+      "astra_parts": 7,
+      "astra_generation_usd": 0.1138375,
+      "hybrid_generation_usd": 0.08859925,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 5,
+            "current": 4,
+            "iou": 0.9843749999999998,
+            "phone_id": "phone_6",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 4,
+            "current": 3,
+            "iou": 0.9701655052264804,
+            "phone_id": "phone_5",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 3,
+            "current": 2,
+            "iou": 0.964499572284003,
+            "phone_id": "phone_4",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 0,
+            "current": 0,
+            "iou": 0.9492139015308235,
+            "phone_id": "phone_1",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 6,
+            "current": 5,
+            "iou": 0.7648183556405336,
+            "phone_id": "phone_7",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 1,
+            "current": 1,
+            "iou": 0.5000000000000008,
+            "phone_id": "phone_2",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_1",
+          "phone_2",
+          "phone_4",
+          "phone_5",
+          "phone_6",
+          "phone_7"
+        ],
+        "unmatched": [],
+        "dropout": [
+          2
+        ],
+        "raw_id_stability": 0.3333333333333333,
+        "raw_label_stability": 0.0
+      }
+    },
+    {
+      "frame": "c_astra_tracking/gym/shift_left",
+      "scene": "gym",
+      "kind": "shift_left",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 6.141874707998795,
+        "time_to_first_outline_seconds": 9.149482541999532,
+        "time_to_first_step_from_start_seconds": 15.41390466699886,
+        "total_seconds": 25.427928999999494,
+        "sam_seconds": 2.9727126249999856,
+        "gemini_count_seconds": 1.0215982079989772,
+        "gemini_usd": 0.00268425,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 1.140876916997513,
+        "parts_preflight_seconds": 0.5772149169988552,
+        "steps_preflight_seconds": 0.5636619999986578,
+        "real_wall_time_to_first_box_seconds": 7.881151542000225,
+        "first_box_full_response_seconds": 7.881151542000225,
+        "first_box_model_only_seconds": 7.30393662500137,
+        "time_to_parts_response_seconds": 7.881151542000225,
+        "time_to_first_outline_seconds": 12.102994834000128,
+        "time_to_first_step_seconds": 8.647982249998677,
+        "time_to_first_step_from_start_seconds": 20.75616383399756,
+        "sam_seconds": 4.140212165999401,
+        "steps_seconds": 19.608469082999363,
+        "total_seconds": 31.83030966700062,
+        "adapter_wall_seconds": 31.831483624999237,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაარეგულირე სიმაღლე",
+          "focus": [
+            "p6",
+            "p5"
+          ],
+          "avoid": [],
+          "focus_iou": 0.328744638349928,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "აირჩიე წონა",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.008590534979423869,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოკიდე სახელურს",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.5242244276002188,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაჯექი და დაფიქსირდი",
+          "focus": [
+            "p5",
+            "p3",
+            "p4",
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6238575975738037,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ჩამოწიე მკერდამდე",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.3101966018868351,
+          "avoid_iou": 1.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაარეგულირე სიმაღლე",
+          "focus": [
+            "p8",
+            "p7"
+          ],
+          "avoid": [],
+          "focus_iou": 0.33001532578912335,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "აირჩიე წონა",
+          "focus": [
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.012906543257488108,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოკიდე სახელურს",
+          "focus": [
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.2533224474985259,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაჯექი და დაფიქსირდი",
+          "focus": [
+            "p7",
+            "p5",
+            "p6"
+          ],
+          "avoid": [],
+          "focus_iou": 0.8523671173687936,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ჩამოწიე მკერდამდე",
+          "focus": [
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.13639249780209045,
+          "avoid_iou": 1.0
+        }
+      ],
+      "hybrid_parts": 6,
+      "astra_parts": 8,
+      "astra_generation_usd": 0.11308750000000001,
+      "hybrid_generation_usd": 0.08763925,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 6,
+            "current": 4,
+            "iou": 0.8517431412483524,
+            "phone_id": "phone_7",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 4,
+            "current": 2,
+            "iou": 0.8478154148257236,
+            "phone_id": "phone_5",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 5,
+            "current": 3,
+            "iou": 0.7566867191115221,
+            "phone_id": "phone_6",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_9",
+          "phone_10",
+          "phone_5",
+          "phone_6",
+          "phone_7",
+          "phone_11"
+        ],
+        "unmatched": [
+          0,
+          1,
+          5
+        ],
+        "dropout": [
+          0,
+          1,
+          2,
+          3,
+          7
+        ],
+        "raw_id_stability": 0.0,
+        "raw_label_stability": 0.0
+      }
+    },
+    {
+      "frame": "c_astra_tracking/gym/shift_right",
+      "scene": "gym",
+      "kind": "shift_right",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 8.40528387499944,
+        "time_to_first_outline_seconds": 11.896740124999269,
+        "time_to_first_step_from_start_seconds": 17.10495612500017,
+        "total_seconds": 27.05832279199967,
+        "sam_seconds": 3.453679500000362,
+        "gemini_count_seconds": 0.8883519580012944,
+        "gemini_usd": 0.0028755,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 0.9025944589993742,
+        "parts_preflight_seconds": 0.4548156669989112,
+        "steps_preflight_seconds": 0.447778792000463,
+        "real_wall_time_to_first_box_seconds": 7.458345749999353,
+        "first_box_full_response_seconds": 7.458345749999353,
+        "first_box_model_only_seconds": 7.003530083000442,
+        "time_to_parts_response_seconds": 7.458345749999353,
+        "time_to_first_outline_seconds": 11.642146624999441,
+        "time_to_first_step_seconds": 6.325184541999988,
+        "time_to_first_step_from_start_seconds": 17.97215383299954,
+        "sam_seconds": 4.103128958000525,
+        "steps_seconds": 16.89432612500059,
+        "total_seconds": 28.653147166000053,
+        "adapter_wall_seconds": 28.653929000000062,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაარეგულირე სიმაღლე",
+          "focus": [
+            "p7",
+            "p6"
+          ],
+          "avoid": [],
+          "focus_iou": 0.32734169376064404,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "აირჩიე წონა",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p3"
+          ],
+          "focus_iou": 0.008564814814814815,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოკიდე სახელურს",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.5276525692784071,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაჯექი და დაფიქსირდი",
+          "focus": [
+            "p1",
+            "p6",
+            "p4",
+            "p5"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6247094215780118,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ჩამოწიე მკერდამდე",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.31139963292774114,
+          "avoid_iou": 1.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაარეგულირე სიმაღლე",
+          "focus": [
+            "p7",
+            "p6"
+          ],
+          "avoid": [],
+          "focus_iou": 0.32783434956204155,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "აირჩიე წონა",
+          "focus": [
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6479843685726039,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოკიდე სახელურს",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.5276525692784071,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაჯექი და დაფიქსირდი",
+          "focus": [
+            "p6",
+            "p4",
+            "p5",
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6245218579234972,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ჩამოწიე მკერდამდე",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.31139963292774114,
+          "avoid_iou": 1.0
+        }
+      ],
+      "hybrid_parts": 7,
+      "astra_parts": 7,
+      "astra_generation_usd": 0.1127625,
+      "hybrid_generation_usd": 0.08805550000000001,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 0,
+            "current": 0,
+            "iou": 0.9771397920870475,
+            "phone_id": "phone_1",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 2,
+            "current": 2,
+            "iou": 0.9687409670892345,
+            "phone_id": "phone_3",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 5,
+            "current": 5,
+            "iou": 0.9597505304442879,
+            "phone_id": "phone_6",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 3,
+            "current": 3,
+            "iou": 0.936640575417813,
+            "phone_id": "phone_4",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 4,
+            "current": 4,
+            "iou": 0.9200000000000007,
+            "phone_id": "phone_5",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 6,
+            "current": 6,
+            "iou": 0.8076923076923116,
+            "phone_id": "phone_7",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 1,
+            "current": 1,
+            "iou": 0.6874999999999942,
+            "phone_id": "phone_2",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_1",
+          "phone_2",
+          "phone_3",
+          "phone_4",
+          "phone_5",
+          "phone_6",
+          "phone_7"
+        ],
+        "unmatched": [],
+        "dropout": [],
+        "raw_id_stability": 1.0,
+        "raw_label_stability": 0.0
+      }
+    },
+    {
+      "frame": "c_astra_tracking/microscope/original",
+      "scene": "microscope",
+      "kind": "original",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 7.18082079099986,
+        "time_to_first_outline_seconds": 13.304536957999517,
+        "time_to_first_step_from_start_seconds": 18.063335625000036,
+        "total_seconds": 32.448817290998704,
+        "sam_seconds": 6.062689541000509,
+        "gemini_count_seconds": 0.8045997090011952,
+        "gemini_usd": 0.0034245,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 1.3474813749999157,
+        "parts_preflight_seconds": 0.43668637499831675,
+        "steps_preflight_seconds": 0.910795000001599,
+        "real_wall_time_to_first_box_seconds": 13.156181665999611,
+        "first_box_full_response_seconds": 13.156181665999611,
+        "first_box_model_only_seconds": 12.719495291001294,
+        "time_to_parts_response_seconds": 13.156181665999611,
+        "time_to_first_outline_seconds": 19.24927241700061,
+        "time_to_first_step_seconds": 4.00564679099989,
+        "time_to_first_step_from_start_seconds": 23.264002290999997,
+        "sam_seconds": 5.978753958999732,
+        "steps_seconds": 17.147815332999016,
+        "total_seconds": 36.5572127079995,
+        "adapter_wall_seconds": 36.55845245800083,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "ჩართე განათება",
+          "focus": [
+            "p13"
+          ],
+          "avoid": [],
+          "focus_iou": 0.053898096992019646,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დააყენე 4× ობიექტივი",
+          "focus": [
+            "p4",
+            "p3"
+          ],
+          "avoid": [
+            "p7"
+          ],
+          "focus_iou": 0.7873282087118565,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დადე პრეპარატი",
+          "focus": [
+            "p7",
+            "p9",
+            "p6",
+            "p8"
+          ],
+          "avoid": [],
+          "focus_iou": 0.8148460036192285,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "იპოვე გამოსახულება",
+          "focus": [
+            "p1",
+            "p11"
+          ],
+          "avoid": [
+            "p7"
+          ],
+          "focus_iou": 0.3247043022399376,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "გადადი 40×-ზე",
+          "focus": [
+            "p4",
+            "p5",
+            "p10"
+          ],
+          "avoid": [
+            "p11",
+            "p7"
+          ],
+          "focus_iou": 0.17866230003778813,
+          "avoid_iou": 0.545729265273429
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "ჩართე განათება",
+          "focus": [
+            "p12"
+          ],
+          "avoid": [],
+          "focus_iou": 0.05463008329250368,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დააყენე 4× ობიექტივი",
+          "focus": [
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.2505517330910035,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დადე პრეპარატი",
+          "focus": [
+            "p7",
+            "p8",
+            "p5",
+            "p6"
+          ],
+          "avoid": [],
+          "focus_iou": 0.8164512966758756,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "იპოვე გამოსახულება",
+          "focus": [
+            "p1",
+            "p10"
+          ],
+          "avoid": [],
+          "focus_iou": 0.3251540397465938,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "გადადი 40×-ზე",
+          "focus": [
+            "p2",
+            "p4",
+            "p9"
+          ],
+          "avoid": [
+            "p10"
+          ],
+          "focus_iou": 0.2890488390061405,
+          "avoid_iou": 0.7361001964636542
+        }
+      ],
+      "hybrid_parts": 13,
+      "astra_parts": 12,
+      "astra_generation_usd": 0.1332,
+      "hybrid_generation_usd": 0.09801699999999999,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 10,
+            "current": 11,
+            "iou": 0.9701206947306451,
+            "phone_id": "phone_11",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 7,
+            "current": 8,
+            "iou": 0.962948325264302,
+            "phone_id": "phone_8",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 0,
+            "current": 0,
+            "iou": 0.9249234915910939,
+            "phone_id": "phone_1",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 8,
+            "current": 9,
+            "iou": 0.9215523215523204,
+            "phone_id": "phone_9",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 3,
+            "current": 4,
+            "iou": 0.9212533498247782,
+            "phone_id": "phone_4",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 9,
+            "current": 10,
+            "iou": 0.912364945978391,
+            "phone_id": "phone_10",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 6,
+            "current": 6,
+            "iou": 0.8526798241511557,
+            "phone_id": "phone_7",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 2,
+            "current": 2,
+            "iou": 0.8487614080834412,
+            "phone_id": "phone_3",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 11,
+            "current": 12,
+            "iou": 0.7669565217391335,
+            "phone_id": "phone_12",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_1",
+          "phone_13",
+          "phone_3",
+          "phone_14",
+          "phone_4",
+          "phone_15",
+          "phone_7",
+          "phone_16",
+          "phone_8",
+          "phone_9",
+          "phone_10",
+          "phone_11",
+          "phone_12"
+        ],
+        "unmatched": [
+          1,
+          3,
+          5,
+          7
+        ],
+        "dropout": [
+          1,
+          4,
+          5
+        ],
+        "raw_id_stability": 0.3333333333333333,
+        "raw_label_stability": 0.0
+      }
+    },
     {
       "frame": "c_astra_tracking/sink/original",
       "scene": "sink",
@@ -38,26 +2244,59 @@
       "hybrid_quality": [
         {
           "empty_focus": false,
+          "title": "დაკეტე წყალი",
+          "focus": [
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
           "focus_iou": 0.6003506878877799,
           "avoid_iou": 1.0
         },
         {
           "empty_focus": true,
+          "title": "ჩადგი ვედრო სიფონის ქვეშ",
+          "focus": [],
+          "avoid": [],
           "focus_iou": 0.0,
           "avoid_iou": 1.0
         },
         {
           "empty_focus": false,
+          "title": "მოუშვი ქანჩი",
+          "focus": [
+            "p4"
+          ],
+          "avoid": [
+            "p2",
+            "p3"
+          ],
           "focus_iou": 0.7038619556285949,
           "avoid_iou": 0.0
         },
         {
           "empty_focus": false,
+          "title": "შეამოწმე შუასადები",
+          "focus": [
+            "p1",
+            "p4"
+          ],
+          "avoid": [
+            "p2",
+            "p3"
+          ],
           "focus_iou": 0.4311351805998395,
           "avoid_iou": 0.0
         },
         {
           "empty_focus": false,
+          "title": "მოუჭირე და შეამოწმე",
+          "focus": [
+            "p4",
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
           "focus_iou": 0.16540351622464447,
           "avoid_iou": 1.0
         }
@@ -65,30 +2304,63 @@
       "astra_quality": [
         {
           "empty_focus": false,
+          "title": "დაკეტე წყალი",
+          "focus": [
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
           "focus_iou": 0.2757483234283845,
           "avoid_iou": 1.0
         },
         {
           "empty_focus": true,
+          "title": "ჩადგი ვედრო სიფონის ქვეშ",
+          "focus": [],
+          "avoid": [],
           "focus_iou": 0.0,
           "avoid_iou": 1.0
         },
         {
           "empty_focus": false,
+          "title": "მოუშვი ქანჩი",
+          "focus": [
+            "p4"
+          ],
+          "avoid": [
+            "p1"
+          ],
           "focus_iou": 0.7040078843626807,
           "avoid_iou": 0.0
         },
         {
           "empty_focus": false,
+          "title": "შეამოწმე შუასადები",
+          "focus": [
+            "p5",
+            "p4"
+          ],
+          "avoid": [],
           "focus_iou": 0.8264212706829089,
           "avoid_iou": 1.0
         },
         {
           "empty_focus": false,
+          "title": "მოუჭირე და შეამოწმე",
+          "focus": [
+            "p4",
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
           "focus_iou": 0.18826940182954283,
           "avoid_iou": 1.0
         }
       ],
+      "hybrid_parts": 4,
+      "astra_parts": 5,
+      "astra_generation_usd": 0.1283125,
+      "hybrid_generation_usd": 0.10258025,
       "id_match": {
         "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
         "threshold": 0.5,
@@ -128,63 +2400,1850 @@
         "raw_id_stability": 1.0,
         "raw_label_stability": 0.0
       }
+    },
+    {
+      "frame": "c_astra_tracking/sink/shift_left",
+      "scene": "sink",
+      "kind": "shift_left",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 5.4009685830005765,
+        "time_to_first_outline_seconds": 7.9954564580002625,
+        "time_to_first_step_from_start_seconds": 12.369896625001275,
+        "total_seconds": 25.79836633299965,
+        "sam_seconds": 2.5489342090004357,
+        "gemini_count_seconds": 0.8029682080014027,
+        "gemini_usd": 0.002559,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 0.9331079590010631,
+        "parts_preflight_seconds": 0.46100520900108677,
+        "steps_preflight_seconds": 0.47210274999997637,
+        "real_wall_time_to_first_box_seconds": 7.494434625001304,
+        "first_box_full_response_seconds": 7.494434625001304,
+        "first_box_model_only_seconds": 7.033429416000217,
+        "time_to_parts_response_seconds": 7.494434625001304,
+        "time_to_first_outline_seconds": 10.604495084000519,
+        "time_to_first_step_seconds": 6.018132582999897,
+        "time_to_first_step_from_start_seconds": 16.62748804200055,
+        "sam_seconds": 3.025714125000377,
+        "steps_seconds": 19.839002708000407,
+        "total_seconds": 30.592868458999874,
+        "adapter_wall_seconds": 30.59462849999909,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაკეტე წყალი",
+          "focus": [
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6823118357839569,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": true,
+          "title": "ჩადგი ვედრო სიფონის ქვეშ",
+          "focus": [],
+          "avoid": [],
+          "focus_iou": 0.0,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუშვი ქანჩი",
+          "focus": [
+            "p5"
+          ],
+          "avoid": [],
+          "focus_iou": 0.707817242227873,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "შეამოწმე შუასადები",
+          "focus": [
+            "p4"
+          ],
+          "avoid": [],
+          "focus_iou": 0.5073778934929191,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუჭირე და შეამოწმე",
+          "focus": [
+            "p5",
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.16243893715350657,
+          "avoid_iou": 1.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაკეტე წყალი",
+          "focus": [
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6356320791958945,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": true,
+          "title": "ჩადგი ვედრო სიფონის ქვეშ",
+          "focus": [],
+          "avoid": [],
+          "focus_iou": 0.0,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუშვი ქანჩი",
+          "focus": [
+            "p4"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7147069664577957,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "შეამოწმე შუასადები",
+          "focus": [
+            "p5",
+            "p4"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7957061646112281,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუჭირე და შეამოწმე",
+          "focus": [
+            "p4",
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.1704831871202204,
+          "avoid_iou": 1.0
+        }
+      ],
+      "hybrid_parts": 5,
+      "astra_parts": 5,
+      "astra_generation_usd": 0.11765,
+      "hybrid_generation_usd": 0.09492650000000001,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 0,
+            "current": 0,
+            "iou": 0.9444992870461778,
+            "phone_id": "phone_1",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 3,
+            "current": 4,
+            "iou": 0.7022968197879857,
+            "phone_id": "phone_4",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 1,
+            "current": 1,
+            "iou": 0.6183206106870228,
+            "phone_id": "phone_2",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 2,
+            "current": 2,
+            "iou": 0.6158201229375605,
+            "phone_id": "phone_3",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 4,
+            "current": 3,
+            "iou": 0.53770086526576,
+            "phone_id": "phone_5",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_1",
+          "phone_2",
+          "phone_3",
+          "phone_5",
+          "phone_4"
+        ],
+        "unmatched": [],
+        "dropout": [],
+        "raw_id_stability": 0.6,
+        "raw_label_stability": 0.0
+      }
+    },
+    {
+      "frame": "c_astra_tracking/sink/shift_right",
+      "scene": "sink",
+      "kind": "shift_right",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 5.5313832920001005,
+        "time_to_first_outline_seconds": 7.691080124999644,
+        "time_to_first_step_from_start_seconds": 11.502665166999577,
+        "total_seconds": 24.723795292000432,
+        "sam_seconds": 2.1181808750006894,
+        "gemini_count_seconds": 0.795053874999212,
+        "gemini_usd": 0.00230775,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 0.9343962920011109,
+        "parts_preflight_seconds": 0.46015566700043564,
+        "steps_preflight_seconds": 0.4742406250006752,
+        "real_wall_time_to_first_box_seconds": 8.644591290998505,
+        "first_box_full_response_seconds": 8.644591290998505,
+        "first_box_model_only_seconds": 8.18443562399807,
+        "time_to_parts_response_seconds": 8.644591290998505,
+        "time_to_first_outline_seconds": 12.513149040998542,
+        "time_to_first_step_seconds": 4.6182717499996215,
+        "time_to_first_step_from_start_seconds": 17.136293165998723,
+        "sam_seconds": 3.782940666000286,
+        "steps_seconds": 19.068227833999117,
+        "total_seconds": 31.74391037499845,
+        "adapter_wall_seconds": 31.74518704199909,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაკეტე წყალი",
+          "focus": [
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6245719985980427,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": true,
+          "title": "ჩადგი ვედრო სიფონის ქვეშ",
+          "focus": [],
+          "avoid": [],
+          "focus_iou": 0.0,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუშვი ქანჩი",
+          "focus": [
+            "p4"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7047830740100436,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "შეამოწმე შუასადები",
+          "focus": [
+            "p3",
+            "p4"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6213311857859206,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუჭირე და შეამოწმე",
+          "focus": [
+            "p4",
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.17337505189505553,
+          "avoid_iou": 1.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაკეტე წყალი",
+          "focus": [
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.601622947725986,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": true,
+          "title": "ჩადგი ვედრო სიფონის ქვეშ",
+          "focus": [],
+          "avoid": [],
+          "focus_iou": 0.0,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუშვი ქანჩი",
+          "focus": [
+            "p4"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7053549395410051,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "შეამოწმე შუასადები",
+          "focus": [
+            "p5",
+            "p4"
+          ],
+          "avoid": [],
+          "focus_iou": 0.8156464152521399,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუჭირე და შეამოწმე",
+          "focus": [
+            "p4",
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.1751268776358382,
+          "avoid_iou": 1.0
+        }
+      ],
+      "hybrid_parts": 4,
+      "astra_parts": 5,
+      "astra_generation_usd": 0.11708750000000001,
+      "hybrid_generation_usd": 0.09272525,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 1,
+            "current": 0,
+            "iou": 0.9040966137816723,
+            "phone_id": "phone_2",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 3,
+            "current": 3,
+            "iou": 0.8837808807733623,
+            "phone_id": "phone_4",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 2,
+            "current": 1,
+            "iou": 0.8589473684210529,
+            "phone_id": "phone_3",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 4,
+            "current": 2,
+            "iou": 0.563420685377578,
+            "phone_id": "phone_5",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_2",
+          "phone_3",
+          "phone_5",
+          "phone_4"
+        ],
+        "unmatched": [],
+        "dropout": [
+          0
+        ],
+        "raw_id_stability": 0.25,
+        "raw_label_stability": 0.0
+      }
+    },
+    {
+      "frame": "c_astra_stress/car/dark_noise",
+      "scene": "car",
+      "kind": "dark_noise",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 4.190602542001216,
+        "time_to_first_outline_seconds": 5.455852834000325,
+        "time_to_first_step_from_start_seconds": 10.553610875000231,
+        "total_seconds": 20.83558287500091,
+        "sam_seconds": 1.2418093339983898,
+        "gemini_count_seconds": 0.9028189580003527,
+        "gemini_usd": 0.00163575,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 1.0810117080000055,
+        "parts_preflight_seconds": 0.5752335830002266,
+        "steps_preflight_seconds": 0.5057781249997788,
+        "real_wall_time_to_first_box_seconds": 5.565490667000631,
+        "first_box_full_response_seconds": 5.565490667000631,
+        "first_box_model_only_seconds": 4.990257084000405,
+        "time_to_parts_response_seconds": 5.565490667000631,
+        "time_to_first_outline_seconds": 7.162613708000208,
+        "time_to_first_step_seconds": 4.799576042001718,
+        "time_to_first_step_from_start_seconds": 11.964240625002276,
+        "sam_seconds": 1.536679250000816,
+        "steps_seconds": 15.718082709001465,
+        "total_seconds": 22.96737508300066,
+        "adapter_wall_seconds": 22.968283000000156,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "იპოვე ზეთის საზომი",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7530288909599254,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ამოიღე და გაწმინდე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7530288909599254,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "წაიკითხე დონე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7530288909599254,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაამატე ზეთი",
+          "focus": [
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.5877074161869286,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დახურე და გადაამოწმე",
+          "focus": [
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7457006369426752,
+          "avoid_iou": 1.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "იპოვე ზეთის საზომი",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7678460583488517,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ამოიღე და გაწმინდე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7678460583488517,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "წაიკითხე დონე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7678460583488517,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაამატე ზეთი",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7682027157061905,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დახურე და გადაამოწმე",
+          "focus": [
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7681113320079523,
+          "avoid_iou": 1.0
+        }
+      ],
+      "hybrid_parts": 2,
+      "astra_parts": 2,
+      "astra_generation_usd": 0.0983375,
+      "hybrid_generation_usd": 0.08254075000000001,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 1,
+            "current": 1,
+            "iou": 0.8761808367071529,
+            "phone_id": "phone_2",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 0,
+            "current": 0,
+            "iou": 0.839610797237917,
+            "phone_id": "phone_1",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_1",
+          "phone_2"
+        ],
+        "unmatched": [],
+        "dropout": [],
+        "raw_id_stability": 1.0,
+        "raw_label_stability": 0.0
+      }
+    },
+    {
+      "frame": "c_astra_stress/car/motion_blur",
+      "scene": "car",
+      "kind": "motion_blur",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 4.273001167000984,
+        "time_to_first_outline_seconds": 5.535668833999807,
+        "time_to_first_step_from_start_seconds": 10.346196333999615,
+        "total_seconds": 21.32395779199942,
+        "sam_seconds": 1.2345007920011994,
+        "gemini_count_seconds": 0.7904486659990653,
+        "gemini_usd": 0.0018045,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 0.89993695800149,
+        "parts_preflight_seconds": 0.43521429100110254,
+        "steps_preflight_seconds": 0.46472266700038745,
+        "real_wall_time_to_first_box_seconds": 5.409594499999002,
+        "first_box_full_response_seconds": 5.409594499999002,
+        "first_box_model_only_seconds": 4.9743802089979,
+        "time_to_parts_response_seconds": 5.409594499999002,
+        "time_to_first_outline_seconds": 7.534928000000946,
+        "time_to_first_step_seconds": 6.432993915999759,
+        "time_to_first_step_from_start_seconds": 13.969798956999512,
+        "sam_seconds": 2.0605679170002986,
+        "steps_seconds": 19.81926495799962,
+        "total_seconds": 27.47812950000116,
+        "adapter_wall_seconds": 27.479531832999783,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "იპოვე ზეთის საზომი",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.6370223978919631,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ამოიღე და გაწმინდე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.6370223978919631,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "წაიკითხე დონე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.6370223978919631,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაამატე ზეთი",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.8285238045629754,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დახურე და გადაამოწმე",
+          "focus": [
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7669045432063873,
+          "avoid_iou": 1.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "იპოვე ზეთის საზომი",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.6338212803146166,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ამოიღე და გაწმინდე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.6338212803146166,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "წაიკითხე დონე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.6338212803146166,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაამატე ზეთი",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.838189708617483,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დახურე და გადაამოწმე",
+          "focus": [
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7725710277095756,
+          "avoid_iou": 1.0
+        }
+      ],
+      "hybrid_parts": 2,
+      "astra_parts": 2,
+      "astra_generation_usd": 0.105775,
+      "hybrid_generation_usd": 0.087272,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 0,
+            "current": 0,
+            "iou": 0.8642578125000002,
+            "phone_id": "phone_1",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 1,
+            "current": 1,
+            "iou": 0.8062220414802769,
+            "phone_id": "phone_2",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_1",
+          "phone_2"
+        ],
+        "unmatched": [],
+        "dropout": [],
+        "raw_id_stability": 1.0,
+        "raw_label_stability": 0.0
+      }
+    },
+    {
+      "frame": "c_astra_stress/car/occlusion",
+      "scene": "car",
+      "kind": "occlusion",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 7.709821709000607,
+        "time_to_first_outline_seconds": 8.537982750000083,
+        "time_to_first_step_from_start_seconds": 13.918552625000302,
+        "total_seconds": 25.525738500000443,
+        "sam_seconds": 0.8067183340008341,
+        "gemini_count_seconds": 0.8242470000004687,
+        "gemini_usd": 0.003447,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 0.900172625999403,
+        "parts_preflight_seconds": 0.4416540839993104,
+        "steps_preflight_seconds": 0.45851854200009257,
+        "real_wall_time_to_first_box_seconds": 5.83390750000035,
+        "first_box_full_response_seconds": 5.83390750000035,
+        "first_box_model_only_seconds": 5.39225341600104,
+        "time_to_parts_response_seconds": 5.83390750000035,
+        "time_to_first_outline_seconds": 7.418853125000169,
+        "time_to_first_step_seconds": 5.2099705830005405,
+        "time_to_first_step_from_start_seconds": 12.630448707999676,
+        "sam_seconds": 1.5212786669999332,
+        "steps_seconds": 14.399802665999232,
+        "total_seconds": 21.939277625000614,
+        "adapter_wall_seconds": 21.9400736660009,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "იპოვე ზეთის საზომი",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7594611930724824,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ამოიღე და გაწმინდე",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7594611930724824,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "წაიკითხე დონე",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7594611930724824,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": true,
+          "title": "დაამატე ზეთი",
+          "focus": [],
+          "avoid": [],
+          "focus_iou": 0.0,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დახურე და გადაამოწმე",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.3403276803679218,
+          "avoid_iou": 1.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "იპოვე ზეთის საზომი",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7601026298909558,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ამოიღე და გაწმინდე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7601026298909558,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "წაიკითხე დონე",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7601026298909558,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაამატე ზეთი",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6635001055520372,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დახურე და გადაამოწმე",
+          "focus": [
+            "p1",
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7018459579885423,
+          "avoid_iou": 1.0
+        }
+      ],
+      "hybrid_parts": 1,
+      "astra_parts": 2,
+      "astra_generation_usd": 0.09295,
+      "hybrid_generation_usd": 0.0824145,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 1,
+            "current": 0,
+            "iou": 0.8908296943231447,
+            "phone_id": "phone_2",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_2"
+        ],
+        "unmatched": [],
+        "dropout": [
+          0
+        ],
+        "raw_id_stability": 0.0,
+        "raw_label_stability": 0.0
+      }
+    },
+    {
+      "frame": "c_astra_stress/gym/dark_noise",
+      "scene": "gym",
+      "kind": "dark_noise",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 5.778440500000215,
+        "time_to_first_outline_seconds": 8.81369745899974,
+        "time_to_first_step_from_start_seconds": 14.458733250001387,
+        "total_seconds": 23.98976924999988,
+        "sam_seconds": 2.999862208000195,
+        "gemini_count_seconds": 0.8214458749989717,
+        "gemini_usd": 0.00267675,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 1.2935735000010027,
+        "parts_preflight_seconds": 0.5421997500016005,
+        "steps_preflight_seconds": 0.7513737499994022,
+        "real_wall_time_to_first_box_seconds": 8.171551709001506,
+        "first_box_full_response_seconds": 8.171551709001506,
+        "first_box_model_only_seconds": 7.629351958999905,
+        "time_to_parts_response_seconds": 8.171551709001506,
+        "time_to_first_outline_seconds": 12.378295000000435,
+        "time_to_first_step_seconds": 5.705104791999474,
+        "time_to_first_step_from_start_seconds": 18.088374582999677,
+        "sam_seconds": 4.120050833000278,
+        "steps_seconds": 15.257787208998707,
+        "total_seconds": 27.742759916000068,
+        "adapter_wall_seconds": 27.744589833000646,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაარეგულირე სიმაღლე",
+          "focus": [
+            "p6",
+            "p5"
+          ],
+          "avoid": [
+            "p2"
+          ],
+          "focus_iou": 0.3286638598229212,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "აირჩიე წონა",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p6"
+          ],
+          "focus_iou": 0.009619341563786007,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოკიდე სახელურს",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.5390527465667915,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაჯექი და დაფიქსირდი",
+          "focus": [
+            "p5",
+            "p3",
+            "p4",
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6225234760896705,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ჩამოწიე მკერდამდე",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.31879308396428974,
+          "avoid_iou": 1.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაარეგულირე სიმაღლე",
+          "focus": [
+            "p7",
+            "p6"
+          ],
+          "avoid": [],
+          "focus_iou": 0.3338179568478849,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "აირჩიე წონა",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [
+            "p3"
+          ],
+          "focus_iou": 0.01198559670781893,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოკიდე სახელურს",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.5380993150684932,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაჯექი და დაფიქსირდი",
+          "focus": [
+            "p6",
+            "p4",
+            "p5",
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6227304114708152,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ჩამოწიე მკერდამდე",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [
+            "p3"
+          ],
+          "focus_iou": 0.31986897097029254,
+          "avoid_iou": 0.0
+        }
+      ],
+      "hybrid_parts": 6,
+      "astra_parts": 7,
+      "astra_generation_usd": 0.105725,
+      "hybrid_generation_usd": 0.08689425,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 3,
+            "current": 2,
+            "iou": 0.9051044540796217,
+            "phone_id": "phone_4",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 4,
+            "current": 3,
+            "iou": 0.8667856080880165,
+            "phone_id": "phone_5",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 5,
+            "current": 4,
+            "iou": 0.8565900044228222,
+            "phone_id": "phone_6",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 0,
+            "current": 0,
+            "iou": 0.846031925733047,
+            "phone_id": "phone_1",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 1,
+            "current": 1,
+            "iou": 0.5750000000000001,
+            "phone_id": "phone_2",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_1",
+          "phone_2",
+          "phone_4",
+          "phone_5",
+          "phone_6",
+          "phone_8"
+        ],
+        "unmatched": [
+          5
+        ],
+        "dropout": [
+          2,
+          6
+        ],
+        "raw_id_stability": 0.4,
+        "raw_label_stability": 0.0
+      }
+    },
+    {
+      "frame": "c_astra_stress/gym/motion_blur",
+      "scene": "gym",
+      "kind": "motion_blur",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 5.983220791998974,
+        "time_to_first_outline_seconds": 9.404132124998796,
+        "time_to_first_step_from_start_seconds": 15.72109004199956,
+        "total_seconds": 29.808687791999546,
+        "sam_seconds": 3.3832506670005387,
+        "gemini_count_seconds": 0.892384624999977,
+        "gemini_usd": 0.00284925,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 0.8452150000011898,
+        "parts_preflight_seconds": 0.4118977920006728,
+        "steps_preflight_seconds": 0.433317208000517,
+        "real_wall_time_to_first_box_seconds": 8.146368375000748,
+        "first_box_full_response_seconds": 8.146368375000748,
+        "first_box_model_only_seconds": 7.734470583000075,
+        "time_to_parts_response_seconds": 8.146368375000748,
+        "time_to_first_outline_seconds": 11.90638754199972,
+        "time_to_first_step_seconds": 5.361330833999091,
+        "time_to_first_step_from_start_seconds": 17.27257850099886,
+        "sam_seconds": 3.68021674999909,
+        "steps_seconds": 14.776247959000102,
+        "total_seconds": 26.801767082999504,
+        "adapter_wall_seconds": 26.80315037499895,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაარეგულირე სიმაღლე",
+          "focus": [
+            "p7",
+            "p6"
+          ],
+          "avoid": [
+            "p3"
+          ],
+          "focus_iou": 0.33631284916201115,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "აირჩიე წონა",
+          "focus": [
+            "p3",
+            "p2"
+          ],
+          "avoid": [
+            "p7"
+          ],
+          "focus_iou": 0.49745544062300284,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოკიდე სახელურს",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.5015566625155666,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაჯექი და დაფიქსირდი",
+          "focus": [
+            "p6",
+            "p4",
+            "p5",
+            "p1"
+          ],
+          "avoid": [
+            "p3",
+            "p7"
+          ],
+          "focus_iou": 0.5532459492600926,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ჩამოწიე მკერდამდე",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [
+            "p2",
+            "p3",
+            "p7"
+          ],
+          "focus_iou": 0.35911971331970116,
+          "avoid_iou": 0.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაარეგულირე სიმაღლე",
+          "focus": [
+            "p7"
+          ],
+          "avoid": [],
+          "focus_iou": 0.018158862771993266,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "აირჩიე წონა",
+          "focus": [
+            "p2"
+          ],
+          "avoid": [],
+          "focus_iou": 0.02124485596707819,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოკიდე სახელურს",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.5038239719157472,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაჯექი და დაფიქსირდი",
+          "focus": [
+            "p6",
+            "p4",
+            "p5",
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.5528039847641372,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ჩამოწიე მკერდამდე",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.3564619503488561,
+          "avoid_iou": 1.0
+        }
+      ],
+      "hybrid_parts": 7,
+      "astra_parts": 7,
+      "astra_generation_usd": 0.1101625,
+      "hybrid_generation_usd": 0.09366675,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 3,
+            "current": 4,
+            "iou": 0.9367625838214079,
+            "phone_id": "phone_4",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 1,
+            "current": 2,
+            "iou": 0.8733905579399128,
+            "phone_id": "phone_2",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 0,
+            "current": 0,
+            "iou": 0.8675669521657647,
+            "phone_id": "phone_1",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 5,
+            "current": 5,
+            "iou": 0.8613458528951481,
+            "phone_id": "phone_6",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 4,
+            "current": 3,
+            "iou": 0.8150206414734835,
+            "phone_id": "phone_5",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 2,
+            "current": 1,
+            "iou": 0.7812655705032393,
+            "phone_id": "phone_3",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 6,
+            "current": 6,
+            "iou": 0.770609318996415,
+            "phone_id": "phone_7",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_1",
+          "phone_3",
+          "phone_2",
+          "phone_5",
+          "phone_4",
+          "phone_6",
+          "phone_7"
+        ],
+        "unmatched": [],
+        "dropout": [],
+        "raw_id_stability": 0.42857142857142855,
+        "raw_label_stability": 0.0
+      }
+    },
+    {
+      "frame": "c_astra_stress/gym/occlusion",
+      "scene": "gym",
+      "kind": "occlusion",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 6.468038875000275,
+        "time_to_first_outline_seconds": 8.166081708001002,
+        "time_to_first_step_from_start_seconds": 14.173365582999395,
+        "total_seconds": 24.07657829100026,
+        "sam_seconds": 1.6720431250014371,
+        "gemini_count_seconds": 1.348901499999556,
+        "gemini_usd": 0.001968,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 0.8864244579999649,
+        "parts_preflight_seconds": 0.42742837500009045,
+        "steps_preflight_seconds": 0.4589960829998745,
+        "real_wall_time_to_first_box_seconds": 6.2792640830011806,
+        "first_box_full_response_seconds": 6.2792640830011806,
+        "first_box_model_only_seconds": 5.85183570800109,
+        "time_to_parts_response_seconds": 6.2792640830011806,
+        "time_to_first_outline_seconds": 8.581028000000515,
+        "time_to_first_step_seconds": 5.225134999998772,
+        "time_to_first_step_from_start_seconds": 13.808380249998663,
+        "sam_seconds": 2.237398082999789,
+        "steps_seconds": 17.034390040998915,
+        "total_seconds": 25.747452125000564,
+        "adapter_wall_seconds": 25.748329625001134,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": true,
+          "title": "დაარეგულირე სიმაღლე",
+          "focus": [],
+          "avoid": [],
+          "focus_iou": 0.0,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": true,
+          "title": "აირჩიე წონა",
+          "focus": [],
+          "avoid": [],
+          "focus_iou": 0.0,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოკიდე სახელურს",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.5355655112787865,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაჯექი და დაფიქსირდი",
+          "focus": [
+            "p1",
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.3543702790195776,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ჩამოწიე მკერდამდე",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.3138512441644382,
+          "avoid_iou": 1.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": true,
+          "title": "დაარეგულირე სიმაღლე",
+          "focus": [],
+          "avoid": [],
+          "focus_iou": 0.0,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": true,
+          "title": "აირჩიე წონა",
+          "focus": [],
+          "avoid": [],
+          "focus_iou": 0.0,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოკიდე სახელურს",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.5352140384010072,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "დაჯექი და დაფიქსირდი",
+          "focus": [
+            "p1",
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.35490244504816004,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "ჩამოწიე მკერდამდე",
+          "focus": [
+            "p1"
+          ],
+          "avoid": [],
+          "focus_iou": 0.3129916351188992,
+          "avoid_iou": 1.0
+        }
+      ],
+      "hybrid_parts": 3,
+      "astra_parts": 3,
+      "astra_generation_usd": 0.1073375,
+      "hybrid_generation_usd": 0.082223,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 0,
+            "current": 0,
+            "iou": 0.9177402376058955,
+            "phone_id": "phone_1",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 1,
+            "current": 2,
+            "iou": 0.9054494643688875,
+            "phone_id": "phone_2",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 2,
+            "current": 1,
+            "iou": 0.8879405721510994,
+            "phone_id": "phone_3",
+            "raw_id_equal": false,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_1",
+          "phone_3",
+          "phone_2"
+        ],
+        "unmatched": [],
+        "dropout": [],
+        "raw_id_stability": 0.3333333333333333,
+        "raw_label_stability": 0.0
+      }
+    },
+    {
+      "frame": "c_astra_stress/sink/dark_noise",
+      "scene": "sink",
+      "kind": "dark_noise",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 5.357750167000631,
+        "time_to_first_outline_seconds": 7.942013083000347,
+        "time_to_first_step_from_start_seconds": 13.300576291001562,
+        "total_seconds": 29.153065917000276,
+        "sam_seconds": 2.544990209000389,
+        "gemini_count_seconds": 0.9740425830004824,
+        "gemini_usd": 0.00252525,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 1.8231293329990876,
+        "parts_preflight_seconds": 1.12923495799987,
+        "steps_preflight_seconds": 0.6938943749992177,
+        "real_wall_time_to_first_box_seconds": 7.147445374999734,
+        "first_box_full_response_seconds": 7.147445374999734,
+        "first_box_model_only_seconds": 6.018210416999864,
+        "time_to_parts_response_seconds": 7.147445374999734,
+        "time_to_first_outline_seconds": 11.777545832999749,
+        "time_to_first_step_seconds": 6.418935957999565,
+        "time_to_first_step_from_start_seconds": 18.201131499998155,
+        "sam_seconds": 4.553257125000528,
+        "steps_seconds": 22.477773667000292,
+        "total_seconds": 34.39768645799995,
+        "adapter_wall_seconds": 34.39894366599947,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაკეტე წყალი",
+          "focus": [
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6769808389435525,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": true,
+          "title": "ჩადგი ვედრო სიფონის ქვეშ",
+          "focus": [],
+          "avoid": [],
+          "focus_iou": 0.0,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუშვი ქანჩი",
+          "focus": [
+            "p4"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7082117548978741,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "შეამოწმე შუასადები",
+          "focus": [
+            "p5"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6688073552452609,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუჭირე და შეამოწმე",
+          "focus": [
+            "p4",
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.15634921365271887,
+          "avoid_iou": 1.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაკეტე წყალი",
+          "focus": [
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6076096349103478,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": true,
+          "title": "ჩადგი ვედრო სიფონის ქვეშ",
+          "focus": [],
+          "avoid": [],
+          "focus_iou": 0.0,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუშვი ქანჩი",
+          "focus": [
+            "p4"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7109355509355509,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "შეამოწმე შუასადები",
+          "focus": [
+            "p5",
+            "p4"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7114587860350572,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუჭირე და შეამოწმე",
+          "focus": [
+            "p4",
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.16520604860138172,
+          "avoid_iou": 1.0
+        }
+      ],
+      "hybrid_parts": 5,
+      "astra_parts": 5,
+      "astra_generation_usd": 0.12588749999999999,
+      "hybrid_generation_usd": 0.09716775000000001,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 0,
+            "current": 0,
+            "iou": 0.9482807940957722,
+            "phone_id": "phone_1",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 3,
+            "current": 3,
+            "iou": 0.9044277074061394,
+            "phone_id": "phone_4",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 4,
+            "current": 4,
+            "iou": 0.6339337354374948,
+            "phone_id": "phone_5",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 2,
+            "current": 2,
+            "iou": 0.6059728782568948,
+            "phone_id": "phone_3",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 1,
+            "current": 1,
+            "iou": 0.6050796812749003,
+            "phone_id": "phone_2",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_1",
+          "phone_2",
+          "phone_3",
+          "phone_4",
+          "phone_5"
+        ],
+        "unmatched": [],
+        "dropout": [],
+        "raw_id_stability": 1.0,
+        "raw_label_stability": 0.0
+      }
     }
   ],
   "hybrid": {
     "first_box": {
-      "n": 1,
-      "p50": 6.98087120800119,
-      "p90": 6.98087120800119
+      "n": 20,
+      "p50": 5.88363833350013,
+      "p90": 7.749109054700421
     },
     "outline": {
-      "n": 1,
-      "p50": 17.97772616600014,
-      "p90": 17.97772616600014
+      "n": 20,
+      "p50": 8.639783771000111,
+      "p90": 12.037519808299296
     },
     "first_step": {
-      "n": 1,
-      "p50": 25.952303666999796,
-      "p90": 25.952303666999796
+      "n": 20,
+      "p50": 14.316049416500391,
+      "p90": 17.734673775299054
     },
     "total": {
-      "n": 1,
-      "p50": 41.06313787500039,
-      "p90": 41.06313787500039
+      "n": 20,
+      "p50": 25.47683374999997,
+      "p90": 32.52035869099873
     },
-    "steps": 5,
-    "empty_focus": 1,
-    "focus_iou": 0.38015026806817176,
-    "avoid_iou": 0.6
+    "steps": 100,
+    "empty_focus": 7,
+    "focus_iou": 0.5081093647492645,
+    "avoid_iou": 0.5354637958114113
   },
   "astra": {
     "first_box": {
-      "n": 1,
-      "p50": 7.491504999999961,
-      "p90": 7.491504999999961
+      "n": 20,
+      "p50": 7.474925374999657,
+      "p90": 11.405000291299624
     },
     "outline": {
-      "n": 1,
-      "p50": 13.577731291999953,
-      "p90": 13.577731291999953
+      "n": 20,
+      "p50": 11.709129083499647,
+      "p90": 16.529883053599956
     },
     "first_step": {
-      "n": 1,
-      "p50": 20.50725041700025,
-      "p90": 20.50725041700025
+      "n": 20,
+      "p50": 16.965322707998894,
+      "p90": 23.34113864939991
     },
     "total": {
-      "n": 1,
-      "p50": 38.97181629199986,
-      "p90": 38.97181629199986
+      "n": 20,
+      "p50": 28.19795354100006,
+      "p90": 36.79867306639954
     },
-    "steps": 5,
-    "empty_focus": 1,
-    "focus_iou": 0.3988893760607034,
-    "avoid_iou": 0.8
+    "steps": 100,
+    "empty_focus": 6,
+    "focus_iou": 0.512400505135425,
+    "avoid_iou": 0.6573610019646365
   },
   "cost": {
-    "gemini": 0.00226275,
-    "openai": 0.1003175
+    "gemini": 0.05227649999999999,
+    "openai": 1.7335625000000001
   },
+  "paired_cost": {
+    "hybrid": 1.7833475,
+    "astra": 2.234875
+  },
+  "faster_frames": {
+    "first_box": 14,
+    "outline": 15,
+    "first_step": 15,
+    "total": 16
+  },
+  "all_22_complete": false,
   "unsettled": 0
 }

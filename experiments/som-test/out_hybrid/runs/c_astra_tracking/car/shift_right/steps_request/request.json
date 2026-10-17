@@ -1,0 +1,161 @@
+{
+  "model": "gpt-6-astra",
+  "stage": "steps",
+  "prompt": "დაწერე მოცემული ნაბიჯები ქართულად, იმავე რიგით და title/text-ით. გამოიყენე მხოლოდ ტელეფონის მიერ მინიჭებული IDs. focus/avoid/markers/arrows მიუთითებს მხოლოდ ამ ნაწილებზე. avoid არის ნაწილი, რომელსაც არ უნდა შეეხო. როცა მოცემულ parts სიაში მოქმედების ხილული სამიზნის რამდენიმე plausible კანდიდატია, მიმაგრებულ ფოტოზე გადაამოწმე მდებარეობა და ხილული მტკიცებულება (წვეთები, სველი კვალი, შეერთება). აირჩიე ყველაზე სავარაუდო box ამ ხილული მტკიცებულების, მდებარეობის, label-ისა და ინსტრუქციის მიხედვით; არ აირჩიო მხოლოდ სიაში პირველი კანდიდატი და არ გამოიგონო მტკიცებულება. focus-ში მიუთითე მისი ID და warn-ში ჩაწერე გაურკვევლობა/დაშვება (uncertainty). არ დატოვო focus ცარიელი მხოლოდ იმიტომ, რომ რამდენიმე მსგავსი ხილული ნაწილია. empty focus დასაშვებია მხოლოდ მაშინ, როცა სამიზნე ნაწილების სიაში ან ფოტოზე საერთოდ არ ჩანს (უხილავია); ასეთ დროს არ გამოიგონო ID, არ აიძულო არარელევანტური ნაწილი, აღწერე unknown_parts-ში და warn-ში ახსენი. თუ დასადგმელი ნივთი (მაგ. ვედრო) არ ჩანს, დატოვე empty focus; ცარიელი ადგილის, ფონის ან დასადგმელი ზონის ID-ის გამოყენება აკრძალულია. rotate: cw/ccw; move: up/down/left/right/toward/away. ზომები/დოზები ფოტოდან დადასტურებულად არ მიიჩნიო. ეს კვლევაა. პირველი JSON გასაღები იყოს steps.\n{\"object\": \"ავტომობილის ძრავის განყოფილება\", \"parts\": [{\"id\": \"p1\", \"label\": \"ძრავის ზეთის ჩასასხმელი შავი ხუფი ძრავის საფარზე\", \"box\": [513, 296, 638, 357]}, {\"id\": \"p2\", \"label\": \"ყვითელი რგოლისებრი ზეთის საზომი ღეროს სახელური ძრავის საფარის ქვედა მარჯვენა კიდესთან\", \"box\": [626, 379, 674, 430]}], \"instructions\": [{\"title\": \"იპოვე ზეთის საზომი\", \"text\": \"ყვითელი რგოლი ძრავის საფარის ქვემოთ. ეს არის ზეთის საზომი ღერო.\"}, {\"title\": \"ამოიღე და გაწმინდე\", \"text\": \"ამოსწიე ღერო ბოლომდე, მშრალი ხელსახოცით გაწმინდე და ისევ ბოლომდე ჩადე.\"}, {\"title\": \"წაიკითხე დონე\", \"text\": \"კიდევ ერთხელ ამოიღე. ზეთის კვალი ორ ნიშნულს შორის უნდა იყოს.\"}, {\"title\": \"დაამატე ზეთი\", \"text\": \"თუ დონე MIN-თან ახლოსაა, მოხსენი ეს ხუფი საათის ისრის საწინააღმდეგოდ და ჩაასხი 200 მლ, შემდეგ გადაამოწმე.\"}, {\"title\": \"დახურე და გადაამოწმე\", \"text\": \"ხუფი მოუჭირე ბოლომდე, საზომი ღერო ჩადე თავის ადგილას. 2 წუთის შემდეგ კიდევ ერთხელ შეამოწმე დონე.\"}]}",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "steps": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "focus": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "p1",
+                  "p2"
+                ]
+              },
+              "description": "მოქმედების სამიზნე ხილული ნაწილების ID-ები (p1..pN). როდესაც მოქმედების სამიზნის რამდენიმე plausible კანდიდატია, აირჩიე ყველაზე სავარაუდო ID მდებარეობის/ინსტრუქციის მიხედვით და warn-ში ჩაწერე გაურკვევლობა. empty focus დასაშვებია მხოლოდ მაშინ, როცა სამიზნე ნაწილი სიაში/ფოტოზე საერთოდ არ ჩანს (უხილავია). არ გამოიგონო ID."
+            },
+            "avoid": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "p1",
+                  "p2"
+                ]
+              }
+            },
+            "markers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "part": {
+                    "type": "string",
+                    "enum": [
+                      "p1",
+                      "p2"
+                    ]
+                  },
+                  "label": {
+                    "type": "string"
+                  },
+                  "tone": {
+                    "type": "string",
+                    "enum": [
+                      "brand",
+                      "danger",
+                      "neutral"
+                    ]
+                  }
+                },
+                "required": [
+                  "part",
+                  "label",
+                  "tone"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "arrows": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "part": {
+                    "type": "string",
+                    "enum": [
+                      "p1",
+                      "p2"
+                    ]
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "rotate",
+                      "move"
+                    ]
+                  },
+                  "dir": {
+                    "type": "string",
+                    "enum": [
+                      "cw",
+                      "ccw",
+                      "up",
+                      "down",
+                      "left",
+                      "right",
+                      "toward",
+                      "away"
+                    ]
+                  }
+                },
+                "required": [
+                  "part",
+                  "type",
+                  "dir"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "tools": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "warn": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "გაფრთხილება, უსაფრთხოების რჩევა ან გაურკვევლობის (uncertainty) ახსნა, მათ შორის თუ სამიზნე უხილავია ან რამდენიმე კანდიდატს შორის შეირჩა ყველაზე სავარაუდო."
+            }
+          },
+          "required": [
+            "title",
+            "text",
+            "focus",
+            "avoid",
+            "markers",
+            "arrows",
+            "tools",
+            "warn"
+          ],
+          "additionalProperties": false
+        },
+        "minItems": 5,
+        "maxItems": 5
+      },
+      "unknown_parts": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "required": [
+      "steps",
+      "unknown_parts"
+    ],
+    "additionalProperties": false
+  },
+  "source": "/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/inputs/c_astra_tracking/car/shift_right/input.png",
+  "reasoning_effort": "low",
+  "stream": true,
+  "max_output_tokens": 2200,
+  "reserved_usd": 0.28182,
+  "input_token_estimate": 17182
+}

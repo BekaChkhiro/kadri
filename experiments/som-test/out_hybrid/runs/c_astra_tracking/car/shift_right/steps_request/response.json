@@ -1,0 +1,249 @@
+{
+  "id": "resp_09cdd27b2212aaaa016ad374db1adc87d2871381c595a1ee1e",
+  "created_at": 1792242907.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-6-astra",
+  "object": "response",
+  "output": [
+    {
+      "id": "msg_09cdd27b2212aaaa016ad374dc50a087d2a483ffdcc336b756",
+      "content": [
+        {
+          "annotations": [],
+          "text": "{\"steps\":[{\"title\":\"იპოვე ზეთის საზომი\",\"text\":\"ყვითელი რგოლი ძრავის საფარის ქვემოთ. ეს არის ზეთის საზომი ღერო.\",\"focus\":[\"p2\"],\"avoid\":[\"p1\"],\"markers\":[{\"part\":\"p2\",\"label\":\"ზეთის საზომი\",\"tone\":\"brand\"}],\"arrows\":[],\"tools\":[],\"warn\":\"შემოწმებისას ავტომობილი სწორ ზედაპირზე უნდა იდგეს და ძრავა გამორთული იყოს. მოერიდე ცხელ ნაწილებს.\"},{\"title\":\"ამოიღე და გაწმინდე\",\"text\":\"ამოსწიე ღერო ბოლომდე, მშრალი ხელსახოცით გაწმინდე და ისევ ბოლომდე ჩადე.\",\"focus\":[\"p2\"],\"avoid\":[\"p1\"],\"markers\":[],\"arrows\":[{\"part\":\"p2\",\"type\":\"move\",\"dir\":\"up\"},{\"part\":\"p2\",\"type\":\"move\",\"dir\":\"down\"}],\"tools\":[\"მშრალი, უბუსუსო ხელსახოცი\"],\"warn\":null},{\"title\":\"წაიკითხე დონე\",\"text\":\"კიდევ ერთხელ ამოიღე. ზეთის კვალი ორ ნიშნულს შორის უნდა იყოს.\",\"focus\":[\"p2\"],\"avoid\":[\"p1\"],\"markers\":[],\"arrows\":[{\"part\":\"p2\",\"type\":\"move\",\"dir\":\"up\"}],\"tools\":[],\"warn\":\"ფოტოზე ღეროს საზომი ბოლო და ნიშნულები არ ჩანს; ზეთის რეალური დონე ფოტოდან ვერ დგინდება.\"},{\"title\":\"დაამატე ზეთი\",\"text\":\"თუ დონე MIN-თან ახლოსაა, მოხსენი ეს ხუფი საათის ისრის საწინააღმდეგოდ და ჩაასხი 200 მლ, შემდეგ გადაამოწმე.\",\"focus\":[\"p1\"],\"avoid\":[],\"markers\":[{\"part\":\"p1\",\"label\":\"ზეთის ჩასასხმელი ხუფი\",\"tone\":\"brand\"}],\"arrows\":[{\"part\":\"p1\",\"type\":\"rotate\",\"dir\":\"ccw\"}],\"tools\":[\"მწარმოებლის სპეციფიკაციის შესაბამისი ძრავის ზეთი\",\"საზომი ჭურჭელი\",\"ძაბრი\"],\"warn\":\"200 მლ მოცემული ინსტრუქციის რაოდენობაა და არა ფოტოდან დადასტურებული საჭიროება. დაამატე მხოლოდ საჭიროების შემთხვევაში, გამორთულ ძრავაზე; არ გადააცილო MAX ნიშნულს და არ დაღვარო ზეთი ცხელ ნაწილებზე.\"},{\"title\":\"დახურე და გადაამოწმე\",\"text\":\"ხუფი მოუჭირე ბოლომდე, საზომი ღერო ჩადე თავის ადგილას. 2 წუთის შემდეგ კიდევ ერთხელ შეამოწმე დონე.\",\"focus\":[\"p1\",\"p2\"],\"avoid\":[],\"markers\":[],\"arrows\":[{\"part\":\"p1\",\"type\":\"rotate\",\"dir\":\"cw\"},{\"part\":\"p2\",\"type\":\"move\",\"dir\":\"down\"}],\"tools\":[\"მშრალი, უბუსუსო ხელსახოცი\"],\"warn\":\"ხუფი ზედმეტი ძალის გარეშე დაამაგრე. 2 წუთი მოცემული ინსტრუქციის დროა; თუ ავტომობილის სახელმძღვანელო სხვა მოცდის პერიოდს ითხოვს, მიჰყევი მას. შემოწმების შემდეგ ღერო ისევ ბოლომდე ჩადე.\"}],\"unknown_parts\":[\"ზეთის საზომი ღეროს საზომი ბოლო და MIN/MAX ნიშნულები ფოტოზე არ ჩანს.\"]}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message",
+      "phase": "final_answer"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1792242920.0,
+  "conversation": null,
+  "max_output_tokens": 2200,
+  "max_tool_calls": null,
+  "moderation": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_options": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "low",
+    "generate_summary": null,
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "name": "variant_c_steps",
+      "schema_": {
+        "type": "object",
+        "properties": {
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "focus": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "p1",
+                      "p2"
+                    ]
+                  },
+                  "description": "მოქმედების სამიზნე ხილული ნაწილების ID-ები (p1..pN). როდესაც მოქმედების სამიზნის რამდენიმე plausible კანდიდატია, აირჩიე ყველაზე სავარაუდო ID მდებარეობის/ინსტრუქციის მიხედვით და warn-ში ჩაწერე გაურკვევლობა. empty focus დასაშვებია მხოლოდ მაშინ, როცა სამიზნე ნაწილი სიაში/ფოტოზე საერთოდ არ ჩანს (უხილავია). არ გამოიგონო ID."
+                },
+                "avoid": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "p1",
+                      "p2"
+                    ]
+                  }
+                },
+                "markers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "part": {
+                        "type": "string",
+                        "enum": [
+                          "p1",
+                          "p2"
+                        ]
+                      },
+                      "label": {
+                        "type": "string"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": [
+                          "brand",
+                          "danger",
+                          "neutral"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "part",
+                      "label",
+                      "tone"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "arrows": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "part": {
+                        "type": "string",
+                        "enum": [
+                          "p1",
+                          "p2"
+                        ]
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "rotate",
+                          "move"
+                        ]
+                      },
+                      "dir": {
+                        "type": "string",
+                        "enum": [
+                          "cw",
+                          "ccw",
+                          "up",
+                          "down",
+                          "left",
+                          "right",
+                          "toward",
+                          "away"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "part",
+                      "type",
+                      "dir"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "tools": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "warn": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "გაფრთხილება, უსაფრთხოების რჩევა ან გაურკვევლობის (uncertainty) ახსნა, მათ შორის თუ სამიზნე უხილავია ან რამდენიმე კანდიდატს შორის შეირჩა ყველაზე სავარაუდო."
+                }
+              },
+              "required": [
+                "title",
+                "text",
+                "focus",
+                "avoid",
+                "markers",
+                "arrows",
+                "tools",
+                "warn"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 5,
+            "maxItems": 5
+          },
+          "unknown_parts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "steps",
+          "unknown_parts"
+        ],
+        "additionalProperties": false
+      },
+      "type": "json_schema",
+      "description": null,
+      "strict": true
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 2841,
+    "input_tokens_details": {
+      "cache_write_tokens": 2838,
+      "cached_tokens": 0
+    },
+    "output_tokens": 761,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 3602
+  },
+  "user": null,
+  "access_programs": null,
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": false,
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  }
+}

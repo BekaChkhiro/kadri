@@ -1,0 +1,156 @@
+[
+  {
+    "frame": "c_astra_tracking/car/original",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_tracking/car/shift_left",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_tracking/car/shift_right",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_tracking/chemistry/original",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_tracking/chemistry/shift_left",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_tracking/chemistry/shift_right",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_tracking/gym/original",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_tracking/gym/shift_left",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_tracking/gym/shift_right",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_tracking/microscope/original",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_tracking/sink/original",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_tracking/sink/shift_left",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_tracking/sink/shift_right",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_stress/car/dark_noise",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_stress/car/motion_blur",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_stress/car/occlusion",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_stress/gym/dark_noise",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_stress/gym/motion_blur",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_stress/gym/occlusion",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_stress/sink/dark_noise",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_stress/sink/motion_blur",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  },
+  {
+    "frame": "c_astra_stress/sink/occlusion",
+    "same_steps_prompt": true,
+    "same_parts_prompt": true,
+    "baseline_model": "gpt-6-astra",
+    "baseline_effort": "low"
+  }
+]

@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\"object\":\"ძრავის განყოფილება\",\"parts\":[{\"label\":\"ზეთის საზომი ღეროს ყვითელი რგოლისებრი სახელური\",\"box_2d\":[363,584,416,633]},{\"label\":\"ზეთის ჩასასხმელი ხუფი ძრავის საფარზე\",\"box_2d\":[283, 482, 333, 589]}]}",
+            "thoughtSignature": "EmgKZgFpFH0Tj6/DbQoEQCEFUUbZi7kP4RW1UzRK2AvGw8ddCpb45IJpWxCNJxnS3MLep4sciwQCCODEFuNKJnf/esKhrNNej2gtBOjJTtXvDiWgBEmEpuA33UmD7iAq/JOIQy6f6WyaAA=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1666,
+    "candidatesTokenCount": 103,
+    "totalTokenCount": 1769,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 566
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "5HXTaq3aFN-KxN8Pkq6w2AI"
+}

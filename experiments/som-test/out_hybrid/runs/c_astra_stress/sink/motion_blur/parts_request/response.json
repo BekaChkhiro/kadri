@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ნიჟარის ქვეშა სანტექნიკის სისტემა\",\n  \"parts\": [\n    {\n      \"label\": \"წყლის ჩამკეტი მარცხენა ვენტილი\",\n      \"box_2d\": [0, 0, 335, 160]\n    },\n    {\n      \"label\": \"წყლის ჩამკეტი მარჯვენა ვენტილი\",\n      \"box_2d\": [0, 203, 339, 321]\n    },\n    {\n      \"label\": \"თეთრი პლასტმასის სიფონი (U-სებრი მილი)\",\n      \"box_2d\": [0, 269, 493, 672]\n    },\n    {\n      \"label\": \"სიფონის ზედა პლასტმასის ქანჩი (შეერთება ვერტიკალურ მილთან)\",\n      \"box_2d\": [89, 269, 166, 497]\n    },\n    {\n      \"label\": \"სიფონის მარჯვენა პლასტმასის ქანჩი (შეერთება კედლის გამავალ მილთან)\",\n      \"box_2d\": [245, 622, 386, 747]\n    }\n  ]\n}",
+            "thoughtSignature": "EmgKZgFpFH0TPOEd41QB1V68B8H6XKLkw35emcTken5VoB8UupV5RmXkoypeW3keVJzHK5ugRUVt0MtPPUq1slsr0iXBqRQYLRtcPRxyMsaK25ScdGrIHYlhTEtmHXZfKe7TOggNgVsgwQ=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1672,
+    "candidatesTokenCount": 330,
+    "totalTokenCount": 2002,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1080
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 592
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "knbTaq7zM576nsEP3cuxmAs"
+}

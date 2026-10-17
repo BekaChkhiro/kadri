@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ზურგის სავარჯიშო ტრენაჟორი (lat pulldown)\",\n  \"parts\": [\n    {\n      \"label\": \"მოსაქაჩი გრძელი სახელური ზემოთ\",\n      \"box_2d\": [85, 137, 134, 936]\n    },\n    {\n      \"label\": \"მარცხენა მუხლის დამჭერი შავი ბალიში\",\n      \"box_2d\": [403, 356, 458, 517]\n    },\n    {\n      \"label\": \"მარჯვენა მუხლის დამჭერი შავი ბალიში\",\n      \"box_2d\": [403, 560, 458, 722]\n    },\n    {\n      \"label\": \"სავარძლის დასაჯდომი ბალიში\",\n      \"box_2d\": [486, 412, 545, 666]\n    },\n    {\n      \"label\": \"სიმაღლის მარეგულირებელი ყვითელი ღილაკი სავარძლის საყრდენზე\",\n      \"box_2d\": [574, 526, 588, 550]\n    },\n    {\n      \"label\": \"წონის ფილები\",\n      \"box_2d\": [304, 474, 474, 613]\n    },\n    {\n      \"label\": \"წონის ამომრჩევი ყვითელი ქინძისთავი ფილებზე\",\n      \"box_2d\": [343, 577, 355, 599]\n    }\n  ]\n}",
+            "thoughtSignature": "EmgKZgFpFH0Tnt0wrMlGwZCYbH+Q27OqMDg32332E0JSA6wukiJc6J1G2Ow1PYqWE3BBMDxa4181/gRebN8mH8Bo92AnGz0D1M45L9fi6pzO9VkKwjTJEQ4R0VRHjPF781oiQsF9HqoM6g=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1679,
+    "candidatesTokenCount": 431,
+    "totalTokenCount": 2110,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 579
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "dnXTaryMF4u6vdIP6rCmsAs"
+}

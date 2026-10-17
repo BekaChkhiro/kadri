@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ავტომობილის ძრავის განყოფილება\",\n  \"parts\": [\n    {\n      \"label\": \"ყვითელი რგოლისებრი ზეთის საზომი ღეროს სახელური ძრავის საფარის ქვედა მარჯვენა კიდესთან\",\n      \"box_2d\": [379, 626, 430, 674]\n    },\n    {\n      \"label\": \"ძრავის ზეთის ჩასასხმელი შავი ხუფი ძრავის საფარზე\",\n      \"box_2d\": [296, 513, 357, 638]\n    }\n  ]\n}",
+            "thoughtSignature": "EmgKZgFpFH0T6fxecdeXvMZkF9Ma8AgJOyo6PT2gPPzuZe3K5HVMtCjgUvqIfxAV5NQ2Fu6bDVzqXFZafIPFUZH3wytz3yaCS3EvSp/+a3C82XkUXoQtnyMoO2Ndi8a27snlj2XGSwH47A=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1666,
+    "candidatesTokenCount": 169,
+    "totalTokenCount": 1835,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 566
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "1XTTaqKEK8e-nsEP_d_2qAk"
+}

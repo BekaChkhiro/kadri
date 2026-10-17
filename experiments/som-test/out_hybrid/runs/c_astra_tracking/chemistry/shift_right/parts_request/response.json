@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ტიტრაციის ნაკრები\",\n  \"parts\": [\n    {\n      \"label\": \"პლასტმასის ძაბრი ბიურეტის თავზე\",\n      \"box_2d\": [18, 467, 102, 608]\n    },\n    {\n      \"label\": \"მინის ბიურეტი სითხით\",\n      \"box_2d\": [75, 497, 465, 574]\n    },\n    {\n      \"label\": \"ბიურეტის ონკანი ლურჯი სახელურით\",\n      \"box_2d\": [383, 482, 431, 595]\n    },\n    {\n      \"label\": \"ერლენმეიერის კოლბა ხსნარით\",\n      \"box_2d\": [461, 442, 622, 617]\n    },\n    {\n      \"label\": \"ინდიკატორის (ფენოლფთალეინის) საწვეთურიანი ბოთლი ლურჯი თავსახურით\",\n      \"box_2d\": [489, 321, 621, 397]\n    },\n    {\n      \"label\": \"თეთრი კერამიკული ფილა კოლბის ქვეშ\",\n      \"box_2d\": [595, 360, 644, 674]\n    },\n    {\n      \"label\": \"ლაბორატორიული შტატივი დამჭერით\",\n      \"box_2d\": [17, 514, 628, 995]\n    }\n  ]\n}",
+            "thoughtSignature": "EmgKZgFpFH0TsdFgAgLfH4INl0Kqn4EiCRKnEUZwneBb3+elatjyzz8cIBWVfKvlMfuAPWe61I47deu7Rv2Cww36J9uY2wkjhFEwAWMyYSK3pHj2U5XoWZqB1GtVnATLVhc36w0DMLeRYg=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1682,
+    "candidatesTokenCount": 429,
+    "totalTokenCount": 2111,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 582
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "J3XTarbBGtyf3boP0Irx2QE"
+}

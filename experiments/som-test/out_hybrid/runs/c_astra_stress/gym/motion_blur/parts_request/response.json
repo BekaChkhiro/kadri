@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ზურგის სავარჯიშო ტრენაჟორი (Lat Pulldown Machine)\",\n  \"parts\": [\n    {\n      \"label\": \"ზედა განიერი სახელური\",\n      \"box_2d\": [56, 89, 126, 902]\n    },\n    {\n      \"label\": \"წონის ფილები\",\n      \"box_2d\": [258, 431, 396, 574]\n    },\n    {\n      \"label\": \"წონის ამომრჩევი ყვითელი ქინძისთავი\",\n      \"box_2d\": [323, 529, 345, 568]\n    },\n    {\n      \"label\": \"ბარძაყის/მუხლის დამჭერი მარცხენა ბალიში\",\n      \"box_2d\": [386, 313, 444, 490]\n    },\n    {\n      \"label\": \"ბარძაყის/მუხლის დამჭერი მარჯვენა ბალიში\",\n      \"box_2d\": [386, 508, 448, 686]\n    },\n    {\n      \"label\": \"დასაჯდომი სავარძელი\",\n      \"box_2d\": [468, 368, 532, 626]\n    },\n    {\n      \"label\": \"სავარძლის სიმაღლის სარეგულირებელი ყვითელი ღილაკი\",\n      \"box_2d\": [553, 477, 578, 523]\n    }\n  ]\n}",
+            "thoughtSignature": "EmgKZgFpFH0TU1mgpO/pvJ2rt5AOP/EWNL/K/qANX0xbc2i2HV+fsmVWz7pzSL3kyPrAX8VujKEE/OwUqHemF6R74dEEr4fU+7S7UCCiNB5GFatyPWG+xdUxQ8yDFYFReUUfYyG7CLfNEQ=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1679,
+    "candidatesTokenCount": 424,
+    "totalTokenCount": 2103,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 579
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "P3bTarCjPNuF3boPm4TM-QI"
+}

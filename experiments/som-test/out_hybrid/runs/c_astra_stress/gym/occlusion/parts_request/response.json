@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ვარჯიშის ტრენაჟორი (ლატ-პულდაუნი)\",\n  \"parts\": [\n    {\"label\": \"მოხრილი ზედა სახელური (ლატ-პულდაუნის ღერძი)\", \"box_2d\": [71, 99, 120, 897]},\n    {\"label\": \"მუხლის დასაფიქსირებელი მარცხენა ბალიში\", \"box_2d\": [390, 318, 444, 426]},\n    {\"label\": \"მუხლის დასაფიქსირებელი მარჯვენა ბალიში\", \"box_2d\": [390, 574, 443, 680]}\n  ]\n}",
+            "thoughtSignature": "EmgKZgFpFH0Tr7FqxuuU1VDqc+Oq7ooX6QSdKRFZONS8ZfB9XHUZSR48jLMkkx4ll/RyF6F4fjEa5u6CNSKmcaxDJ1zxIycE9MDAZ/3Tge0z0gx2/BXOtEjIBNVvOd0OV3Hgn6ZQlVkgQA=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1679,
+    "candidatesTokenCount": 189,
+    "totalTokenCount": 1868,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 579
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "X3bTarqMCaO_nsEP8JzbuAk"
+}

@@ -1,0 +1,96 @@
+...............................gpt-6-astra/clean: outline=0.0042937079997500405, parts=2
+.gpt-6-astra/clean: outline=0.004162958999586408, parts=2
+gpt-6-astra/clean: outline=0.003245083000365412, parts=2
+gpt-6-astra/clean: outline=0.004014083999209106, parts=2
+gpt-6-astra/clean: outline=0.0025147500000457512, parts=2
+.gpt-6-astra/clean: outline=0.0030862919993523974, parts=2
+.......gpt-6-astra/clean: outline=0.004740624999612919, parts=2
+gpt-6-astra/clean: outline=0.0026547920006123604, parts=2
+....................................................test/test/original: ValueError
+test/test/shift_right: ValueError
+ანგარიში შექმნილია: /private/var/folders/qx/53_bv99d5_b2btd5lzyykkmw0000gn/T/tmpepox342m/REALISM.md
+ანგარიში შექმნილია: /private/var/folders/qx/53_bv99d5_b2btd5lzyykkmw0000gn/T/tmpvxq8i7td/reports/REALISM.md
+ანგარიში შექმნილია: /private/var/folders/qx/53_bv99d5_b2btd5lzyykkmw0000gn/T/tmpcs6sni58/report.md
+ანგარიში შექმნილია: /private/var/folders/qx/53_bv99d5_b2btd5lzyykkmw0000gn/T/tmpcs6sni58/report.md
+OPENAI_API_KEY არ არის; API არ გაშვებულა. დაამატეთ experiments/som-test/.env-ში.
+{
+  "models": [
+    "gpt-6-astra"
+  ],
+  "scenes": [
+    "sink",
+    "gym",
+    "car",
+    "chemistry",
+    "microscope",
+    "psychology",
+    "laundry"
+  ],
+  "runs": 3,
+  "modes": [
+    "clean"
+  ],
+  "effort": "minimal",
+  "max_side": 768,
+  "seed": 42,
+  "requests": 42,
+  "rates_input_output_per_million": {
+    "gpt-6-astra": [
+      10,
+      50
+    ]
+  },
+  "estimated_usd_by_model": {
+    "gpt-6-astra": 10.29
+  },
+  "estimated_total_usd": 10.29,
+  "already_spent_estimated_usd": 0,
+  "budget_usd": 2.0,
+  "fits_budget_estimate": false,
+  "estimate_basis": "16000 input tokens/stage; parts max 1200 output, steps max 2200. Larger prompts reserve more. Not a billing guarantee."
+}
+{
+  "models": [
+    "gpt-6-astra"
+  ],
+  "scenes": [
+    "sink",
+    "gym",
+    "car",
+    "chemistry",
+    "microscope",
+    "psychology",
+    "laundry"
+  ],
+  "runs": 3,
+  "modes": [
+    "clean"
+  ],
+  "effort": "minimal",
+  "max_side": 768,
+  "seed": 42,
+  "requests": 42,
+  "rates_input_output_per_million": {
+    "gpt-6-astra": [
+      10,
+      50
+    ]
+  },
+  "estimated_usd_by_model": {
+    "gpt-6-astra": 10.29
+  },
+  "estimated_total_usd": 10.29,
+  "already_spent_estimated_usd": 0,
+  "budget_usd": 2.0,
+  "fits_budget_estimate": false,
+  "estimate_basis": "16000 input tokens/stage; parts max 1200 output, steps max 2200. Larger prompts reserve more. Not a billing guarantee."
+}
+....OPENAI_API_KEY არ არის; API არ გაშვებულა.
+gpt-6-astra/clean: outline=0.003059916998608969, parts=2
+.......gpt-6-astra/dark: outline=0.003461042000708403, parts=2
+.gpt-6-astra/clean: outline=0.006814124999436899, parts=5
+......
+----------------------------------------------------------------------
+Ran 110 tests in 0.992s
+
+OK

@@ -1,0 +1,9 @@
+{
+  "completed_frames_validated": 20,
+  "schemas_valid": true,
+  "instructions_exact": true,
+  "assign_ids_exact": true,
+  "report_links_exist": true,
+  "credential_scan_passed": true,
+  "offline_tests": 110
+}

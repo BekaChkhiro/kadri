@@ -1,0 +1,36 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ავტომობილის ძრავის განყოფილება\",\n  \"parts\": [\n    {\n      \"label\": \"ზეთის საზომი ღეროს ყვითელი რგოლი ძრავის საფარის მარჯვენა ქვედა კიდესთან\",\n      \"box_2d\": [363, 585, 416, 633]\n    }\n  ]\n}",
+            "thoughtSignature": "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"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1666,
+    "candidatesTokenCount": 102,
+    "totalTokenCount": 2252,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 566
+      }
+    ],
+    "thoughtsTokenCount": 484,
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "DnbTav7uFcuR3boPq9PriAw"
+}

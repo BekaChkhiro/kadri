@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\"object\": \"მიკროსკოპი\", \"parts\": [{\"label\": \"განათების ჩამრთველი ღილაკი ფუძეზე\", \"box_2d\": [556, 600, 574, 649]}, {\"label\": \"განათების წყარო ფუძეზე (ანთებული)\", \"box_2d\": [474, 363, 552, 532]}, {\"label\": \"რევოლვერი ობიექტივებით\", \"box_2d\": [217, 287, 362, 545]}, {\"label\": \"ობიექტივი მარცხნივ\", \"box_2d\": [232, 286, 328, 423]}, {\"label\": \"ცენტრალური ობიექტივი\", \"box_2d\": [250, 403, 359, 489]}, {\"label\": \"მოკლე ობიექტივი მარჯვნივ\", \"box_2d\": [256, 481, 322, 543]}, {\"label\": \"საგნების მაგიდა\", \"box_2d\": [337, 218, 448, 663]}, {\"label\": \"საგნობრივი მინა ნიმუშით\", \"box_2d\": [347, 345, 407, 517]}, {\"label\": \"პრეპარატის მარცხენა სამაგრი\", \"box_2d\": [351, 310, 372, 338]}, {\"label\": \"პრეპარატის მარჯვენა სამაგრი\", \"box_2d\": [368, 529, 392, 592]}, {\"label\": \"ოკულარი\", \"box_2d\": [18, 161, 164, 404]}, {\"label\": \"ფოკუსირების დიდი ხრახნი მარჯვენა მხარეს ქვემოთ\", \"box_2d\": [453, 698, 549, 866]}, {\"label\": \"მიკროფოკუსირების პატარა ხრახნი მარჯვენა მხარეს ზემოთ\", \"box_2d\": [392, 722, 453, 831]}]}",
+            "thoughtSignature": "EmgKZgFpFH0TasWzQDboR4xllxgFxW4h8IIcEemoVHM17zFRz+zAOq7OWq+ErnAQKHTPIQ+Q3Pc0Hs1ZZYTNaVEBufA+ZxQFXj6DzgAp2j0FLKCNvtoT86KKg0ErvJ9CzODWajLLk4679Q=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1651,
+    "candidatesTokenCount": 583,
+    "totalTokenCount": 2234,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1080
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 571
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "kXXTavGCF_Hp7M8Po8meoAU"
+}

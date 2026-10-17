@@ -8,6 +8,162 @@
     "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/sink/original/steps_request": {
       "state": "settled",
       "usd": 0.1003175
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/car/original/parts_request": {
+      "state": "settled",
+      "usd": 0.00180825
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/car/original/steps_request": {
+      "state": "settled",
+      "usd": 0.073655
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/car/shift_left/parts_request": {
+      "state": "settled",
+      "usd": 0.00193575
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/car/shift_left/steps_request": {
+      "state": "settled",
+      "usd": 0.0787675
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/car/shift_right/parts_request": {
+      "state": "settled",
+      "usd": 0.00188325
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/car/shift_right/steps_request": {
+      "state": "settled",
+      "usd": 0.073555
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/chemistry/original/parts_request": {
+      "state": "settled",
+      "usd": 0.0029865
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/chemistry/original/steps_request": {
+      "state": "settled",
+      "usd": 0.0973175
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/chemistry/shift_left/parts_request": {
+      "state": "settled",
+      "usd": 0.0026115
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/chemistry/shift_left/steps_request": {
+      "state": "settled",
+      "usd": 0.0959425
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/chemistry/shift_right/parts_request": {
+      "state": "settled",
+      "usd": 0.00287025
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/chemistry/shift_right/steps_request": {
+      "state": "settled",
+      "usd": 0.0852925
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/gym/original/parts_request": {
+      "state": "settled",
+      "usd": 0.00266925
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/gym/original/steps_request": {
+      "state": "settled",
+      "usd": 0.08593
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/gym/shift_left/parts_request": {
+      "state": "settled",
+      "usd": 0.00268425
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/gym/shift_left/steps_request": {
+      "state": "settled",
+      "usd": 0.084955
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/gym/shift_right/parts_request": {
+      "state": "settled",
+      "usd": 0.0028755
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/gym/shift_right/steps_request": {
+      "state": "settled",
+      "usd": 0.08518
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/microscope/original/parts_request": {
+      "state": "settled",
+      "usd": 0.0034245
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/microscope/original/steps_request": {
+      "state": "settled",
+      "usd": 0.0945925
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/sink/shift_left/parts_request": {
+      "state": "settled",
+      "usd": 0.002559
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/sink/shift_left/steps_request": {
+      "state": "settled",
+      "usd": 0.0923675
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/sink/shift_right/parts_request": {
+      "state": "settled",
+      "usd": 0.00230775
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_tracking/sink/shift_right/steps_request": {
+      "state": "settled",
+      "usd": 0.0904175
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_stress/car/dark_noise/parts_request": {
+      "state": "settled",
+      "usd": 0.00163575
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_stress/car/dark_noise/steps_request": {
+      "state": "settled",
+      "usd": 0.080905
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_stress/car/motion_blur/parts_request": {
+      "state": "settled",
+      "usd": 0.0018045
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_stress/car/motion_blur/steps_request": {
+      "state": "settled",
+      "usd": 0.0854675
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_stress/car/occlusion/parts_request": {
+      "state": "settled",
+      "usd": 0.003447
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_stress/car/occlusion/steps_request": {
+      "state": "settled",
+      "usd": 0.0789675
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_stress/gym/dark_noise/parts_request": {
+      "state": "settled",
+      "usd": 0.00267675
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_stress/gym/dark_noise/steps_request": {
+      "state": "settled",
+      "usd": 0.0842175
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_stress/gym/motion_blur/parts_request": {
+      "state": "settled",
+      "usd": 0.00284925
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_stress/gym/motion_blur/steps_request": {
+      "state": "settled",
+      "usd": 0.0908175
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_stress/gym/occlusion/parts_request": {
+      "state": "settled",
+      "usd": 0.001968
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_stress/gym/occlusion/steps_request": {
+      "state": "settled",
+      "usd": 0.080255
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_stress/sink/dark_noise/parts_request": {
+      "state": "settled",
+      "usd": 0.00252525
+    },
+    "openai:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_stress/sink/dark_noise/steps_request": {
+      "state": "settled",
+      "usd": 0.0946425
+    },
+    "gemini:/Users/beqolozi/Library/Application Support/ThreadRig/engine/9B5674B9-639E-4816-A573-3CC793F52B24/workspace/checkout/experiments/som-test/out_hybrid/runs/c_astra_stress/sink/motion_blur/parts_request": {
+      "state": "settled",
+      "usd": 0.0024915
     }
   }
 }

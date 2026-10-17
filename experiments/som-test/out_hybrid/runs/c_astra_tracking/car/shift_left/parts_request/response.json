@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ავტომობილის ძრავის განყოფილება\",\n  \"parts\": [\n    {\n      \"label\": \"ზეთის საზომი ღერო (ყვითელი რგოლის ფორმის სახელურით ძრავის საფარის ქვედა კიდესთან)\",\n      \"box_2d\": [379, 545, 431, 595]\n    },\n    {\n      \"label\": \"ძრავის ზეთის ჩასასხმელი ხუფი (შავი მრგვალი თავსახური ძრავის პლასტმასის საფარზე)\",\n      \"box_2d\": [296, 438, 350, 549]\n    }\n  ]\n}",
+            "thoughtSignature": "EmgKZgFpFH0T6uOLy8qX5C7Z4fRRIaYWEjBgAuCs0YDG+4TrDMJ9CXXcE5WjFuicthsTtGVNEVK238bwCK7qxMIAuQF9Ga0caXIewEdvYRMS6FNluotzivRHnp4YdW7ZhJRWuZJ5QqQ2Zg=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1666,
+    "candidatesTokenCount": 183,
+    "totalTokenCount": 1849,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 566
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "v3TTav-ZAaHAkdUP7YbtgQw"
+}

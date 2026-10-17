@@ -1,0 +1,10 @@
+{
+  "real_wall_time_to_first_box_seconds": 6.468038875000275,
+  "time_to_first_outline_seconds": 8.166081708001002,
+  "time_to_first_step_from_start_seconds": 14.173365582999395,
+  "total_seconds": 24.07657829100026,
+  "sam_seconds": 1.6720431250014371,
+  "gemini_count_seconds": 1.348901499999556,
+  "gemini_usd": 0.001968,
+  "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+}

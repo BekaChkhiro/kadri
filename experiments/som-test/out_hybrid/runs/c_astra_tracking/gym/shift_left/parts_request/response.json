@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ზურგის სავარჯიშო ტრენაჟორი (Lat Pulldown)\",\n  \"parts\": [\n    {\n      \"label\": \"ჩამოსაქაჩი განიერი სახელური\",\n      \"box_2d\": [86, 61, 134, 856]\n    },\n    {\n      \"label\": \"სავარძლის სიმაღლის სარეგულირებელი ყვითელი ღილაკი\",\n      \"box_2d\": [569, 444, 589, 471]\n    },\n    {\n      \"label\": \"წონის ასარჩევი ყვითელი ქინძისთავი წონების ფილებზე\",\n      \"box_2d\": [343, 497, 356, 519]\n    },\n    {\n      \"label\": \"მუხლების დასაფიქსირებელი მარცხენა ბალიში\",\n      \"box_2d\": [404, 276, 459, 442]\n    },\n    {\n      \"label\": \"მუხლების დასაფიქსირებელი მარჯვენა ბალიში\",\n      \"box_2d\": [403, 477, 460, 642]\n    },\n    {\n      \"label\": \"დასაჯდომი ბალიში\",\n      \"box_2d\": [487, 332, 546, 583]\n    }\n  ]\n}",
+            "thoughtSignature": "EmgKZgFpFH0TMI0UatWKIdgb5Yj9lktGayJZivomw5quwY5E+6Bf2+KrQ1RrjNveT8vzcu48Pw9xl4e0fBXNL7qbeVScwJ9yEZ84GpnqhrBUjacYBJ//4pSlRxd9xCWiGzc/6uazGkVDuA=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1679,
+    "candidatesTokenCount": 380,
+    "totalTokenCount": 2059,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 579
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "XXXTarn4DfGK7M8PwfaZmQg"
+}
