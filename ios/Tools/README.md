@@ -55,3 +55,28 @@ PNGs (cyan agreement, red candidate-only, yellow reference-only). These, `.cache
 `.venv/`, and everything under `ios/Models/` except its `.gitignore` are excluded from git.
 Rebuild packages in the integration checkout with the commands above; git integration
 does not transfer ignored model binaries. No Swift changes are included.
+
+## E2E: Codex as the user (`e2e_codex_loop.py`)
+
+A visible end-to-end run of the photo flow in the iOS Simulator against the staging Worker.
+Codex (`codex exec`, image generation) produces each photo; the Debug app, launched with
+`--autopilot <dir>`, submits it, walks every step (`--autopilot-step-delay`, default 3.5 s)
+and writes `round-N.result.json`. When the steps end with `needs_photo`, Codex makes the
+next photo from the previous one plus the model's request, up to `--max-rounds`.
+
+```sh
+python3 ios/Tools/e2e_codex_loop.py --udid <simulator-udid>            # builds Debug into /tmp/kadri-e2e-dd
+python3 ios/Tools/e2e_codex_loop.py --udid <udid> --app <Kadri.app> --cost-cap 0.60
+python3 ios/Tools/e2e_codex_loop.py --udid <udid> --reuse /tmp/kadri-e2e/<run>  # same photos, no Codex
+```
+
+Stdlib Python only (no `uv`). The session token comes from `$KADRI_SESSION_TOKEN` or is
+minted with `backend/worker/scripts/dev_token.mjs` and `~/.config/kadri/staging.env`; it is
+passed only as a launch argument and never printed or written. Each round costs about
+$0.05–0.10 (steps `costUsd`; `/ai/parts` is not reported) and counts toward the daily limit;
+the driver stops before a round that could pass `--cost-cap`.
+
+Output in `--out` (default `/tmp/kadri-e2e/<timestamp>`): `report.md`, `codex/round-N.png`,
+`shots/` (a simulator screenshot on every `status.json` change), and the autopilot files —
+`status.json`, `round-N.result.json`, `round-N.error.json`, `done.json`. The autopilot is
+compiled only into `DEBUG` simulator builds (`ios/Kadri/Photo/PhotoAutopilot.swift`).
