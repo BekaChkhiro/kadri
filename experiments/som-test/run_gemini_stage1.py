@@ -30,7 +30,7 @@ def geometry_proxy(masks, frame):
         values = [iou(ref, m) for m in resized] if ref.any() else []
         best = int(np.argmax(values)) if values else None
         rows.append({'name': part['name'], 'visible_pixels': int(ref.sum()),
-                     'best_iou': values[best] if best is not None else None,
+                     'best_iou': values[best] if best is not None else (0.0 if ref.any() else None),
                      'best_id': f'p{best+1}' if best is not None else None})
     return rows
 
@@ -59,7 +59,6 @@ def summarize(out, mode, models, frames):
     for model in models:
         rows = [compare(out, mode, model, frame) for frame in frames
                 if (destination(out, mode, model, frame) / 'parts.png').exists()]
-        matches = [r['match'] for r in rows]
         # match_frames matches have per-frame counts derived from labels/parts above.
         matched = sum(len(r['match']['matches']) for r in rows)
         astra_n = sum(r['astra_part_count'] for r in rows)

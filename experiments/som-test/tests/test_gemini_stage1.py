@@ -81,3 +81,22 @@ class GeminiStage1Tests(unittest.TestCase):
             row = next(iter(json.loads((root / 'budget.json').read_text())['requests'].values()))
             self.assertEqual(row['state'], 'reserved')
             self.assertGreater(row['usd'], .7)
+
+
+class GeminiProxyTests(unittest.TestCase):
+    def test_missing_predictions_score_zero_visible_truth_only(self):
+        import numpy as np
+        from unittest.mock import patch
+        import run_gemini_stage1 as runner
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            frame = root/'frame'
+            (frame/'run_1').mkdir(parents=True)
+            (frame/'truth.json').write_text(json.dumps({'parts': [{'name': 'visible'}, {'name': 'occluded'}]}))
+            refs = np.zeros((2, 4, 4), bool)
+            refs[0, 1:3, 1:3] = True
+            np.savez(frame/'truth_masks.npz', visible=refs)
+            with patch.object(runner, 'HERE', root):
+                rows = runner.geometry_proxy(np.zeros((0,2,2), bool), {'baseline': 'frame/run_1'})
+            self.assertEqual(rows[0]['best_iou'], 0)
+            self.assertIsNone(rows[1]['best_iou'])
