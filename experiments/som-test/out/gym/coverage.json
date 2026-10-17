@@ -1,0 +1,42 @@
+[
+  {
+    "part": "BAR",
+    "best_id": "p3",
+    "best_iou": 0.5275563909774436
+  },
+  {
+    "part": "UPRIGHTS",
+    "best_id": "p15",
+    "best_iou": 0.05373433106143654
+  },
+  {
+    "part": "CABLE",
+    "best_id": "p3",
+    "best_iou": 0.03267184788349808
+  },
+  {
+    "part": "STACK",
+    "best_id": "p10",
+    "best_iou": 0.09233496714985921
+  },
+  {
+    "part": "PADS",
+    "best_id": "p10",
+    "best_iou": 0.4225393895444657
+  },
+  {
+    "part": "SEAT",
+    "best_id": "p15",
+    "best_iou": 0.9118283367919113
+  },
+  {
+    "part": "BASE",
+    "best_id": "p16",
+    "best_iou": 0.0022039988438038853
+  },
+  {
+    "part": "POST",
+    "best_id": "p15",
+    "best_iou": 0.005479041916167665
+  }
+]

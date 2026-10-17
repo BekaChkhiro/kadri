@@ -1,0 +1,32 @@
+[
+  {
+    "part": "COVER",
+    "best_id": "p8",
+    "best_iou": 0.8477495466636562
+  },
+  {
+    "part": "CAP",
+    "best_id": "p6",
+    "best_iou": 0.5335840945728103
+  },
+  {
+    "part": "DIP",
+    "best_id": "p8",
+    "best_iou": 0.002306393703782961
+  },
+  {
+    "part": "COOLANT",
+    "best_id": "p4",
+    "best_iou": 0.788320826612432
+  },
+  {
+    "part": "WASHER",
+    "best_id": "p13",
+    "best_iou": 0.8315224178843512
+  },
+  {
+    "part": "BATTERY",
+    "best_id": "p5",
+    "best_iou": 0.1525318421870146
+  }
+]

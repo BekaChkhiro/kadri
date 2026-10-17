@@ -1,0 +1,8 @@
+.env
+.venv/
+__pycache__/
+models/
+.cache/
+out/*/run_*/
+out/*/step_*.png
+out/available_models.json

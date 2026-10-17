@@ -1,0 +1,32 @@
+[
+  {
+    "part": "TAILPIPE",
+    "best_id": "p4",
+    "best_iou": 0.4456546300899354
+  },
+  {
+    "part": "TRAP",
+    "best_id": "p7",
+    "best_iou": 0.33482156195712026
+  },
+  {
+    "part": "NUT",
+    "best_id": "p10",
+    "best_iou": 0.7149844559585492
+  },
+  {
+    "part": "WALL",
+    "best_id": "p7",
+    "best_iou": 0.22298968893809903
+  },
+  {
+    "part": "VALVE_R",
+    "best_id": "p6",
+    "best_iou": 0.017981438515081206
+  },
+  {
+    "part": "VALVE_L",
+    "best_id": "p5",
+    "best_iou": 0.5383097075183922
+  }
+]
