@@ -11,12 +11,14 @@ struct ContentView: View {
     }()
     var body: some View {
         NavigationStack(path: $path) {
-            ThemePreview()
+            PhotoFlowView()
                 .toolbar {
-                    NavigationLink("სესია", value: "flow")
-                    NavigationLink("AR დებაგი", value: "ar")
-                    NavigationLink("SAM bench", value: "sam")
-                    NavigationLink("შესვლა", value: "signin")
+                    Menu("დებაგი", systemImage: "ellipsis.circle") {
+                        NavigationLink("სესია", value: "flow")
+                        NavigationLink("AR დებაგი", value: "ar")
+                        NavigationLink("SAM bench", value: "sam")
+                        NavigationLink("შესვლა", value: "signin")
+                    }
                 }
                 .navigationDestination(for: String.self) { destination in
                     switch destination {
