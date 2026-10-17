@@ -1,11 +1,12 @@
 import { googleSignIn, me, refreshSession } from "./auth";
 import type { Env } from "./env";
 import { json } from "./errors";
+import { registerHistoryRoutes } from "./history";
 import { Router } from "./router";
 
 export { requireSession } from "./session";
 
-export const router = new Router()
+export const router = registerHistoryRoutes(new Router())
   .get("/health", ({ env }) =>
     json({
       ok: true,

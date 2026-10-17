@@ -89,6 +89,31 @@ production-ისთვის იგივე `--env production`-ით (`kadri-
 `assertDailyLimit` აგდებს `LimitError`-ს (`ApiError` + `headers`); `Retry-After` პასუხამდე რომ მივიდეს, router-მა
 `errorResponse(err, err.headers)` უნდა გამოიძახოს `LimitError`-ისთვის.
 
+## History
+
+სესიების ისტორია (`src/history.ts`, სქემა `migrations/0001_init.sql`: `sessions`, `steps`, `feedback`, ON DELETE CASCADE).
+ყველა endpoint-ს სჭირდება `Authorization: Bearer <session>` და მუშაობს მხოლოდ საკუთარ სესიებზე:
+ტოკენის გარეშე → 401, სხვისი სესია → 403 `forbidden` („ამ სესიაზე წვდომა არ გაქვთ“), არარსებული → 404,
+არასწორი body → 400 `invalid_request`.
+
+| Endpoint | Body | პასუხი |
+|---|---|---|
+| `POST /sessions` | `{instructions, objectName?}` | 201 `{id, createdAt}` |
+| `PUT /sessions/:id/keyframe` | `image/jpeg`, ≤ 2 MB (სხვა ტიპი → 415, დიდი → 413) | `{keyframeUrl}` |
+| `GET /sessions/:id/keyframe` | — | `image/jpeg` R2-დან |
+| `PATCH /sessions/:id` | `{status?, objectName?, parts?, costUsd?}` | `{id, updatedAt}` |
+| `PUT /sessions/:id/steps` | `[{idx, title, text, focus[], avoid[]}]` (ყველას ცვლის) | `{id, stepCount, updatedAt}` |
+| `POST /sessions/:id/feedback` | `{rating: 1–5, comment?}` | 201 `{id, createdAt}` |
+| `GET /sessions?limit=20&cursor=` | — | `{sessions:[{id, objectName, status, createdAt, stepCount, keyframeUrl}], nextCursor}` |
+| `GET /sessions/:id` | — | სრული: `parts`, `steps`, `feedback`, `costUsd`, `keyframeUrl`, … |
+| `DELETE /sessions/:id` | — | 204; D1 ჩანაწერები და R2 ფოტო იშლება |
+
+- `status`: `created | parts | steps | done | failed`.
+- `parts`: `[{id, name, box:[x1,y1,x2,y2]}]`, კოორდინატები 0–1000, `x1≤x2`, `y1≤y2`, `id` უნიკალური (≤ 50 ცალი).
+- R2 key: `users/<sub>/sessions/<id>/keyframe.jpg`. `keyframeUrl` აბსოლუტური URL-ია და იგივე Bearer token-ით იხსნება.
+- სია ახლიდან ძველისკენაა (`created_at DESC, id DESC`), `limit` 1–50; შემდეგი გვერდისთვის `nextCursor` → `cursor`.
+- Migration: `npx wrangler d1 migrations apply <db> --local|--remote --env <env>` (0000 და 0001 თანმიმდევრობით).
+
 ## Deploy (ადამიანმა უნდა გააკეთოს)
 
 1. `npx wrangler login`
