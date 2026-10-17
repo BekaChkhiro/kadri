@@ -16,6 +16,9 @@ final class PhotoSession: ObservableObject {
     private var segmentation: Task<Void, Never>?
     private var preparedResult: PartsResult?
     private let authError: SessionError?
+    /// A finished earlier round's photo; `rounds[i]` is round `i + 1`. The current round lives in `image`/`jpeg`/`meshes`.
+    private struct PhotoRound { let image: UIImage; let jpeg: Data; let apiJPEG: Data; let meshes: [TrackedMesh] }
+    private var rounds: [PhotoRound] = []
     var imageSize: CGSize { image?.size ?? CGSize(width: 1024, height: 1536) }
 
     init(api: (any KadriAPI)? = nil) {
@@ -30,7 +33,12 @@ final class PhotoSession: ObservableObject {
         catch { storage = InMemoryTokenStorage(); authError = SessionError(error) }
         let live = { KadriClient(config: config, auth: AuthStore(config: config, storage: storage)) }
         #if DEBUG
-        model = SessionModel(api: api ?? (isMock ? MockKadriAPI(scanDelay: .seconds(1.2), stepDelay: .seconds(2.5)) : live()))
+        #if targetEnvironment(simulator)
+        let multiPhoto = ProcessInfo.processInfo.arguments.contains("--photo-multi")
+        #else
+        let multiPhoto = false
+        #endif
+        model = SessionModel(api: api ?? (isMock ? MockKadriAPI(scanDelay: .seconds(1.2), stepDelay: .seconds(2.5), multiPhoto: multiPhoto) : live()))
         #else
         model = SessionModel(api: api ?? live())
         #endif
@@ -40,13 +48,43 @@ final class PhotoSession: ObservableObject {
     func select(_ source: UIImage) {
         cancelSegmentation()
         if case .describing = model.phase {} else { model.beginDescribing() }
-        // Rasterize orientation once. SAM and display consume the 1536 px JPEG; the detector gets a 768 px copy.
-        guard source.size.width > 0, source.size.height > 0 else { selectionError = "ფოტოს წაკითხვა ვერ მოხერხდა."; return }
+        rounds = []
+        guard let prepared = prepare(source) else { return }
+        jpeg = prepared.jpeg; apiJPEG = prepared.apiJPEG; image = prepared.image; selectionError = nil
+    }
+
+    /// Rasterize orientation once. SAM and display consume the 1536 px JPEG; the detector gets a 768 px copy.
+    private func prepare(_ source: UIImage) -> (jpeg: Data, apiJPEG: Data, image: UIImage)? {
+        guard source.size.width > 0, source.size.height > 0 else { selectionError = "ფოტოს წაკითხვა ვერ მოხერხდა."; return nil }
         guard let data = Self.rasterize(source, maxSide: 1536), let decoded = UIImage(data: data),
               let apiData = Self.rasterize(source, maxSide: 768) else {
-            selectionError = "ფოტოს დამუშავება ვერ მოხერხდა."; return
+            selectionError = "ფოტოს დამუშავება ვერ მოხერხდა."; return nil
         }
-        jpeg = data; apiJPEG = apiData; image = decoded; selectionError = nil
+        return (data, apiData, decoded)
+    }
+
+    /// Files the current photo as a finished round and scans `source` for the round the model asked for.
+    func continueWithPhoto(_ source: UIImage) {
+        guard model.canContinueWithPhoto, let image, let jpeg, let apiJPEG,
+              let prepared = prepare(source) else { return }
+        rounds.append(PhotoRound(image: image, jpeg: jpeg, apiJPEG: apiJPEG, meshes: meshes))
+        cancelSegmentation()
+        preparedResult = nil
+        self.jpeg = prepared.jpeg; self.apiJPEG = prepared.apiJPEG; self.image = prepared.image; selectionError = nil
+        let failure = isMock ? nil : authError
+        let keyframe = prepared.apiJPEG
+        model.continueWithPhoto { if let failure { throw failure }; return keyframe }
+    }
+
+    /// The photo of the round the current step belongs to; earlier rounds come back after `previous()`.
+    var displayedImage: UIImage? {
+        let number = model.displayedRound
+        return number < model.round && rounds.indices.contains(number - 1) ? rounds[number - 1].image : image
+    }
+
+    var displayedMeshes: [TrackedMesh] {
+        let number = model.displayedRound
+        return number < model.round && rounds.indices.contains(number - 1) ? rounds[number - 1].meshes : meshes
     }
 
     private static func rasterize(_ source: UIImage, maxSide: CGFloat) -> Data? {
@@ -66,6 +104,12 @@ final class PhotoSession: ObservableObject {
     }
 
     func phaseChanged() {
+        // Cancelling a later round's photo returns the model to the previous round; its photo becomes current again.
+        if rounds.count >= model.round, let last = rounds.popLast() {
+            cancelSegmentation()
+            image = last.image; jpeg = last.jpeg; apiJPEG = last.apiJPEG; meshes = last.meshes
+            preparedResult = model.partsResult
+        }
         switch model.phase {
         case .parts(let result) where preparedResult != result:
             preparedResult = result
@@ -81,7 +125,7 @@ final class PhotoSession: ObservableObject {
 
     func retake() {
         cancelSegmentation()
-        image = nil; jpeg = nil; apiJPEG = nil; preparedResult = nil
+        image = nil; jpeg = nil; apiJPEG = nil; preparedResult = nil; rounds = []
         model.beginDescribing()
     }
 
@@ -141,6 +185,13 @@ final class PhotoSession: ObservableObject {
     func selectDemo() {
         if let url = Bundle.main.url(forResource: "PhotoDemo", withExtension: "png"),
            let image = UIImage(contentsOfFile: url.path) { select(image) }
+        else { selectionError = "სატესტო ფოტო ვერ მოიძებნა." }
+    }
+
+    /// The simulator has no camera; the same demo photo is enough for a later round.
+    func continueWithDemo() {
+        if let url = Bundle.main.url(forResource: "PhotoDemo", withExtension: "png"),
+           let image = UIImage(contentsOfFile: url.path) { continueWithPhoto(image) }
         else { selectionError = "სატესტო ფოტო ვერ მოიძებნა." }
     }
     #endif
