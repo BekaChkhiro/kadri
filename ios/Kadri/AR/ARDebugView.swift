@@ -17,6 +17,7 @@ struct ARDebugView: View {
     @State private var fps: Double = 0
     @State private var lastTimestamp: TimeInterval?
     @State private var lastHeartbeat: TimeInterval = 0
+    @State private var lastAutoCapture: TimeInterval = 0
 
     var body: some View {
         GeometryReader { geometry in
@@ -90,14 +91,7 @@ struct ARDebugView: View {
                         Button("სატესტო box-ები") {
                             guard let keyframe = controller.keyframe else { return }
                             arLog.notice("ge.kadri tap test-boxes")
-                            anchors.place(keyframe: keyframe, parts: [
-                                ("p1", [250, 350, 450, 600]),
-                                ("p2", [550, 350, 750, 600])
-                            ], session: controller.session)
-                            contourKeyframe = keyframe
-                            // Contours turn on automatically once parts are placed; the toggle can still hide them.
-                            if showContours { tracker.start(keyframe: keyframe, placements: anchors.placements) } else { showContours = true }
-                            arLog.notice("ge.kadri placed unanchored=\(anchors.unanchored.joined(separator: ","), privacy: .public)")
+                            placeTestBoxes(keyframe)
                         }.disabled(controller.keyframe == nil)
                     }.buttonStyle(.borderedProminent)
                 }.padding().foregroundStyle(.white)
@@ -124,6 +118,7 @@ struct ARDebugView: View {
                 fps = fps == 0 ? 1 / (timestamp - last) : fps * 0.9 + 0.1 / (timestamp - last)
             }
             lastTimestamp = timestamp
+            autoCaptureIfReady(timestamp)
             if timestamp - lastHeartbeat >= 1, let frame = controller.latest?.frame {
                 lastHeartbeat = timestamp
                 let state: String
@@ -137,8 +132,33 @@ struct ARDebugView: View {
         }
         .onChange(of: controller.status) { _, status in arLog.notice("ge.kadri status=\(status, privacy: .public)") }
         .onChange(of: controller.captureStatus) { _, status in arLog.notice("ge.kadri capture=\(status, privacy: .public)") }
+        .onChange(of: controller.keyframe?.timestamp) { _, stamp in
+            // First keyframe of the session: place test parts and show contours without any taps.
+            guard stamp != nil, anchors.placements.isEmpty, let keyframe = controller.keyframe else { return }
+            arLog.notice("ge.kadri auto test-boxes")
+            placeTestBoxes(keyframe)
+        }
         .onAppear { arLog.notice("ge.kadri ar-debug appear supported=\(controller.supported)"); controller.start(); displayRate.start() }
         .onDisappear { arLog.notice("ge.kadri ar-debug disappear"); tracker.stop(); showContours = false; contourKeyframe = nil; displayRate.stop(); anchors.clear(session: controller.session); controller.pause() }
+    }
+
+    private func placeTestBoxes(_ keyframe: Keyframe) {
+        anchors.place(keyframe: keyframe, parts: [
+            ("p1", [250, 350, 450, 600]),
+            ("p2", [550, 350, 750, 600])
+        ], session: controller.session)
+        contourKeyframe = keyframe
+        // Contours turn on automatically once parts are placed; the toggle can still hide them.
+        if showContours { tracker.start(keyframe: keyframe, placements: anchors.placements) } else { showContours = true }
+        arLog.notice("ge.kadri placed unanchored=\(anchors.unanchored.joined(separator: ","), privacy: .public)")
+    }
+
+    /// Until the first keyframe exists, try a capture every 0.8 s while tracking is normal.
+    private func autoCaptureIfReady(_ timestamp: TimeInterval) {
+        guard controller.keyframe == nil, timestamp - lastAutoCapture >= 0.8,
+              case .normal = controller.latest?.frame.camera.trackingState else { return }
+        lastAutoCapture = timestamp
+        Task { await controller.capture() }
     }
 }
 
