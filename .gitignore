@@ -10,3 +10,6 @@ ios/**/xcuserdata/
 ios/**/DerivedData/
 ios/**/.build/
 ios/**/.swiftpm/
+!ios/Models/SAMEncoder.mlpackage/
+!ios/Models/SAMDecoder.mlpackage/
+!ios/Models/conversion.json
