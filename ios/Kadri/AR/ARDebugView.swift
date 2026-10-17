@@ -107,7 +107,10 @@ struct ARDebugView: View {
                 if controller.latest == nil { tracker.stop(); showContours = false; contourKeyframe = nil }
             }
         }
+        .onChange(of: tracker.status) { _, status in arLog.notice("ge.kadri contour-status=\(status, privacy: .public)") }
+        .onChange(of: tracker.contours.count) { _, count in arLog.notice("ge.kadri contours=\(count) embedMs=\(Int(tracker.embedMs))") }
         .onChange(of: showContours) { _, enabled in
+            arLog.notice("ge.kadri show-contours=\(enabled) keyframe=\(contourKeyframe != nil) placements=\(anchors.placements.count)")
             if enabled, let keyframe = contourKeyframe {
                 tracker.start(keyframe: keyframe, placements: anchors.placements)
             } else { tracker.stop() }
