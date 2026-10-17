@@ -89,6 +89,8 @@ final class PhotoMultiRoundTests: XCTestCase {
         window.makeKeyAndVisible()
         defer { window.isHidden = true; previousWindow?.makeKeyAndVisible() }
 
+        try await shot("start", window, directory)
+        XCTAssertNotNil(Self.element(in: host.view, label: "სატესტო ფოტო"), "start screen")
         session.selectDemo()
         try await shot("describing", window, directory)
         session.submit("ნიჟარა ჟონავს")

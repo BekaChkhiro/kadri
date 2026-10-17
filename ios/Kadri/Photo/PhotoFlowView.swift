@@ -82,31 +82,16 @@ struct PhotoFlowView: View {
     }
 
     private var picker: some View {
-        ZStack {
-            Theme.Colors.surface.ignoresSafeArea()
-            VStack(alignment: .leading, spacing: 20) {
-                Image(systemName: "camera.viewfinder")
-                    .font(.system(size: 40)).foregroundStyle(Theme.Colors.brand[500]!)
-                Text("გადაიღე ან აირჩიე ფოტო").font(.kadri(26, weight: .semibold))
-                Text("კადრი ნაწილებს იპოვის და ნაბიჯ-ნაბიჯ გეტყვის რა გააკეთო")
-                    .font(.kadri(15)).foregroundStyle(Theme.Colors.ink[600]!)
-                Button("გადაღება") { camera = true }
-                    .buttonStyle(SessionButtonStyle(primary: true))
-                    .disabled(!cameraAvailable)
-                if !cameraAvailable {
-                    Text("ამ მოწყობილობაზე კამერა არ არის")
-                        .font(.kadri(12)).foregroundStyle(Theme.Colors.ink[500]!)
-                }
-                PhotosPicker(selection: $picked, matching: .images) { Text("გალერეიდან") }
-                    .buttonStyle(SessionButtonStyle(primary: false))
-                #if DEBUG && targetEnvironment(simulator)
-                Button("სატესტო ფოტო", action: session.selectDemo)
-                    .buttonStyle(SessionButtonStyle(primary: false))
-                #endif
-            }
-            .foregroundStyle(Theme.Colors.ink[900]!)
-            .padding(24).glass().padding(20)
-        }
+        PhotoStartView(cameraAvailable: cameraAvailable, takePhoto: { camera = true }, picked: $picked,
+                       selectExample: session.selectExample, demo: demo)
+    }
+
+    private var demo: (() -> Void)? {
+        #if DEBUG && targetEnvironment(simulator)
+        session.selectDemo
+        #else
+        nil
+        #endif
     }
 
     @ViewBuilder private func flow(_ image: UIImage) -> some View {

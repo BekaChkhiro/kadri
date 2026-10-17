@@ -101,6 +101,14 @@ final class PhotoSession: ObservableObject {
         }.jpegData(compressionQuality: 0.88)
     }
 
+    /// Opens a bundled example photo with its description already typed.
+    func selectExample(_ example: PhotoExample) {
+        guard let source = example.image() else { selectionError = "ფოტოს წაკითხვა ვერ მოხერხდა."; return }
+        select(source)
+        guard image != nil else { return }
+        model.updateText(example.prefill)
+    }
+
     func submit(_ text: String) {
         guard let apiJPEG else { return }
         model.updateText(text)
