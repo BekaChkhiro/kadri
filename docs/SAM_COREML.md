@@ -245,6 +245,69 @@ root `.gitignore` არ შეცვლილა. ადგილობრი�
 gate-ებს, provenance-სა და compute plans-ს; `out/review/` — გადაფარულ მასკებს.
 ვიზუალურად შემოწმდა sink/p3, car/p1 და gym/p2 overlay-ები.
 
-მოდელები/weights git-ში არ შედის. ინტეგრაციის checkout-ში იგივე პაკეტებს
-ზემოთ მითითებული export ბრძანება აღადგენს. მხოლოდ სკრიპტები, lockfile,
-ტესტები და ეს ანგარიში გადადის commit-ებით.
+Default `SAMEncoder.mlpackage`, `SAMDecoder.mlpackage` და `conversion.json`
+git-შია (`ios/Models/`, root `.gitignore`-ის გამო `git add -f`-ით), რომ app build
+და CI რეპროდუცირებადი იყოს. კანდიდატების ექსპორტები და upstream weights git-ში
+არ შედის; მათ ზემოთ მითითებული export ბრძანება აღადგენს.
+
+## Swift parity
+
+`ios/Kadri/Segmentation/Segmenter.swift` (actor): `embed(CGImage)` → `Embedding`,
+`mask(embedding:box:imageSize:)` → `Mask` (W×H, 0/255 bitmap, score, დროები).
+Preprocessing: 8-bit RGBX გამოსახულების საკუთარ ფერთა სივრცეში (ფერის გარდაქმნის
+გარეშე, PIL-ის მსგავსად), `vDSP_vfltu8` → planar Float32, separable bilinear
+1024×1024-ზე პირდაპირ `MLMultiArray`-ში. Postprocessing: `iou_scores`-ის argmax
+(თანაბრისას პირველი), შერჩეული 256×256 logits → separable bicubic H×W-ზე (`a=-0.75`,
+`floor`, tap-ები საზღვარზე clamp-დება; index/lambda **არ** clamp-დება — PyTorch-თან
+ასე ემთხვევა), შემდეგ `>0`. მხოლოდ Accelerate/vDSP, Metal არა. ორივე kernel PyTorch-ს
+<1e-5-ით ემთხვევა (`interp.json`). მოდელები `MLModel(contentsOf:)`-ით იტვირთება
+(`COREML_CODEGEN_LANGUAGE=None`, Swift 6).
+
+Fixtures: `ios/KadriTests/Fixtures/make_fixtures.py` (1.5 MB) — `input.png`,
+`boxes.json`, Python Core ML **CPU_ONLY** მასკები (`coreml_pN.png`; სიმულატორში Core ML
+CPU-ზე მუშაობს) და SAM2 რეფერენსი (`sam2_pN.png`). Mac-ზე ALL და CPU_ONLY მასკები
+ერთმანეთს მინ. IoU 0.9467-ით ემთხვევა (gym/p1), ამიტომ რეფერენსად CPU არჩეულია.
+
+სიმულატორი (iPhone 17, Debug, `.cpuOnly`), 2026-10-17:
+
+| სცენა/ნაწილი | IoU Python Core ML-თან | IoU SAM2-თან | არჩეული (Swift/Py) |
+|---|---:|---:|---|
+| sink p1 | 0.9982 | 0.9653 | 0/0 |
+| sink p2 | 0.9840 | 0.8266 | 2/2 |
+| sink p3 | 0.9925 | 0.8311 | 1/1 |
+| sink p4 | 0.9979 | 0.9653 | 0/0 |
+| sink p5 | 0.9932 | 0.9361 | 2/2 |
+| car p1 | 0.9972 | 0.9320 | 2/2 |
+| car p2 | 0.9547 | 0.9202 | **2/1** |
+| gym p1 | 0.9984 | 0.9081 | 1/1 |
+| gym p2 | 1.0000 | 0.8090 | 2/2 |
+| gym p3 | 0.9991 | 0.9650 | 2/2 |
+| gym p4 | 0.9985 | 0.9489 | 2/2 |
+| gym p5 | 1.0000 | 0.9644 | 0/0 |
+| gym p6 | 0.9993 | 0.9639 | 0/0 |
+| gym p7 | 1.0000 | 0.8250 | 2/2 |
+
+სცენის საშუალო SAM2-თან: sink 0.9049, car 0.9261, gym 0.9120 (≥0.8 gate გაიარა).
+ყველა ნაწილი ≥0.95 Python Core ML-თან. ერთადერთი token-ის გადართვა car/p2-ზეა: score-ები
+სიმულატორსა და Mac Core ML-ს შორის ~0.003-ით განსხვავდება, ამ ნაწილის ორი საუკეთესო კი
+თითქმის თანაბარია (Swift 0.8926/0.8901, Python 0.8887/0.8896); ორივე მასკა ახლოსაა
+(0.9547). ზღვარი არ შესუსტებულა. სიმულატორის დროები (Debug, მხოლოდ CPU, მხოლოდ
+ორიენტაციისთვის — ტელეფონის ციფრები არაა): pre ≈130 მს, encoder ≈1.05 წმ,
+decoder ≈25 მს/box, post ≈22–28 მს/box.
+
+## ტელეფონის bench — ინსტრუქცია ადამიანისთვის
+
+1. Xcode-ში `ios/Kadri.xcodeproj`, target Kadri → Signing & Capabilities → შენი Team.
+   სქემა Kadri → Edit Scheme → Run → Build Configuration **Release** (Debug-ში
+   pre/post ბევრად ნელია). აირჩიე ტელეფონი (iPhone 12 და iPhone 15 Pro) და Run.
+2. აპში ზედა მარჯვენა „SAM bench“. ჩაიტვირთება ჩაშენებული sink კადრი (5 ნაწილი).
+3. აირჩიე `ALL`, დააჭირე „გაშვება (10×)“. დაელოდე ცხრილს, შეამოწმე, რომ ფერადი
+   მასკები ნაწილებს ფარავს. დააჭირე „კოპირება (JSON)“ და ჩასვი ჩატში.
+4. იგივე გაიმეორე `CPU_AND_NE`-ით. შემდეგ ერთხელ ისევ `ALL` (მეორე გაშვება აჩვენებს
+   ANE-ის cache-ის შემდეგ load/cold დროს). სურვილისამებრ „ფოტოს არჩევა“ — ცენტრალური
+   box, გრძელი მხარე ≤1440 px.
+5. JSON-ში: `loadMs` — ორივე მოდელის ჩატვირთვა; `encoderColdMs`/`decoderColdMs` —
+   პირველი გაშვება ჩატვირთვის შემდეგ; `*WarmMs.median` — შემდეგი 10-ის მედიანა.
+   სამიზნეები: encoder ≤150 მს, decoder ≤30 მს/box. პირველი გაშვება აპის დაყენების
+   შემდეგ ყველაზე ცივია (ANE compile) — ჩაინიშნე ცალკე.
+6. სურვილისამებრ: 5 წუთი ზედიზედ გაშვება და ტელეფონის გაცხელება (sustained ქცევა).

@@ -14,8 +14,15 @@ struct ContentView: View {
             ThemePreview()
                 .toolbar {
                     NavigationLink("AR დებაგი", value: "ar")
+                    NavigationLink("SAM bench", value: "sam")
                 }
-                .navigationDestination(for: String.self) { _ in ARDebugView() }
+                .navigationDestination(for: String.self) { destination in
+                    if destination == "sam" {
+                        SegmentationBenchView()
+                    } else {
+                        ARDebugView()
+                    }
+                }
         }
     }
 }

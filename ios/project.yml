@@ -18,6 +18,11 @@ targets:
     platform: iOS
     sources:
       - path: Kadri
+      - path: Models/SAMEncoder.mlpackage
+      - path: Models/SAMDecoder.mlpackage
+      - path: KadriTests/Fixtures/sink
+        type: folder
+        buildPhase: resources
     dependencies:
       - package: KadriCore
       - sdk: ARKit.framework
@@ -38,11 +43,17 @@ targets:
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        COREML_CODEGEN_LANGUAGE: None
   KadriTests:
     type: bundle.unit-test
     platform: iOS
     sources:
       - path: KadriTests
+        excludes:
+          - Fixtures/**
+      - path: KadriTests/Fixtures
+        type: folder
+        buildPhase: resources
     dependencies:
       - target: Kadri
     settings:

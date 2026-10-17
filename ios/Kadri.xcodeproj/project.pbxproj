@@ -7,11 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07DA81569ACB3C3CEF357B7A /* SegmentationBenchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7827EF5714A095173AA7C615 /* SegmentationBenchView.swift */; };
 		192F30E2CBC4A5B72BDAC499 /* NotoSansGeorgian-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A7232F6CADE38F5998CDD86B /* NotoSansGeorgian-Regular.ttf */; };
 		1BAD10810ED8DBAD455C6695 /* ARKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A050936A9DE4965679EB720 /* ARKit.framework */; };
+		207F06A72FB17D6F63A804D3 /* SAMEncoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8241E2AC9AA8786BAEE982AB /* SAMEncoder.mlpackage */; };
+		247480935EFF895F6D00FED6 /* SAMDecoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = ED5AEC7A48122B42DFDE0A46 /* SAMDecoder.mlpackage */; };
 		2627612ADB843E044E6BAAD0 /* SessionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8D3F09CEFA43CA7FA54609 /* SessionScreen.swift */; };
 		37789446591D4FB3C98C7948 /* SessionSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BF5F143404E75DF39FED04 /* SessionSnapshotTests.swift */; };
 		387879FE5284A5F25A697DAF /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A07FD3A6DD38BBD488C4C97D /* Inter-Regular.ttf */; };
+		39CD30AE8466CBDF141C4E82 /* sink in Resources */ = {isa = PBXBuildFile; fileRef = 0BC5406AFC56533421633751 /* sink */; };
 		3A22A9DB0A7B1979BC715269 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6F8715683CDD1468FCCEA2 /* Theme.swift */; };
 		3B5D76707165FAFED8C89035 /* ARControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0248C421A7F6709755E1292 /* ARControllerTests.swift */; };
 		4209CE751639036987E4CB8A /* OFL-NotoSansGeorgian.txt in Resources */ = {isa = PBXBuildFile; fileRef = 317A97DEC8B919E1D5640FD6 /* OFL-NotoSansGeorgian.txt */; };
@@ -34,14 +38,19 @@
 		B0C7B9CD0B78ADD51ED872B9 /* RealityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 929743E4A7FCA4EBC2F888D7 /* RealityKit.framework */; };
 		B71D30C9823A5FF91D0A3DBC /* CoreML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45B6800C7C6BC6DFD3FD195E /* CoreML.framework */; };
 		BD67D4209D70CC5DD7C4D768 /* ARSessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0284BC4ED2FA5475C1184EE9 /* ARSessionController.swift */; };
+		C480FA751DE36F8B229476CC /* SegmentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79684495C6B552237CE68F89 /* SegmentationTests.swift */; };
+		CAC92803A5B7FCAF050E82EB /* SegmentationBench.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CC50C123CF7B32458FEBD3 /* SegmentationBench.swift */; };
 		D6C97E8C50507362CE0C7B9F /* KadriApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD5A9F0403797194A257F7D /* KadriApp.swift */; };
 		D99995671C2CD82936EFFE51 /* KeyframePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889B405E7EAD71436F553E6 /* KeyframePicker.swift */; };
 		E130A68F5F393B8FEE871CA4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543FF004E3F31262D70B1ECA /* ContentView.swift */; };
 		EA71BC0ADF6AB6242FFAB163 /* ARDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3F9A3ED45BED82339BC58F /* ARDebugView.swift */; };
+		EAC14CB5A08766FB56D8EF39 /* Segmenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98849AE08F82095210AB2C08 /* Segmenter.swift */; };
 		EAF7180A4D2ECF039B84CD03 /* KadriCore in Frameworks */ = {isa = PBXBuildFile; productRef = 3B8FE85B572B4ACA38714736 /* KadriCore */; };
+		EBD6116765DBDD0A5D03DE9A /* Fixtures in Resources */ = {isa = PBXBuildFile; fileRef = 6C871271F759749DF134EF13 /* Fixtures */; };
 		EC3A8417B62ECE05AFDFE721 /* ScanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F55593458662C90DBD1A8F7 /* ScanningView.swift */; };
 		F3A6721520CD41B44AAC06CB /* OFL-Inter.txt in Resources */ = {isa = PBXBuildFile; fileRef = EC47E7F74A9863587D696784 /* OFL-Inter.txt */; };
 		F4AAA1A1748F2F3BE3BF4AAD /* NotoSansGeorgian-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24F1F6DCECABEBE28315A574 /* NotoSansGeorgian-Bold.ttf */; };
+		F4D910D84EF7FA073CFCF0A2 /* SAMGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6545EC000C213F047CC832 /* SAMGeometry.swift */; };
 		FAE6EC25500266A74D9C602B /* NotoSansGeorgian-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B3D97CD203D0775D8B41AFD6 /* NotoSansGeorgian-Medium.ttf */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +68,7 @@
 		00BF5F143404E75DF39FED04 /* SessionSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSnapshotTests.swift; sourceTree = "<group>"; };
 		0284BC4ED2FA5475C1184EE9 /* ARSessionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSessionController.swift; sourceTree = "<group>"; };
 		0B3F9A3ED45BED82339BC58F /* ARDebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARDebugView.swift; sourceTree = "<group>"; };
+		0BC5406AFC56533421633751 /* sink */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sink; path = KadriTests/Fixtures/sink; sourceTree = SOURCE_ROOT; };
 		0F55593458662C90DBD1A8F7 /* ScanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanningView.swift; sourceTree = "<group>"; };
 		1B5A4C245D4AD9B3997F740D /* PartsRevealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartsRevealView.swift; sourceTree = "<group>"; };
 		24F1F6DCECABEBE28315A574 /* NotoSansGeorgian-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansGeorgian-Bold.ttf"; sourceTree = "<group>"; };
@@ -73,10 +83,15 @@
 		5BC9A3615F9651942AE4DF2B /* KadriCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = KadriCore; path = Packages/KadriCore; sourceTree = SOURCE_ROOT; };
 		5BF721974DE7AA9474A9A606 /* NotoSansGeorgian-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansGeorgian-SemiBold.ttf"; sourceTree = "<group>"; };
 		6881E6C4A4099231DB05929E /* SessionPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPresentation.swift; sourceTree = "<group>"; };
+		6C871271F759749DF134EF13 /* Fixtures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fixtures; path = KadriTests/Fixtures; sourceTree = SOURCE_ROOT; };
 		73919932F619884CCB894798 /* SessionPreviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPreviews.swift; sourceTree = "<group>"; };
+		7827EF5714A095173AA7C615 /* SegmentationBenchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentationBenchView.swift; sourceTree = "<group>"; };
 		7889B405E7EAD71436F553E6 /* KeyframePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyframePicker.swift; sourceTree = "<group>"; };
+		79684495C6B552237CE68F89 /* SegmentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentationTests.swift; sourceTree = "<group>"; };
+		8241E2AC9AA8786BAEE982AB /* SAMEncoder.mlpackage */ = {isa = PBXFileReference; path = SAMEncoder.mlpackage; sourceTree = "<group>"; };
 		84CAC115ECF63FDB03CC26B8 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
 		929743E4A7FCA4EBC2F888D7 /* RealityKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealityKit.framework; path = System/Library/Frameworks/RealityKit.framework; sourceTree = SDKROOT; };
+		98849AE08F82095210AB2C08 /* Segmenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Segmenter.swift; sourceTree = "<group>"; };
 		9A050936A9DE4965679EB720 /* ARKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARKit.framework; path = System/Library/Frameworks/ARKit.framework; sourceTree = SDKROOT; };
 		A00B16E38C3E8EC7B01B52E4 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		A07FD3A6DD38BBD488C4C97D /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
@@ -91,8 +106,11 @@
 		CAC9836272FB003780B518D6 /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
 		D014C6514CCF1D0423555B9B /* KadriTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = KadriTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D624A7ABF50F3C99DA5D0ADF /* SessionPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPresentationTests.swift; sourceTree = "<group>"; };
+		D7CC50C123CF7B32458FEBD3 /* SegmentationBench.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentationBench.swift; sourceTree = "<group>"; };
+		DC6545EC000C213F047CC832 /* SAMGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SAMGeometry.swift; sourceTree = "<group>"; };
 		EC47E7F74A9863587D696784 /* OFL-Inter.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OFL-Inter.txt"; sourceTree = "<group>"; };
 		EC6F8715683CDD1468FCCEA2 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		ED5AEC7A48122B42DFDE0A46 /* SAMDecoder.mlpackage */ = {isa = PBXFileReference; path = SAMDecoder.mlpackage; sourceTree = "<group>"; };
 		F0248C421A7F6709755E1292 /* ARControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARControllerTests.swift; sourceTree = "<group>"; };
 		F4910DAFAB764B1ABC03FDC1 /* KadriTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KadriTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -113,6 +131,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1078C23B69B87EE0D34508B9 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				ED5AEC7A48122B42DFDE0A46 /* SAMDecoder.mlpackage */,
+				8241E2AC9AA8786BAEE982AB /* SAMEncoder.mlpackage */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		187E7246AC41BFDD3422291B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -133,6 +160,7 @@
 				26AE2588A54B31F04C7D0DF7 /* AR */,
 				EAF36B7FB440F8813F254796 /* Design */,
 				FEB0235438BDD303D3660CCA /* Resources */,
+				ABF72A8CBFCE25F197A6D52A /* Segmentation */,
 				303718F3E800726231EC8190 /* Session */,
 			);
 			path = Kadri;
@@ -167,9 +195,12 @@
 			isa = PBXGroup;
 			children = (
 				F0248C421A7F6709755E1292 /* ARControllerTests.swift */,
+				6C871271F759749DF134EF13 /* Fixtures */,
 				F4910DAFAB764B1ABC03FDC1 /* KadriTests.swift */,
+				79684495C6B552237CE68F89 /* SegmentationTests.swift */,
 				D624A7ABF50F3C99DA5D0ADF /* SessionPresentationTests.swift */,
 				00BF5F143404E75DF39FED04 /* SessionSnapshotTests.swift */,
+				A299FD6E35B15A2F56613CA0 /* Fixtures */,
 			);
 			path = KadriTests;
 			sourceTree = "<group>";
@@ -188,6 +219,7 @@
 			children = (
 				1CBA3C9F10935232D776E968 /* Kadri */,
 				5CB0942AF44DA57FD6340EED /* KadriTests */,
+				1078C23B69B87EE0D34508B9 /* Models */,
 				BA6496228E9E927EB722C759 /* Packages */,
 				187E7246AC41BFDD3422291B /* Frameworks */,
 				9E68D18A883391FA440C85FB /* Products */,
@@ -201,6 +233,25 @@
 				D014C6514CCF1D0423555B9B /* KadriTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A299FD6E35B15A2F56613CA0 /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				0BC5406AFC56533421633751 /* sink */,
+			);
+			path = Fixtures;
+			sourceTree = "<group>";
+		};
+		ABF72A8CBFCE25F197A6D52A /* Segmentation */ = {
+			isa = PBXGroup;
+			children = (
+				DC6545EC000C213F047CC832 /* SAMGeometry.swift */,
+				D7CC50C123CF7B32458FEBD3 /* SegmentationBench.swift */,
+				7827EF5714A095173AA7C615 /* SegmentationBenchView.swift */,
+				98849AE08F82095210AB2C08 /* Segmenter.swift */,
+			);
+			path = Segmentation;
 			sourceTree = "<group>";
 		};
 		BA6496228E9E927EB722C759 /* Packages */ = {
@@ -254,6 +305,7 @@
 			buildConfigurationList = EF2DA4E4F8109C4B3FC84464 /* Build configuration list for PBXNativeTarget "KadriTests" */;
 			buildPhases = (
 				06FE383E727917C5B8C98801 /* Sources */,
+				051A71FD4194302E7C4FE931 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -330,6 +382,14 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		051A71FD4194302E7C4FE931 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EBD6116765DBDD0A5D03DE9A /* Fixtures in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C8DD52A2C367239E234D4424 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -344,6 +404,7 @@
 				91ED3764D969F8DA61658440 /* NotoSansGeorgian-SemiBold.ttf in Resources */,
 				F3A6721520CD41B44AAC06CB /* OFL-Inter.txt in Resources */,
 				4209CE751639036987E4CB8A /* OFL-NotoSansGeorgian.txt in Resources */,
+				39CD30AE8466CBDF141C4E82 /* sink in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,6 +417,7 @@
 			files = (
 				3B5D76707165FAFED8C89035 /* ARControllerTests.swift in Sources */,
 				ADE3F74A26977B000BF655B1 /* KadriTests.swift in Sources */,
+				C480FA751DE36F8B229476CC /* SegmentationTests.swift in Sources */,
 				729038930CAADDEFED6F3F3A /* SessionPresentationTests.swift in Sources */,
 				37789446591D4FB3C98C7948 /* SessionSnapshotTests.swift in Sources */,
 			);
@@ -375,7 +437,13 @@
 				AB7754BA7224CE2D04DD9517 /* MockKadriAPI.swift in Sources */,
 				A021D80B098F055B3EF12B0B /* PartAnchors.swift in Sources */,
 				54F0522C6E62571ABF309D4D /* PartsRevealView.swift in Sources */,
+				247480935EFF895F6D00FED6 /* SAMDecoder.mlpackage in Sources */,
+				207F06A72FB17D6F63A804D3 /* SAMEncoder.mlpackage in Sources */,
+				F4D910D84EF7FA073CFCF0A2 /* SAMGeometry.swift in Sources */,
 				EC3A8417B62ECE05AFDFE721 /* ScanningView.swift in Sources */,
+				CAC92803A5B7FCAF050E82EB /* SegmentationBench.swift in Sources */,
+				07DA81569ACB3C3CEF357B7A /* SegmentationBenchView.swift in Sources */,
+				EAC14CB5A08766FB56D8EF39 /* Segmenter.swift in Sources */,
 				89EF43D89D35C3880A687D29 /* SessionPresentation.swift in Sources */,
 				AA688D92A9EC9C0E84545F71 /* SessionPreviews.swift in Sources */,
 				2627612ADB843E044E6BAAD0 /* SessionScreen.swift in Sources */,
@@ -466,6 +534,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COREML_CODEGEN_LANGUAGE = None;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Kadri/Info.plist;
@@ -508,6 +577,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COREML_CODEGEN_LANGUAGE = None;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Kadri/Info.plist;
