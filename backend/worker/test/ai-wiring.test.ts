@@ -447,6 +447,14 @@ it("diagnostic follow-ups keep steps usage and honor the configured answer limit
   ]);
 });
 
+// Only the hub vars: the full knowledgeEnv carries ai-helpers' SESSION_SECRET (from .dev.vars when present),
+// which would not verify tokens signed by token() with auth-helpers' secret.
+const knowledgeVars: Partial<Env> = {
+  KNOWLEDGE_HUB_ENABLED: knowledgeEnv.KNOWLEDGE_HUB_ENABLED,
+  KNOWLEDGE_HUB_URL: knowledgeEnv.KNOWLEDGE_HUB_URL,
+  KNOWLEDGE_HUB_KEY: knowledgeEnv.KNOWLEDGE_HUB_KEY,
+};
+
 describe("steps knowledge wiring", () => {
   it("looks up once before both retry attempts and excludes photos", async () => {
     let lookups = 0;
@@ -470,7 +478,8 @@ describe("steps knowledge wiring", () => {
     const res = await post("/ai/steps", {
       object: "მაცივარი", parts, instructions, image: b64(fakeJpeg(64, 64)),
       context: { round: 1, doneSteps: [], answers: [{ question: "ჩართულია?", answer: "დიახ" }] },
-    }, await token("knowledge-retry"), knowledgeEnv);
+    }, await token("knowledge-retry"), knowledgeVars);
+    expect(res.status).toBe(200);
     expect((await events(res)).map(e => e.event)).toEqual(["step", "done"]);
     expect(lookups).toBe(1);
     expect(attempts).toBe(2);
@@ -486,7 +495,8 @@ describe("steps knowledge wiring", () => {
       return stepsResponse(stepsResult);
     });
     const res = await post("/ai/steps", { object: "მაცივარი", parts, instructions },
-      await token("knowledge-timeout"), knowledgeEnv);
+      await token("knowledge-timeout"), knowledgeVars);
+    expect(res.status).toBe(200);
     expect((await events(res)).map(e => e.event)).toEqual(["step", "done"]);
     expect(aborted).toBe(true);
   });
