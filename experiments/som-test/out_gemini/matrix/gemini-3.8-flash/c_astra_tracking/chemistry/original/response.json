@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ტიტრაციის ნაკრები\",\n  \"parts\": [\n    {\n      \"label\": \"ბიურეტის ზედა ნაწილში ჩადგმული პლასტმასის ძაბრი\",\n      \"box_2d\": [1, 423, 102, 570]\n    },\n    {\n      \"label\": \"ვერტიკალური მინის ბიურეტი სითხით\",\n      \"box_2d\": [78, 461, 442, 532]\n    },\n    {\n      \"label\": \"ბიურეტის ლურჯი ონკანი (სარქველი)\",\n      \"box_2d\": [368, 442, 417, 555]\n    },\n    {\n      \"label\": \"ერლენმეიერის კოლბა გამჭვირვალე ხსნარით\",\n      \"box_2d\": [447, 401, 606, 578]\n    },\n    {\n      \"label\": \"ინდიკატორის (ფენოლფთალეინის) პატარა ბოთლი ლურჯი საწვეთურით\",\n      \"box_2d\": [471, 281, 606, 360]\n    },\n    {\n      \"label\": \"თეთრი კერამიკული ფილა კოლბის ქვეშ\",\n      \"box_2d\": [576, 317, 629, 638]\n    },\n    {\n      \"label\": \"ლაბორატორიული შტატივი დამჭერითა და მეტალის ფუძით\",\n      \"box_2d\": [0, 627, 613, 955]\n    }\n  ]\n}",
+            "thoughtSignature": "EmgKZgFpFH0Ta7YHw/tBpnb9yKNpdo6X7vEnjovyBpjE7JIQgkGnX56Tdbu03t6k9HmRkIpzDBjIt1tjOQVnXmpyekV4E6UqbjOuInf2dGdVAegrf3AsgYJJ28n71gKO3HNT6CpNLw6CNQ=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1682,
+    "candidatesTokenCount": 455,
+    "totalTokenCount": 2137,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 582
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "i2_Tav_sEaKTvdIPmO_FoAs"
+}

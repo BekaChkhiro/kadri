@@ -1,0 +1,159 @@
+{
+  "frame": "c_astra_tracking/car/original",
+  "labels": [
+    "ძრავის ზეთის ჩასასხმელი შავი ხუფი",
+    "ზეთის საზომი ღეროს ყვითელი რგოლისებრი სახელური"
+  ],
+  "match": {
+    "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+    "threshold": 0.5,
+    "matches": [
+      {
+        "previous": 0,
+        "current": 0,
+        "iou": 0.9370755998189234,
+        "phone_id": "phone_1",
+        "raw_id_equal": true,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 1,
+        "current": 1,
+        "iou": 0.9252539912917286,
+        "phone_id": "phone_2",
+        "raw_id_equal": true,
+        "raw_label_equal": false
+      }
+    ],
+    "phone_ids": [
+      "phone_1",
+      "phone_2"
+    ],
+    "unmatched": [],
+    "dropout": [],
+    "raw_id_stability": 1.0,
+    "raw_label_stability": 0.0
+  },
+  "proxy": [
+    {
+      "name": "COVER",
+      "visible_pixels": 138586,
+      "best_iou": 0.03921030984370716,
+      "best_id": "p1"
+    },
+    {
+      "name": "CAP",
+      "visible_pixels": 9305,
+      "best_iou": 0.583987103707684,
+      "best_id": "p1"
+    },
+    {
+      "name": "DIP",
+      "visible_pixels": 3172,
+      "best_iou": 0.7305164319248826,
+      "best_id": "p2"
+    },
+    {
+      "name": "COOLANT",
+      "visible_pixels": 42140,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    },
+    {
+      "name": "WASHER",
+      "visible_pixels": 15495,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    },
+    {
+      "name": "BATTERY",
+      "visible_pixels": 28971,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    }
+  ],
+  "astra_proxy": [
+    {
+      "name": "COVER",
+      "visible_pixels": 138586,
+      "best_iou": 0.03972984284126824,
+      "best_id": "p1"
+    },
+    {
+      "name": "CAP",
+      "visible_pixels": 9305,
+      "best_iou": 0.5917248790972596,
+      "best_id": "p1"
+    },
+    {
+      "name": "DIP",
+      "visible_pixels": 3172,
+      "best_iou": 0.7361502347417841,
+      "best_id": "p2"
+    },
+    {
+      "name": "COOLANT",
+      "visible_pixels": 42140,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    },
+    {
+      "name": "WASHER",
+      "visible_pixels": 15495,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    },
+    {
+      "name": "BATTERY",
+      "visible_pixels": 28971,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    }
+  ],
+  "astra_latency": {
+    "preflight_seconds": 1.2557300419994135,
+    "parts_preflight_seconds": 0.45831079199888336,
+    "steps_preflight_seconds": 0.7974192500005302,
+    "real_wall_time_to_first_box_seconds": 4.884608667000066,
+    "first_box_full_response_seconds": 4.884608667000066,
+    "first_box_model_only_seconds": 4.4262978750011825,
+    "time_to_parts_response_seconds": 4.884608667000066,
+    "time_to_first_outline_seconds": 6.468326541000351,
+    "time_to_first_step_seconds": 4.837750333999793,
+    "time_to_first_step_from_start_seconds": 11.308236291999492,
+    "sam_seconds": 1.5129786659999809,
+    "steps_seconds": 17.470379291999052,
+    "total_seconds": 24.088557582999783,
+    "adapter_wall_seconds": 24.1819688329997,
+    "first_box_definition": "C parts response; streaming steps; outline after SAM",
+    "partial_recovery": false,
+    "is_replay": false,
+    "original_wall_total_available": true
+  },
+  "gemini_latency": {
+    "first_box_full_response_seconds": 5.4822729589996015,
+    "response_seconds": 5.4822729589996015,
+    "validated_parts_seconds": 5.485540792000393,
+    "part_count": 2,
+    "usage": {
+      "promptTokenCount": 1666,
+      "candidatesTokenCount": 149,
+      "totalTokenCount": 1815,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1100
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 566
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "usd": 0.00180825,
+    "model_version": "gemini-3.8-flash",
+    "definition": "Full parts response including network; no count preflight; excludes SAM; empty parts has no first box"
+  },
+  "astra_part_count": 2
+}

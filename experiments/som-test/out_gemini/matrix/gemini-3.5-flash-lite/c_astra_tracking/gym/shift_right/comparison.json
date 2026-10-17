@@ -1,0 +1,211 @@
+{
+  "frame": "c_astra_tracking/gym/shift_right",
+  "labels": [
+    "ზედა გრძელი სახელური მოხრილი ბოლოებით",
+    "წონების დასტა ყვითელი ქინძისთავით შუაში",
+    "მუხლების დასაჭერი ჰორიზონტალური შავი ბალიში",
+    "სავარძლის საჯდომი ბალიში",
+    "სავარძლის სიმაღლის დასარეგულირებელი ყვითელი ღილაკი ქვევით"
+  ],
+  "match": {
+    "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+    "threshold": 0.5,
+    "matches": [
+      {
+        "previous": 5,
+        "current": 3,
+        "iou": 0.9481734865109072,
+        "phone_id": "phone_6",
+        "raw_id_equal": false,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 2,
+        "current": 1,
+        "iou": 0.943009396737583,
+        "phone_id": "phone_3",
+        "raw_id_equal": false,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 0,
+        "current": 0,
+        "iou": 0.8706788505799511,
+        "phone_id": "phone_1",
+        "raw_id_equal": true,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 6,
+        "current": 4,
+        "iou": 0.6634615384615391,
+        "phone_id": "phone_7",
+        "raw_id_equal": false,
+        "raw_label_equal": false
+      }
+    ],
+    "phone_ids": [
+      "phone_1",
+      "phone_3",
+      "phone_8",
+      "phone_6",
+      "phone_7"
+    ],
+    "unmatched": [
+      2
+    ],
+    "dropout": [
+      1,
+      3,
+      4
+    ],
+    "raw_id_stability": 0.25,
+    "raw_label_stability": 0.0
+  },
+  "proxy": [
+    {
+      "name": "BAR",
+      "visible_pixels": 19501,
+      "best_iou": 0.5269925902693379,
+      "best_id": "p1"
+    },
+    {
+      "name": "UPRIGHTS",
+      "visible_pixels": 89376,
+      "best_iou": 0.08228600934984463,
+      "best_id": "p3"
+    },
+    {
+      "name": "CABLE",
+      "visible_pixels": 19926,
+      "best_iou": 0.03419836100021013,
+      "best_id": "p1"
+    },
+    {
+      "name": "STACK",
+      "visible_pixels": 38880,
+      "best_iou": 0.6458686821944573,
+      "best_id": "p2"
+    },
+    {
+      "name": "PADS",
+      "visible_pixels": 29665,
+      "best_iou": 0.865424430641822,
+      "best_id": "p3"
+    },
+    {
+      "name": "SEAT",
+      "visible_pixels": 22135,
+      "best_iou": 0.9011244838794694,
+      "best_id": "p4"
+    },
+    {
+      "name": "BASE",
+      "visible_pixels": 22195,
+      "best_iou": 0.020500112637981526,
+      "best_id": "p5"
+    },
+    {
+      "name": "POST",
+      "visible_pixels": 12417,
+      "best_iou": 0.03664331158895063,
+      "best_id": "p5"
+    }
+  ],
+  "astra_proxy": [
+    {
+      "name": "BAR",
+      "visible_pixels": 19501,
+      "best_iou": 0.5276525692784071,
+      "best_id": "p1"
+    },
+    {
+      "name": "UPRIGHTS",
+      "visible_pixels": 89376,
+      "best_iou": 0.05251028493067195,
+      "best_id": "p6"
+    },
+    {
+      "name": "CABLE",
+      "visible_pixels": 19926,
+      "best_iou": 0.034283614217462066,
+      "best_id": "p1"
+    },
+    {
+      "name": "STACK",
+      "visible_pixels": 38880,
+      "best_iou": 0.6462875359934184,
+      "best_id": "p3"
+    },
+    {
+      "name": "PADS",
+      "visible_pixels": 29665,
+      "best_iou": 0.4163969082380921,
+      "best_id": "p5"
+    },
+    {
+      "name": "SEAT",
+      "visible_pixels": 22135,
+      "best_iou": 0.901458571303049,
+      "best_id": "p6"
+    },
+    {
+      "name": "BASE",
+      "visible_pixels": 22195,
+      "best_iou": 0.022527596305474205,
+      "best_id": "p7"
+    },
+    {
+      "name": "POST",
+      "visible_pixels": 12417,
+      "best_iou": 0.04026737537247322,
+      "best_id": "p7"
+    }
+  ],
+  "astra_latency": {
+    "preflight_seconds": 0.9025944589993742,
+    "parts_preflight_seconds": 0.4548156669989112,
+    "steps_preflight_seconds": 0.447778792000463,
+    "real_wall_time_to_first_box_seconds": 7.458345749999353,
+    "first_box_full_response_seconds": 7.458345749999353,
+    "first_box_model_only_seconds": 7.003530083000442,
+    "time_to_parts_response_seconds": 7.458345749999353,
+    "time_to_first_outline_seconds": 11.642146624999441,
+    "time_to_first_step_seconds": 6.325184541999988,
+    "time_to_first_step_from_start_seconds": 17.97215383299954,
+    "sam_seconds": 4.103128958000525,
+    "steps_seconds": 16.89432612500059,
+    "total_seconds": 28.653147166000053,
+    "adapter_wall_seconds": 28.653929000000062,
+    "first_box_definition": "C parts response; streaming steps; outline after SAM",
+    "partial_recovery": false,
+    "is_replay": false,
+    "original_wall_total_available": true
+  },
+  "gemini_latency": {
+    "first_box_full_response_seconds": 3.158642583999608,
+    "response_seconds": 3.158642583999608,
+    "validated_parts_seconds": 3.1608951250000246,
+    "part_count": 5,
+    "usage": {
+      "promptTokenCount": 1679,
+      "candidatesTokenCount": 321,
+      "totalTokenCount": 2000,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1100
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 579
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "usd": 0.0013062,
+    "model_version": "gemini-3.5-flash-lite",
+    "definition": "Full parts response including network; no count preflight; excludes SAM; empty parts has no first box"
+  },
+  "astra_part_count": 7
+}

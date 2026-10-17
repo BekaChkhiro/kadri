@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"სავარჯიშო ტრენაჟორი\",\n  \"parts\": [\n    {\n      \"label\": \"ზედა გრძელი სახელური\",\n      \"box_2d\": [\n        68,\n        99,\n        118,\n        897\n      ]\n    },\n    {\n      \"label\": \"მუხლების დასაფიქსირებელი შავი ლილვაკი\",\n      \"box_2d\": [\n        388,\n        317,\n        443,\n        681\n      ]\n    }\n  ]\n}",
+            "thoughtSignature": "El8KXQFpFH0TlhDlytrpXrbnwfZM2FcUMHqgEn8caC71FhBxSoU2vIxWU1dEXZ60cwDgu5VspdbjmkzaeLXv/f5iN6wSQvGyAC96LgcrszdAMnEIx+UeVb+CpbQWkaNHbQ=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1679,
+    "candidatesTokenCount": 147,
+    "totalTokenCount": 1826,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 579
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "m3DTauPNLoDZvdIPhKvK2Ag"
+}

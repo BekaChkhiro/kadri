@@ -1,0 +1,25 @@
+{
+  "first_box_full_response_seconds": 3.4861165000002075,
+  "response_seconds": 3.4861165000002075,
+  "validated_parts_seconds": 3.488830541000425,
+  "part_count": 3,
+  "usage": {
+    "promptTokenCount": 1672,
+    "candidatesTokenCount": 206,
+    "totalTokenCount": 1878,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 592
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1080
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "usd": 0.0010165999999999999,
+  "model_version": "gemini-3.5-flash-lite",
+  "definition": "Full parts response including network; no count preflight; excludes SAM; empty parts has no first box"
+}

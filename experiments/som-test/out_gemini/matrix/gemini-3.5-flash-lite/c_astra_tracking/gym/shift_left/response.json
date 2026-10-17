@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"სავარჯიშო ტრენაჟორი\",\n  \"parts\": [\n    {\n      \"label\": \"ზედა გრძელი სახელური\",\n      \"box_2d\": [75, 57, 137, 856]\n    },\n    {\n      \"label\": \"მარცხენა მუხლის ფიქსატორი ბალიში\",\n      \"box_2d\": [403, 275, 459, 439]\n    },\n    {\n      \"label\": \"მარჯვენა მუხლის ფიქსატორი ბალიში\",\n      \"box_2d\": [403, 477, 458, 642]\n    },\n    {\n      \"label\": \"სავარძლის ბალიში\",\n      \"box_2d\": [492, 332, 545, 583]\n    },\n    {\n      \"label\": \"ქვედა ყვითელი ღილაკი სიმაღლის დასარეგულირებლად\",\n      \"box_2d\": [573, 442, 588, 469]\n    },\n    {\n      \"label\": \"წონების ფილების ყვითელი ქინძისთავი\",\n      \"box_2d\": [344, 497, 355, 519]\n    }\n  ]\n}",
+            "thoughtSignature": "El8KXQFpFH0TP8R8ekVVJCa5mUIITlaCnXHE34sQLOh/hKWNDUDbnaRUrWe7+aOjfTdAlDIZxZzT4486+EsQBSPP5lMLw+dY1p91cWHKu7iaC6G9DIpATfEcsFAttBdgCQ=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1679,
+    "candidatesTokenCount": 355,
+    "totalTokenCount": 2034,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 579
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "XHDTarafILn-vdIPvYDMsAQ"
+}

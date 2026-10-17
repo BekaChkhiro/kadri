@@ -1,0 +1,25 @@
+{
+  "first_box_full_response_seconds": 6.089316292000149,
+  "response_seconds": 6.089316292000149,
+  "validated_parts_seconds": 6.0932728339994355,
+  "part_count": 4,
+  "usage": {
+    "promptTokenCount": 1672,
+    "candidatesTokenCount": 158,
+    "totalTokenCount": 1830,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1080
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 592
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "usd": 0.002462,
+  "model_version": "gemini-robotics-er-2-preview",
+  "definition": "Full parts response including network; no count preflight; excludes SAM; empty parts has no first box"
+}

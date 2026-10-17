@@ -1,0 +1,15 @@
+{
+  "frames_verified": 22,
+  "responses_validated": 47,
+  "visual_review_matrix": 44,
+  "visual_review_pilot": 3,
+  "ledger_requests_settled": 47,
+  "total_usd": 0.08484654999999998,
+  "limit_usd": 5,
+  "markdown_links_checked": 25,
+  "secret_scan": "passed",
+  "tests_passed": 103,
+  "new_tests": 9,
+  "openai_calls": 0,
+  "stage2_calls": 0
+}

@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ქიმიური ლაბორატორიული დანადგარი ტიტრაციისთვის\",\n  \"parts\": [\n    {\n      \"label\": \"ზედა ძაბრი\",\n      \"box_2d\": [18, 384, 100, 526]\n    },\n    {\n      \"label\": \"ბიურეტი სითხით\",\n      \"box_2d\": [91, 427, 431, 484]\n    },\n    {\n      \"label\": \"ბიურეტის ონკანი\",\n      \"box_2d\": [382, 401, 429, 514]\n    },\n    {\n      \"label\": \"შტატივი და სადგამი\",\n      \"box_2d\": [13, 582, 629, 915]\n    },\n    {\n      \"label\": \"კონუსური კოლბა სითხით\",\n      \"box_2d\": [461, 359, 620, 538]\n    },\n    {\n      \"label\": \"თეთრი ფილა კოლბის ქვეშ\",\n      \"box_2d\": [591, 277, 643, 597]\n    },\n    {\n      \"label\": \"ინდიკატორის ფლაკონი თავსახურით\",\n      \"box_2d\": [488, 240, 620, 319]\n    }\n  ]\n}",
+            "thoughtSignature": "El8KXQFpFH0T97Wrw7bZBonNs8Bznou1CrWs+JQsOwY1z/FNdCsjV08GaxuVvr/vUwkTwnVYp2IyaeC1TnXhpfpj606ToQkoj1SAPoOdAr2aMCOGOWgdni5MTWK1G6lj9Q=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1682,
+    "candidatesTokenCount": 391,
+    "totalTokenCount": 2073,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 582
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "SXDTapWWHaf-xN8PtvuB-AQ"
+}

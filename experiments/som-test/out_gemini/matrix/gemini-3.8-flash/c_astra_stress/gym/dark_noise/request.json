@@ -1,0 +1,107 @@
+{
+  "model": "gemini-3.8-flash",
+  "prompt": "ამ ფოტოზე გამოყავი მოქმედებებისთვის საჭირო მხოლოდ ფიზიკური ხილული კომპონენტები. ცარიელი ადგილი, ფონი ან ზონა, სადაც ნივთი უნდა დადგას, ნაწილი არ არის და parts-ში არ ჩასვა. დააბრუნე object და parts: ქართული label და მჭიდრო box_2d=[ymin,xmin,ymax,xmax], ფოტოს სიგანის/სიმაღლის მიმართ 0..1000. ID-ები და ნაბიჯები არ შექმნა. თუ რამდენიმე მსგავსი ან ერთგვაროვანი ნაწილია, label-ში აუცილებლად დააზუსტე მდებარეობა (მაგ. მარჯვენა/მარცხენა/ზედა/ქვედა), რათა მოქმედების სამიზნე მკაფიოდ გაირჩეს. იმავე label string-ში მოკლედ აღწერე ხილული განმასხვავებელი მტკიცებულება (წვეთები, სველი კვალი, შეერთება) მხოლოდ თუ ფოტოზე ჩანს; არ მიაწერო ნავარაუდევი მტკიცებულება. უხილავი ნაწილი არ გამოიგონო.\n[{\"title\": \"დაარეგულირე სიმაღლე\", \"text\": \"გამოსწიე ყვითელი ღილაკი სავარძლის ქვეშ და ისე დააყენე, რომ ჯდომისას მუხლები ბალიშების ქვეშ მჭიდროდ მოექცეს.\"}, {\"title\": \"აირჩიე წონა\", \"text\": \"ყვითელი ქინძისთავი გადაიტანე სასურველ ფილაში და ბოლომდე ჩაარჭე.\"}, {\"title\": \"მოკიდე სახელურს\", \"text\": \"ფეხზე მდგომმა მოკიდე ხელი მოხრილ ბოლოებთან, მხრებზე ოდნავ ფართოდ, ხელისგულები წინ.\"}, {\"title\": \"დაჯექი და დაფიქსირდი\", \"text\": \"სახელურით ხელში დაჯექი, ფეხები იატაკზე, მუხლები ბალიშების ქვეშ. მკერდი წინ, ზურგი სწორი.\"}, {\"title\": \"ჩამოწიე მკერდამდე\", \"text\": \"იდაყვები ქვემოთ და უკან, სახელური მკერდის ზედა ნაწილამდე. ზემოთ ნელა აუშვი, 2 წამში.\"}]",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "object": {
+        "type": "string"
+      },
+      "parts": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "box_2d": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1000
+              },
+              "minItems": 4,
+              "maxItems": 4
+            }
+          },
+          "required": [
+            "label",
+            "box_2d"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 24
+      }
+    },
+    "required": [
+      "object",
+      "parts"
+    ],
+    "additionalProperties": false
+  },
+  "generation_config": {
+    "responseMimeType": "application/json",
+    "responseJsonSchema": {
+      "type": "object",
+      "properties": {
+        "object": {
+          "type": "string"
+        },
+        "parts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "box_2d": {
+                "type": "array",
+                "items": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1000
+                },
+                "minItems": 4,
+                "maxItems": 4
+              }
+            },
+            "required": [
+              "label",
+              "box_2d"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 24
+        }
+      },
+      "required": [
+        "object",
+        "parts"
+      ],
+      "additionalProperties": false
+    },
+    "thinkingConfig": {
+      "thinkingLevel": "low"
+    },
+    "maxOutputTokens": 8192,
+    "candidateCount": 1
+  },
+  "input_sha256": "ca0a52f501430c7110493b7cb58f00fd44357b7ccdbdc3aea7c2d40ba5c7f804",
+  "price": {
+    "input": 0.75,
+    "output": 3.75,
+    "thinking": "low"
+  },
+  "price_source": "https://ai.google.dev/gemini-api/docs/pricing",
+  "reserved_usd": 0.817152,
+  "stream": false,
+  "stage": 1,
+  "retries": 0
+}

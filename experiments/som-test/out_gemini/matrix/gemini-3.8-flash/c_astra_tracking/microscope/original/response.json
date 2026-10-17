@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"მიკროსკოპი\",\n  \"parts\": [\n    {\n      \"label\": \"ოკულარი\",\n      \"box_2d\": [21, 163, 159, 396]\n    },\n    {\n      \"label\": \"რევოლვერული თავაკი\",\n      \"box_2d\": [217, 342, 269, 532]\n    },\n    {\n      \"label\": \"მარცხენა ობიექტივი\",\n      \"box_2d\": [227, 285, 329, 421]\n    },\n    {\n      \"label\": \"ცენტრალური ობიექტივი\",\n      \"box_2d\": [247, 403, 359, 490]\n    },\n    {\n      \"label\": \"მარჯვენა მოკლე ობიექტივი (ყვითელი ზოლით)\",\n      \"box_2d\": [257, 484, 323, 545]\n    },\n    {\n      \"label\": \"სასაგნე მაგიდა\",\n      \"box_2d\": [336, 221, 447, 664]\n    },\n    {\n      \"label\": \"სასაგნე მინა პრეპარატით\",\n      \"box_2d\": [347, 345, 408, 513]\n    },\n    {\n      \"label\": \"მარცხენა ლითონის სამაგრი\",\n      \"box_2d\": [351, 311, 373, 341]\n    },\n    {\n      \"label\": \"მარჯვენა ლითონის სამაგრი\",\n      \"box_2d\": [373, 529, 393, 588]\n    },\n    {\n      \"label\": \"განათების წყარო (ანთებული ნათურა)\",\n      \"box_2d\": [471, 365, 551, 532]\n    },\n    {\n      \"label\": \"ჩამრთველი ღილაკი ფუძეზე\",\n      \"box_2d\": [552, 600, 574, 649]\n    },\n    {\n      \"label\": \"ქვედა დიდი ფოკუსირების ხრახნი (მაკროხრახნი)\",\n      \"box_2d\": [451, 699, 550, 866]\n    },\n    {\n      \"label\": \"ზედა პატარა ფოკუსირების ხრახნი (მიკროხრახნი)\",\n      \"box_2d\": [390, 720, 453, 831]\n    }\n  ]\n}",
+            "thoughtSignature": "EmgKZgFpFH0TWrjsjPbo0u3Sw0wQhVHo9vtOmY5ttEK4fLsv9imxOUsnxH2BTwbFX4qdLTF/2bMFHWl02rCHBNofVHw+8QHyTFt7oX3LVevxQBUqkT/vPZeiAAaUgL7BTfbEl+bspkHZ9g=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1651,
+    "candidatesTokenCount": 716,
+    "totalTokenCount": 2367,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 571
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1080
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "ym_TatrQCM2s28oPht3OMQ"
+}

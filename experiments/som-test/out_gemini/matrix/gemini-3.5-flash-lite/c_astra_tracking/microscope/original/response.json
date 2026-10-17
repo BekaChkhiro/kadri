@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"მიკროსკოპი\",\n  \"parts\": [\n    {\n      \"label\": \"ჩამრთველი ფუძეზე\",\n      \"box_2d\": [\n        550,\n        597,\n        576,\n        642\n      ]\n    },\n    {\n      \"label\": \"რევოლვერი ობიექტივებით\",\n      \"box_2d\": [\n        210,\n        286,\n        354,\n        542\n      ]\n    },\n    {\n      \"label\": \"პრეპარატი\",\n      \"box_2d\": [\n        342,\n        322,\n        405,\n        513\n      ]\n    },\n    {\n      \"label\": \"მარცხენა სამაგრი\",\n      \"box_2d\": [\n        329,\n        312,\n        363,\n        337\n      ]\n    },\n    {\n      \"label\": \"მარჯვენა სამაგრი\",\n      \"box_2d\": [\n        333,\n        531,\n        365,\n        585\n      ]\n    },\n    {\n      \"label\": \"ოკულარი\",\n      \"box_2d\": [\n        23,\n        160,\n        138,\n        337\n      ]\n    },\n    {\n      \"label\": \"დიდი ხრახნი\",\n      \"box_2d\": [\n        452,\n        696,\n        544,\n        863\n      ]\n    },\n    {\n      \"label\": \"პატარა ხრახნი\",\n      \"box_2d\": [\n        388,\n        723,\n        450,\n        827\n      ]\n    }\n  ]\n}",
+            "thoughtSignature": "El8KXQFpFH0TVS5RQk0jAmJPztwsYAZFWFyxmyrLiE6DBVlbK6myaMavUftZHBpBBE1SSVk3FtHgAnu1pYfypyi60zoyST+86/OhqprSMUfzDiknj0eNNi3E3tiaFJ9v6w=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1651,
+    "candidatesTokenCount": 463,
+    "totalTokenCount": 2114,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 571
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1080
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "aHDTavmTNbSkxN8PpbfImQE"
+}

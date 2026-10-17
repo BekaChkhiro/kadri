@@ -1,0 +1,151 @@
+{
+  "frame": "c_astra_stress/car/motion_blur",
+  "labels": [
+    "ყვითელი რგოლიანი ზეთის საზომი ღერო"
+  ],
+  "match": {
+    "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+    "threshold": 0.5,
+    "matches": [
+      {
+        "previous": 1,
+        "current": 0,
+        "iou": 0.690058479532165,
+        "phone_id": "phone_2",
+        "raw_id_equal": false,
+        "raw_label_equal": false
+      }
+    ],
+    "phone_ids": [
+      "phone_2"
+    ],
+    "unmatched": [],
+    "dropout": [
+      0
+    ],
+    "raw_id_stability": 0.0,
+    "raw_label_stability": 0.0
+  },
+  "proxy": [
+    {
+      "name": "COVER",
+      "visible_pixels": 138586,
+      "best_iou": 0.02599698210821298,
+      "best_id": "p1"
+    },
+    {
+      "name": "CAP",
+      "visible_pixels": 9305,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    },
+    {
+      "name": "DIP",
+      "visible_pixels": 3172,
+      "best_iou": 0.6412196750500779,
+      "best_id": "p1"
+    },
+    {
+      "name": "COOLANT",
+      "visible_pixels": 42140,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    },
+    {
+      "name": "WASHER",
+      "visible_pixels": 15495,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    },
+    {
+      "name": "BATTERY",
+      "visible_pixels": 28971,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    }
+  ],
+  "astra_proxy": [
+    {
+      "name": "COVER",
+      "visible_pixels": 138586,
+      "best_iou": 0.06122552061535797,
+      "best_id": "p1"
+    },
+    {
+      "name": "CAP",
+      "visible_pixels": 9305,
+      "best_iou": 0.838189708617483,
+      "best_id": "p1"
+    },
+    {
+      "name": "DIP",
+      "visible_pixels": 3172,
+      "best_iou": 0.6338212803146166,
+      "best_id": "p2"
+    },
+    {
+      "name": "COOLANT",
+      "visible_pixels": 42140,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    },
+    {
+      "name": "WASHER",
+      "visible_pixels": 15495,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    },
+    {
+      "name": "BATTERY",
+      "visible_pixels": 28971,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    }
+  ],
+  "astra_latency": {
+    "preflight_seconds": 0.89993695800149,
+    "parts_preflight_seconds": 0.43521429100110254,
+    "steps_preflight_seconds": 0.46472266700038745,
+    "real_wall_time_to_first_box_seconds": 5.409594499999002,
+    "first_box_full_response_seconds": 5.409594499999002,
+    "first_box_model_only_seconds": 4.9743802089979,
+    "time_to_parts_response_seconds": 5.409594499999002,
+    "time_to_first_outline_seconds": 7.534928000000946,
+    "time_to_first_step_seconds": 6.432993915999759,
+    "time_to_first_step_from_start_seconds": 13.969798956999512,
+    "sam_seconds": 2.0605679170002986,
+    "steps_seconds": 19.81926495799962,
+    "total_seconds": 27.47812950000116,
+    "adapter_wall_seconds": 27.479531832999783,
+    "first_box_definition": "C parts response; streaming steps; outline after SAM",
+    "partial_recovery": false,
+    "is_replay": false,
+    "original_wall_total_available": true
+  },
+  "gemini_latency": {
+    "first_box_full_response_seconds": 2.9416280830009782,
+    "response_seconds": 2.9416280830009782,
+    "validated_parts_seconds": 2.942673540999749,
+    "part_count": 1,
+    "usage": {
+      "promptTokenCount": 1666,
+      "candidatesTokenCount": 90,
+      "totalTokenCount": 1756,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1100
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 566
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "usd": 0.0007247999999999999,
+    "model_version": "gemini-3.5-flash-lite",
+    "definition": "Full parts response including network; no count preflight; excludes SAM; empty parts has no first box"
+  },
+  "astra_part_count": 2
+}

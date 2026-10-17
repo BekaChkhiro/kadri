@@ -1,0 +1,193 @@
+{
+  "limit": 5,
+  "requests": {
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/pilot/gemini-3.8-flash/c_astra_tracking/sink/original": {
+      "state": "settled",
+      "usd": 0.00227775
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/pilot/gemini-robotics-er-2-preview/c_astra_tracking/sink/original": {
+      "state": "settled",
+      "usd": 0.002462
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/pilot/gemini-3.5-flash-lite/c_astra_tracking/sink/original": {
+      "state": "settled",
+      "usd": 0.0010165999999999999
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_tracking/car/original": {
+      "state": "settled",
+      "usd": 0.00180825
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_tracking/car/shift_left": {
+      "state": "settled",
+      "usd": 0.001887
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_tracking/car/shift_right": {
+      "state": "settled",
+      "usd": 0.00186825
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_tracking/chemistry/original": {
+      "state": "settled",
+      "usd": 0.00296775
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_tracking/chemistry/shift_left": {
+      "state": "settled",
+      "usd": 0.00308025
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_tracking/chemistry/shift_right": {
+      "state": "settled",
+      "usd": 0.00258525
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_tracking/gym/original": {
+      "state": "settled",
+      "usd": 0.002493
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_tracking/gym/shift_left": {
+      "state": "settled",
+      "usd": 0.002838
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_tracking/gym/shift_right": {
+      "state": "settled",
+      "usd": 0.00269175
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_tracking/microscope/original": {
+      "state": "settled",
+      "usd": 0.00392325
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_tracking/sink/original": {
+      "state": "settled",
+      "usd": 0.00230775
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_tracking/sink/shift_left": {
+      "state": "settled",
+      "usd": 0.00252525
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_tracking/sink/shift_right": {
+      "state": "settled",
+      "usd": 0.002319
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_stress/car/dark_noise": {
+      "state": "settled",
+      "usd": 0.0030945
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_stress/car/motion_blur": {
+      "state": "settled",
+      "usd": 0.001722
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_stress/car/occlusion": {
+      "state": "settled",
+      "usd": 0.00153825
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_stress/gym/dark_noise": {
+      "state": "settled",
+      "usd": 0.00277425
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_stress/gym/motion_blur": {
+      "state": "settled",
+      "usd": 0.002448
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_stress/gym/occlusion": {
+      "state": "settled",
+      "usd": 0.001893
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_stress/sink/dark_noise": {
+      "state": "settled",
+      "usd": 0.0025665
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_stress/sink/motion_blur": {
+      "state": "settled",
+      "usd": 0.0025665
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.8-flash/c_astra_stress/sink/occlusion": {
+      "state": "settled",
+      "usd": 0.00216525
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_tracking/car/original": {
+      "state": "settled",
+      "usd": 0.0007497999999999999
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_tracking/car/shift_left": {
+      "state": "settled",
+      "usd": 0.0007572999999999999
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_tracking/car/shift_right": {
+      "state": "settled",
+      "usd": 0.0007448
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_tracking/chemistry/original": {
+      "state": "settled",
+      "usd": 0.0011496
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_tracking/chemistry/shift_left": {
+      "state": "settled",
+      "usd": 0.0014820999999999999
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_tracking/chemistry/shift_right": {
+      "state": "settled",
+      "usd": 0.0014271
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_tracking/gym/original": {
+      "state": "settled",
+      "usd": 0.0015312000000000001
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_tracking/gym/shift_left": {
+      "state": "settled",
+      "usd": 0.0013912
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_tracking/gym/shift_right": {
+      "state": "settled",
+      "usd": 0.0013062
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_tracking/microscope/original": {
+      "state": "settled",
+      "usd": 0.0016528
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_tracking/sink/original": {
+      "state": "settled",
+      "usd": 0.0009991
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_tracking/sink/shift_left": {
+      "state": "settled",
+      "usd": 0.0011466
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_tracking/sink/shift_right": {
+      "state": "settled",
+      "usd": 0.0011891
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_stress/car/dark_noise": {
+      "state": "settled",
+      "usd": 0.0007247999999999999
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_stress/car/motion_blur": {
+      "state": "settled",
+      "usd": 0.0007247999999999999
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_stress/car/occlusion": {
+      "state": "settled",
+      "usd": 0.0007423
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_stress/gym/dark_noise": {
+      "state": "settled",
+      "usd": 0.0013887
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_stress/gym/motion_blur": {
+      "state": "settled",
+      "usd": 0.0016287
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_stress/gym/occlusion": {
+      "state": "settled",
+      "usd": 0.0008712
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_stress/sink/dark_noise": {
+      "state": "settled",
+      "usd": 0.0011641
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_stress/sink/motion_blur": {
+      "state": "settled",
+      "usd": 0.0011565999999999998
+    },
+    "/Users/beqolozi/Library/Application Support/ThreadRig/engine/E8D4DDA2-D023-4EA8-AF8C-30291685FD24/workspace/checkout/experiments/som-test/out_gemini/matrix/gemini-3.5-flash-lite/c_astra_stress/sink/occlusion": {
+      "state": "settled",
+      "usd": 0.0010991
+    }
+  }
+}

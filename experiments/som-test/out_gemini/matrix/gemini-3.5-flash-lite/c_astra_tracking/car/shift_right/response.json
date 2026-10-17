@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ძრავის განყოფილება\",\n  \"parts\": [\n    {\n      \"label\": \"ყვითელი რგოლიანი ზეთის საზომი ღერო ძრავის საფარის ქვემოთ\",\n      \"box_2d\": [\n        380,\n        629,\n        463,\n        633\n      ]\n    }\n  ]\n}",
+            "thoughtSignature": "El8KXQFpFH0TjNYjTJf09xlo3IETFZFip16C8EZ2VnUZBEbpuhzMaxZreZO/kGKiD7g8UAlMkDY/KRMVzJMHkJRqsZh8j+EVT7tY4YlxtsNDQ/Jk51nGINGqPyNHQ+RbBA=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1666,
+    "candidatesTokenCount": 98,
+    "totalTokenCount": 1764,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 566
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "P3DTauuiKp7zvdIPysrq6Ag"
+}

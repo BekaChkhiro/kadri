@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ძრავის ზეთის შემოწმება და დამატება\",\n  \"parts\": [\n    {\n      \"label\": \"ყვითელი რგოლიანი ზეთის საზომი ღერო\",\n      \"box_2d\": [\n        363,\n        584,\n        415,\n        634\n      ]\n    }\n  ]\n}",
+            "thoughtSignature": "El8KXQFpFH0TH4k6oGVCjhjDArTJVzz52o5oY5OBmEeTsoWcmsYe11VJr8+PdOWmlSS0EXYtar1fMZFDNb++beBniENY9/pYo4UutZ8zBzetDeGkHjK301yHC5UexJB8kg=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1666,
+    "candidatesTokenCount": 97,
+    "totalTokenCount": 1763,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 566
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "iXDTarz7OeOwvdIPjM_iiQE"
+}

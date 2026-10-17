@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"სავარჯიშო ტრენაჟორი\",\n  \"parts\": [\n    {\n      \"label\": \"ქვედა ყვითელი ღილაკი სავარძლის ძირში\",\n      \"box_2d\": [\n        559,\n        485,\n        573,\n        513\n      ]\n    },\n    {\n      \"label\": \"ზედა ყვითელი ქინძისთავი წონის ფილებზე\",\n      \"box_2d\": [\n        329,\n        539,\n        340,\n        558\n      ]\n    },\n    {\n      \"label\": \"შავი გრძელი სახელური ტრენაჟორის თავზე\",\n      \"box_2d\": [\n        71,\n        100,\n        119,\n        897\n      ]\n    },\n    {\n      \"label\": \"სავარძლის შავი ბალიში\",\n      \"box_2d\": [\n        472,\n        373,\n        531,\n        625\n      ]\n    },\n    {\n      \"label\": \"მუხლების დასაფიქსირებელი მარცხენა შავი ბალიში\",\n      \"box_2d\": [\n        388,\n        316,\n        443,\n        479\n      ]\n    },\n    {\n      \"label\": \"მუხლების დასაფიქსირებელი მარჯვენა შავი ბალიში\",\n      \"box_2d\": [\n        388,\n        521,\n        443,\n        681\n      ]\n    }\n  ]\n}",
+            "thoughtSignature": "El8KXQFpFH0TQNW2hGYwJIWRuJg9B69xkc+wGRVTsPtfrN/LtuWuiEV1VMbxdh/qtk/F/juZzPTcMgix/MbedwUjaXqUY7VY/Ga64Iru4CCBqdL40prtWxCylT8xH8Lyaw=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1679,
+    "candidatesTokenCount": 411,
+    "totalTokenCount": 2090,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 579
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "VnDTapT_CNuD7M8Poa7ZgAU"
+}

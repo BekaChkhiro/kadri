@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ნიჟარის სიფონი\",\n  \"parts\": [\n    {\n      \"label\": \"მარცხენა წყლის სარქველი\",\n      \"box_2d\": [\n        205,\n        13,\n        329,\n        149\n      ]\n    },\n    {\n      \"label\": \"მარჯვენა წყლის სარქველი\",\n      \"box_2d\": [\n        210,\n        216,\n        333,\n        316\n      ]\n    },\n    {\n      \"label\": \"სიფონის ქანჩი წვეთებითა და სველი კვალით\",\n      \"box_2d\": [\n        248,\n        617,\n        375,\n        747\n      ]\n    }\n  ]\n}",
+            "thoughtSignature": "El8KXQFpFH0TIzMbAdK8nL3TU+7a1cMb8WSy5KiHZC78xRqyeyi/rjQpZwIc9DPXUlD5ydcV3f3VzUNtR8D6rhoN/9Q8T+non1vmOz1TpomJ3rdP11p0uez4trdDwhApXg=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1672,
+    "candidatesTokenCount": 206,
+    "totalTokenCount": 1878,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 592
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1080
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "W2_TasuSN4OH28oPnqSKsQU"
+}

@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ნიჟარის სიფონი და წყლის სარქველები\",\n  \"parts\": [\n    {\n      \"label\": \"მარცხენა წყლის სარქველი\",\n      \"box_2d\": [249, 13, 328, 149]\n    },\n    {\n      \"label\": \"მარჯვენა წყლის სარქველი\",\n      \"box_2d\": [253, 218, 333, 316]\n    },\n    {\n      \"label\": \"სიფონის პლასტმასის ქანჩი წვეთებითა და სველი კვალით\",\n      \"box_2d\": [250, 642, 385, 746]\n    }\n  ]\n}",
+            "thoughtSignature": "El8KXQFpFH0TPMatkM/jDmWfAuNQ5f6nCFEuPdiAlKKjVRGqk8jenTtrd23jOs5Te3fMxIk7FyuKon10BvRGQ2C8rIgFEb6dqMARpW2QagbQdqC7Y5+zPLjNGaDE7YI8vg=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1672,
+    "candidatesTokenCount": 199,
+    "totalTokenCount": 1871,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1080
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 592
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "cXDTapDWEd2S3boP1_a7uQk"
+}

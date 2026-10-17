@@ -1,0 +1,231 @@
+{
+  "frame": "c_astra_tracking/microscope/original",
+  "labels": [
+    "ოკულარი",
+    "რევოლვერი ობიექტივებით",
+    "მარცხენა სამაგრი",
+    "მარჯვენა სამაგრი",
+    "პრეპარატი",
+    "პატარა ხრახნი",
+    "დიდი ხრახნი",
+    "ჩამრთველი ფუძეზე"
+  ],
+  "match": {
+    "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+    "threshold": 0.5,
+    "matches": [
+      {
+        "previous": 9,
+        "current": 6,
+        "iou": 0.8868109668109664,
+        "phone_id": "phone_10",
+        "raw_id_equal": false,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 8,
+        "current": 5,
+        "iou": 0.8406304728546422,
+        "phone_id": "phone_9",
+        "raw_id_equal": false,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 6,
+        "current": 4,
+        "iou": 0.7574520212331561,
+        "phone_id": "phone_7",
+        "raw_id_equal": false,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 11,
+        "current": 7,
+        "iou": 0.743050338091659,
+        "phone_id": "phone_12",
+        "raw_id_equal": false,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 0,
+        "current": 0,
+        "iou": 0.6152892811800981,
+        "phone_id": "phone_1",
+        "raw_id_equal": true,
+        "raw_label_equal": false
+      }
+    ],
+    "phone_ids": [
+      "phone_1",
+      "phone_13",
+      "phone_14",
+      "phone_15",
+      "phone_7",
+      "phone_9",
+      "phone_10",
+      "phone_12"
+    ],
+    "unmatched": [
+      1,
+      2,
+      3
+    ],
+    "dropout": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      7,
+      10
+    ],
+    "raw_id_stability": 0.2,
+    "raw_label_stability": 0.0
+  },
+  "proxy": [
+    {
+      "name": "EYEPIECE",
+      "visible_pixels": 25809,
+      "best_iou": 0.3751374720315522,
+      "best_id": "p1"
+    },
+    {
+      "name": "NOSE",
+      "visible_pixels": 37941,
+      "best_iou": 0.7876653807316883,
+      "best_id": "p2"
+    },
+    {
+      "name": "STAGE",
+      "visible_pixels": 47080,
+      "best_iou": 0.1411873528422469,
+      "best_id": "p5"
+    },
+    {
+      "name": "SLIDE",
+      "visible_pixels": 12199,
+      "best_iou": 0.5043417584121569,
+      "best_id": "p5"
+    },
+    {
+      "name": "FINE",
+      "visible_pixels": 7995,
+      "best_iou": 0.8261224489795919,
+      "best_id": "p6"
+    },
+    {
+      "name": "COARSE",
+      "visible_pixels": 16031,
+      "best_iou": 0.7364642242439144,
+      "best_id": "p7"
+    },
+    {
+      "name": "LIGHT",
+      "visible_pixels": 14843,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    },
+    {
+      "name": "SWITCH",
+      "visible_pixels": 1077,
+      "best_iou": 0.6153846153846154,
+      "best_id": "p8"
+    }
+  ],
+  "astra_proxy": [
+    {
+      "name": "EYEPIECE",
+      "visible_pixels": 25809,
+      "best_iou": 0.8721078057462497,
+      "best_id": "p1"
+    },
+    {
+      "name": "NOSE",
+      "visible_pixels": 37941,
+      "best_iou": 0.27736380631401564,
+      "best_id": "p4"
+    },
+    {
+      "name": "STAGE",
+      "visible_pixels": 47080,
+      "best_iou": 0.6912888807808082,
+      "best_id": "p8"
+    },
+    {
+      "name": "SLIDE",
+      "visible_pixels": 12199,
+      "best_iou": 0.49992226368159204,
+      "best_id": "p7"
+    },
+    {
+      "name": "FINE",
+      "visible_pixels": 7995,
+      "best_iou": 0.8281486659676104,
+      "best_id": "p9"
+    },
+    {
+      "name": "COARSE",
+      "visible_pixels": 16031,
+      "best_iou": 0.7361001964636542,
+      "best_id": "p10"
+    },
+    {
+      "name": "LIGHT",
+      "visible_pixels": 14843,
+      "best_iou": 0.8444036907559173,
+      "best_id": "p11"
+    },
+    {
+      "name": "SWITCH",
+      "visible_pixels": 1077,
+      "best_iou": 0.6006734006734007,
+      "best_id": "p12"
+    }
+  ],
+  "astra_latency": {
+    "preflight_seconds": 1.3474813749999157,
+    "parts_preflight_seconds": 0.43668637499831675,
+    "steps_preflight_seconds": 0.910795000001599,
+    "real_wall_time_to_first_box_seconds": 13.156181665999611,
+    "first_box_full_response_seconds": 13.156181665999611,
+    "first_box_model_only_seconds": 12.719495291001294,
+    "time_to_parts_response_seconds": 13.156181665999611,
+    "time_to_first_outline_seconds": 19.24927241700061,
+    "time_to_first_step_seconds": 4.00564679099989,
+    "time_to_first_step_from_start_seconds": 23.264002290999997,
+    "sam_seconds": 5.978753958999732,
+    "steps_seconds": 17.147815332999016,
+    "total_seconds": 36.5572127079995,
+    "adapter_wall_seconds": 36.55845245800083,
+    "first_box_definition": "C parts response; streaming steps; outline after SAM",
+    "partial_recovery": false,
+    "is_replay": false,
+    "original_wall_total_available": true
+  },
+  "gemini_latency": {
+    "first_box_full_response_seconds": 3.5950599589996273,
+    "response_seconds": 3.5950599589996273,
+    "validated_parts_seconds": 3.5977658339998015,
+    "part_count": 8,
+    "usage": {
+      "promptTokenCount": 1651,
+      "candidatesTokenCount": 463,
+      "totalTokenCount": 2114,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 571
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1080
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "usd": 0.0016528,
+    "model_version": "gemini-3.5-flash-lite",
+    "definition": "Full parts response including network; no count preflight; excludes SAM; empty parts has no first box"
+  },
+  "astra_part_count": 12
+}

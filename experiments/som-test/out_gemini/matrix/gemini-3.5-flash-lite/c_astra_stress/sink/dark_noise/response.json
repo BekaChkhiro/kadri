@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ნიჟარის სიფონი და წყალმომარაგების სისტემა\",\n  \"parts\": [\n    {\n      \"label\": \"მარცხენა ონკანი\",\n      \"box_2d\": [\n        210,\n        10,\n        328,\n        146\n      ]\n    },\n    {\n      \"label\": \"მარჯვენა ონკანი\",\n      \"box_2d\": [\n        219,\n        219,\n        333,\n        316\n      ]\n    },\n    {\n      \"label\": \"სიფონის ქვედა მრუდი ნაწილი\",\n      \"box_2d\": [\n        0,\n        268,\n        490,\n        915\n      ]\n    },\n    {\n      \"label\": \"მარჯვენა ქანჩი სველი კვალით\",\n      \"box_2d\": [\n        250,\n        642,\n        377,\n        747\n      ]\n    }\n  ]\n}",
+            "thoughtSignature": "El8KXQFpFH0T7b1gpP7EQHilwPxLS98qrTuV/Tm1U3bwEOr/rEbH/o24ohOjqHrIORAxECaztvzAIw4xIfs/54yZswKfqPx5q3vNrcB8MeRpCI2S7CAm+jexm0dOUPzmdw=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1672,
+    "candidatesTokenCount": 265,
+    "totalTokenCount": 1937,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 592
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1080
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "n3DTatzpJuis28oP8cDk-Qk"
+}

@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ზურგის სავარჯიშო ტრენაჟორი (Lat Pulldown)\",\n  \"parts\": [\n    {\n      \"label\": \"ზედა მოხრილი სახელური (ჩამოსაქაჩი ღერძი)\",\n      \"box_2d\": [58, 89, 126, 903]\n    },\n    {\n      \"label\": \"წონის ფილები ყვითელი ქინძისთავით\",\n      \"box_2d\": [279, 434, 401, 574]\n    },\n    {\n      \"label\": \"მუხლების დასაფიქსირებელი ბალიშები\",\n      \"box_2d\": [384, 314, 444, 683]\n    },\n    {\n      \"label\": \"სავარძელი\",\n      \"box_2d\": [471, 368, 532, 627]\n    },\n    {\n      \"label\": \"სიმაღლის მარეგულირებელი ყვითელი ღილაკი სავარძლის ქვეშ\",\n      \"box_2d\": [551, 477, 579, 521]\n    }\n  ]\n}",
+            "thoughtSignature": "EmgKZgFpFH0Tb6cf4+rIeHiqADLApNWQLwpIGBzShpp+/7xKb4t1wmp+Nx4EJ+wIA2fkGPNVOZB5SolTNAdgtJW9eFW5qOhzhKr049v405iYy2KUmsJ/U7ZnDWauM2r2fGGDoikLksnwUA=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1679,
+    "candidatesTokenCount": 317,
+    "totalTokenCount": 1996,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 579
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "CnDTaoPDO8fcxs0PrPvd-Qo"
+}

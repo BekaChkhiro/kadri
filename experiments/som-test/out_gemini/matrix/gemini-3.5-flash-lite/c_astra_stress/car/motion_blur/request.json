@@ -1,0 +1,107 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "prompt": "ამ ფოტოზე გამოყავი მოქმედებებისთვის საჭირო მხოლოდ ფიზიკური ხილული კომპონენტები. ცარიელი ადგილი, ფონი ან ზონა, სადაც ნივთი უნდა დადგას, ნაწილი არ არის და parts-ში არ ჩასვა. დააბრუნე object და parts: ქართული label და მჭიდრო box_2d=[ymin,xmin,ymax,xmax], ფოტოს სიგანის/სიმაღლის მიმართ 0..1000. ID-ები და ნაბიჯები არ შექმნა. თუ რამდენიმე მსგავსი ან ერთგვაროვანი ნაწილია, label-ში აუცილებლად დააზუსტე მდებარეობა (მაგ. მარჯვენა/მარცხენა/ზედა/ქვედა), რათა მოქმედების სამიზნე მკაფიოდ გაირჩეს. იმავე label string-ში მოკლედ აღწერე ხილული განმასხვავებელი მტკიცებულება (წვეთები, სველი კვალი, შეერთება) მხოლოდ თუ ფოტოზე ჩანს; არ მიაწერო ნავარაუდევი მტკიცებულება. უხილავი ნაწილი არ გამოიგონო.\n[{\"title\": \"იპოვე ზეთის საზომი\", \"text\": \"ყვითელი რგოლი ძრავის საფარის ქვემოთ. ეს არის ზეთის საზომი ღერო.\"}, {\"title\": \"ამოიღე და გაწმინდე\", \"text\": \"ამოსწიე ღერო ბოლომდე, მშრალი ხელსახოცით გაწმინდე და ისევ ბოლომდე ჩადე.\"}, {\"title\": \"წაიკითხე დონე\", \"text\": \"კიდევ ერთხელ ამოიღე. ზეთის კვალი ორ ნიშნულს შორის უნდა იყოს.\"}, {\"title\": \"დაამატე ზეთი\", \"text\": \"თუ დონე MIN-თან ახლოსაა, მოხსენი ეს ხუფი საათის ისრის საწინააღმდეგოდ და ჩაასხი 200 მლ, შემდეგ გადაამოწმე.\"}, {\"title\": \"დახურე და გადაამოწმე\", \"text\": \"ხუფი მოუჭირე ბოლომდე, საზომი ღერო ჩადე თავის ადგილას. 2 წუთის შემდეგ კიდევ ერთხელ შეამოწმე დონე.\"}]",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "object": {
+        "type": "string"
+      },
+      "parts": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "box_2d": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1000
+              },
+              "minItems": 4,
+              "maxItems": 4
+            }
+          },
+          "required": [
+            "label",
+            "box_2d"
+          ],
+          "additionalProperties": false
+        },
+        "maxItems": 24
+      }
+    },
+    "required": [
+      "object",
+      "parts"
+    ],
+    "additionalProperties": false
+  },
+  "generation_config": {
+    "responseMimeType": "application/json",
+    "responseJsonSchema": {
+      "type": "object",
+      "properties": {
+        "object": {
+          "type": "string"
+        },
+        "parts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "box_2d": {
+                "type": "array",
+                "items": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1000
+                },
+                "minItems": 4,
+                "maxItems": 4
+              }
+            },
+            "required": [
+              "label",
+              "box_2d"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 24
+        }
+      },
+      "required": [
+        "object",
+        "parts"
+      ],
+      "additionalProperties": false
+    },
+    "thinkingConfig": {
+      "thinkingLevel": "minimal"
+    },
+    "maxOutputTokens": 8192,
+    "candidateCount": 1
+  },
+  "input_sha256": "0bcd317de1a80a405e5f092535e5d475d2f05a34d0c1d3a5bb5b956662fce715",
+  "price": {
+    "input": 0.3,
+    "output": 2.5,
+    "thinking": "minimal"
+  },
+  "price_source": "https://ai.google.dev/gemini-api/docs/pricing",
+  "reserved_usd": 0.3350528,
+  "stream": false,
+  "stage": 1,
+  "retries": 0
+}

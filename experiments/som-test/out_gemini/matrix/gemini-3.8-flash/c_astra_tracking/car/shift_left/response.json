@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ავტომობილის ძრავის განყოფილება\",\n  \"parts\": [\n    {\n      \"label\": \"ზეთის საზომი ღეროს ყვითელი რგოლი, ძრავის საფარის ქვედა მარჯვენა კიდესთან\",\n      \"box_2d\": [378, 545, 429, 593]\n    },\n    {\n      \"label\": \"ზეთის ჩასასხმელი ხუფი, ძრავის შავ საფარზე ცენტრალურ ნაწილში\",\n      \"box_2d\": [297, 444, 349, 548]\n    }\n  ]\n}",
+            "thoughtSignature": "EmgKZgFpFH0TGoPNMeXbtuq7m+Aq4FjyiK6eMEiYtBedVKE5Ud3sd1t8oIiNk8oMwUhlzRL/KpQk+6eOkKkFzUN5F1okvLyh5UNWkbPkxZ1szYHVWbiGbHGkK5Mhn0juoSwF3uIF5e7zlw=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1666,
+    "candidatesTokenCount": 170,
+    "totalTokenCount": 1836,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 566
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "fm_TavSaFvjbxs0P4N-T2QM"
+}

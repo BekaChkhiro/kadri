@@ -1,0 +1,106 @@
+[
+  {
+    "path": "out_gemini/review/gemini-3.8-flash-01.jpg",
+    "frames": [
+      "c_astra_tracking/car/original",
+      "c_astra_tracking/car/shift_left",
+      "c_astra_tracking/car/shift_right",
+      "c_astra_tracking/chemistry/original"
+    ]
+  },
+  {
+    "path": "out_gemini/review/gemini-3.8-flash-02.jpg",
+    "frames": [
+      "c_astra_tracking/chemistry/shift_left",
+      "c_astra_tracking/chemistry/shift_right",
+      "c_astra_tracking/gym/original",
+      "c_astra_tracking/gym/shift_left"
+    ]
+  },
+  {
+    "path": "out_gemini/review/gemini-3.8-flash-03.jpg",
+    "frames": [
+      "c_astra_tracking/gym/shift_right",
+      "c_astra_tracking/microscope/original",
+      "c_astra_tracking/sink/original",
+      "c_astra_tracking/sink/shift_left"
+    ]
+  },
+  {
+    "path": "out_gemini/review/gemini-3.8-flash-04.jpg",
+    "frames": [
+      "c_astra_tracking/sink/shift_right",
+      "c_astra_stress/car/dark_noise",
+      "c_astra_stress/car/motion_blur",
+      "c_astra_stress/car/occlusion"
+    ]
+  },
+  {
+    "path": "out_gemini/review/gemini-3.8-flash-05.jpg",
+    "frames": [
+      "c_astra_stress/gym/dark_noise",
+      "c_astra_stress/gym/motion_blur",
+      "c_astra_stress/gym/occlusion",
+      "c_astra_stress/sink/dark_noise"
+    ]
+  },
+  {
+    "path": "out_gemini/review/gemini-3.8-flash-06.jpg",
+    "frames": [
+      "c_astra_stress/sink/motion_blur",
+      "c_astra_stress/sink/occlusion"
+    ]
+  },
+  {
+    "path": "out_gemini/review/gemini-3.5-flash-lite-01.jpg",
+    "frames": [
+      "c_astra_tracking/car/original",
+      "c_astra_tracking/car/shift_left",
+      "c_astra_tracking/car/shift_right",
+      "c_astra_tracking/chemistry/original"
+    ]
+  },
+  {
+    "path": "out_gemini/review/gemini-3.5-flash-lite-02.jpg",
+    "frames": [
+      "c_astra_tracking/chemistry/shift_left",
+      "c_astra_tracking/chemistry/shift_right",
+      "c_astra_tracking/gym/original",
+      "c_astra_tracking/gym/shift_left"
+    ]
+  },
+  {
+    "path": "out_gemini/review/gemini-3.5-flash-lite-03.jpg",
+    "frames": [
+      "c_astra_tracking/gym/shift_right",
+      "c_astra_tracking/microscope/original",
+      "c_astra_tracking/sink/original",
+      "c_astra_tracking/sink/shift_left"
+    ]
+  },
+  {
+    "path": "out_gemini/review/gemini-3.5-flash-lite-04.jpg",
+    "frames": [
+      "c_astra_tracking/sink/shift_right",
+      "c_astra_stress/car/dark_noise",
+      "c_astra_stress/car/motion_blur",
+      "c_astra_stress/car/occlusion"
+    ]
+  },
+  {
+    "path": "out_gemini/review/gemini-3.5-flash-lite-05.jpg",
+    "frames": [
+      "c_astra_stress/gym/dark_noise",
+      "c_astra_stress/gym/motion_blur",
+      "c_astra_stress/gym/occlusion",
+      "c_astra_stress/sink/dark_noise"
+    ]
+  },
+  {
+    "path": "out_gemini/review/gemini-3.5-flash-lite-06.jpg",
+    "frames": [
+      "c_astra_stress/sink/motion_blur",
+      "c_astra_stress/sink/occlusion"
+    ]
+  }
+]

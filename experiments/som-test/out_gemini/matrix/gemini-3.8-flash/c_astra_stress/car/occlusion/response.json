@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\"object\": \"ძრავის განყოფილება\", \"parts\": [{\"label\": \"ზეთის საზომი ღეროს ყვითელი რგოლი, ძრავის საფარის ქვედა მარჯვენა მხარეს\", \"box_2d\": [364, 584, 415, 634]}]}",
+            "thoughtSignature": "EmgKZgFpFH0TEyl5sXnITUNSFa9V2s9TcsC6kmouzjey6GBFBppOwpsB9JKUHV0mbaNr8vb7V9Xu4Jq8pkRAzLraaTMPOJgqoNh4o5GKQo8VM59NLf+QbacDn8bSae+DRjSf48XvuV/8VQ=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1666,
+    "candidatesTokenCount": 77,
+    "totalTokenCount": 1743,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 566
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "_W_TatWdC4HMvdIP7eKg4Qc"
+}

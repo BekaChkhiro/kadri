@@ -1,0 +1,179 @@
+{
+  "frame": "c_astra_stress/sink/motion_blur",
+  "labels": [
+    "ზედა პლასტმასის ქანჩი, ნიჟარის სადინართან შეერთებაზე",
+    "წყლის ჩამკეტი ვენტილი, მარცხენა მეტალის ონკანი",
+    "წყლის ჩამკეტი ვენტილი, მარჯვენა მეტალის ონკანი",
+    "თეთრი პლასტმასის U-სებრი სიფონი",
+    "მარჯვენა პლასტმასის ქანჩი, სიფონის გამოსასვლელ მილთან შეერთებაზე"
+  ],
+  "match": {
+    "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+    "threshold": 0.5,
+    "matches": [
+      {
+        "previous": 4,
+        "current": 3,
+        "iou": 0.9196154500319921,
+        "phone_id": "phone_5",
+        "raw_id_equal": false,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 0,
+        "current": 0,
+        "iou": 0.8963995354239261,
+        "phone_id": "phone_1",
+        "raw_id_equal": true,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 3,
+        "current": 4,
+        "iou": 0.8299258187081602,
+        "phone_id": "phone_4",
+        "raw_id_equal": false,
+        "raw_label_equal": false
+      }
+    ],
+    "phone_ids": [
+      "phone_1",
+      "phone_6",
+      "phone_7",
+      "phone_5",
+      "phone_4"
+    ],
+    "unmatched": [
+      1,
+      2
+    ],
+    "dropout": [
+      1,
+      2
+    ],
+    "raw_id_stability": 0.3333333333333333,
+    "raw_label_stability": 0.0
+  },
+  "proxy": [
+    {
+      "name": "TAILPIPE",
+      "visible_pixels": 43753,
+      "best_iou": 0.48276631344116006,
+      "best_id": "p1"
+    },
+    {
+      "name": "TRAP",
+      "visible_pixels": 86373,
+      "best_iou": 0.6562913269282981,
+      "best_id": "p4"
+    },
+    {
+      "name": "NUT",
+      "visible_pixels": 23656,
+      "best_iou": 0.7929138188388719,
+      "best_id": "p5"
+    },
+    {
+      "name": "WALL",
+      "visible_pixels": 56412,
+      "best_iou": 0.0012259910093992644,
+      "best_id": "p5"
+    },
+    {
+      "name": "VALVE_R",
+      "visible_pixels": 16894,
+      "best_iou": 0.5732808421412983,
+      "best_id": "p3"
+    },
+    {
+      "name": "VALVE_L",
+      "visible_pixels": 19599,
+      "best_iou": 0.5313404981015509,
+      "best_id": "p2"
+    }
+  ],
+  "astra_proxy": [
+    {
+      "name": "TAILPIPE",
+      "visible_pixels": 43753,
+      "best_iou": 0.4844415694497111,
+      "best_id": "p1"
+    },
+    {
+      "name": "TRAP",
+      "visible_pixels": 86373,
+      "best_iou": 0.6633375496293173,
+      "best_id": "p5"
+    },
+    {
+      "name": "NUT",
+      "visible_pixels": 23656,
+      "best_iou": 0.7875038663779771,
+      "best_id": "p4"
+    },
+    {
+      "name": "WALL",
+      "visible_pixels": 56412,
+      "best_iou": 0.006344757293922793,
+      "best_id": "p4"
+    },
+    {
+      "name": "VALVE_R",
+      "visible_pixels": 16894,
+      "best_iou": 0.5751766445746836,
+      "best_id": "p3"
+    },
+    {
+      "name": "VALVE_L",
+      "visible_pixels": 19599,
+      "best_iou": 0.7459430570401322,
+      "best_id": "p2"
+    }
+  ],
+  "astra_latency": {
+    "preflight_seconds": 0.8671154170006048,
+    "parts_preflight_seconds": 0.4215750000003027,
+    "steps_preflight_seconds": 0.4455404170003021,
+    "real_wall_time_to_first_box_seconds": 6.78168633399946,
+    "first_box_full_response_seconds": 6.78168633399946,
+    "first_box_model_only_seconds": 6.360111333999157,
+    "time_to_parts_response_seconds": 6.78168633399946,
+    "time_to_first_outline_seconds": 9.683984833000068,
+    "time_to_first_step_seconds": 4.814526041998761,
+    "time_to_first_step_from_start_seconds": 14.503004458998475,
+    "sam_seconds": 2.8170996670014574,
+    "steps_seconds": 19.52437262499916,
+    "total_seconds": 29.38200974999927,
+    "adapter_wall_seconds": 29.383311166999192,
+    "first_box_definition": "C parts response; streaming steps; outline after SAM",
+    "partial_recovery": false,
+    "is_replay": false,
+    "original_wall_total_available": true
+  },
+  "gemini_latency": {
+    "first_box_full_response_seconds": 5.750304082999719,
+    "response_seconds": 5.750304082999719,
+    "validated_parts_seconds": 5.752531333000661,
+    "part_count": 5,
+    "usage": {
+      "promptTokenCount": 1672,
+      "candidatesTokenCount": 350,
+      "totalTokenCount": 2022,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 592
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1080
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "usd": 0.0025665,
+    "model_version": "gemini-3.8-flash",
+    "definition": "Full parts response including network; no count preflight; excludes SAM; empty parts has no first box"
+  },
+  "astra_part_count": 5
+}

@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"სავარჯიშო ტრენაჟორი\",\n  \"parts\": [\n    {\n      \"label\": \"ზედა გრძელი სახელური მოხრილი ბოლოებით\",\n      \"box_2d\": [79, 140, 134, 937]\n    },\n    {\n      \"label\": \"წონების დასტა ყვითელი ქინძისთავით შუაში\",\n      \"box_2d\": [303, 477, 480, 611]\n    },\n    {\n      \"label\": \"სავარძლის საჯდომი ბალიში\",\n      \"box_2d\": [488, 414, 547, 663]\n    },\n    {\n      \"label\": \"მუხლების დასაჭერი ჰორიზონტალური შავი ბალიში\",\n      \"box_2d\": [404, 355, 458, 722]\n    },\n    {\n      \"label\": \"სავარძლის სიმაღლის დასარეგულირებელი ყვითელი ღილაკი ქვევით\",\n      \"box_2d\": [575, 526, 587, 549]\n    }\n  ]\n}",
+            "thoughtSignature": "El8KXQFpFH0TmR9BqqjkMo2HHLlXI+MMGvJIyf+8bmeC7E+h5Fe3R6mjrGQyFiD52N+lInfCwqHeOPBWw7GjgvEaJLN2Vnz5kG8ghL0kG3NgkpXtzNDZYuVBNsRVw+2Sxg=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1679,
+    "candidatesTokenCount": 321,
+    "totalTokenCount": 2000,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 579
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "YnDTasLlKrfPvdIP-7vg4Ag"
+}

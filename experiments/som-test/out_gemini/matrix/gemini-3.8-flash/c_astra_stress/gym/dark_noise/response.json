@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ზურგის ჩამოსაქაჩი ტრენაჟორი (Lat Pulldown Machine)\",\n  \"parts\": [\n    {\n      \"label\": \"ზედა განიერი მოხრილი სახელური (ჩამოსაქაჩი ღერძი)\",\n      \"box_2d\": [70, 99, 119, 897]\n    },\n    {\n      \"label\": \"სავარძლის სიმაღლის სარეგულირებელი ყვითელი ღილაკი\",\n      \"box_2d\": [556, 483, 575, 513]\n    },\n    {\n      \"label\": \"წონის ფილების დასაფიქსირებელი ყვითელი ქინძისთავი\",\n      \"box_2d\": [328, 537, 342, 560]\n    },\n    {\n      \"label\": \"სავარძლის რბილი დასაჯდომი ბალიში\",\n      \"box_2d\": [471, 370, 533, 626]\n    },\n    {\n      \"label\": \"მუხლების დამჭერი მარცხენა ცილინდრული ბალიში\",\n      \"box_2d\": [387, 316, 444, 487]\n    },\n    {\n      \"label\": \"მუხლების დამჭერი მარჯვენა ცილინდრული ბალიში\",\n      \"box_2d\": [387, 517, 445, 684]\n    }\n  ]\n}",
+            "thoughtSignature": "EmgKZgFpFH0T3Z5IovjC1WjkuFDjqcuptg+1M5+lwwwfmgoBd+BfrD/OKnPqjYCMwt5/mbclbxhAL039CNby/kOF4ZFcQxgEpxB5Q8lqyEiFKW0V5wmTLT6RNxm1JiXnE14ecUvZouSnJw=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1679,
+    "candidatesTokenCount": 404,
+    "totalTokenCount": 2083,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 579
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "AXDTas_WPOq1xN8PwsmZqAk"
+}

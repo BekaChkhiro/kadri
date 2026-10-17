@@ -1,0 +1,187 @@
+{
+  "frame": "c_astra_tracking/chemistry/shift_left",
+  "labels": [
+    "ზედა ძაბრი",
+    "ბიურეტი სითხით",
+    "შტატივი და სადგამი",
+    "ბიურეტის ონკანი",
+    "კონუსური კოლბა სითხით",
+    "ინდიკატორის ფლაკონი თავსახურით",
+    "თეთრი ფილა კოლბის ქვეშ"
+  ],
+  "match": {
+    "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+    "threshold": 0.5,
+    "matches": [
+      {
+        "previous": 6,
+        "current": 6,
+        "iou": 0.8818541548897676,
+        "phone_id": "phone_7",
+        "raw_id_equal": true,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 4,
+        "current": 4,
+        "iou": 0.8015008254540005,
+        "phone_id": "phone_5",
+        "raw_id_equal": true,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 5,
+        "current": 5,
+        "iou": 0.727788279773158,
+        "phone_id": "phone_6",
+        "raw_id_equal": true,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 2,
+        "current": 3,
+        "iou": 0.6905483186913058,
+        "phone_id": "phone_3",
+        "raw_id_equal": false,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 0,
+        "current": 0,
+        "iou": 0.519655411426874,
+        "phone_id": "phone_1",
+        "raw_id_equal": true,
+        "raw_label_equal": false
+      }
+    ],
+    "phone_ids": [
+      "phone_1",
+      "phone_8",
+      "phone_9",
+      "phone_3",
+      "phone_5",
+      "phone_6",
+      "phone_7"
+    ],
+    "unmatched": [
+      1,
+      2
+    ],
+    "dropout": [
+      1,
+      3
+    ],
+    "raw_id_stability": 0.8,
+    "raw_label_stability": 0.0
+  },
+  "proxy": [
+    {
+      "name": "FUNNEL",
+      "visible_pixels": 10671,
+      "best_iou": 0.8301240907145914,
+      "best_id": "p1"
+    },
+    {
+      "name": "BURETTE",
+      "visible_pixels": 15378,
+      "best_iou": 0.8216120460584588,
+      "best_id": "p2"
+    },
+    {
+      "name": "STOPCOCK",
+      "visible_pixels": 6930,
+      "best_iou": 0.32048938264660387,
+      "best_id": "p4"
+    },
+    {
+      "name": "FLASK",
+      "visible_pixels": 30933,
+      "best_iou": 0.9310246227164416,
+      "best_id": "p5"
+    },
+    {
+      "name": "BOTTLE",
+      "visible_pixels": 11824,
+      "best_iou": 0.8955598768432993,
+      "best_id": "p6"
+    }
+  ],
+  "astra_proxy": [
+    {
+      "name": "FUNNEL",
+      "visible_pixels": 10671,
+      "best_iou": 0.8079301283042202,
+      "best_id": "p1"
+    },
+    {
+      "name": "BURETTE",
+      "visible_pixels": 15378,
+      "best_iou": 0.8092618342300949,
+      "best_id": "p2"
+    },
+    {
+      "name": "STOPCOCK",
+      "visible_pixels": 6930,
+      "best_iou": 0.5168151003588993,
+      "best_id": "p3"
+    },
+    {
+      "name": "FLASK",
+      "visible_pixels": 30933,
+      "best_iou": 0.9303498366583146,
+      "best_id": "p5"
+    },
+    {
+      "name": "BOTTLE",
+      "visible_pixels": 11824,
+      "best_iou": 0.8948176893847523,
+      "best_id": "p6"
+    }
+  ],
+  "astra_latency": {
+    "preflight_seconds": 0.916735749997315,
+    "parts_preflight_seconds": 0.4224223749988596,
+    "steps_preflight_seconds": 0.4943133749984554,
+    "real_wall_time_to_first_box_seconds": 7.876748291000695,
+    "first_box_full_response_seconds": 7.876748291000695,
+    "first_box_model_only_seconds": 7.454325916001835,
+    "time_to_parts_response_seconds": 7.876748291000695,
+    "time_to_first_outline_seconds": 11.776111541999853,
+    "time_to_first_step_seconds": 4.789488332999099,
+    "time_to_first_step_from_start_seconds": 16.57069458299884,
+    "sam_seconds": 3.8186352500015346,
+    "steps_seconds": 14.981812874999378,
+    "total_seconds": 26.918209999999817,
+    "adapter_wall_seconds": 26.91945300000043,
+    "first_box_definition": "C parts response; streaming steps; outline after SAM",
+    "partial_recovery": false,
+    "is_replay": false,
+    "original_wall_total_available": true
+  },
+  "gemini_latency": {
+    "first_box_full_response_seconds": 3.2451150830002007,
+    "response_seconds": 3.2451150830002007,
+    "validated_parts_seconds": 3.2474947499995324,
+    "part_count": 7,
+    "usage": {
+      "promptTokenCount": 1682,
+      "candidatesTokenCount": 391,
+      "totalTokenCount": 2073,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1100
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 582
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "usd": 0.0014820999999999999,
+    "model_version": "gemini-3.5-flash-lite",
+    "definition": "Full parts response including network; no count preflight; excludes SAM; empty parts has no first box"
+  },
+  "astra_part_count": 7
+}

@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\"object\": \"ლაბორატორიული დანადგარი\", \"parts\": [{\"label\": \"ძაბრი ზედა ნაწილში\", \"box_2d\": [0, 425, 78, 567]}, {\"label\": \"ბიურეტის ზედა სამაგრი\", \"box_2d\": [123, 467, 160, 524]}, {\"label\": \"ბიურეტის შტატივი\", \"box_2d\": [0, 631, 613, 953]}, {\"label\": \"ბიურეტის ონკანი\", \"box_2d\": [368, 442, 414, 555]}, {\"label\": \"ინდიკატორის ფლაკონი მარცხნივ\", \"box_2d\": [474, 281, 604, 359]}, {\"label\": \"კონუსური კოლბა\", \"box_2d\": [447, 401, 608, 578]}]}",
+            "thoughtSignature": "El8KXQFpFH0TRB5RPUlWAPnECdWKZfpjqNO58oZ3JQKTNvzKVKWcoNqRG9pfTjdVUL6RekoFnoseMcgD0N+rTY7Bc3khHQVT//PZP5CYmanVtYG8UqvGaDRYTUMOVr/IWA=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1682,
+    "candidatesTokenCount": 258,
+    "totalTokenCount": 1940,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 582
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "Q3DTavyeG9mBxs0P9JLTyQg"
+}

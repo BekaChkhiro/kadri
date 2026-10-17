@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ლაბორატორიული დანადგარი ტიტრაციისთვის\",\n  \"parts\": [\n    {\n      \"label\": \"ზედა ძაბრი ბიურეტის თავზე\",\n      \"box_2d\": [18, 465, 105, 608]\n    },\n    {\n      \"label\": \"ბიურეტის ლურჯი ონკანი\",\n      \"box_2d\": [390, 483, 429, 595]\n    },\n    {\n      \"label\": \"კონუსური კოლბა სითხით ქვედა ნაწილში\",\n      \"box_2d\": [463, 442, 621, 621]\n    },\n    {\n      \"label\": \"ინდიკატორის პატარა ქილა ლურჯი თავსახურით\",\n      \"box_2d\": [488, 321, 621, 400]\n    },\n    {\n      \"label\": \"თეთრი ფილა კოლბის ქვეშ\",\n      \"box_2d\": [594, 355, 644, 676]\n    },\n    {\n      \"label\": \"რკინის შტატივი სადგამითა და სამაგრებით\",\n      \"box_2d\": [14, 508, 629, 995]\n    }\n  ]\n}",
+            "thoughtSignature": "El8KXQFpFH0Tw8PH3QD0/CQTf4d+0Y4KFO04Sh+PzIlGCRAhZ5PfoVUxKDj1T7F5kWyJa5/jrbEUwr6oppDFMRhn4bzTxj7uJP01i2bASrMiBl0d6UgVT/cKGyhh6hTVcg=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1682,
+    "candidatesTokenCount": 369,
+    "totalTokenCount": 2051,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 582
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "UHDTaradD9jVxN8Pu4uv2Qk"
+}

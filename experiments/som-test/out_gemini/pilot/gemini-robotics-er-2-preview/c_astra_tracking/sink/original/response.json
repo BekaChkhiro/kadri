@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\"object\":\"სიფონის შეკეთება\",\"parts\":[{\"label\":\"მარცხენა წყლის ვენტილი\",\"box_2d\":[238,11,329,151]},{\"label\":\"მარჯვენა წყლის ვენტილი\",\"box_2d\":[243,217,333,317]},{\"label\":\"პლასტმასის ქანჩი, რომელზეც ჩანს წყლის წვეთები\",\"box_2d\":[252, 622, 381, 745]},{\"label\":\"სიფონი\",\"box_2d\":[0,268, 492, 706]}]}",
+            "thoughtSignature": "EmoKaAFpFH0TOntNeSxm0FENKfTVZjEfPcICxgNgL/DIjXrECbb1XNP/9XW4MlyPilpsooJd4niycupbuEDfKRCFQCK0ekkd75vR3g3tW5fkQdPPnB/RFxTpdRPrrgVSmMBV69rDXtmBynV4"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1672,
+    "candidatesTokenCount": 158,
+    "totalTokenCount": 1830,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1080
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 592
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-robotics-er-2-preview",
+  "responseId": "U2_Tatu9I9yFxN8PrseKqQg"
+}

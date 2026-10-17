@@ -1,0 +1,200 @@
+{
+  "frame": "c_astra_tracking/chemistry/shift_right",
+  "labels": [
+    "თეთრი პლასტმასის ძაბრი ბიურეტის თავზე",
+    "მინის ბიურეტი სითხით",
+    "ლაბორატორიული შტატივი დამჭერით",
+    "ბიურეტის ლურჯი ონკანი",
+    "ერლენმეიერის კოლბა გამჭვირვალე ხსნარით",
+    "ინდიკატორის (ფენოლფთალეინის) პატარა ბოთლი ლურჯი თავსახურით",
+    "თეთრი კერამიკული ფილა კოლბის ქვეშ"
+  ],
+  "match": {
+    "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+    "threshold": 0.5,
+    "matches": [
+      {
+        "previous": 4,
+        "current": 3,
+        "iou": 0.9267605633802828,
+        "phone_id": "phone_5",
+        "raw_id_equal": false,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 6,
+        "current": 4,
+        "iou": 0.91099099099099,
+        "phone_id": "phone_7",
+        "raw_id_equal": false,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 7,
+        "current": 5,
+        "iou": 0.8693966970003374,
+        "phone_id": "phone_8",
+        "raw_id_equal": false,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 0,
+        "current": 0,
+        "iou": 0.8683151657034169,
+        "phone_id": "phone_1",
+        "raw_id_equal": true,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 8,
+        "current": 6,
+        "iou": 0.8450659630606852,
+        "phone_id": "phone_9",
+        "raw_id_equal": false,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 3,
+        "current": 2,
+        "iou": 0.6555697610706164,
+        "phone_id": "phone_4",
+        "raw_id_equal": false,
+        "raw_label_equal": false
+      },
+      {
+        "previous": 2,
+        "current": 1,
+        "iou": 0.654232424677189,
+        "phone_id": "phone_3",
+        "raw_id_equal": false,
+        "raw_label_equal": false
+      }
+    ],
+    "phone_ids": [
+      "phone_1",
+      "phone_3",
+      "phone_4",
+      "phone_5",
+      "phone_7",
+      "phone_8",
+      "phone_9"
+    ],
+    "unmatched": [],
+    "dropout": [
+      1,
+      5
+    ],
+    "raw_id_stability": 0.14285714285714285,
+    "raw_label_stability": 0.0
+  },
+  "proxy": [
+    {
+      "name": "FUNNEL",
+      "visible_pixels": 10671,
+      "best_iou": 0.8239658848614072,
+      "best_id": "p1"
+    },
+    {
+      "name": "BURETTE",
+      "visible_pixels": 15378,
+      "best_iou": 0.7575436177546799,
+      "best_id": "p2"
+    },
+    {
+      "name": "STOPCOCK",
+      "visible_pixels": 6930,
+      "best_iou": 0.5588193956430078,
+      "best_id": "p4"
+    },
+    {
+      "name": "FLASK",
+      "visible_pixels": 30933,
+      "best_iou": 0.9327928787156256,
+      "best_id": "p5"
+    },
+    {
+      "name": "BOTTLE",
+      "visible_pixels": 11824,
+      "best_iou": 0.8920676202860858,
+      "best_id": "p6"
+    }
+  ],
+  "astra_proxy": [
+    {
+      "name": "FUNNEL",
+      "visible_pixels": 10671,
+      "best_iou": 0.8367468343672984,
+      "best_id": "p1"
+    },
+    {
+      "name": "BURETTE",
+      "visible_pixels": 15378,
+      "best_iou": 0.8280502392344498,
+      "best_id": "p3"
+    },
+    {
+      "name": "STOPCOCK",
+      "visible_pixels": 6930,
+      "best_iou": 0.5134525989575996,
+      "best_id": "p5"
+    },
+    {
+      "name": "FLASK",
+      "visible_pixels": 30933,
+      "best_iou": 0.9319704136376623,
+      "best_id": "p7"
+    },
+    {
+      "name": "BOTTLE",
+      "visible_pixels": 11824,
+      "best_iou": 0.8927122220418763,
+      "best_id": "p8"
+    }
+  ],
+  "astra_latency": {
+    "preflight_seconds": 1.0614574159990298,
+    "parts_preflight_seconds": 0.4599514999990788,
+    "steps_preflight_seconds": 0.601505915999951,
+    "real_wall_time_to_first_box_seconds": 13.620705249999446,
+    "first_box_full_response_seconds": 13.620705249999446,
+    "first_box_model_only_seconds": 13.160753750000367,
+    "time_to_parts_response_seconds": 13.620705249999446,
+    "time_to_first_outline_seconds": 18.66305979200115,
+    "time_to_first_step_seconds": 6.510125791999599,
+    "time_to_first_step_from_start_seconds": 25.179173376000108,
+    "sam_seconds": 4.956236625001111,
+    "steps_seconds": 20.3012881249997,
+    "total_seconds": 39.1585110420001,
+    "adapter_wall_seconds": 39.1598404159995,
+    "first_box_definition": "C parts response; streaming steps; outline after SAM",
+    "partial_recovery": false,
+    "is_replay": false,
+    "original_wall_total_available": true
+  },
+  "gemini_latency": {
+    "first_box_full_response_seconds": 7.392448083001,
+    "response_seconds": 7.392448083001,
+    "validated_parts_seconds": 7.39616845800083,
+    "part_count": 7,
+    "usage": {
+      "promptTokenCount": 1682,
+      "candidatesTokenCount": 353,
+      "totalTokenCount": 2035,
+      "promptTokensDetails": [
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1100
+        },
+        {
+          "modality": "TEXT",
+          "tokenCount": 582
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "usd": 0.00258525,
+    "model_version": "gemini-3.8-flash",
+    "definition": "Full parts response including network; no count preflight; excludes SAM; empty parts has no first box"
+  },
+  "astra_part_count": 9
+}

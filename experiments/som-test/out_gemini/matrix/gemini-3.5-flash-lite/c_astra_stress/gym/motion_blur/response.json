@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"სავარჯიშო ტრენაჟორი\",\n  \"parts\": [\n    {\n      \"label\": \"ზედა საბაგირო სახელური\",\n      \"box_2d\": [\n        57,\n        93,\n        121,\n        903\n      ]\n    },\n    {\n      \"label\": \"წონების ფილების ბლოკი\",\n      \"box_2d\": [\n        233,\n        434,\n        392,\n        574\n      ]\n    },\n    {\n      \"label\": \"ყვითელი ქინძისთავი ფილების ბლოკში\",\n      \"box_2d\": [\n        322,\n        527,\n        342,\n        559\n      ]\n    },\n    {\n      \"label\": \"მარცხენა მუხლის ფიქსატორი ბალიში\",\n      \"box_2d\": [\n        388,\n        316,\n        440,\n        484\n      ]\n    },\n    {\n      \"label\": \"მარჯვენა მუხლის ფიქსატორი ბალიში\",\n      \"box_2d\": [\n        388,\n        513,\n        442,\n        681\n      ]\n    },\n    {\n      \"label\": \"სავარძლის ბალიში\",\n      \"box_2d\": [\n        478,\n        363,\n        537,\n        617\n      ]\n    },\n    {\n      \"label\": \"სავარძლის ქვედა ყვითელი ღილაკი\",\n      \"box_2d\": [\n        553,\n        484,\n        577,\n        518\n      ]\n    }\n  ]\n}",
+            "thoughtSignature": "El8KXQFpFH0TKwT0eX4vPQgz6gcsIKUTYubK9ltCtVKWYUf9EZXwI8/iRz/33ryxOq97qjxSdPCnGQQNiHZnQRza6J9uL5qRpcdnb9VvUYCMPFq7wEbPJW1Hf+1NbTsScg=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1679,
+    "candidatesTokenCount": 450,
+    "totalTokenCount": 2129,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 579
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "lHDTarn2L-TkxN8P4aumkAU"
+}

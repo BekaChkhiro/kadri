@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\"object\": \"სავარჯიშო ტრენაჟორი\", \"parts\": [{\"label\": \"სავარძლის რეგულირების ყვითელი ღილაკი\", \"box_2d\": [555, 485, 574, 513]}, {\"label\": \"სავარძლის ქვედა დასაჯდომი ბალიში\", \"box_2d\": [471, 372, 532, 625]}, {\"label\": \"მუხლის მარცხენა საფიქსაციო ბალიში\", \"box_2d\": [390, 314, 444, 481]}, {\"label\": \"მუხლის მარჯვენა საფიქსაციო ბალიში\", \"box_2d\": [389, 520, 444, 684]}, {\"label\": \"წონის ამომრჩევი ყვითელი ქინძისთავი\", \"box_2d\": [328, 537, 340, 560]}, {\"label\": \"წონის ფილები\", \"box_2d\": [287, 431, 461, 574]}, {\"label\": \"ჩამოსაწევი განიერი სახელური\", \"box_2d\": [69, 99, 120, 897]}]}",
+            "thoughtSignature": "EmgKZgFpFH0Tsqqbsms6SUykjL0yGZ6cZohrjzP8o5nKbCMJHB23h5jEtkyH//wBjRgbpnn/L0nNCHpJPjkWuNBEw5iJZ8KnhJ4dKXZ3XLYbuBOKavxb67hF36KvjM4hjmIVVdQNCcW0qA=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1679,
+    "candidatesTokenCount": 329,
+    "totalTokenCount": 2008,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 579
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "q2_TatbKJOS4vdIP9cTS4QY"
+}

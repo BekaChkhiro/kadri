@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"მანქანის ძრავის განყოფილება\",\n  \"parts\": [\n    {\n      \"label\": \"ყვითელი რგოლიანი ზეთის საზომი ღერო ძრავის საფარის ქვემოთ\",\n      \"box_2d\": [\n        379,\n        547,\n        431,\n        591\n      ]\n    }\n  ]\n}",
+            "thoughtSignature": "El8KXQFpFH0TRF2vcxfvUbjzkFXlSyTOCtVs6GeEQH+Y/EwvViYtb7wgI/UmUUOtXe4sCKsEcIbFxfg3jklwILG/1o79/0QbpdrDGvi5+5LKbTwy5pvgG+bypXybvUgWjA=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1666,
+    "candidatesTokenCount": 103,
+    "totalTokenCount": 1769,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 566
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "O3DTaqSGKbyTvdIPopPa0QI"
+}

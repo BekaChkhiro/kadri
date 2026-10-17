@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\"object\": \"სავარჯიშო ტრენაჟორი (Lat Pulldown)\", \"parts\": [{\"label\": \"ზედა მოხრილი სახელური (ჩამოსაქაჩი ღერძი)\", \"box_2d\": [70, 96, 120, 893]}, {\"label\": \"მუხლის დასაფიქსირებელი მარცხენა ბალიში\", \"box_2d\": [386, 319, 444, 427]}, {\"label\": \"მუხლის დასაფიქსირებელი მარჯვენა ბალიში\", \"box_2d\": [387, 574, 444, 680]}]}",
+            "thoughtSignature": "EmgKZgFpFH0TCrPqgmLp77lq7e77UTpeUWt3gNjfP9JGCvZ8kpQFL9rafY/OKh/fZ/Nz6Ie2U26SNWBDgZ4wAhCV1y+jFDDWW8BAXkjUnBPpRgvHl9uWC2KS52uNV/d8mVVqA58o7L9F/w=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1679,
+    "candidatesTokenCount": 169,
+    "totalTokenCount": 1848,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 579
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "E3DTavc-5PPE3w-AkJDQBA"
+}

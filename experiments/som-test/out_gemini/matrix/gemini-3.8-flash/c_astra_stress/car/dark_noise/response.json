@@ -1,0 +1,36 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ძრავის განყოფილება\",\n  \"parts\": [\n    {\n      \"label\": \"ზეთის საზომი ღეროს ყვითელი რგოლიანი სახელური ძრავის საფარის ქვედა მარჯვენა კიდესთან\",\n      \"box_2d\": [363, 584, 418, 634]\n    },\n    {\n      \"label\": \"ძრავის ზეთის ჩასასხმელი შავი მრგვალი ხუფი ძრავის პლასტმასის საფარზე\",\n      \"box_2d\": [283, 481, 335, 590]\n    }\n  ]\n}",
+            "thoughtSignature": "EqcLCqQLAWkUfRO33S34LNRK7Kahpe2oVLWoGS2X99CfQt7xhUHp6EG+0MzZ8NaqhRehublsqnRXG4F3NEMEMjoTDGpWRxz+KzCVZo2TzmDgeJ2va4HXLIpKlBzXtph1sS7UpKb50U3bNrVa767Fd4UuLwRUpUNwa5NKr2K9zc2TApgaYNl+HgkXZHdwtzSqgfuZ/7TRpRUJbyGgXZ1Lzs6ESJFHbBsnmE9Vc2wUX3w8fs8jWLrk8CiOhsGEaaHdxRCzawDmmMPleSJyqpwU0Go3fSHhl5tUv9e4clu8S0MK4LTZ+v8f7Uh64IS+ZnUBizWJCbiFaFw/u1pBy+J2j8bTZioKjZOHQ2nj83LeXGlHlAKe8XyF1D7lErG/P78gh1XwGJZZMRWO+iRzrcPs67eXB8ka/G0FUt7dDGokg5f0nVWNMQ/ghXChQaWVPLR5O4gmMcmVhK79oV6VDUupjZvB08ZnomRGMQJnWot+sanciiD9gV79uCAaDA1iHmfd2r62gT3Agee3mKYGUBzgcKegOAwZ7iUAgtFkWymSLwTHqlD5WklP8iyJZg6GqcC9Yr8W9IJWrJnz1QZCoqThAWcUBsiUSmo9QxtYNnK+Gbgd7zxvZIUd+0vKsTZyW7DtIllVbDus/SQOV67qKcqjHhZEK4LuIpoiOio+PdTpONRac+jNwpzhL+++d5tMSBWW4STZY7vtKqR6yls5KUgSDaBzWBxP7ImxLxgE655W40hVM6/Jovp/rAHf2LbCndScFagFN0gzZnILwFh5e9ETvW8MWS0Nl3CT1kZQKNcp3Bv1tPgqPuoDUbU4mHDAWuCIikiBAkoAas4oGHZtjP+KZN+dcWh3jptono6xke4GAW843Q5qnrUsQ8ekDP3jSIyRoXRx9IqbqbdyhTeIdlb52WZY8VE3GRGFRrxrLeEJeTfd2NJ5py0gVYczTKYO3NbaFQrqiciNY7kxpUbeiyoUhgGc3hsLP7KjzGio1Qnv8DiMOCgIMENCUF19itLcI+tsT6RjrqBuW3YRerh0Rns6mH2JJNcEVOwuu/+pI2fczt+h0/wSbeDMwLNWPgGSClbopofkF9rCCDSOrMxl0Lgx6XJePL8P7exzWZKtYTOWBHv0Wy17wNyqLOVhtfKdsWdH5aBcMAWRx56PUU0p1PISNYNpcbY7YAqBM8+yIWfDmlwmxgxA/8SAj0S/ppEYm1xpEl+4v8sNGS6xlF9czlOjOSGL01ojQFFZ9Dm+v/jc3q6ZeP7A8Vcu3FD/6aPL8Ewyu5In51cBh/R+OZU1THPmZhqbAyV96PHaTTRKXd6u6bbgWuI2UfzvfSSKIWLLi7cA25C9v/uaLQgtjBqJZxfGkedndr6J7u7aGgUK1EHLGvE3m6KAlUNWeP8sm2rnhlncUgwuhM4S8odQSIrk3BZWeenWAQbatNkt96RTRPvOP2xKUKGORstrtEA3bdostTB7olxb2UGBPdi4/kGSTQbLBMpZqM9FGJWd9+0Am4lj6JGpAq3TU1GQPiobyVAIS0lvNSh2bb10BiA7oM205uPG609QP8bQ8Nb5C37LBfplxgkK05sUuk423X/KCi2NA2eOhTYk3UwFKBz0jRwcsv8ZjNBWUIJo4ByrwUKhXVO9QGizg8iTja99OGNcVurwDZFdGnmyEC9H+OgsLaHIWkzyNVoKbia17GyQKqY3VYzzjBe9nCUviHAVcx3Wzcp/flub1MybPzBjwTKhe7RfKjEEJTtEO3+HknwE4CY57xfijan0+UJ3k9tSvBrESKKGVCr/uznw1B/peMlq6uzCf+yzCLsmRw4Xd5jmFf7VtdEngf1Jz3HaodHN8Yn3fzqKPw0LEMFpNK7MofvwVZ20ZXnc6w89Aepa0gmmijtFtp8YzveRMxKNidSQeVnzl0CuoAtlPm3Pqtye1cF74A=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1666,
+    "candidatesTokenCount": 173,
+    "totalTokenCount": 2158,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 566
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      }
+    ],
+    "thoughtsTokenCount": 319,
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "72_TauSJNsaIxs0PsJL6-Ag"
+}

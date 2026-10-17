@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\"object\": \"ძრავის განყოფილება\", \"parts\": [{\"label\": \"ზეთის საზომი ღერო (ყვითელი რგოლისებრი სახელური)\", \"box_2d\": [358, 576, 421, 642]}, {\"label\": \"ძრავის ზეთის ჩასასხმელი ხუფი (ძრავის პლასტმასის საფარზე)\", \"box_2d\": [278, 479, 335, 595]}]}",
+            "thoughtSignature": "EmgKZgFpFH0TjKV+Nj1VVf5l6fv+dikvrKSJ76TXH5BLOMWpYkRutYzfqaWs47kdGxdnZZuRqBeXkpmd2SXnGcjbFPogZ+a2PzS586K4mCpfEbhQt2yJpA9FW64XQ/eVSOWl71DbfiTgTA=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1666,
+    "candidatesTokenCount": 126,
+    "totalTokenCount": 1792,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 566
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "92_TateYLOOLvdIPpMChsAs"
+}

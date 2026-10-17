@@ -1,0 +1,145 @@
+{
+  "frame": "c_astra_tracking/car/shift_left",
+  "labels": [
+    "ყვითელი რგოლიანი ზეთის საზომი ღერო ძრავის საფარის ქვემოთ"
+  ],
+  "match": {
+    "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+    "threshold": 0.5,
+    "matches": [],
+    "phone_ids": [
+      "phone_3"
+    ],
+    "unmatched": [
+      0
+    ],
+    "dropout": [
+      0,
+      1
+    ],
+    "raw_id_stability": null,
+    "raw_label_stability": null
+  },
+  "proxy": [
+    {
+      "name": "COVER",
+      "visible_pixels": 138586,
+      "best_iou": 0.01522341842796961,
+      "best_id": "p1"
+    },
+    {
+      "name": "CAP",
+      "visible_pixels": 9305,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    },
+    {
+      "name": "DIP",
+      "visible_pixels": 3172,
+      "best_iou": 0.7439674083359449,
+      "best_id": "p1"
+    },
+    {
+      "name": "COOLANT",
+      "visible_pixels": 35310,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    },
+    {
+      "name": "WASHER",
+      "visible_pixels": 15062,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    },
+    {
+      "name": "BATTERY",
+      "visible_pixels": 28971,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    }
+  ],
+  "astra_proxy": [
+    {
+      "name": "COVER",
+      "visible_pixels": 138586,
+      "best_iou": 0.049240182991066916,
+      "best_id": "p1"
+    },
+    {
+      "name": "CAP",
+      "visible_pixels": 9305,
+      "best_iou": 0.600734418420008,
+      "best_id": "p1"
+    },
+    {
+      "name": "DIP",
+      "visible_pixels": 3172,
+      "best_iou": 0.7125553914327917,
+      "best_id": "p2"
+    },
+    {
+      "name": "COOLANT",
+      "visible_pixels": 35310,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    },
+    {
+      "name": "WASHER",
+      "visible_pixels": 15062,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    },
+    {
+      "name": "BATTERY",
+      "visible_pixels": 28971,
+      "best_iou": 0.0,
+      "best_id": "p1"
+    }
+  ],
+  "astra_latency": {
+    "preflight_seconds": 1.2298110419997101,
+    "parts_preflight_seconds": 0.4432292919991596,
+    "steps_preflight_seconds": 0.7865817500005505,
+    "real_wall_time_to_first_box_seconds": 4.426919542000178,
+    "first_box_full_response_seconds": 4.426919542000178,
+    "first_box_model_only_seconds": 3.9836902500010183,
+    "time_to_parts_response_seconds": 4.426919542000178,
+    "time_to_first_outline_seconds": 5.823765666998952,
+    "time_to_first_step_seconds": 6.0503630839994,
+    "time_to_first_step_from_start_seconds": 11.875756750998335,
+    "sam_seconds": 1.3228619159999653,
+    "steps_seconds": 17.590033999998923,
+    "total_seconds": 23.525224457998775,
+    "adapter_wall_seconds": 23.52604324999993,
+    "first_box_definition": "C parts response; streaming steps; outline after SAM",
+    "partial_recovery": false,
+    "is_replay": false,
+    "original_wall_total_available": true
+  },
+  "gemini_latency": {
+    "first_box_full_response_seconds": 3.03944062499977,
+    "response_seconds": 3.03944062499977,
+    "validated_parts_seconds": 3.040411124999082,
+    "part_count": 1,
+    "usage": {
+      "promptTokenCount": 1666,
+      "candidatesTokenCount": 103,
+      "totalTokenCount": 1769,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 566
+        },
+        {
+          "modality": "IMAGE",
+          "tokenCount": 1100
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "usd": 0.0007572999999999999,
+    "model_version": "gemini-3.5-flash-lite",
+    "definition": "Full parts response including network; no count preflight; excludes SAM; empty parts has no first box"
+  },
+  "astra_part_count": 2
+}

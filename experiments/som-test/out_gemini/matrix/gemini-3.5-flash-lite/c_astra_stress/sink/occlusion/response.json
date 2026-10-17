@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ნიჟარის ქვეშ არსებული სისტემა და ონკანები\",\n  \"parts\": [\n    {\n      \"label\": \"მარცხენა ონკანი\",\n      \"box_2d\": [211, 14, 327, 147]\n    },\n    {\n      \"label\": \"მარჯვენა ონკანი\",\n      \"box_2d\": [212, 218, 333, 317]\n    },\n    {\n      \"label\": \"ჟონვადი ჰორიზონტალური ქანჩი წვეთებით\",\n      \"box_2d\": [249, 563, 385, 746]\n    },\n    {\n      \"label\": \"სიფონის ვერტიკალური ქანჩი\",\n      \"box_2d\": [90, 269, 172, 488]\n    }\n  ]\n}",
+            "thoughtSignature": "El8KXQFpFH0TrC/W+2P5vTzsirodHOCuW38Zju8WpuIoBRGB6hX91gigl9PTXjVw/zoa96ZgAulLRyyT8h4HNCaWbNkTunx4qxiNGkZ6a4pIdOOfJAyX8FVH1cVAlMIbSA=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1672,
+    "candidatesTokenCount": 239,
+    "totalTokenCount": 1911,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1080
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 592
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "qXDTasa5Ksu5vdIP0MWHuAg"
+}

@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ნიჟარის ქვეშა სანტექნიკა\",\n  \"parts\": [\n    {\n      \"label\": \"წყლის ჩამკეტი მარცხენა ვენტილი (ონკანი)\",\n      \"box_2d\": [246, 12, 329, 151]\n    },\n    {\n      \"label\": \"წყლის ჩამკეტი მარჯვენა ვენტილი (ონკანი)\",\n      \"box_2d\": [253, 218, 334, 316]\n    },\n    {\n      \"label\": \"თეთრი U-ფორმის სიფონი (მუხლი)\",\n      \"box_2d\": [273, 314, 492, 659]\n    },\n    {\n      \"label\": \"პლასტმასის მომჭერი ქანჩი (შეერთებაზე ჩანს ჩამოკიდებული წყლის წვეთი)\",\n      \"box_2d\": [252, 622, 381, 749]\n    }\n  ]\n}",
+            "thoughtSignature": "EmgKZgFpFH0TzROENX/5r1idoupM46laoRQIIDzxw5rWMA7b6EqLxUBB0/dk8JUFNfldiI71YSu0ii6K8luzsw6fD57EkSANEotNWSY+rThN1zyH3UzaLvHOKeE47onlIT44wj8IgRWbCQ=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1672,
+    "candidatesTokenCount": 273,
+    "totalTokenCount": 1945,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 592
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1080
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "QW_Tauy5HOis28oP8cDk-Qk"
+}

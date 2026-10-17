@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ნიჟარის სიფონი და წყალმომარაგების სარქველები\",\n  \"parts\": [\n    {\n      \"label\": \"მარცხენა წყალმომარაგების სარქველი\",\n      \"box_2d\": [\n        217,\n        50,\n        344,\n        188\n      ]\n    },\n    {\n      \"label\": \"მარჯვენა წყალმომარაგების სარქველი\",\n      \"box_2d\": [\n        231,\n        256,\n        349,\n        357\n      ]\n    },\n    {\n      \"label\": \"მარჯვენა ქანჩი წვეთით\",\n      \"box_2d\": [\n        268,\n        664,\n        415,\n        784\n      ]\n    },\n    {\n      \"label\": \"ზედა ქანჩი\",\n      \"box_2d\": [\n        20,\n        309,\n        184,\n        530\n      ]\n    }\n  ]\n}",
+            "thoughtSignature": "El8KXQFpFH0TlrcnARNL15iAydCr22XgkS49EREoj8Qp0RPX865dWEULkCLLbXl3dr7WZGSfL7Ik/Cxv7Rs0+T/ZC3WpzESgh7BXkvqA2UhNBQukTN3jMhI7SigrVVgQZg=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1672,
+    "candidatesTokenCount": 275,
+    "totalTokenCount": 1947,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 592
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1080
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "fHDTasnnDcHQvdIP97OhgQY"
+}

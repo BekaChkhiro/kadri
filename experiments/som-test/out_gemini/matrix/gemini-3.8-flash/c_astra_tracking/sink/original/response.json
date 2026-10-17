@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ნიჟარის ქვეშ სანტექნიკური სისტემა\",\n  \"parts\": [\n    {\n      \"label\": \"მარცხენა წყლის ჩამკეტი ონკანი/ვენტილი\",\n      \"box_2d\": [201, 12, 329, 149]\n    },\n    {\n      \"label\": \"მარჯვენა წყლის ჩამკეტი ონკანი/ვენტილი\",\n      \"box_2d\": [212, 216, 334, 318]\n    },\n    {\n      \"label\": \"თეთრი პლასტმასის U-ფორმის სიფონი/მუხლი\",\n      \"box_2d\": [0, 271, 492, 655]\n    },\n    {\n      \"label\": \"გამომავალი მილის პლასტმასის ქანჩი (ჩანს ჩამოკიდებული წყლის წვეთი)\",\n      \"box_2d\": [250, 621, 381, 747]\n    }\n  ]\n}",
+            "thoughtSignature": "EmgKZgFpFH0TkckPVPJjcdVwgQqdqwpgqCu62gQmEQhrABSw/DQld7bhPq57+y0pSjA6Sk/63pyuakxqwJu9Vu1T1XhuJBf3JP7jDTb91JKrpF1BsuiAeKNtY+1kpNM+H5aMc7xHDuySbA=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1672,
+    "candidatesTokenCount": 281,
+    "totalTokenCount": 1953,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 592
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1080
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "2G_TaoenCeq1xN8PwsmZqAk"
+}

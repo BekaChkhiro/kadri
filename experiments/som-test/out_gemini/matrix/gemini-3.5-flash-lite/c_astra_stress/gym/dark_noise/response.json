@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"სავარჯიშო ტრენაჟორი\",\n  \"parts\": [\n    {\n      \"label\": \"ყვითელი ღილაკი სავარძლის ქვეშ\",\n      \"box_2d\": [560, 485, 571, 509]\n    },\n    {\n      \"label\": \"ყვითელი ქინძისთავი წონების ფილებში\",\n      \"box_2d\": [329, 538, 339, 558]\n    },\n    {\n      \"label\": \"ზედა გრძელი სახელური\",\n      \"box_2d\": [65, 99, 118, 897]\n    },\n    {\n      \"label\": \"სავარძლის დასაჯდომი ბალიში\",\n      \"box_2d\": [471, 372, 530, 624]\n    },\n    {\n      \"label\": \"მარცხენა მუხლის ფიქსატორი ბალიში\",\n      \"box_2d\": [388, 316, 443, 482]\n    },\n    {\n      \"label\": \"მარჯვენა მუხლის ფიქსატორი ბალიში\",\n      \"box_2d\": [389, 519, 442, 681]\n    }\n  ]\n}",
+            "thoughtSignature": "El8KXQFpFH0Txqnb2Dh/sk5irVakkYZJDvhwhdyihlb1jhXjL8DOqLecFHHgWCD90MpP1uSXGhn4ckhxiRFg+3mbjhE91H6Qx3fowsMxdaeE0VKByYwje/PmKXj4AWWGvA=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1679,
+    "candidatesTokenCount": 354,
+    "totalTokenCount": 2033,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 579
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1100
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash-lite",
+  "responseId": "jnDTaprBLq68vdIP8cefyAk"
+}

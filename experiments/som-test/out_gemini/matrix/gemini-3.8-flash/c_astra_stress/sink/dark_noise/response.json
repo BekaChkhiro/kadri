@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\n  \"object\": \"ნიჟარის ქვეშა სანტექნიკა\",\n  \"parts\": [\n    {\n      \"label\": \"მარცხენა წყლის ჩამკეტი ვენტილი/ონკანი კედელზე\",\n      \"box_2d\": [211, 8, 330, 149]\n    },\n    {\n      \"label\": \"მარჯვენა წყლის ჩამკეტი ვენტილი/ონკანი კედელზე\",\n      \"box_2d\": [215, 215, 334, 321]\n    },\n    {\n      \"label\": \"U-ფორმის პლასტმასის სიფონი (მუხლი)\",\n      \"box_2d\": [267, 314, 492, 649]\n    },\n    {\n      \"label\": \"ზედა პლასტმასის ქანჩი (სიფონის ზედა შეერთება)\",\n      \"box_2d\": [91, 269, 166, 492]\n    },\n    {\n      \"label\": \"მარჯვენა პლასტმასის ქანჩი (გადინების მილის შეერთებასთან, ქვეშ ჩანს წყლის წვეთი)\",\n      \"box_2d\": [251, 620, 381, 747]\n    }\n  ]\n}",
+            "thoughtSignature": "EmgKZgFpFH0Tc7p3pYsJO8a82qnq/tRqcnyOJgpzh5+Yz8RIGszlpE0zi55PPFufWJ6JrSdA5m/xKcrw790H2JRiHL1RaEATdokYknVOhk2Ir85ljBqEZIeT/1XdvfuXiOPNUXQSG8Cwhg=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1672,
+    "candidatesTokenCount": 350,
+    "totalTokenCount": 2022,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 592
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1080
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "HnDTaq7mKr2yvdIPmNDUoQU"
+}
