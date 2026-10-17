@@ -13,6 +13,7 @@ struct MeshWrap: View {
     @Environment(\.meshWrapReduceMotion) private var previewReduceMotion
     private var reduceMotion: Bool { systemReduceMotion || previewReduceMotion }
     @Environment(\.meshWrapSpotlightActive) private var spotlightActive
+    @Environment(\.meshWrapFocusOutlineOnly) private var outlineOnly
     @SwiftUI.State private var geometry = MeshWrapGeometry.empty
     @SwiftUI.State private var scan: Double = 0
     @SwiftUI.State private var scanned = false
@@ -29,6 +30,7 @@ struct MeshWrap: View {
                         scan: scan, emphasis: scanned && state != .idle ? 1 : 0,
                         danger: scanned && state == .avoid ? 1 : 0,
                         subdued: spotlightActive && state == .idle ? 1 : 0,
+                        bare: outlineOnly && scanned && state == .focus ? 1 : 0,
                         showScan: !reduceMotion)
             .opacity(appeared ? 1 : 0)
             .animation(reduceMotion ? nil : .easeOut(duration: 0.35), value: state)
@@ -71,14 +73,16 @@ private struct MeshWrapDrawing: View, Animatable {
     nonisolated var emphasis: Double
     nonisolated var danger: Double
     nonisolated var subdued: Double
+    nonisolated var bare: Double
     let showScan: Bool
     @Environment(\.meshWrapDrawObserver) private var observer
 
-    nonisolated var animatableData: AnimatablePair<AnimatablePair<Double,Double>, AnimatablePair<Double,Double>> {
-        get { .init(.init(scan,emphasis),.init(danger,subdued)) }
+    nonisolated var animatableData: AnimatablePair<AnimatablePair<AnimatablePair<Double,Double>, AnimatablePair<Double,Double>>, Double> {
+        get { .init(.init(.init(scan,emphasis),.init(danger,subdued)),bare) }
         set {
-            scan = newValue.first.first; emphasis = newValue.first.second
-            danger = newValue.second.first; subdued = newValue.second.second
+            scan = newValue.first.first.first; emphasis = newValue.first.first.second
+            danger = newValue.first.second.first; subdued = newValue.first.second.second
+            bare = newValue.second
         }
     }
 
@@ -106,7 +110,7 @@ private struct MeshWrapDrawing: View, Animatable {
             var fill = context
             fill.clip(to: Path(reveal))
             fill.clip(to: geometry.outline, style: FillStyle(eoFill: true))
-            fill.opacity = 1 - 0.85*subdued
+            fill.opacity = (1 - 0.85*subdued) * (1 - bare)
             fill.fill(geometry.outline, with: .color(color.opacity(fillOpacity)), style: FillStyle(eoFill: true))
             fill.stroke(geometry.wireframe, with: .color(.white.opacity(0.75)), lineWidth: 1.4*unit)
 
@@ -135,10 +139,19 @@ private struct MeshWrapDrawing: View, Animatable {
     }
 }
 
+private struct MeshWrapFocusOutlineOnlyKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
 private struct MeshWrapSpotlightActiveKey: EnvironmentKey {
     static let defaultValue = false
 }
 extension EnvironmentValues {
+    var meshWrapFocusOutlineOnly: Bool {
+        get { self[MeshWrapFocusOutlineOnlyKey.self] }
+        set { self[MeshWrapFocusOutlineOnlyKey.self] = newValue }
+    }
+
     var meshWrapSpotlightActive: Bool {
         get { self[MeshWrapSpotlightActiveKey.self] }
         set { self[MeshWrapSpotlightActiveKey.self] = newValue }

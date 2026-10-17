@@ -34,6 +34,7 @@ struct PhotoResultView: View {
                             .frame(width: proxy.size.width, height: proxy.size.height).clipped()
                             .accessibilityHidden(true)
                         TrackedMeshOverlay(meshes: meshes, boxes: boxes, step: step)
+                            .environment(\.meshWrapFocusOutlineOnly, true)
                             .accessibilityHidden(true)
                         PhotoAnnotationsView(step: step, parts: parts, boxes: boxes,
                                              meshReady: Set(meshes.filter { $0.mesh.triangleCount > 0 }.map(\.id)),
