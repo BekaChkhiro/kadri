@@ -5,9 +5,10 @@ import KadriCore
 /// Plays the user's part for an end-to-end run (`--autopilot <dir>`): an outside driver drops photos into `dir`,
 /// the autopilot submits them, walks every step and reports each round back as JSON files in the same folder.
 ///
-/// In: `round-N.jpg|png` (round 1 also needs `comment.txt`). Out: `status.json` on every change,
-/// `round-N.result.json` when a round's steps end, `round-N.error.json` on an error (it stops there),
-/// `done.json` once the session is finished. Every file is written atomically.
+/// In: `round-N.jpg|png` (round 1 also needs `comment.txt`), `answer-K.txt` for the session's K-th question.
+/// Out: `status.json` on every change, `question-K.json` when steps end with a question or a measurement,
+/// `round-N.result.json` when a photo round ends (all of its answer turns included), `round-N.error.json`
+/// on an error (it stops there), `done.json` once the session is finished. Every file is written atomically.
 @MainActor
 final class PhotoAutopilot {
     let session: PhotoSession
@@ -15,7 +16,10 @@ final class PhotoAutopilot {
     let stepDelay: TimeInterval
     let pollInterval: TimeInterval
 
-    private enum Stage: Equatable { case waitingForPhoto(Int), running, stopped }
+    /// Answering "I have no tool" to a measurement sends no unit.
+    static let noToolAnswer = "არ მაქვს ხელსაწყო"
+
+    private enum Stage: Equatable { case waitingForPhoto(Int), waitingForAnswer(Int), running, stopped }
     private var stage: Stage = .waitingForPhoto(1)
     private var task: Task<Void, Never>?
     private var lastStatus: [String: AnyHashable]?
@@ -25,6 +29,11 @@ final class PhotoAutopilot {
     private var scanMs: Int?
     private var firstStepMs: Int?
     private var stepsDoneMs: Int?
+    /// Set when an answer is sent; the first step of that turn appends to `turnFirstStepMs`.
+    private var turnStart: Date?
+    private var turnFirstStepMs: [Int] = []
+    /// Steps cost of this photo's finished answer turns; `model.usage` only holds the latest stream's.
+    private var turnCosts: [Double] = []
 
     init(session: PhotoSession, directory: URL, stepDelay: TimeInterval = 3.5, pollInterval: TimeInterval = 0.5) {
         self.session = session
@@ -72,6 +81,7 @@ final class PhotoAutopilot {
         switch stage {
         case .stopped: return
         case .waitingForPhoto(let number): takePhoto(number)
+        case .waitingForAnswer(let number): takeAnswer(number, model)
         case .running: drive(model)
         }
         writeStatus()
@@ -89,6 +99,20 @@ final class PhotoAutopilot {
             session.continueWithPhoto(image)
         }
         roundStart = Date(); scanMs = nil; firstStepMs = nil; stepsDoneMs = nil
+        turnStart = nil; turnFirstStepMs = []; turnCosts = []
+        stage = .running
+    }
+
+    private func takeAnswer(_ number: Int, _ model: SessionModel) {
+        guard let raw = try? String(contentsOf: file("answer-\(number).txt"), encoding: .utf8) else { return }
+        let text = String(raw.trimmingCharacters(in: .whitespacesAndNewlines).prefix(120))
+        guard !text.isEmpty, model.canContinueWithAnswer else { return }
+        var unit: String?
+        if case .needsMeasurement(_, let value, _, _, _, _) = model.continuation, text != Self.noToolAnswer { unit = value }
+        let before = model.answers.count
+        model.continueWithAnswer(text, unit: unit)
+        guard model.answers.count > before else { return }
+        turnStart = Date()
         stage = .running
     }
 
@@ -112,19 +136,34 @@ final class PhotoAutopilot {
         case .steps(let result, let steps, let streaming):
             if scanMs == nil { scanMs = elapsed() }
             if firstStepMs == nil, !steps.isEmpty { firstStepMs = elapsed() }
+            if let turnStart, !steps.isEmpty {
+                turnFirstStepMs.append(Int(Date().timeIntervalSince(turnStart) * 1000))
+                self.turnStart = nil
+            }
             if stepsDoneMs == nil, !streaming { stepsDoneMs = elapsed() }
             if model.currentStepIndex != stepIndexSeen { stepIndexSeen = model.currentStepIndex; stepSeenAt = Date() }
             guard Date().timeIntervalSince(stepSeenAt) >= stepDelay else { return }
             if model.currentStepIndex < model.allSteps.count - 1 {
                 model.next()
             } else if !streaming {
+                if model.canContinueWithAnswer, var question = questionJSON(model) {
+                    let number = model.answers.count + 1
+                    question["costUsd"] = model.usage?.costUsd ?? NSNull()
+                    turnCosts.append(model.usage?.costUsd ?? 0)
+                    write(question, to: "question-\(number).json")
+                    stage = .waitingForAnswer(number)
+                    return
+                }
                 write(resultJSON(model, result: result), to: "round-\(round).result.json")
                 if model.canContinueWithPhoto {
                     stage = .waitingForPhoto(round + 1)
                 } else {
+                    // Also reached at the answer limit: the session ends as complete.
+                    let cause = model.foundCause, summary = model.completionSummary
                     model.finish()
                     session.phaseChanged()
-                    write(["rounds": round, "steps": model.allSteps.count], to: "done.json")
+                    write(["rounds": round, "steps": model.allSteps.count, "answers": model.answers.count,
+                           "cause": cause ?? NSNull(), "summary": summary ?? NSNull()], to: "done.json")
                     stage = .stopped
                 }
             }
@@ -136,25 +175,68 @@ final class PhotoAutopilot {
 
     // MARK: - Files
 
+    private func questionJSON(_ model: SessionModel) -> [String: Any]? {
+        var json: [String: Any] = ["round": model.round, "turn": model.answers.count + 1, "stepsSoFar": model.allSteps.count,
+                                   "stepTitles": model.allSteps.map(\.title)]
+        switch model.continuation {
+        case .needsAnswer(let question, let options, let allowOther, let reason):
+            json.merge(["kind": "needs_answer", "question": question, "options": options, "allowOther": allowOther,
+                        "unit": NSNull(), "min": NSNull(), "max": NSNull(), "how": NSNull(),
+                        "reason": reason ?? NSNull()]) { $1 }
+        case .needsMeasurement(let question, let unit, let min, let max, let how, let reason):
+            json.merge(["kind": "needs_measurement", "question": question, "options": [String](), "allowOther": false,
+                        "unit": unit, "min": min ?? NSNull(), "max": max ?? NSNull(), "how": how,
+                        "reason": reason ?? NSNull()]) { $1 }
+        default: return nil
+        }
+        return json
+    }
+
+    private static func kind(_ continuation: StepsContinuation?) -> String {
+        switch continuation {
+        case .needsPhoto: "needs_photo"
+        case .needsAnswer: "needs_answer"
+        case .needsMeasurement: "needs_measurement"
+        default: "complete"
+        }
+    }
+
     private func resultJSON(_ model: SessionModel, result: PartsResult) -> [String: Any] {
-        let offset = model.stepOffset
+        // Every step of this photo, across its answer turns; earlier photos' steps come first in `allSteps`.
+        let offset = model.completedRounds.reduce(0) { $0 + $1.steps.count }
         let steps: [[String: Any]] = model.allSteps.enumerated().dropFirst(offset).map { index, step in
             ["index": index + 1, "title": step.title, "text": step.text, "focus": step.focus,
              "icon": step.icon ?? NSNull(), "warn": step.warn ?? NSNull(), "tip": step.tip ?? NSNull()]
         }
-        var continuation: [String: Any] = ["kind": "complete"]
-        if case .needsPhoto(let prompt, let reason) = model.continuation {
+        var continuation: [String: Any] = ["kind": "complete", "cause": NSNull(), "summary": NSNull()]
+        switch model.continuation {
+        case .needsPhoto(let prompt, let reason):
             continuation = ["kind": "needs_photo", "prompt": prompt, "reason": reason]
+        case .complete(let cause, let summary):
+            continuation = ["kind": "complete", "cause": cause ?? NSNull(), "summary": summary ?? NSNull()]
+        case .needsAnswer, .needsMeasurement:
+            // Only when no more answers are allowed; the session ends here.
+            continuation["answerLimitReached"] = true
+        case nil: break
         }
+        // Each finished turn was answered by the answer appended right after it.
+        let answers = model.answers.suffix(model.completedTurns.count)
+        let turns: [[String: Any]] = zip(model.completedTurns, answers).map { turn, answer in
+            ["kind": Self.kind(turn.continuation), "question": answer.question, "answer": answer.answer,
+             "unit": answer.unit ?? NSNull()]
+        }
+        let costs = turnCosts + [model.usage?.costUsd].compactMap { $0 }
+        let cost: Double? = costs.isEmpty ? nil : costs.reduce(0, +)
         return [
             "round": model.round,
             "object": result.object,
             "parts": result.parts.map { ["id": $0.id, "name": $0.name, "box": $0.box] as [String: Any] },
             "steps": steps,
             "continuation": continuation,
-            "costUsd": model.usage?.costUsd ?? NSNull(),
+            "turns": turns,
+            "costUsd": cost.map { $0 as Any } ?? NSNull(),
             "timings": ["scanMs": scanMs ?? NSNull(), "firstStepMs": firstStepMs ?? NSNull(),
-                        "stepsDoneMs": stepsDoneMs ?? NSNull()] as [String: Any],
+                        "stepsDoneMs": stepsDoneMs ?? NSNull(), "turnFirstStepMs": turnFirstStepMs] as [String: Any],
         ]
     }
 
@@ -175,6 +257,7 @@ final class PhotoAutopilot {
             "stepsCount": model.allSteps.count, "streaming": streaming,
         ]
         if case .waitingForPhoto(let number) = stage { status["waitingForPhoto"] = number }
+        if case .waitingForAnswer(let number) = stage { status["waitingForAnswer"] = number }
         guard status != lastStatus else { return }
         lastStatus = status
         var json: [String: Any] = status

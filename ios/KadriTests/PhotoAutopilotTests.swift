@@ -72,6 +72,75 @@ final class PhotoAutopilotTests: XCTestCase {
         XCTAssertEqual(leftovers, [])
     }
 
+    func testDiagnosticAnswersRunInsideOnePhotoRound() async throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("autopilot-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let demo = try XCTUnwrap(Bundle.main.url(forResource: "PhotoDemo", withExtension: "png"))
+
+        let session = PhotoSession(api: DiagnosticAPI())
+        let pilot = PhotoAutopilot(session: session, directory: directory, stepDelay: 0.05, pollInterval: 0.02)
+        pilot.start()
+        defer { pilot.stop() }
+
+        try "აკუმულატორი ჯდება".write(to: directory.appendingPathComponent("comment.txt"), atomically: true, encoding: .utf8)
+        try FileManager.default.copyItem(at: demo, to: directory.appendingPathComponent("round-1.png"))
+
+        try await waitForFile("question-1.json", in: directory)
+        let first = try json("question-1.json", in: directory)
+        XCTAssertEqual(first["round"] as? Int, 1)
+        XCTAssertEqual(first["turn"] as? Int, 1)
+        XCTAssertEqual(first["kind"] as? String, "needs_answer")
+        XCTAssertEqual(first["question"] as? String, DiagnosticAPI.question)
+        XCTAssertEqual(first["options"] as? [String], DiagnosticAPI.options)
+        XCTAssertEqual(first["allowOther"] as? Bool, true)
+        XCTAssertEqual(first["stepsSoFar"] as? Int, 2)
+        XCTAssertEqual(first["stepTitles"] as? [String], MockKadriAPI.sampleSteps.prefix(2).map(\.title))
+        try await waitFor("status waiting for answer 1") {
+            (try? self.json("status.json", in: directory)["waitingForAnswer"] as? Int) == 1
+        }
+        XCTAssertNil(try? json("round-1.result.json", in: directory), "the round is not over while a question is open")
+
+        try "  \n".write(to: directory.appendingPathComponent("answer-1.txt"), atomically: true, encoding: .utf8)
+        try await Task.sleep(for: .milliseconds(100))
+        XCTAssertEqual(session.model.answers.count, 0, "an empty answer is not sent")
+        try "ღამით\n".write(to: directory.appendingPathComponent("answer-1.txt"), atomically: true, encoding: .utf8)
+
+        try await waitForFile("question-2.json", in: directory)
+        let second = try json("question-2.json", in: directory)
+        XCTAssertEqual(second["turn"] as? Int, 2)
+        XCTAssertEqual(second["kind"] as? String, "needs_measurement")
+        XCTAssertEqual(second["unit"] as? String, "mA")
+        XCTAssertEqual(second["min"] as? Double, 0)
+        XCTAssertEqual(second["how"] as? String, DiagnosticAPI.how)
+        XCTAssertEqual(second["stepsSoFar"] as? Int, 3, "the answer brought a new step")
+
+        try "150".write(to: directory.appendingPathComponent("answer-2.txt"), atomically: true, encoding: .utf8)
+        try await waitForFile("done.json", in: directory)
+
+        let result = try json("round-1.result.json", in: directory)
+        XCTAssertEqual((result["steps"] as? [[String: Any]])?.map { $0["index"] as? Int }, [1, 2, 3, 4])
+        let turns = try XCTUnwrap(result["turns"] as? [[String: Any]])
+        XCTAssertEqual(turns.count, 2)
+        XCTAssertEqual(turns.map { $0["kind"] as? String }, ["needs_answer", "needs_measurement"])
+        XCTAssertEqual(turns.map { $0["answer"] as? String }, ["ღამით", "150"])
+        XCTAssertEqual(turns[1]["unit"] as? String, "mA")
+        XCTAssertTrue(turns[0]["unit"] is NSNull)
+        let continuation = try XCTUnwrap(result["continuation"] as? [String: Any])
+        XCTAssertEqual(continuation["kind"] as? String, "complete")
+        XCTAssertEqual(continuation["cause"] as? String, DiagnosticAPI.cause)
+        XCTAssertEqual(continuation["summary"] as? String, DiagnosticAPI.summary)
+        let timings = try XCTUnwrap(result["timings"] as? [String: Any])
+        XCTAssertEqual((timings["turnFirstStepMs"] as? [Int])?.count, 2)
+
+        let done = try json("done.json", in: directory)
+        XCTAssertEqual(done["cause"] as? String, DiagnosticAPI.cause)
+        XCTAssertEqual(done["answers"] as? Int, 2)
+        XCTAssertEqual(done["rounds"] as? Int, 1)
+        XCTAssertEqual(session.model.answers.map(\.unit), [nil, "mA"])
+        XCTAssertTrue(pilot.isStopped)
+    }
+
     // MARK: - Helpers
 
     private func json(_ name: String, in directory: URL) throws -> [String: Any] {
@@ -90,6 +159,43 @@ final class PhotoAutopilotTests: XCTestCase {
                 throw NSError(domain: "PhotoAutopilotTests", code: 1, userInfo: [NSLocalizedDescriptionKey: "timed out waiting for \(what)"])
             }
             try await Task.sleep(for: .milliseconds(20))
+        }
+    }
+}
+
+/// Plays needs_answer → needs_measurement → complete(cause) on one photo, keyed by how many answers were sent.
+private struct DiagnosticAPI: KadriAPI {
+    static let question = "როდის ჯდება აკუმულატორი?"
+    static let options = ["ღამით", "მგზავრობისას", "ყოველთვის"]
+    static let how = "მულტიმეტრი მიაერთე მინუს კლემასა და მავთულს შორის"
+    static let cause = "პარაზიტული დენი"
+    static let summary = "ღამით 150 mA იხარჯება."
+
+    func parts(keyframe: Data, instructions: String, context: SessionContext?) async throws -> PartsResult {
+        try await Task.sleep(for: .milliseconds(5))
+        return MockKadriAPI.result
+    }
+
+    func steps(object: String, parts: [Part], instructions: String, context: SessionContext?) -> AsyncThrowingStream<StepEvent, Error> {
+        let (steps, next): ([Step], StepsContinuation) = switch context?.answers.count ?? 0 {
+        case 0: (Array(MockKadriAPI.sampleSteps.prefix(2)),
+                 .needsAnswer(question: Self.question, options: Self.options, allowOther: true, reason: nil))
+        case 1: ([MockKadriAPI.sampleSteps[2]],
+                 .needsMeasurement(question: "რამდენი დენი იხარჯება?", unit: "mA", min: 0, max: 2000, how: Self.how, reason: nil))
+        default: ([MockKadriAPI.sampleSteps[3]], .complete(cause: Self.cause, summary: Self.summary))
+        }
+        return AsyncThrowingStream { continuation in
+            let task = Task {
+                do {
+                    for step in steps {
+                        try await Task.sleep(for: .milliseconds(5))
+                        continuation.yield(.step(step))
+                    }
+                    continuation.yield(.done(nil, continuation: next))
+                    continuation.finish()
+                } catch { continuation.finish(throwing: error) }
+            }
+            continuation.onTermination = { _ in task.cancel() }
         }
     }
 }
