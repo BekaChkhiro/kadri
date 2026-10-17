@@ -162,6 +162,49 @@ final class PhotoMultiRoundTests: XCTestCase {
         try await shot("done", window, directory)
     }
 
+    func testDiagnosticCycleThroughAnswerAndMeasurementCards() async throws {
+        let session = PhotoSession(api: MockKadriAPI(scanDelay: .milliseconds(5), stepDelay: .milliseconds(5), diagnostic: true))
+        let model = session.model
+        let host = UIHostingController(rootView: PhotoFlowView(session: session))
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let previous = scene.windows.first(where: \.isKeyWindow)
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = host
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; previous?.makeKeyAndVisible() }
+        session.selectDemo()
+        session.submit("შეამოწმე")
+        try await waitForFinishedSteps(session)
+        let image = session.image
+        model.next(); model.next()
+        try await poll(2, "answer action") { Self.element(in: host.view, label: "პასუხი") != nil }
+        XCTAssertTrue(try XCTUnwrap(Self.element(in: host.view, label: "პასუხი")).accessibilityActivate())
+        try await poll(2, "answer options") { Self.element(in: host.view, label: "კი") != nil }
+        XCTAssertTrue(try XCTUnwrap(Self.element(in: host.view, label: "კი")).accessibilityActivate())
+        try await poll(2, "answer sent") { model.answers.count == 1 }
+        try await waitForFinishedSteps(session)
+        XCTAssertEqual(model.allSteps.count, 5)
+        XCTAssertEqual(model.stepOffset, 3)
+        XCTAssertTrue(session.image === image)
+        model.next()
+        try await poll(2, "measurement action") { Self.element(in: host.view, label: "გაზომვა") != nil }
+        XCTAssertTrue(try XCTUnwrap(Self.element(in: host.view, label: "გაზომვა")).accessibilityActivate())
+        try await poll(2, "measurement card") { Self.element(in: host.view, label: "არ მაქვს ხელსაწყო") != nil }
+        XCTAssertNotNil(Self.element(in: host.view, label: "გაზომვის მნიშვნელობა"))
+        XCTAssertTrue(try XCTUnwrap(Self.element(in: host.view, label: "არ მაქვს ხელსაწყო")).accessibilityActivate())
+        try await poll(2, "measurement sent") { model.answers.count == 2 }
+        try await waitForFinishedSteps(session)
+        XCTAssertEqual(model.allSteps.count, 7)
+        XCTAssertEqual(model.round, 1)
+        XCTAssertNil(model.answers.last?.unit)
+        XCTAssertEqual(model.foundCause, "პარაზიტული დენი სალონის განათებიდან")
+        model.next()
+        try await poll(2, "finish action") { Self.element(in: host.view, label: "დასრულება") != nil }
+        XCTAssertTrue(try XCTUnwrap(Self.element(in: host.view, label: "დასრულება")).accessibilityActivate())
+        try await poll(2, "done") { if case .done = model.phase { return true }; return false }
+    }
+
     // MARK: - Helpers
 
     private func waitForFinishedSteps(_ session: PhotoSession, timeout: TimeInterval = 5) async throws {

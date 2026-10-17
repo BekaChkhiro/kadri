@@ -87,6 +87,15 @@ final class PhotoSnapshotTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(CGFloat(rows) / image.scale, 40, "warning box is clipped or hidden")
     }
 
+    func testDiagnosticCardsAndSummary() async throws {
+        for (name, continuation) in [("answer-card", MockKadriAPI.answerRequest), ("measurement-card", MockKadriAPI.measurementRequest)] {
+            _ = try await render(screen(step: MockKadriAPI.sampleSteps[2], index: 2, count: 3, continuation: continuation), name: name)
+        }
+        _ = try await render(PhotoDoneView(object: "დიაგნოსტიკა", steps: Array(MockKadriAPI.sampleSteps.prefix(3)),
+            photos: 1, minutes: 2, thumbnail: nil, close: {}, newPhoto: {},
+            cause: "პარაზიტული დენი სალონის განათებიდან", diagnosticSummary: "მცველი F12 ამოღებისას დენი 30 mA-მდე დაეცა.", answers: 2), name: "done-cause")
+    }
+
     func testLongPhotoRequestChecklist() async throws {
         let prompt = "გადაუღე სიფონის ქვედა შეერთებას ახლოდან, ქანჩი რომ ჩანდეს"
         let reason = "ამ ფოტოზე შუასადების მდგომარეობა არ ჩანს, ამიტომ ვერ ვიტყვი, გამოსაცვლელია თუ საკმარისია მხოლოდ მოჭერა."
@@ -103,7 +112,8 @@ final class PhotoSnapshotTests: XCTestCase {
         return PhotoResultView(image: photo, parts: result.parts, meshes: [], step: step, index: index, count: count,
                                streaming: false, object: result.object, segmentationStatus: nil,
                                close: {}, previous: {}, next: {}, finish: {},
-                               continuation: continuation, initiallyShowingPhotoRequest: continuation != nil)
+                               continuation: continuation, initiallyShowingPhotoRequest: continuation != nil,
+                               canContinueWithAnswer: true, initiallyShowingAnswerRequest: true)
             .environment(\.meshWrapReduceMotion, true)
     }
 

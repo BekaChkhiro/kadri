@@ -23,7 +23,7 @@ struct PhotoRequestCard: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     HStack(alignment: .top, spacing: 14) {
-                        illustration
+                        if prompt.count <= 40 { illustration }
                         VStack(alignment: .leading, spacing: 0) {
                             HStack(spacing: 4) {
                                 Image(systemName: "camera").font(.system(size: 14)).accessibilityHidden(true)
@@ -41,7 +41,7 @@ struct PhotoRequestCard: View {
                     if !reason.isEmpty {
                         Text(reason).font(.kadri(14.5)).lineSpacing(4)
                             .foregroundStyle(Theme.Colors.ink[600]!)
-                            .fixedSize(horizontal: false, vertical: true).padding(.top, 12)
+                            .fixedSize(horizontal: false, vertical: true).padding(.top, prompt.count > 40 ? 8 : 12)
                     }
                     // Short chips on one wrapping row keep the checklist readable and close to the reason.
                     PhotoToolsLayout {
@@ -61,10 +61,10 @@ struct PhotoRequestCard: View {
                             .accessibilityElement(children: .combine)
                         }
                     }
-                    .padding(.top, 12)
+                    .padding(.top, prompt.count > 40 ? 8 : 12)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 16).padding(.bottom, 8)
+                .padding(.horizontal, 16).padding(.bottom, prompt.count > 40 ? 0 : 8)
             }
             .scrollBounceBehavior(.basedOnSize)
             Spacer(minLength: 0)
@@ -97,10 +97,10 @@ struct PhotoRequestCard: View {
                         .buttonStyle(SessionButtonStyle(primary: false)).fixedSize(horizontal: true, vertical: false)
                         .accessibilityHint("ნაბიჯებს დაუბრუნდება")
                 }
-            }.padding(.top, 16).padding(.horizontal, 16)
+            }.padding(.top, prompt.count > 40 ? 8 : 16).padding(.horizontal, 16)
         }
         .foregroundStyle(Theme.Colors.ink[900]!)
-        .padding(.vertical, 16)
+        .padding(.vertical, prompt.count > 40 ? 12 : 16)
         .onAppear {
             withAnimation(reduceMotion ? .easeOut(duration: 0.15) : .easeOut(duration: 0.45).delay(0.1)) { appeared = true }
         }
