@@ -1,4 +1,5 @@
 import XCTest
+import ImageIO
 import KadriCore
 @testable import Kadri
 
@@ -31,7 +32,7 @@ final class PhotoGeometryTests: XCTestCase {
 
     func testInvalidBoxIsOmitted() throws {
         let part = try JSONDecoder().decode(Part.self, from: Data(#"{"id":"bad","name":"bad","box":[100,100,90,200]}"#.utf8))
-        XCTAssertTrue(PhotoGeometry.boxes(parts: [part], viewport: CGSize(width: 390, height: 450), imageSize: CGSize(width: 1024, height: 1536)).isEmpty)
+        XCTAssertTrue(PhotoGeometry.boxes(parts: [part], viewport: CGSize(width: 390, height: 390), imageSize: CGSize(width: 1024, height: 1024)).isEmpty)
     }
 
     func testEmptyAndOutsideFocusUseFit() {
@@ -95,6 +96,43 @@ final class PhotoGeometryTests: XCTestCase {
         XCTAssertEqual(whole.d, whole.a)
     }
 
+    func testSquarePhotoFillsSquareViewport() {
+        XCTAssertEqual(PhotoGeometry.imageRect(viewport: CGSize(width: 390, height: 390), imageSize: CGSize(width: 1024, height: 1024)),
+                       CGRect(x: 0, y: 0, width: 390, height: 390))
+    }
+
+    func testSquareMockBoxesMapStraightOntoViewport() throws {
+        let viewport = CGSize(width: 390, height: 390), image = CGSize(width: 1024, height: 1024)
+        let boxes = PhotoGeometry.boxes(parts: MockKadriAPI.result.parts, viewport: viewport, imageSize: image)
+        for part in MockKadriAPI.result.parts {
+            let b = part.box.map { CGFloat($0) * 0.39 }
+            assertRect(try XCTUnwrap(boxes[part.id]), equals: CGRect(x: b[0], y: b[1], width: b[2] - b[0], height: b[3] - b[1]))
+        }
+    }
+
+    func testSquareFocusZoomClampsAndNeverRevealsAnEdge() {
+        let image = CGSize(width: 1024, height: 1024), viewport = CGSize(width: 390, height: 390)
+        let visible = CGRect(origin: .zero, size: viewport)
+        let fitScale = 390.0 / 1024
+        let whole = PhotoGeometry.focusTransform(imageSize: image, viewport: viewport, visibleRect: visible, focusBoxes: [])
+        assertRect(CGRect(origin: .zero, size: image).applying(whole), equals: visible)
+        for box in [CGRect(x: 0, y: 0, width: 10, height: 10), CGRect(x: 507, y: 507, width: 10, height: 10),
+                    CGRect(x: 1014, y: 1014, width: 10, height: 10)] {
+            let mapping = PhotoGeometry.focusTransform(imageSize: image, viewport: viewport, visibleRect: visible, focusBoxes: [box])
+            XCTAssertEqual(mapping.a, fitScale * 3, accuracy: 0.0001)
+            let rendered = CGRect(origin: .zero, size: image).applying(mapping)
+            XCTAssertLessThanOrEqual(rendered.minX, 0.0001)
+            XCTAssertLessThanOrEqual(rendered.minY, 0.0001)
+            XCTAssertGreaterThanOrEqual(rendered.maxX, viewport.width - 0.0001)
+            XCTAssertGreaterThanOrEqual(rendered.maxY, viewport.height - 0.0001)
+        }
+        let centre = PhotoGeometry.focusTransform(imageSize: image, viewport: viewport, visibleRect: visible,
+            focusBoxes: [CGRect(x: 507, y: 507, width: 10, height: 10)])
+        let focused = CGRect(x: 507, y: 507, width: 10, height: 10).applying(centre)
+        XCTAssertEqual(focused.midX, 195, accuracy: 0.0001)
+        XCTAssertEqual(focused.midY, 195, accuracy: 0.0001)
+    }
+
     private func assertRect(_ actual: CGRect, equals expected: CGRect, file: StaticString = #filePath, line: UInt = #line) {
         XCTAssertEqual(actual.minX, expected.minX, accuracy: 0.0001, file: file, line: line)
         XCTAssertEqual(actual.minY, expected.minY, accuracy: 0.0001, file: file, line: line)
@@ -102,6 +140,62 @@ final class PhotoGeometryTests: XCTestCase {
         XCTAssertEqual(actual.height, expected.height, accuracy: 0.0001, file: file, line: line)
     }
 
+}
+
+@MainActor
+final class PhotoSquareJPEGTests: XCTestCase {
+    func testLandscapeAndPortraitBecomeCentreSquares() throws {
+        for (size, maxSide, side) in [(CGSize(width: 1500, height: 1000), 768.0, 768.0),
+                                      (CGSize(width: 1000, height: 1500), 1536.0, 1000.0),
+                                      (CGSize(width: 1000, height: 1500), 768.0, 768.0)] {
+            // Red bands outside the centre square, green inside: the crop must keep only green.
+            let format = UIGraphicsImageRendererFormat(); format.scale = 1
+            let source = UIGraphicsImageRenderer(size: size, format: format).image { context in
+                UIColor.red.setFill(); context.fill(CGRect(origin: .zero, size: size))
+                let short = min(size.width, size.height)
+                UIColor.green.setFill()
+                context.fill(CGRect(x: (size.width - short) / 2, y: (size.height - short) / 2, width: short, height: short))
+            }
+            let image = try decode(try XCTUnwrap(PhotoSession.squareJPEG(source, maxSide: maxSide)))
+            XCTAssertEqual(image.width, Int(side)); XCTAssertEqual(image.height, Int(side))
+            let edge = Int(side) - 3
+            for (x, y) in [(2, 2), (edge, 2), (2, edge), (edge, edge), (Int(side) / 2, Int(side) / 2)] {
+                let pixel = try rgb(image, x: x, y: y)
+                XCTAssertGreaterThan(pixel.g, 200, "\(size) at \(x),\(y)"); XCTAssertLessThan(pixel.r, 60, "\(size) at \(x),\(y)")
+            }
+        }
+    }
+
+    func testOrientationIsBakedIn() throws {
+        // 300×200 pixels whose top rows are red; `.right` shows them as the right edge of a 200×300 photo.
+        let context = try XCTUnwrap(CGContext(data: nil, width: 300, height: 200, bitsPerComponent: 8, bytesPerRow: 0,
+            space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+        context.setFillColor(UIColor.blue.cgColor); context.fill(CGRect(x: 0, y: 0, width: 300, height: 200))
+        context.setFillColor(UIColor.red.cgColor); context.fill(CGRect(x: 0, y: 150, width: 300, height: 50))
+        let source = UIImage(cgImage: try XCTUnwrap(context.makeImage()), scale: 1, orientation: .right)
+        XCTAssertEqual(source.size, CGSize(width: 200, height: 300))
+        let data = try XCTUnwrap(PhotoSession.squareJPEG(source, maxSide: 1536))
+        XCTAssertEqual(try XCTUnwrap(UIImage(data: data)).imageOrientation, .up)
+        let image = try decode(data)
+        XCTAssertEqual(image.width, 200); XCTAssertEqual(image.height, 200)
+        let right = try rgb(image, x: 195, y: 100), left = try rgb(image, x: 5, y: 100)
+        XCTAssertGreaterThan(right.r, 200); XCTAssertLessThan(right.b, 60)
+        XCTAssertGreaterThan(left.b, 200); XCTAssertLessThan(left.r, 60)
+    }
+
+    private func decode(_ data: Data) throws -> CGImage {
+        let source = try XCTUnwrap(CGImageSourceCreateWithData(data as CFData, nil))
+        return try XCTUnwrap(CGImageSourceCreateImageAtIndex(source, 0, nil))
+    }
+
+    private func rgb(_ image: CGImage, x: Int, y: Int) throws -> (r: Int, g: Int, b: Int) {
+        var pixel = [UInt8](repeating: 0, count: 4)
+        let context = try XCTUnwrap(CGContext(data: &pixel, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4,
+            space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+        // Shift the image so pixel (x, y), counted from the top, lands on the single-pixel context.
+        context.draw(image, in: CGRect(x: -x, y: -(image.height - 1 - y), width: image.width, height: image.height))
+        return (Int(pixel[0]), Int(pixel[1]), Int(pixel[2]))
+    }
 }
 
 final class PhotoStepPresentationTests: XCTestCase {

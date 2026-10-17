@@ -7,7 +7,9 @@ import KadriCore
 final class PhotoSnapshotTests: XCTestCase {
     func testPhotoStepsAndWaiting() async throws {
         let url = try XCTUnwrap(Bundle.main.url(forResource: "PhotoDemo", withExtension: "png"))
-        let photo = try XCTUnwrap(UIImage(contentsOfFile: url.path))
+        let demo = try XCTUnwrap(UIImage(contentsOfFile: url.path))
+        let photo = try XCTUnwrap(PhotoSession.squareJPEG(demo, maxSide: 1536).flatMap(UIImage.init(data:)))
+        XCTAssertEqual(photo.size, CGSize(width: 1024, height: 1024))
         let result = MockKadriAPI.result
         let meshes = result.parts.map { part in
             let b = part.box.map { CGFloat($0) / 1000 }
@@ -17,8 +19,9 @@ final class PhotoSnapshotTests: XCTestCase {
                 .map { CGPoint(x: $0.x * 1024, y: $0.y * 1024) }
             return TrackedMesh(id: part.id, mesh: MeshTriangulation.triangulate(polygons: [polygon]), referenceBox: rect)
         }
-        let directory = URL(fileURLWithPath: "/tmp/kadri-photo-shots-v5")
+        let directory = URL(fileURLWithPath: "/tmp/kadri-photo-shots-square/result")
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        // A rotated copy: still square, but the parts sit elsewhere — focus must not depend on orientation.
         let landscape = UIGraphicsImageRenderer(size: CGSize(width: photo.size.height, height: photo.size.width)).image { context in
             context.cgContext.translateBy(x: photo.size.height, y: 0)
             context.cgContext.rotate(by: .pi / 2)

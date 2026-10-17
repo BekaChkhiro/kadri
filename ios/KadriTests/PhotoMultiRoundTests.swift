@@ -26,6 +26,7 @@ final class PhotoMultiRoundTests: XCTestCase {
         model.next(); model.next()
         XCTAssertEqual(model.currentStepIndex, 2)
         let firstImage = try XCTUnwrap(session.image)
+        XCTAssertEqual(firstImage.size, CGSize(width: 1024, height: 1024))
         let firstMeshes = session.meshes.map(\.id)
 
         session.continueWithDemo()
@@ -75,7 +76,7 @@ final class PhotoMultiRoundTests: XCTestCase {
     }
 
     func testScreens() async throws {
-        let directory = URL(fileURLWithPath: "/tmp/kadri-photo-shots-multi")
+        let directory = URL(fileURLWithPath: "/tmp/kadri-photo-shots-square")
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         let session = PhotoSession(api: MockKadriAPI(scanDelay: .seconds(3), stepDelay: .milliseconds(40), multiPhoto: true))
         let model = session.model
@@ -89,11 +90,14 @@ final class PhotoMultiRoundTests: XCTestCase {
         defer { window.isHidden = true; previousWindow?.makeKeyAndVisible() }
 
         session.selectDemo()
+        try await shot("describing", window, directory)
         session.submit("ნიჟარა ჟონავს")
+        try await shot("scanning", window, directory, wait: 0.8)
         try await waitForFinishedSteps(session, timeout: 15)
         if !(try await waitForMeshes(session)) { print("PhotoMultiRoundTests: round 1 meshes did not arrive within 20 s") }
+        try await shot("step-1", window, directory)
         model.next(); model.next()
-        try await shot("round1-step3-new-photo", window, directory)
+        try await shot("step-last", window, directory)
 
         let newPhoto = try XCTUnwrap(Self.element(in: host.view, label: "ახალი ფოტო"), "ახალი ფოტო button")
         XCTAssertTrue(newPhoto.accessibilityActivate())

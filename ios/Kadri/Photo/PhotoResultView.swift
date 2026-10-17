@@ -96,34 +96,36 @@ private struct PhotoChip: View {
     }
 }
 
-/// All photo phases share the same split. Keyboard avoidance shrinks the photo first,
-/// preserving enough panel space for the description and its send button.
+/// All photo phases share the same split: a square photo area (photos are centre-square crops, so they fill it exactly)
+/// and the panel below. Keyboard avoidance shrinks the photo first, preserving enough panel space for the description.
 struct PhotoScreenLayout<Photo: View, Panel: View>: View {
     let title: String
     var close: () -> Void
     var newPhoto: () -> Void
     @ViewBuilder var photo: () -> Photo
     @ViewBuilder var panel: () -> Panel
+    static var minimumPanelHeight: CGFloat { 210 }
 
     var body: some View {
         VStack(spacing: 0) {
             PhotoHeader(title: title, close: close, newPhoto: newPhoto)
                 .padding(.horizontal, 16).padding(.top, 8).padding(.bottom, 10)
             GeometryReader { proxy in
-                let panelHeight = min(proxy.size.height, max(210, proxy.size.height * 0.4))
+                let side = max(0, min(proxy.size.width, proxy.size.height - Self.minimumPanelHeight))
                 VStack(spacing: 0) {
                     photo()
                         .allowsHitTesting(false)
-                        .frame(height: max(0, proxy.size.height - panelHeight))
+                        .frame(width: side, height: side)
                         .clipped()
                         .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
                         .accessibilityIdentifier("photo-area")
                     panel()
                         .frame(maxWidth: .infinity)
-                        .frame(height: panelHeight)
+                        .frame(height: max(0, proxy.size.height - side))
                         .background(Theme.Colors.surface)
                         .accessibilityIdentifier("photo-panel")
                 }
+                .frame(maxWidth: .infinity)
             }
         }
         .foregroundStyle(Theme.Colors.ink[900]!)
@@ -217,10 +219,11 @@ private struct PhotoResultPreview: View {
 
     private var photo: UIImage {
         if let url = Bundle.main.url(forResource: "input", withExtension: "png", subdirectory: "sink"),
-           let image = UIImage(contentsOfFile: url.path) { return image }
-        return UIGraphicsImageRenderer(size: CGSize(width: 512, height: 768)).image { context in
+           let image = UIImage(contentsOfFile: url.path),
+           let square = PhotoSession.squareJPEG(image, maxSide: 1536).flatMap(UIImage.init(data:)) { return square }
+        return UIGraphicsImageRenderer(size: CGSize(width: 768, height: 768)).image { context in
             UIColor.systemGray3.setFill()
-            context.fill(CGRect(x: 0, y: 0, width: 512, height: 768))
+            context.fill(CGRect(x: 0, y: 0, width: 768, height: 768))
         }
     }
 
