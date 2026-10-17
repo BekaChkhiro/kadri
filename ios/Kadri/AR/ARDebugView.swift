@@ -1,6 +1,10 @@
 import SwiftUI
 import RealityKit
 import ARKit
+import os
+
+/// Device-test log, readable from a Mac: idevicesyslog -p Kadri -m "ge.kadri"
+private let arLog = Logger(subsystem: "ge.kadri", category: "ar")
 
 struct ARDebugView: View {
     @StateObject private var controller = ARSessionController()
@@ -8,13 +12,14 @@ struct ARDebugView: View {
     @Environment(\.displayScale) private var displayScale
     @State private var fps: Double = 0
     @State private var lastTimestamp: TimeInterval?
+    @State private var lastHeartbeat: TimeInterval = 0
 
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 Color.black.ignoresSafeArea()
                 if controller.supported {
-                    ARCameraView(session: controller.session)
+                    ARCameraView(session: controller.session, delegate: controller)
                     ForEach(anchors.unanchoredCenters(viewport: geometry.size), id: \.id) { item in
                         Text(item.id + " · 2D").font(.caption.bold()).padding(6)
                             .background(.orange).foregroundStyle(.black).position(item.point)
@@ -56,16 +61,19 @@ struct ARDebugView: View {
                         .font(.caption)
                     HStack {
                         Button("კადრი") {
+                            arLog.notice("ge.kadri tap capture")
                             Task {
                                 await controller.capture()
                             }
                         }.disabled(!controller.supported)
                         Button("სატესტო box-ები") {
                             guard let keyframe = controller.keyframe else { return }
+                            arLog.notice("ge.kadri tap test-boxes")
                             anchors.place(keyframe: keyframe, parts: [
                                 ("p1", [250, 350, 450, 600]),
                                 ("p2", [550, 350, 750, 600])
                             ], session: controller.session)
+                            arLog.notice("ge.kadri placed unanchored=\(anchors.unanchored.joined(separator: ","), privacy: .public)")
                         }.disabled(controller.keyframe == nil)
                     }.buttonStyle(.borderedProminent)
                 }.padding().foregroundStyle(.white)
@@ -80,9 +88,21 @@ struct ARDebugView: View {
                 fps = fps == 0 ? 1 / (timestamp - last) : fps * 0.9 + 0.1 / (timestamp - last)
             }
             lastTimestamp = timestamp
+            if timestamp - lastHeartbeat >= 1, let frame = controller.latest?.frame {
+                lastHeartbeat = timestamp
+                let state: String
+                switch frame.camera.trackingState {
+                case .normal: state = "normal"
+                case .notAvailable: state = "notAvailable"
+                case .limited(let reason): state = "limited(\(reason))"
+                }
+                arLog.notice("ge.kadri hb tracking=\(state, privacy: .public) fps=\(Int(fps)) points=\(frame.rawFeaturePoints?.points.count ?? 0) depth=\(frame.sceneDepth != nil ? "lidar" : "raycast", privacy: .public) unanchored=\(anchors.unanchored.count) keyframe=\(controller.keyframe != nil)")
+            }
         }
-        .onAppear { controller.start() }
-        .onDisappear { anchors.clear(session: controller.session); controller.pause() }
+        .onChange(of: controller.status) { _, status in arLog.notice("ge.kadri status=\(status, privacy: .public)") }
+        .onChange(of: controller.captureStatus) { _, status in arLog.notice("ge.kadri capture=\(status, privacy: .public)") }
+        .onAppear { arLog.notice("ge.kadri ar-debug appear supported=\(controller.supported)"); controller.start() }
+        .onDisappear { arLog.notice("ge.kadri ar-debug disappear"); anchors.clear(session: controller.session); controller.pause() }
     }
 }
 
@@ -129,10 +149,15 @@ private struct ARStatusBar: View {
 
 private struct ARCameraView: UIViewRepresentable {
     let session: ARSession
+    let delegate: ARSessionDelegate
     func makeUIView(context: Context) -> ARView {
         let view = ARView(frame: .zero, cameraMode: .ar, automaticallyConfigureSession: false)
         view.session = session
+        // Assigning ARView.session takes over session.delegate; give frames back to our controller.
+        session.delegate = delegate
         return view
     }
-    func updateUIView(_ uiView: ARView, context: Context) {}
+    func updateUIView(_ uiView: ARView, context: Context) {
+        if session.delegate !== delegate { session.delegate = delegate }
+    }
 }
