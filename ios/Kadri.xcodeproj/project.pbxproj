@@ -26,9 +26,11 @@
 		40A5DA33CD651B2FC3F1EB6A /* MeshWrapGeometryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6CB6CB0B0F28CA4F0F79D82 /* MeshWrapGeometryTests.swift */; };
 		41E6BA8BAC87FAA8A85992E3 /* TouchSegmentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7E6F468A7AB583E6BD00D8 /* TouchSegmentationTests.swift */; };
 		4209CE751639036987E4CB8A /* OFL-NotoSansGeorgian.txt in Resources */ = {isa = PBXBuildFile; fileRef = 317A97DEC8B919E1D5640FD6 /* OFL-NotoSansGeorgian.txt */; };
+		4AA3A55B710B9248322A5234 /* MeshWrapIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C23715356543CFFCCA0738 /* MeshWrapIntegrationTests.swift */; };
 		54F0522C6E62571ABF309D4D /* PartsRevealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5A4C245D4AD9B3997F740D /* PartsRevealView.swift */; };
 		5BE739AD9DDDF79EFA649F4E /* StepCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57C76ED6947A710AECBC58E /* StepCard.swift */; };
 		5C58BFDF78CA098BC961D969 /* ThemePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50FB119A97C98B1472B896A /* ThemePreview.swift */; };
+		5D35D91417AC03986C5F4A42 /* TrackedMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA8C9D26AAC7620338D783 /* TrackedMesh.swift */; };
 		62DAABB9EF80E005F447FD50 /* DevAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 870628B4A1D760DA2D9AE62A /* DevAuth.swift */; };
 		6D41E78BA702EF418494A06F /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAC9836272FB003780B518D6 /* Vision.framework */; };
 		729038930CAADDEFED6F3F3A /* SessionPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D624A7ABF50F3C99DA5D0ADF /* SessionPresentationTests.swift */; };
@@ -97,6 +99,7 @@
 		0CF25B819A4307E63C96B93E /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		0F55593458662C90DBD1A8F7 /* ScanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanningView.swift; sourceTree = "<group>"; };
 		1B5A4C245D4AD9B3997F740D /* PartsRevealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartsRevealView.swift; sourceTree = "<group>"; };
+		24C23715356543CFFCCA0738 /* MeshWrapIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrapIntegrationTests.swift; sourceTree = "<group>"; };
 		24F1F6DCECABEBE28315A574 /* NotoSansGeorgian-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansGeorgian-Bold.ttf"; sourceTree = "<group>"; };
 		2CE6EB632B576D6674E9FB23 /* DescribeBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescribeBar.swift; sourceTree = "<group>"; };
 		317A97DEC8B919E1D5640FD6 /* OFL-NotoSansGeorgian.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OFL-NotoSansGeorgian.txt"; sourceTree = "<group>"; };
@@ -104,6 +107,7 @@
 		340983717E658514DD60A10B /* Inter-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Medium.ttf"; sourceTree = "<group>"; };
 		3DE74887511C25C4481B6F46 /* MeshWrapGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrapGeometry.swift; sourceTree = "<group>"; };
 		45B6800C7C6BC6DFD3FD195E /* CoreML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreML.framework; path = System/Library/Frameworks/CoreML.framework; sourceTree = SDKROOT; };
+		4ADA8C9D26AAC7620338D783 /* TrackedMesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedMesh.swift; sourceTree = "<group>"; };
 		4AF5D91DF61E491034224AFC /* PartAnchors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartAnchors.swift; sourceTree = "<group>"; };
 		4B6AA45E02280C63D8D7D074 /* GIDTokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIDTokenProvider.swift; sourceTree = "<group>"; };
 		4E8D3F09CEFA43CA7FA54609 /* SessionScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionScreen.swift; sourceTree = "<group>"; };
@@ -255,6 +259,7 @@
 				C715792D0B8C0680D720655E /* FlowTests.swift */,
 				F4910DAFAB764B1ABC03FDC1 /* KadriTests.swift */,
 				C6CB6CB0B0F28CA4F0F79D82 /* MeshWrapGeometryTests.swift */,
+				24C23715356543CFFCCA0738 /* MeshWrapIntegrationTests.swift */,
 				6A9BCE391233E0A986DDEBC3 /* MeshWrapSnapshotTests.swift */,
 				79684495C6B552237CE68F89 /* SegmentationTests.swift */,
 				D624A7ABF50F3C99DA5D0ADF /* SessionPresentationTests.swift */,
@@ -290,6 +295,7 @@
 				DDD4C0E74341F15D5E0088D8 /* MeshWrap.swift */,
 				3DE74887511C25C4481B6F46 /* MeshWrapGeometry.swift */,
 				5FF12F4D98C708EE32218BCF /* MeshWrapPreview.swift */,
+				4ADA8C9D26AAC7620338D783 /* TrackedMesh.swift */,
 			);
 			path = Overlays;
 			sourceTree = "<group>";
@@ -523,6 +529,7 @@
 				34479821C4275CDA91184BF8 /* FlowTests.swift in Sources */,
 				ADE3F74A26977B000BF655B1 /* KadriTests.swift in Sources */,
 				40A5DA33CD651B2FC3F1EB6A /* MeshWrapGeometryTests.swift in Sources */,
+				4AA3A55B710B9248322A5234 /* MeshWrapIntegrationTests.swift in Sources */,
 				B0354A00A763F67E86E883FB /* MeshWrapSnapshotTests.swift in Sources */,
 				C480FA751DE36F8B229476CC /* SegmentationTests.swift in Sources */,
 				729038930CAADDEFED6F3F3A /* SessionPresentationTests.swift in Sources */,
@@ -573,6 +580,7 @@
 				3A22A9DB0A7B1979BC715269 /* Theme.swift in Sources */,
 				5C58BFDF78CA098BC961D969 /* ThemePreview.swift in Sources */,
 				FF8E6E798DB7F54BE8E1573A /* TouchSegmentation.swift in Sources */,
+				5D35D91417AC03986C5F4A42 /* TrackedMesh.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

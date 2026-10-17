@@ -152,6 +152,7 @@ struct SpotlightDim: ViewModifier {
     let meshes: [TriangulatedMesh]
     let transform: CGAffineTransform
     let active: Bool
+    let transforms: [CGAffineTransform]?
     let appeared: Bool
     @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
     @Environment(\.meshWrapReduceMotion) private var previewReduceMotion
@@ -160,7 +161,8 @@ struct SpotlightDim: ViewModifier {
     @State private var scanned = false
     private var isActive: Bool { active && appeared && (scanned || reduceMotion) && !meshes.isEmpty }
 
-    init(meshes: [TriangulatedMesh], transform: CGAffineTransform, active: Bool, appeared: Bool = true) {
+    init(meshes: [TriangulatedMesh], transform: CGAffineTransform, active: Bool, appeared: Bool = true, transforms: [CGAffineTransform]? = nil) {
+        self.transforms = transforms
         self.meshes = meshes
         self.transform = transform
         self.active = active
@@ -176,8 +178,9 @@ struct SpotlightDim: ViewModifier {
                     context.blendMode = .destinationOut
                     context.drawLayer { hole in
                         hole.addFilter(.blur(radius: 18*390/1024))
-                        for outline in outlines {
-                            let path = outline.applying(transform)
+                        for (index, outline) in outlines.enumerated() {
+                            let mapping = transforms.flatMap { index < $0.count ? $0[index] : nil } ?? transform
+                            let path = outline.applying(mapping)
                             hole.fill(path, with: .color(.white), style: FillStyle(eoFill: true))
                             hole.stroke(path, with: .color(.white),
                                         style: StrokeStyle(lineWidth: 60*390/1024, lineJoin: .round))

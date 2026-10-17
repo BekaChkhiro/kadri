@@ -2,6 +2,7 @@ import SwiftUI
 import RealityKit
 import ARKit
 import os
+import KadriCore
 
 /// Device-test log, readable from a Mac: idevicesyslog -p Kadri -m "ge.kadri"
 private let arLog = Logger(subsystem: "ge.kadri", category: "ar")
@@ -12,6 +13,8 @@ struct ARDebugView: View {
     @StateObject private var tracker = PartTracker()
     @StateObject private var displayRate = ContourDisplayRate()
     @StateObject private var touch = TouchSegmentation()
+    @State private var showMesh = false
+    @State private var meshDemoState = MeshWrap.State.idle
     @State private var touchMode = false
     @State private var showContours = false
     @State private var contourKeyframe: Keyframe?
@@ -32,12 +35,21 @@ struct ARDebugView: View {
                             .background(.orange).foregroundStyle(.black).position(item.point)
                     }
                     if let snapshot = controller.latest {
-                        if showContours || touchMode {
+                        if (showContours || touchMode) && !showMesh {
                             ContourOverlay(contours: tracker.contours,
                                            boxes: PartTracker.boxes(anchors.projections(frame: snapshot.frame, viewport: geometry.size, scale: displayScale))
                                             .merging(anchors.unanchoredBoxes(viewport: geometry.size), uniquingKeysWith: { first, _ in first }),
                                            focus: touchMode ? Set(tracker.contours.map(\.id)) : ["p1"], avoid: touchMode ? [] : ["p2"])
                                 .allowsHitTesting(false)
+                        }
+                        if showMesh {
+                            let id = tracker.meshes.first?.id ?? ""
+                            TrackedMeshOverlay(meshes: tracker.meshes,
+                                boxes: PartTracker.boxes(anchors.projections(frame: snapshot.frame, viewport: geometry.size, scale: displayScale))
+                                    .merging(anchors.unanchoredBoxes(viewport: geometry.size), uniquingKeysWith: { first, _ in first }),
+                                step: Step(index: 1, title: "", text: "",
+                                           focus: meshDemoState == .focus ? [id] : [],
+                                           avoid: meshDemoState == .avoid ? [id] : []))
                         }
                         ForEach(anchors.projections(frame: snapshot.frame, viewport: geometry.size, scale: displayScale)) { projection in
                             Path { path in
@@ -76,6 +88,12 @@ struct ARDebugView: View {
                     if !anchors.unanchored.isEmpty {
                         Text("მიბმის გარეშე (2D): " + anchors.unanchored.joined(separator: ", ")).font(.caption)
                     }
+                    Toggle("ბადე", isOn: $showMesh)
+                    if showMesh {
+                        Button("ბადის რეჟიმი: \(meshDemoState.rawValue)") {
+                            meshDemoState = meshDemoState == .idle ? .focus : meshDemoState == .focus ? .avoid : .idle
+                        }
+                    }
                     Toggle("შეხება", isOn: $touchMode)
                     if touchMode {
                         Text(touch.status).font(.caption)
@@ -84,7 +102,7 @@ struct ARDebugView: View {
                     }
                     Toggle("კონტურები", isOn: $showContours)
                         .disabled(touchMode || contourKeyframe == nil || anchors.placements.isEmpty)
-                    if showContours {
+                    if showContours || showMesh {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(String(format: "UI %.0f fps · embed %.1f ms · N %d", displayRate.fps, tracker.embedMs, tracker.interval))
                             ForEach(tracker.contours) { item in
@@ -112,7 +130,7 @@ struct ARDebugView: View {
                 }.padding().foregroundStyle(.white)
             }
             .onChange(of: controller.latest?.timestamp) { _, _ in
-                if let snapshot = controller.latest, showContours || touchMode { tracker.update(snapshot: snapshot, anchors: anchors) }
+                if let snapshot = controller.latest, showContours || touchMode || showMesh { tracker.update(snapshot: snapshot, anchors: anchors) }
                 if controller.latest == nil { touch.clear(controller: controller, anchors: anchors, tracker: tracker); tracker.stop(); showContours = false; contourKeyframe = nil }
             }
         }
@@ -126,7 +144,12 @@ struct ARDebugView: View {
             arLog.notice("ge.kadri show-contours=\(enabled) keyframe=\(contourKeyframe != nil) placements=\(anchors.placements.count)")
             if enabled, let keyframe = contourKeyframe {
                 tracker.start(keyframe: keyframe, placements: anchors.placements)
-            } else { tracker.stop() }
+            } else if !showMesh && !touchMode { tracker.stop() }
+        }
+        .onChange(of: showMesh) { _, enabled in
+            if enabled, !touchMode, let keyframe = contourKeyframe {
+                tracker.start(keyframe: keyframe, placements: anchors.placements)
+            } else if !enabled && !showContours && !touchMode { tracker.stop() }
         }
         .preferredColorScheme(.dark)
         .navigationTitle("AR დებაგი")
@@ -168,7 +191,7 @@ struct ARDebugView: View {
         ], session: controller.session)
         contourKeyframe = keyframe
         // Contours turn on automatically once parts are placed; the toggle can still hide them.
-        if showContours { tracker.start(keyframe: keyframe, placements: anchors.placements) } else { showContours = true }
+        if showContours || showMesh { tracker.start(keyframe: keyframe, placements: anchors.placements) } else { showContours = true }
         arLog.notice("ge.kadri placed unanchored=\(anchors.unanchored.joined(separator: ","), privacy: .public)")
     }
 

@@ -14,7 +14,8 @@ private actor ContourProcessor {
     private var segmenter: Segmenter?
     private let context = CIContext(options: [.cacheIntermediates: false])
 
-    func process(snapshot: FrameSnapshot, jpeg: Data?, boxes: [String: CGRect]) async throws -> ContourBatch {
+    func process(snapshot: FrameSnapshot, jpeg: Data?, boxes: [String: CGRect],
+                 onContour: @Sendable (TrackedContour) async -> Void) async throws -> ContourBatch {
         try Task.checkCancellation()
         let image: CGImage
         if let jpeg, let source = CGImageSourceCreateWithData(jpeg as CFData, nil),
@@ -49,6 +50,7 @@ private actor ContourProcessor {
             try Task.checkCancellation()
             contours.append(TrackedContour(id: id, polygons: try MaskContours.extract(mask), referenceBox: box,
                                            maskMs: mask.decodeMs + mask.postMs))
+            await onContour(contours.last!)
         }
         return ContourBatch(contours: contours, embedMs: embedding.preMs + embedding.encodeMs)
     }
@@ -56,7 +58,27 @@ private actor ContourProcessor {
 
 @MainActor
 final class PartTracker: ObservableObject {
-    @Published private(set) var contours: [TrackedContour] = []
+    @Published private(set) var contours: [TrackedContour] = [] {
+        didSet { rebuildMeshes() }
+    }
+    @Published private(set) var meshes: [TrackedMesh] = []
+    private var meshCache = TrackedMeshCache()
+    private var meshTask: Task<Void, Never>?
+
+    private func rebuildMeshes() {
+        meshTask?.cancel()
+        let contours = contours, cache = meshCache
+        if contours.isEmpty { meshes = []; return }
+        meshTask = Task { [weak self] in
+            var result: [TrackedMesh] = []
+            for contour in contours {
+                guard !Task.isCancelled else { return }
+                result.append(await cache.mesh(for: contour))
+            }
+            guard !Task.isCancelled else { return }
+            self?.meshes = result
+        }
+    }
     @Published private(set) var embedMs: Double = 0
     @Published private(set) var status = ""
     var interval = 30
@@ -91,6 +113,7 @@ final class PartTracker: ObservableObject {
 
     func stop() {
         enabled = false; generation += 1; task?.cancel(); task = nil
+        meshCache = TrackedMeshCache()
         contours = []; referenceBoxes = [:]; frameCount = 0; embedMs = 0; status = ""
     }
 
@@ -126,6 +149,11 @@ final class PartTracker: ObservableObject {
         return result
     }
 
+    private func receive(_ contour: TrackedContour, token: Int) {
+        guard enabled, generation == token else { return }
+        contours = contours.filter { $0.id != contour.id } + [contour]
+    }
+
     private func launch(snapshot: FrameSnapshot, jpeg: Data?, boxes: [String: CGRect]) {
         generation += 1
         let token = generation, processor = processor
@@ -133,7 +161,9 @@ final class PartTracker: ObservableObject {
         status = "კონტურების განახლება…"
         task = Task { [weak self] in
             let work = Task.detached(priority: .userInitiated) {
-                try await processor.process(snapshot: snapshot, jpeg: jpeg, boxes: boxes)
+                try await processor.process(snapshot: snapshot, jpeg: jpeg, boxes: boxes) { [weak self] contour in
+                    await self?.receive(contour, token: token)
+                }
             }
             do {
                 let result = try await withTaskCancellationHandler { try await work.value } onCancel: { work.cancel() }
