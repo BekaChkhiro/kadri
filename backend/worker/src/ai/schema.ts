@@ -20,14 +20,33 @@ export function array(items: JsonSchema): JsonSchema {
   return { type: "array", items };
 }
 
+/**
+ * Length caps of the design's short texts (2026-10-17). They are sent in the
+ * strict schemas, but only as guidance: whether the Responses API enforces
+ * maxLength is not something we rely on, so `softened` drops them for our own
+ * validation and validate.ts clamps what still overflows instead of a 502.
+ */
+export const LIMITS = {
+  object: 40,
+  label: 60,
+  title: 40,
+  text: 120,
+  tip: 100,
+  warn: 100,
+  tools: 3,
+  tool: 24,
+  markers: 3,
+  markerLabel: 24,
+} as const;
+
 /** variant_c.schema_parts */
 export function schemaParts(): JsonSchema {
   return obj({
-    object: { type: "string" },
+    object: { type: "string", maxLength: LIMITS.object },
     parts: {
       ...array(
         obj({
-          label: { type: "string", minLength: 1, maxLength: 120 },
+          label: { type: "string", minLength: 1, maxLength: LIMITS.label },
           box: {
             ...array({ type: "number", minimum: 0, maximum: 1000 }),
             minItems: 4,
@@ -44,18 +63,22 @@ export function schemaParts(): JsonSchema {
 export function schemaFor(ids: string[], count = 5): JsonSchema {
   const string = (): JsonSchema => ({ type: "string" });
   const part = (): JsonSchema => ({ type: "string", enum: [...ids] });
+  const capped = (max: number): JsonSchema => ({ type: "string", maxLength: max });
   const step = obj({
-    title: string(),
-    text: string(),
+    title: { type: "string", minLength: 1, maxLength: LIMITS.title },
+    text: capped(LIMITS.text),
     focus: array(part()),
     avoid: array(part()),
-    markers: array(
-      obj({
-        part: part(),
-        label: string(),
-        tone: { type: "string", enum: ["brand", "danger", "neutral"] },
-      }),
-    ),
+    markers: {
+      ...array(
+        obj({
+          part: part(),
+          label: capped(LIMITS.markerLabel),
+          tone: { type: "string", enum: ["brand", "danger", "neutral"] },
+        }),
+      ),
+      maxItems: LIMITS.markers,
+    },
     arrows: array(
       obj({
         part: part(),
@@ -66,8 +89,9 @@ export function schemaFor(ids: string[], count = 5): JsonSchema {
         },
       }),
     ),
-    tools: array(string()),
-    warn: { type: ["string", "null"] },
+    tools: { ...array(capped(LIMITS.tool)), maxItems: LIMITS.tools },
+    tip: { type: ["string", "null"], maxLength: LIMITS.tip },
+    warn: { type: ["string", "null"], maxLength: LIMITS.warn },
   });
   // Strict schemas require all object properties. Empty label means unknown/background.
   return obj({
@@ -93,15 +117,40 @@ export function schemaSteps(ids: string[], count: number): JsonSchema {
     }
   } else {
     step.focus!.description =
-      "მოქმედების სამიზნე ხილული ნაწილების ID-ები (p1..pN). როდესაც მოქმედების სამიზნის " +
-      "რამდენიმე plausible კანდიდატია, აირჩიე ყველაზე სავარაუდო ID მდებარეობის/ინსტრუქციის " +
-      "მიხედვით და warn-ში ჩაწერე გაურკვევლობა. empty focus დასაშვებია მხოლოდ მაშინ, როცა " +
-      "სამიზნე ნაწილი სიაში/ფოტოზე საერთოდ არ ჩანს (უხილავია). არ გამოიგონო ID.";
+      "მოქმედების სამიზნე ხილული ნაწილების ID-ები. რამდენიმე კანდიდატიდან აირჩიე ყველაზე " +
+      "სავარაუდო. ცარიელი მხოლოდ მაშინ, როცა სამიზნე საერთოდ არ ჩანს. არ გამოიგონო ID.";
     step.warn!.description =
-      "გაფრთხილება, უსაფრთხოების რჩევა ან გაურკვევლობის (uncertainty) ახსნა, მათ შორის თუ " +
-      "სამიზნე უხილავია ან რამდენიმე კანდიდატს შორის შეირჩა ყველაზე სავარაუდო.";
+      "ერთი წინადადება მხოლოდ რეალურ საფრთხეზე ან დაზიანების რისკზე, სხვა შემთხვევაში null.";
   }
   return result;
+}
+
+/**
+ * `schema` without the soft caps of LIMITS: every maxLength, and maxItems of
+ * `tools`/`markers` (but not the `maxItems: 0` that forbids references when
+ * there are no parts). Hard rules — enums, required keys, step count — stay.
+ */
+export function softened(schema: JsonSchema): JsonSchema {
+  const out: JsonSchema = {};
+  for (const [key, value] of Object.entries(schema)) {
+    if (key === "maxLength") continue;
+    if (key === "properties") {
+      const props: Props = {};
+      for (const [name, sub] of Object.entries(value as Props)) {
+        const soft = softened(sub);
+        if ((name === "tools" || name === "markers") && typeof soft.maxItems === "number" && soft.maxItems > 0) {
+          delete soft.maxItems;
+        }
+        props[name] = soft;
+      }
+      out[key] = props;
+    } else if (key === "items" && typeof value === "object" && value !== null) {
+      out[key] = softened(value as JsonSchema);
+    } else {
+      out[key] = value;
+    }
+  }
+  return out;
 }
 
 /** The schema of one element of `steps` (used to validate streamed steps). */

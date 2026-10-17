@@ -24,6 +24,7 @@ const stepsResult = {
       markers: [],
       arrows: [{ part: "p1", type: "rotate", dir: "cw" }],
       tools: [],
+      tip: null,
       warn: null,
     },
   ],

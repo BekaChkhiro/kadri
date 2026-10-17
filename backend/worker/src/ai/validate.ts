@@ -6,7 +6,7 @@
  */
 import { aiErrors } from "./errors";
 import type { Instructions } from "./prompts";
-import { schemaParts, validateSchema } from "./schema";
+import { LIMITS, schemaParts, softened, validateSchema } from "./schema";
 
 export type Box = [number, number, number, number];
 
@@ -60,12 +60,27 @@ export function assignIds(parts: Array<{ label: string; box: number[] }>): Part[
 
 /** Validates the parts-stage model JSON and renumbers IDs. Throws Error on any violation. */
 export function partsFromModel(result: unknown): { object: string; parts: Part[] } {
-  const err = validateSchema(schemaParts(), result);
+  const err = validateSchema(softened(schemaParts()), result);
   if (err) throw new Error(`parts schema: ${err}`);
   const r = result as { object: string; parts: Array<{ label: string; box: number[] }> };
-  const parts = assignIds(r.parts);
+  const parts = assignIds(r.parts).map((p) => ({ ...p, name: clampText(p.name, LIMITS.label) }));
   if (parts.length > MAX_PARTS) throw new Error(`too many parts: ${parts.length} > ${MAX_PARTS}`);
-  return { object: r.object, parts };
+  return { object: clampText(r.object, LIMITS.object), parts };
+}
+
+/**
+ * Collapses whitespace and cuts `text` to at most `max` characters, at a word
+ * boundary when one is close, ending in "…". Over-long model text is clamped
+ * rather than rejected: the call is already paid for.
+ */
+export function clampText(text: string, max: number): string {
+  const clean = text.replace(/\s+/g, " ").trim();
+  const chars = [...clean];
+  if (chars.length <= max) return clean;
+  let cut = chars.slice(0, max - 1).join("");
+  const space = cut.lastIndexOf(" ");
+  if (space >= (max - 1) * 0.6) cut = cut.slice(0, space);
+  return cut.replace(/[\s,;:.\-–—]+$/u, "") + "…";
 }
 
 export interface Step {
@@ -76,7 +91,57 @@ export interface Step {
   markers: Array<{ part: string; label: string; tone: string }>;
   arrows: Array<{ part: string; type: string; dir: string }>;
   tools: string[];
+  tip: string | null;
   warn: string | null;
+}
+
+/** "1. ", "2) ", "ნაბიჯი 3: " and the like in front of a title. */
+const TITLE_NUMBER = /^\s*(?:ნაბიჯი\s*)?\d+\s*(?:[.):](?!\d)|\s[-–—])\s*/u;
+
+/** The first 1–3 words of a part name that fit a marker, before any " — evidence" or ", detail". */
+export function shortLabel(name: string): string {
+  const head = name.split(/\s+[—–-]\s+|[,;(]/u)[0] ?? name;
+  let label = "";
+  for (const word of head.trim().split(/\s+/).slice(0, 3)) {
+    const next = label ? `${label} ${word}` : word;
+    if (label && [...next].length > LIMITS.markerLabel) break;
+    label = next;
+  }
+  return clampText(label, LIMITS.markerLabel);
+}
+
+/**
+ * Brings a schema-valid step to the design's shape: no number before the
+ * title, texts within LIMITS, ≤3 tools/markers, and a marker on the focus part
+ * when the model sent none. Every synthesized reference is focus[0], which
+ * stepRuleError checks anyway.
+ */
+export function tidyStep(step: Step, labels: Map<string, string>): Step {
+  const optional = (value: string | null | undefined, max: number) => {
+    const t = value == null ? "" : clampText(value, max);
+    return t ? t : null;
+  };
+  const title = step.title.replace(TITLE_NUMBER, "").trim();
+  let markers = step.markers.slice(0, LIMITS.markers).map((m) => ({ ...m, label: clampText(m.label, LIMITS.markerLabel) }));
+  const target = step.focus[0];
+  if (markers.length === 0 && target !== undefined) {
+    markers = [
+      {
+        part: target,
+        label: shortLabel(labels.get(target) ?? ""),
+        tone: step.avoid.includes(target) ? "danger" : "brand",
+      },
+    ];
+  }
+  return {
+    ...step,
+    title: clampText(title || step.title, LIMITS.title),
+    text: clampText(step.text, LIMITS.text),
+    markers,
+    tools: step.tools.slice(0, LIMITS.tools).map((t) => clampText(t, LIMITS.tool)),
+    tip: optional(step.tip, LIMITS.tip),
+    warn: optional(step.warn, LIMITS.warn),
+  };
 }
 
 /** vision.validate_plan's per-step rules (schema validation is done separately). */

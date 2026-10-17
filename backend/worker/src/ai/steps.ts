@@ -5,7 +5,7 @@
  * Body (JSON): { object, parts: [{id, name, box}], instructions, count?, image?, sessionId? }
  * `image` (JPEG base64, optional) is attached like the experiment does.
  *
- * Events: `step` {index, title, text, focus, avoid, markers, arrows, tools, warn}
+ * Events: `step` {index, title, text, focus, avoid, markers, arrows, tools, tip, warn}
  * per completed step, then `done` {unknownParts, usage, costUsd, latencyMs,
  * firstStepMs, model}, or `error` {code, message} in Georgian.
  */
@@ -32,6 +32,7 @@ export async function readStepsRequest(request: Request): Promise<{ input: Steps
   if (typeof body.object !== "string" || body.object.length > 300) throw aiErrors.badRequest("object არასწორია");
   const parts = parseParts(body.parts);
   const instructions = parseInstructions(body.instructions);
+  // Free text: 5 steps, as in the design's flows (Camera/artboards/car.tsx).
   let count = Array.isArray(instructions) ? instructions.length : 5;
   if (body.count !== undefined) {
     if (typeof body.count !== "number" || !Number.isInteger(body.count) || body.count < 1 || body.count > MAX_STEPS) {

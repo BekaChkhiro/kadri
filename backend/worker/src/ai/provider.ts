@@ -9,9 +9,9 @@ import { aiErrors } from "./errors";
 import { DEFAULT_EFFORT, DEFAULT_MODEL, outputText, postResponses, responsesPayload, type ResponseObject } from "./openai";
 import { estimateCost, type Usage } from "./pricing";
 import { promptParts, promptSteps, type Instructions } from "./prompts";
-import { schemaParts, schemaSteps, stepItemSchema, validateSchema } from "./schema";
+import { schemaParts, schemaSteps, softened, stepItemSchema, validateSchema } from "./schema";
 import { StepsStreamParser } from "./stepsParser";
-import { partsFromModel, stepRuleError, type Part, type Step } from "./validate";
+import { partsFromModel, stepRuleError, tidyStep, type Part, type Step } from "./validate";
 import { readSse } from "../sse";
 
 export const AI_TIMEOUT_MS = 60_000;
@@ -146,7 +146,8 @@ export class AstraProvider implements PartsProvider, StepsProvider {
     const ids = input.parts.map((p) => p.id);
     const labels = new Map(input.parts.map((p) => [p.id, p.name]));
     const schema = schemaSteps(ids, input.count);
-    const itemSchema = stepItemSchema(ids);
+    // Length caps are guidance for the model; tidyStep clamps instead of a 502.
+    const itemSchema = softened(stepItemSchema(ids));
     const promptParts = input.parts.map((p) => ({ id: p.id, label: p.name, box: p.box }));
     const payload = responsesPayload({
       model,
@@ -156,13 +157,15 @@ export class AstraProvider implements PartsProvider, StepsProvider {
       schema,
       imageBase64: input.imageBase64,
     });
-    const checkStep = (step: unknown): Step => {
-      const err = validateSchema(itemSchema, step) ?? stepRuleError(step as Step, labels);
+    const checkStep = (raw: unknown): Step => {
+      const schemaErr = validateSchema(itemSchema, raw);
+      const step = schemaErr ? null : tidyStep(raw as Step, labels);
+      const err = schemaErr ?? stepRuleError(step!, labels);
       if (err) {
         console.error("ai/steps invalid step", err);
         throw aiErrors.invalid();
       }
-      return step as Step;
+      return step!;
     };
 
     const limit = deadline(this.config.timeoutMs ?? AI_TIMEOUT_MS, signal);
@@ -219,7 +222,7 @@ export class AstraProvider implements PartsProvider, StepsProvider {
       } catch {
         throw aiErrors.invalid();
       }
-      const err = validateSchema(schema, result);
+      const err = validateSchema(softened(schema), result);
       if (err) {
         console.error("ai/steps invalid result", err);
         throw aiErrors.invalid();

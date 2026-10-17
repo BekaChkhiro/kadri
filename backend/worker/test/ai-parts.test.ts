@@ -95,6 +95,18 @@ describe("POST /ai/parts", () => {
     expect(body.error.message).toMatch(/[ა-ჰ]/);
   });
 
+  it("clamps an over-long object and label instead of failing", async () => {
+    const object = "ნიჟარის ქვეშ არსებული სიფონი და წყლის ჩამკეტი ონკანები";
+    const label = "სიფონის მარჯვენა პლასტმასის ქანჩი — ჰორიზონტალურ მილთან შეერთებაზე ჩანს წვეთები";
+    mockFetch(() => Response.json(responseBody({ object, parts: [{ label, box: [1, 2, 3, 4] }] })));
+    const res = await postParts({ image: b64(fakeJpeg(512, 512)), instructions });
+    expect(res.status).toBe(200);
+    const body = await res.json<any>();
+    expect([...body.object].length).toBeLessThanOrEqual(40);
+    expect(body.object.startsWith("ნიჟარის ქვეშ")).toBe(true);
+    expect([...body.parts[0].name].length).toBeLessThanOrEqual(60);
+  });
+
   it("rejects more than 12 parts", async () => {
     const parts = Array.from({ length: 13 }, (_, i) => ({ label: `ნაწილი ${i}`, box: [i, i, i + 10, i + 10] }));
     mockFetch(() => Response.json(responseBody({ object: "x", parts })));
