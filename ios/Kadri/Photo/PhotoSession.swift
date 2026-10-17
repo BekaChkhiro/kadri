@@ -11,6 +11,8 @@ final class PhotoSession: ObservableObject {
     @Published private(set) var segmentationStatus: String?
     @Published var selectionError: String?
     private var jpeg: Data?
+    /// Worker `/ai/parts` rejects keyframes whose long side exceeds 768 px; boxes are 0–1000 so they still map onto `jpeg`.
+    private var apiJPEG: Data?
     private var segmentation: Task<Void, Never>?
     private var preparedResult: PartsResult?
     private let authError: SessionError?
@@ -38,25 +40,29 @@ final class PhotoSession: ObservableObject {
     func select(_ source: UIImage) {
         cancelSegmentation()
         if case .describing = model.phase {} else { model.beginDescribing() }
-        // Rasterize orientation once. Detector, SAM and display all consume this same JPEG.
-        let factor = min(1, 1536 / max(source.size.width, source.size.height))
-        let size = CGSize(width: (source.size.width * factor).rounded(), height: (source.size.height * factor).rounded())
-        guard size.width > 0, size.height > 0 else { selectionError = "ფოტოს წაკითხვა ვერ მოხერხდა."; return }
-        let format = UIGraphicsImageRendererFormat(); format.scale = 1
-        let normalized = UIGraphicsImageRenderer(size: size, format: format).image { _ in
-            source.draw(in: CGRect(origin: .zero, size: size))
-        }
-        guard let data = normalized.jpegData(compressionQuality: 0.88), let decoded = UIImage(data: data) else {
+        // Rasterize orientation once. SAM and display consume the 1536 px JPEG; the detector gets a 768 px copy.
+        guard source.size.width > 0, source.size.height > 0 else { selectionError = "ფოტოს წაკითხვა ვერ მოხერხდა."; return }
+        guard let data = Self.rasterize(source, maxSide: 1536), let decoded = UIImage(data: data),
+              let apiData = Self.rasterize(source, maxSide: 768) else {
             selectionError = "ფოტოს დამუშავება ვერ მოხერხდა."; return
         }
-        jpeg = data; image = decoded; selectionError = nil
+        jpeg = data; apiJPEG = apiData; image = decoded; selectionError = nil
+    }
+
+    private static func rasterize(_ source: UIImage, maxSide: CGFloat) -> Data? {
+        let factor = min(1, maxSide / max(source.size.width, source.size.height))
+        let size = CGSize(width: (source.size.width * factor).rounded(), height: (source.size.height * factor).rounded())
+        let format = UIGraphicsImageRendererFormat(); format.scale = 1
+        return UIGraphicsImageRenderer(size: size, format: format).image { _ in
+            source.draw(in: CGRect(origin: .zero, size: size))
+        }.jpegData(compressionQuality: 0.88)
     }
 
     func submit(_ text: String) {
-        guard let jpeg else { return }
+        guard let apiJPEG else { return }
         model.updateText(text)
         let failure = isMock ? nil : authError
-        model.submit { if let failure { throw failure }; return jpeg }
+        model.submit { if let failure { throw failure }; return apiJPEG }
     }
 
     func phaseChanged() {
@@ -75,7 +81,7 @@ final class PhotoSession: ObservableObject {
 
     func retake() {
         cancelSegmentation()
-        image = nil; jpeg = nil; preparedResult = nil
+        image = nil; jpeg = nil; apiJPEG = nil; preparedResult = nil
         model.beginDescribing()
     }
 
