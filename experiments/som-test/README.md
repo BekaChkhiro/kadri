@@ -66,3 +66,43 @@ uv run python -m unittest discover -s tests -v
 ხარისხი: `mask_fraction_inside_box` = box-ში მოხვედრილი მასკის პიქსელები / მთელი მასკა; `box_occupancy` = იგივე პიქსელები / box-ის ფართობი. ცარიელი მასკა ინახება და აღინიშნება; `too_large` ნიშნავს ფოტოს >85%-ს ან box-ის ფართობის >2-გზის მასკას (ეს დიაგნოსტიკური ზღვრებია, მასკები არ იფილტრება). `consistency.json` ადარებს ყველა წარმატებული ცდის წყვილს: NFKC/casefold/whitespace-normalized თანაბარი label + box IoU≥0.5, greedy ერთი-ერთთან მატჩინგი; შემდეგ parts და ნაბიჯების focus/avoid Jaccard. სინონიმები არ ემთხვევა; თანხმობა სისწორეს არ ამტკიცებს.
 
 განმეორებით გაშვებისას ვალიდური `plan.json` თავიდან არ ითხოვება, SAM/რენდერი ახლდება. წარუმატებელი API ცდა ხელახლა იგზავნება და შეიძლება ფასიანი იყოს. მოდელის, ფოტოს, ground truth-ის ან device-ის შეცვლისას ძველი run ფოლდერი ჯერ ცალკე გადაიტანეთ — შეუთავსებელი ქეში არ გადაიწერება. `out_b/manual_sink/` არის ხელით არჩეული box-ის MPS შემოწმება, არა AI ცდა.
+
+## ვარიანტი C — parts → კონტურები → streaming steps
+
+`run_c.py` იყენებს `gpt-6-astra`-ს default-ად, `--max-side 768`, `--effort minimal`, 3 ცდას. პირველი strict პასუხი შეიცავს მხოლოდ `object`/`parts[{label,box}]`; კოდი ცენტრის Y/X რიგით ანიჭებს `p1..pN`-ს და B-დან იმპორტირებული SAM box prompt-ით წერს კონტურებს. მეორე მოთხოვნა იღებს მხოლოდ object/ნაწილებს/ინსტრუქციებს, ფოტოს ხელახლა არ აგზავნის; ყველა reference ტელეფონის ID-ების enum-ით იზღუდება. [Responses streaming](https://developers.openai.com/api/docs/guides/streaming-responses)-ში პირველი **სრული, ვალიდირებული ნაბიჯის** მიღების დრო იზომება, არა პირველი ტოკენის. ეს ნაბიჯი დასრულებამდე წინასწარია: სრული პასუხი შესაძლოა incomplete/refused აღმოჩნდეს.
+
+```sh
+cd experiments/som-test
+uv sync --locked
+uv run python run_c.py --dry-run
+uv run python -m unittest discover -s tests -v
+```
+
+რეკომენდებული მცირე სერია (მთლიანი შეფასება **$1.266**, ქვემოთ მოცემული ტარიფებით; სამივე ბრძანებამდე დაამატეთ `--dry-run` გეგმების სანახავად):
+
+```sh
+# (ა) speed sweep: ერთი სცენა, თითო მოდელზე ერთი ცდა (~$0.558)
+uv run python run_c.py --scenes sink --runs 1 --effort low \
+  --models gpt-6-astra gpt-5.4-mini gpt-5.4-nano gpt-4.1-mini \
+  --price gpt-5.4-mini=0.75,4.5 --price gpt-5.4-nano=0.2,1.25 \
+  --price gpt-4.1-mini=0.4,1.6 --budget-usd 2
+
+# (ბ) ID სტაბილურობა: ერთი სცენა, სამი ცდა (~$0.118)
+uv run python run_c.py --scenes sink --runs 3 --effort low \
+  --models gpt-5.4-mini --price gpt-5.4-mini=0.75,4.5 --budget-usd 2
+
+# (გ) clean + ოთხივე დაზიანება, სამივე სცენა (~$0.590)
+uv run python run_c.py --scenes sink gym car --runs 1 --effort low \
+  --models gpt-5.4-mini --price gpt-5.4-mini=0.75,4.5 \
+  --degrade --seed 42 --budget-usd 2
+```
+
+ტარიფები $/1M input/output: [5.4-mini](https://developers.openai.com/api/docs/models/gpt-5.4-mini), [5.4-nano](https://developers.openai.com/api/docs/models/gpt-5.4-nano), [4.1-mini](https://developers.openai.com/api/docs/models/gpt-4.1-mini), შემოწმებული 2026-10-17. `low` არჩეულია sweep-ისთვის, რადგან 5.4 mini/nano `minimal`-ს არ ასახელებს მხარდაჭერილ effort-ებში; ავტომატური შეცვლა/retry არ ხდება. Reasoning მხოლოდ `gpt-5*`/`gpt-6*` მოდელებს ეგზავნება. უცნობი ტარიფი მოთხოვნას ბლოკავს `--price MODEL=IN_PER_1M,OUT_PER_1M`-მდე. ცნობილი ფასები/usage-ის cached input ლოგიკა უცვლელი `vision.py`-დანაა; ხელით მოცემული ორი ტარიფი cached input-საც სრული ფასით ითვლის.
+
+ბიუჯეტი **C-ს ყველა გაშვებაზე გროვდება** `out_c/budget.json`-ში. ყოველი მოთხოვნის წინ ჯავშნდება შეფასებული input + მაქსიმალური output-ის ფასი; usage-ის შემდეგ ზუსტდება. განუსაზღვრელი/გაწყვეტილი მოთხოვნის ჯავშანი რჩება. შემდეგი მოთხოვნა აღარ იგზავნება, თუ ჯამი ლიმიტს გადააჭარბებს; SDK retry გამორთულია. `--dry-run` API-ს, SAM-სა და ledger-ის ჩაწერას არ აკეთებს; default 9 ცდის გეგმა ~$4.41-ია და $2-ში არ ეტევა — runner ლიმიტზე გაჩერდება. შეფასება ეფუძნება 16k input/stage-სა და 1200/2200 output-ის ლიმიტს; დიდი prompt-ისთვის ჯავშანი იზრდება. ეს ბილინგის გარანტია ან ანგარიშის დარჩენილი ბალანსის შემოწმება არაა. ხელახალი გაშვება ახალ batch-ს ქმნის და ფასიანია; ledger არ წაშალოთ ამ $2 სერიის შუაში.
+
+შედეგები ინახება `out_c/<UTC_batch>/<model>/<scene>/run_<n>/<mode>/`-ში: შემცირებული `input.png`, `degradation.json`, `parts.json`, მოთხოვნები/ნედლი პასუხები/usage, `parts.png`, მასკები, ნაბიჯები და metrics. `time_to_first_outline_seconds` მოიცავს ფოტოს მომზადებას, parts API-ს, SAM-ის ჩატვირთვას/ყველა box-სა და კონტურების რენდერს; თუ ყველა მასკა ცარიელია, არის `null`. `time_to_first_step_seconds` ითვლება მეორე API მოთხოვნიდან, ხოლო `time_to_first_step_from_start_seconds` — სრული ცდის დასაწყისიდან. `summary.json` შეიცავს ყველა წყვილის ID თანხვედრას, IoU მატჩებს, ნაწილების რაოდენობის ცვლილებასა და clean/degrade შედარებას; წარუმატებელი ცდები ცალკე აღინიშნება.
+
+`--degrade` ნიშნავს clean + dark/blur/tilt/jpeg; `--degrade dark blur` ზღუდავს რეჟიმებს. Dark: linear-light −1.5EV, gamma 2.2, noise σ=5; blur: 15px ჰორიზონტალური motion kernel; tilt: seed-ით ±12°, ცენტრალური crop; jpeg: q=35. იგივე seed ცდებს შორის იმავე დაზიანებას იძლევა. Tilt-ისთვის clean box-ებიც გარდაიქმნება და მოიჭრება; სრულად მოჭრილი ნაწილები matching-ის denominator-იდან გამოირიცხება. IoU≥0.5 greedy one-to-one მატჩინგი label-ს არ იყენებს. ეს გეომეტრიული proxy-ა: სემანტიკურ სისწორეს ან AR tracking-ს არ ადასტურებს. ცენტრით მინიჭებული ნომრები დეტერმინისტულია, მაგრამ ნაწილის გამოტოვებისას შეიძლება გადაიწიოს — სწორედ ამას ზომავს ID თანხვედრა.
+
+Offline შემოწმება (2026-10-17): 37 A+B+C ტესტი გაიარა; სამივე რეკომენდებული dry-run-ის ჯამია $1.26559. რეალური SAM2.1_b/MPS გაეშვა sink-ის ხელით მოცემულ box-ზე `[620,247,750,387]`, 512×768 ფოტოზე: clean/dark/blur/tilt/jpeg მასკები — 4470/4429/5159/9147/4618 px, ყველა არაცარიელი. ოთხივე დაზიანება და ხუთივე კონტური ვიზუალურად შემოწმებულია; blur-ის კონტური შედარებით გაფართოებულია. ეს არის SAM/degrade შემოწმება, არა AI ხარისხის შედეგი. API არ გაშვებულა. ადგილობრივი მტკიცებულებები `out_c/local_check/`-შია და git-ში არ შედის.
