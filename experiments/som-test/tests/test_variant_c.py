@@ -1,3 +1,4 @@
+import base64
 import json
 from pathlib import Path
 import tempfile
@@ -238,6 +239,38 @@ class VariantCTests(unittest.TestCase):
             self.assertTrue((dest / "step_1.png").exists())
             self.assertNotIn("NEVER_SEND_GT", str(client.responses.create.call_args_list))
 
+    def test_pipeline_both_stages_receive_prepared_photo_without_truth_metadata(self):
+        with tempfile.TemporaryDirectory() as d:
+            source, dest = Path(d) / "original.png", Path(d) / "run"
+            Image.new("RGB", (200, 200), "white").save(source)
+            fixture = truth()
+            fixture["parts"][0].update(id="GT_ONLY_ID", path="GT_ONLY_PATH")
+            fixture["steps"][0].update(focus=["GT_ONLY_ID"], path="GT_STEP_PATH")
+            payload = {"object": "ობიექტი", "parts": [
+                {k: v for k, v in p.items() if k != "id"} for p in parts()]}
+            client = SimpleNamespace(responses=SimpleNamespace(create=Mock(
+                side_effect=[response(payload), stream_for(steps())])))
+            with patch("variant_c.request_stage", wraps=request_stage) as stage:
+                process_c(client, "gpt-6-astra", source, fixture, dest, "cpu", "minimal",
+                          100, "dark", 42, Budget(2), {}, Mock(side_effect=sam_for_boxes))
+            prepared = dest / "input.png"
+            self.assertNotEqual(prepared.read_bytes(), source.read_bytes())
+            expected_instructions = [{"title": s["title"], "text": s["text"]}
+                                     for s in fixture["steps"]]
+            for call, api_call in zip(stage.call_args_list, client.responses.create.call_args_list):
+                self.assertEqual(call.args[5], prepared)
+                content = api_call.kwargs["input"][0]["content"]
+                self.assertEqual(content[1], {"type": "input_image", "detail": "high",
+                    "image_url": "data:image/png;base64," + base64.b64encode(prepared.read_bytes()).decode()})
+                data = json.loads(content[0]["text"].split("\n", 1)[1])
+                self.assertEqual(data if call.args[2] == "parts" else data["instructions"],
+                                 expected_instructions)
+                for secret in ("GT_ONLY_ID", "GT_ONLY_PATH", "GT_STEP_PATH", "NEVER_SEND_GT"):
+                    self.assertNotIn(secret, str(api_call))
+                saved = json.loads((dest / (call.args[2] + "_request") / "request.json").read_text())
+                self.assertEqual(saved["source"], str(prepared))
+            self.assertEqual(stage.call_count, 2)
+
     def test_cli_dry_run_and_missing_key_never_construct_client(self):
         for args in (["--dry-run"], []):
             with patch.dict("os.environ", {"OPENAI_API_KEY": ""}), patch.object(run_c, "load_dotenv"), \
@@ -251,6 +284,11 @@ class VariantCTests(unittest.TestCase):
         self.assertIn("მდებარეობა", p_prompt)
         self.assertIn("მარჯვენა/მარცხენა/ზედა/ქვედა", p_prompt)
         self.assertIn("უხილავი ნაწილი არ გამოიგონო", p_prompt)
+        self.assertIn("მხოლოდ ფიზიკური ხილული კომპონენტები", p_prompt)
+        self.assertIn("ნაწილი არ არის და parts-ში არ ჩასვა", p_prompt)
+        self.assertIn("იმავე label string-ში", p_prompt)
+        self.assertIn("მხოლოდ თუ ფოტოზე ჩანს", p_prompt)
+        self.assertIn("არ მიაწერო ნავარაუდევი მტკიცებულება", p_prompt)
 
         s_prompt = prompt_steps("სიფონი", parts(), instructions)
         self.assertIn("plausible კანდიდატია", s_prompt)
@@ -258,6 +296,13 @@ class VariantCTests(unittest.TestCase):
         self.assertIn("uncertainty", s_prompt)
         self.assertIn("empty focus დასაშვებია მხოლოდ მაშინ, როცა სამიზნე ნაწილების სიაში ან ფოტოზე საერთოდ არ ჩანს", s_prompt)
         self.assertIn("არ გამოიგონო ID", s_prompt)
+        self.assertIn("მიმაგრებულ ფოტოზე გადაამოწმე", s_prompt)
+        self.assertIn("არ აირჩიო მხოლოდ სიაში პირველი კანდიდატი", s_prompt)
+        self.assertIn("არ გამოიგონო მტკიცებულება", s_prompt)
+        self.assertIn("ვედრო) არ ჩანს, დატოვე empty focus", s_prompt)
+        self.assertIn("ცარიელი ადგილის, ფონის ან დასადგმელი ზონის ID-ის გამოყენება აკრძალულია", s_prompt)
+        for prompt in (p_prompt, s_prompt):
+            self.assertIn("წვეთები, სველი კვალი, შეერთება", prompt)
 
     def test_schema_descriptions_and_focus_optionality(self):
         schema = schema_steps(parts(), 1)

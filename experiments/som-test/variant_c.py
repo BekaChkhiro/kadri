@@ -44,11 +44,14 @@ def assign_ids(parts):
 
 
 def prompt_parts(instructions):
-    return ("ამ ფოტოზე გამოყავი მოქმედებებისთვის საჭირო მხოლოდ ხილული ნაწილები. "
+    return ("ამ ფოტოზე გამოყავი მოქმედებებისთვის საჭირო მხოლოდ ფიზიკური ხილული კომპონენტები. "
+            "ცარიელი ადგილი, ფონი ან ზონა, სადაც ნივთი უნდა დადგას, ნაწილი არ არის და parts-ში არ ჩასვა. "
             "დააბრუნე object და parts: ქართული label და მჭიდრო box=[x0,y0,x1,y1], "
             "ფოტოს სიგანის/სიმაღლის მიმართ 0..1000. ID-ები და ნაბიჯები არ შექმნა. "
             "თუ რამდენიმე მსგავსი ან ერთგვაროვანი ნაწილია, label-ში აუცილებლად დააზუსტე "
             "მდებარეობა (მაგ. მარჯვენა/მარცხენა/ზედა/ქვედა), რათა მოქმედების სამიზნე მკაფიოდ გაირჩეს. "
+            "იმავე label string-ში მოკლედ აღწერე ხილული განმასხვავებელი მტკიცებულება "
+            "(წვეთები, სველი კვალი, შეერთება) მხოლოდ თუ ფოტოზე ჩანს; არ მიაწერო ნავარაუდევი მტკიცებულება. "
             "უხილავი ნაწილი არ გამოიგონო.\n" + json.dumps(instructions, ensure_ascii=False))
 
 
@@ -57,11 +60,15 @@ def prompt_steps(object_name, parts, instructions):
             "გამოიყენე მხოლოდ ტელეფონის მიერ მინიჭებული IDs. focus/avoid/markers/arrows "
             "მიუთითებს მხოლოდ ამ ნაწილებზე. avoid არის ნაწილი, რომელსაც არ უნდა შეეხო. "
             "როცა მოცემულ parts სიაში მოქმედების ხილული სამიზნის რამდენიმე plausible კანდიდატია, "
-            "აირჩიე ყველაზე სავარაუდო box მდებარეობის, label-ისა და ინსტრუქციის კონტექსტის მიხედვით, "
+            "მიმაგრებულ ფოტოზე გადაამოწმე მდებარეობა და ხილული მტკიცებულება (წვეთები, სველი კვალი, შეერთება). "
+            "აირჩიე ყველაზე სავარაუდო box ამ ხილული მტკიცებულების, მდებარეობის, label-ისა და ინსტრუქციის მიხედვით; "
+            "არ აირჩიო მხოლოდ სიაში პირველი კანდიდატი და არ გამოიგონო მტკიცებულება. "
             "focus-ში მიუთითე მისი ID და warn-ში ჩაწერე გაურკვევლობა/დაშვება (uncertainty). "
             "არ დატოვო focus ცარიელი მხოლოდ იმიტომ, რომ რამდენიმე მსგავსი ხილული ნაწილია. "
             "empty focus დასაშვებია მხოლოდ მაშინ, როცა სამიზნე ნაწილების სიაში ან ფოტოზე საერთოდ არ ჩანს (უხილავია); "
             "ასეთ დროს არ გამოიგონო ID, არ აიძულო არარელევანტური ნაწილი, აღწერე unknown_parts-ში და warn-ში ახსენი. "
+            "თუ დასადგმელი ნივთი (მაგ. ვედრო) არ ჩანს, დატოვე empty focus; "
+            "ცარიელი ადგილის, ფონის ან დასადგმელი ზონის ID-ის გამოყენება აკრძალულია. "
             "rotate: cw/ccw; move: up/down/left/right/toward/away. "
             "ზომები/დოზები ფოტოდან დადასტურებულად არ მიიჩნიო. ეს კვლევაა. "
             "პირველი JSON გასაღები იყოს steps.\n" + json.dumps({"object": object_name,
@@ -374,7 +381,7 @@ def process_c(client, model, source, truth, destination, device, effort, max_sid
     prompt = prompt_steps(result["object"], parts, instructions)
     steps_start = time.perf_counter()
     steps, steps_metrics = request_stage(client, model, "steps", prompt, schema_steps(parts, len(instructions)),
-        None, destination / "steps_request", effort, budget, overrides, parts)
+        prepared, destination / "steps_request", effort, budget, overrides, parts)
     plan = {"object": result["object"], "parts": parts, **steps}
     save_json(destination / "plan.json", plan)
     adapted = validate_steps(steps, parts, len(instructions))
