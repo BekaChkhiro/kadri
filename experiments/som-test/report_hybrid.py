@@ -20,9 +20,12 @@ def evaluate_run(run, truth_dir):
         masks = data['masks']
     h, w = refs.shape[1:]
     masks = [cv2.resize(m.astype(np.uint8), (w,h), interpolation=cv2.INTER_NEAREST).astype(bool) for m in masks]
+    if len(plan['steps']) != len(truth['steps']):
+        raise ValueError('Plan and truth step counts differ')
     rows = []
     for step, expected in zip(plan['steps'], truth['steps']):
-        row = {'empty_focus': not step['focus']}
+        row = {'empty_focus': not step['focus'], 'title': step['title'] if 'title' in step else None,
+               'focus': step['focus'], 'avoid': step['avoid']}
         for field in ('focus', 'avoid'):
             actual, ref = np.zeros((h,w), bool), np.zeros((h,w), bool)
             for pid in step[field]: actual |= masks[int(pid[1:])-1]
@@ -44,6 +47,10 @@ def main():
             'hybrid': load(run/'latency.json'), 'astra': load(baseline/'latency.json'),
             'hybrid_quality': evaluate_run(run, baseline.parent),
             'astra_quality': evaluate_run(baseline, baseline.parent),
+            'hybrid_parts': len(load(run/'parts.json')['parts']),
+            'astra_parts': len(load(baseline/'parts.json')['parts']),
+            'astra_generation_usd': sum(load(baseline/f'{stage}_request/metrics.json')['estimated_usd'] for stage in ('parts','steps')),
+            'hybrid_generation_usd': load(run/'latency.json')['gemini_usd'] + load(run/'steps_request/metrics.json')['estimated_usd'],
             'id_match': match_frames(load(baseline/'parts.json')['parts'], load(run/'parts.json')['parts'], transform, transform, .5)})
     report = {'n': len(rows), 'rows': rows}
     for name in ('hybrid','astra'):
@@ -54,6 +61,10 @@ def main():
             avoid_iou=float(np.mean([s['avoid_iou'] for s in steps])) if steps else None)
     ledger = load(out/'budget.json')
     report['cost'] = {p: sum(v['usd'] for k,v in ledger['requests'].items() if k.startswith(p+':')) for p in ('gemini','openai')}
+    report['paired_cost'] = {name: sum(r[name+'_generation_usd'] for r in rows) for name in ('hybrid','astra')}
+    report['faster_frames'] = {key: sum(r['hybrid'][field] < r['astra'][field] for r in rows
+        if r['hybrid'][field] is not None and r['astra'][field] is not None) for key,field in FIELDS.items()}
+    report['all_22_complete'] = len(rows) == 22
     report['unsettled'] = sum(v['state'] != 'settled' for v in ledger['requests'].values())
     atomic_json(out/'summary.json', report)
     print(json.dumps({k:v for k,v in report.items() if k != 'rows'}, indent=2))
