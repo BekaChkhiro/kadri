@@ -3,7 +3,8 @@
 
 Codex generates each photo; the app (Debug build, `--autopilot <dir>`) submits it to the staging Worker,
 walks the steps and writes `round-N.result.json`. When the model asks for another photo, Codex makes the
-next one from the previous photo and the model's request. Screenshots follow `status.json`.
+next one from the previous photo and the model's request. When it asks a question or a measurement instead
+(`question-K.json`), Codex answers it in the user's role (`answer-K.txt`, text only). Screenshots follow `status.json`.
 
     python3 ios/Tools/e2e_codex_loop.py --udid <simulator-udid>
 
@@ -29,6 +30,14 @@ SCHEMA = {
     "required": ["image_path", "comment"],
     "additionalProperties": False,
 }
+ANSWER_SCHEMA = {
+    "type": "object",
+    "properties": {"answer": {"type": "string"}, "note": {"type": "string"}},
+    "required": ["answer", "note"],
+    "additionalProperties": False,
+}
+NO_TOOL = "არ მაქვს ხელსაწყო"  # PhotoAutopilot.noToolAnswer: sent without a unit
+MAX_QUESTIONS = 8
 PHOTO_STYLE = (
     "ფოტორეალისტური კადრი, თითქოს ჩვეულებრივი ტელეფონით არის გადაღებული: ბუნებრივი სინათლე, "
     "ოდნავ არასრულყოფილი კომპოზიცია. კვადრატული ფორმატი 1:1 (1024×1024). არანაირი ტექსტი, წარწერა, "
@@ -118,8 +127,11 @@ class Codex:
         self.dir.mkdir(parents=True, exist_ok=True)
         self.schema = self.dir / "schema.json"
         self.schema.write_text(json.dumps(SCHEMA))
+        self.answer_schema = self.dir / "answer-schema.json"
+        self.answer_schema.write_text(json.dumps(ANSWER_SCHEMA))
         self.reuse = reuse
         self.generated = 0
+        self.answered = 0
 
     def photo(self, number: int, prompt: str, previous: Path | None) -> tuple[Path, str]:
         target = self.dir / f"round-{number}.png"
@@ -156,6 +168,37 @@ class Codex:
         return target, meta.get("comment", "").strip()
 
 
+    def answer(self, number: int, question: dict, prompt: str) -> tuple[str, str]:
+        """Codex as the user answers question K; `codex/answer-K.json` keeps it for `--reuse`."""
+        target = self.dir / f"answer-{number}.json"
+        if self.reuse:
+            old = read_json(self.reuse / "codex" / target.name) or {}
+            if old.get("question") == question.get("question") and str(old.get("answer", "")).strip():
+                target.write_text(json.dumps(old, ensure_ascii=False, indent=2))
+                log(f"question {number}: answer reused from {self.reuse}")
+                return old["answer"].strip(), old.get("note", "")
+        started = time.time()
+        output = self.dir / f"answer-{number}.out.json"
+        cmd = ["codex", "exec", "--skip-git-repo-check", "--sandbox", "read-only", "-C", str(self.dir),
+               "--output-schema", str(self.answer_schema), "-o", str(output)]
+        log(f"question {number}: Codex is answering…")
+        with (self.dir / f"answer-{number}.log").open("w") as out:
+            code = subprocess.run(cmd, input=prompt, text=True, stdout=out, stderr=subprocess.STDOUT,
+                                  timeout=300).returncode
+        self.answered += 1
+        if code != 0:
+            raise RuntimeError(f"codex exited {code}, see {self.dir / f'answer-{number}.log'}")
+        meta = read_json(output) or {}
+        answer = " ".join(str(meta.get("answer", "")).split())[:120]
+        if not answer:
+            raise RuntimeError(f"codex gave no answer to question {number}")
+        note = str(meta.get("note", "")).strip()
+        target.write_text(json.dumps({"question": question.get("question"), "kind": question.get("kind"),
+                                      "answer": answer, "note": note}, ensure_ascii=False, indent=2))
+        log(f"question {number}: answered in {time.time() - started:.0f} s")
+        return answer, note
+
+
 def size(path: Path) -> str:
     out = subprocess.run(["sips", "-g", "pixelWidth", "-g", "pixelHeight", str(path)],
                          capture_output=True, text=True).stdout.split()
@@ -185,6 +228,39 @@ def next_prompt(number: int, scenario: str, done_titles: list[str], prompt: str,
         f"შეინახე სურათი ფაილად round-{number}.png ამ დირექტორიაში. JSON პასუხში image_path იყოს ამ ფაილის "
         "აბსოლუტური გზა, comment კი — ერთი მოკლე ქართული წინადადება მომხმარებლის სახელით (რას აჩვენებს ფოტო)."
     )
+
+
+def answer_prompt(scenario: str, done_titles: list[str], q: dict) -> str:
+    steps = "; ".join(done_titles) or "—"
+    lines = [
+        f"შენ თამაშობ მომხმარებელს, რომელსაც ეს პრობლემა აქვს: „{scenario}“.",
+        f"დამხმარე აპის ნაბიჯები, რომლებიც უკვე შეასრულე: {steps}.",
+        f"ახლა აპი გეკითხება: „{q.get('question')}“",
+    ]
+    if q.get("reason"):
+        lines.append(f"რატომ კითხულობს: {q['reason']}")
+    if q.get("kind") == "needs_measurement":
+        bounds = [f"მინ. {q['min']}" if q.get("min") is not None else "",
+                  f"მაქს. {q['max']}" if q.get("max") is not None else ""]
+        bounds_text = ", ".join(b for b in bounds if b) or "არ არის მითითებული"
+        lines += [
+            f"ეს არის გაზომვა. ერთეული: {q.get('unit')}; მოსალოდნელი დიაპაზონი: {bounds_text}.",
+            f"როგორ გაიზომოს: {q.get('how') or '—'}",
+            "answer-ში დაწერე მხოლოდ რეალისტური რიცხვი ერთეულის გარეშე (მაგ. 150 ან 12.4), სცენარის პრობლემასთან "
+            f"თანმიმდევრული — ის, რასაც ამ პრობლემის მქონე ადამიანი რეალურად გაზომავდა. მხოლოდ იშვიათად, თუ "
+            f"ასეთი ხელსაწყო ჩვეულებრივ სახლში არ აქვთ, დაწერე ზუსტად „{NO_TOOL}“.",
+        ]
+    else:
+        options = q.get("options") or []
+        lines.append("ვარიანტები: " + "; ".join(f"„{o}“" for o in options))
+        if q.get("allowOther"):
+            lines.append("answer-ში დაწერე ზუსტად ერთი ვარიანტი სიტყვასიტყვით; თუ არცერთი არ ერგება, "
+                         "მოკლე საკუთარი პასუხი (≤ 60 სიმბოლო).")
+        else:
+            lines.append("answer-ში დაწერე ზუსტად ერთი ვარიანტი სიტყვასიტყვით.")
+    lines.append("უპასუხე როგორც ამ სცენარის რეალური მომხმარებელი, რომელიც ეხლა ამ შემოწმებას აკეთებს. "
+                 "ფაილებს ნუ შექმნი და ნურაფერს გაუშვებ. note-ში ერთი მოკლე წინადადება: რატომ ასე უპასუხე.")
+    return "\n".join(lines)
 
 
 def deliver(png: Path, out: Path, number: int) -> None:
@@ -224,6 +300,8 @@ class Watcher:
             name += f"-of{status.get('stepsCount')}"
         if status.get("waitingForPhoto"):
             name += "-waiting"
+        if status.get("waitingForAnswer"):
+            name = f"r{status.get('round')}-question-{status.get('waitingForAnswer')}"
         path = self.shots_dir / f"{name}.png"
         n = 2
         while path.exists():
@@ -250,15 +328,54 @@ class Watcher:
 # MARK: - Report
 
 
+def spent(rounds: list[dict]) -> float:
+    """Steps cost so far: finished rounds, plus the answer turns of the round still running."""
+    total = 0.0
+    for r in rounds:
+        if r.get("result"):
+            total += r["result"].get("costUsd") or 0
+        else:
+            total += sum(q.get("costUsd") or 0 for q in r.get("questions", []))
+    return total
+
+
+def outcome(rounds: list[dict], out: Path) -> dict:
+    done = read_json(out / "done.json") or {}
+    last = next((r["result"] for r in reversed(rounds) if r.get("result")), {})
+    cont = last.get("continuation", {}) if last else {}
+    return {
+        "answers": sum(len(r.get("questions", [])) for r in rounds),
+        "cause": done.get("cause") or cont.get("cause"),
+        "summary": done.get("summary") or cont.get("summary"),
+    }
+
+
+def write_summary(out: Path, args, rounds: list[dict], stop: str) -> None:
+    result = outcome(rounds, out)
+    summary = {
+        "scenario": args.scenario, "stop": stop, "rounds": len(rounds),
+        "steps": sum(len((r.get("result") or {}).get("steps", [])) for r in rounds),
+        "answers": result["answers"], "cause": result["cause"], "summary": result["summary"],
+        "costUsd": round(spent(rounds), 4),
+    }
+    (out / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2))
+    keys = list(summary)
+    clean = [str("" if summary[k] is None else summary[k]).replace("\t", " ").replace("\n", " ") for k in keys]
+    (out / "summary.tsv").write_text("\t".join(keys) + "\n" + "\t".join(clean) + "\n")
+
+
 def report(out: Path, args, rounds: list[dict], stop: str, watcher: Watcher, codex: Codex) -> Path:
-    total = sum(r["result"].get("costUsd") or 0 for r in rounds if r.get("result"))
+    total = spent(rounds)
+    final = outcome(rounds, out)
     lines = [
         "# Kadri E2E — Codex ავტოპილოტი", "",
         f"- სცენარი: „{args.scenario}“",
         f"- სიმულატორი: `{args.udid}`, step-delay {args.step_delay} წმ",
         f"- round-ები: {len(rounds)}; დასრულება: {stop}",
         f"- ჯამური ხარჯი (steps `costUsd`): ${total:.4f} (cap ${args.cost_cap:.2f}); /ai/parts-ის ხარჯი აქ არ ითვლება",
-        f"- Codex-ის სურათები: {codex.generated}", "",
+        f"- Codex-ის სურათები: {codex.generated}; Codex-ის პასუხები: {codex.answered}",
+        f"- პასუხები: {final['answers']}; მიზეზი (cause): {final['cause'] or '—'}",
+        f"- შეჯამება (summary): {final['summary'] or '—'}", "",
     ]
     for r in rounds:
         n = r["number"]
@@ -276,6 +393,8 @@ def report(out: Path, args, rounds: list[dict], stop: str, watcher: Watcher, cod
             cont_text = cont.get("kind", "?")
             if cont.get("kind") == "needs_photo":
                 cont_text += f" — „{cont.get('prompt')}“ (მიზეზი: {cont.get('reason')})"
+            elif cont.get("cause") or cont.get("summary"):
+                cont_text += f" — cause: {cont.get('cause') or '—'}; summary: {cont.get('summary') or '—'}"
             t = result.get("timings", {})
             cost = result.get("costUsd")
             lines += [
@@ -283,12 +402,22 @@ def report(out: Path, args, rounds: list[dict], stop: str, watcher: Watcher, cod
                 f"- parts: {parts}",
                 f"- continuation: {cont_text}",
                 f"- costUsd: {'$%.4f' % cost if cost is not None else '—'}",
-                f"- დროები: scan {t.get('scanMs')} ms, პირველი ნაბიჯი {t.get('firstStepMs')} ms, ყველა ნაბიჯი {t.get('stepsDoneMs')} ms",
+                f"- დროები: scan {t.get('scanMs')} ms, პირველი ნაბიჯი {t.get('firstStepMs')} ms, ყველა ნაბიჯი {t.get('stepsDoneMs')} ms, "
+                f"პასუხის შემდეგ პირველი ნაბიჯი {t.get('turnFirstStepMs') or '—'} ms",
                 "", "| # | ნაბიჯი | ტექსტი | focus |", "|---|---|---|---|",
             ]
             for s in result.get("steps", []):
                 text = (s.get("text") or "").replace("|", "/").replace("\n", " ")
                 lines.append(f"| {s.get('index')} | {s.get('title')} | {text} | {', '.join(s.get('focus') or [])} |")
+        questions = r.get("questions", [])
+        if questions:
+            lines += ["", "კითხვა-პასუხი:", "", "| K | kind | კითხვა | პასუხი | ერთეული |", "|---|---|---|---|---|"]
+            for q in questions:
+                cells = [str(q.get(k) or "—").replace("|", "/").replace("\n", " ")
+                         for k in ("question", "answer", "answerUnit")]
+                lines.append(f"| {q.get('turn')} | {q.get('kind')} | {cells[0]} | {cells[1]} | {cells[2]} |")
+                if q.get("options"):
+                    lines.append(f"|  |  | ვარიანტები: {' / '.join(q['options'])} |  |  |")
         shots = watcher.shots.get(n, [])
         if shots:
             lines += ["", "სქრინშოტები: " + ", ".join(f"[{s}](shots/{s})" for s in shots)]
@@ -296,14 +425,15 @@ def report(out: Path, args, rounds: list[dict], stop: str, watcher: Watcher, cod
     run_dir = out.name
     lines += [
         "## ხელახლა ნახვა შენს სიმულატორზე", "",
-        "იგივე ფოტოებით (Codex აღარ ეშვება; AI პასუხები staging-იდან ახლიდან მოდის, ~$0.05–0.10 თითო round):", "",
+        "იგივე ფოტოებით (Codex აღარ ეშვება — პასუხებიც ხელახლა გამოიყენება, თუ კითხვა იგივეა; AI პასუხები staging-იდან ახლიდან მოდის, ~$0.05–0.10 თითო round):", "",
         "```sh",
         f"python3 ios/Tools/e2e_codex_loop.py --udid 6C9A34B2-7783-4246-BCBE-6D8BE57B3ADA --reuse {out} "
         f"--out /tmp/kadri-e2e/{run_dir}-replay",
         "```", "",
         "რა უნდა ნახო: აპი თავისით იხსნება, ჩნდება round 1-ის ფოტო და კომენტარი, „ვასკანერებ…“, შემდეგ ნაწილების "
         "მონიშვნა და ნაბიჯები ავტომატურად იცვლება ყოველ ~3.5 წამში; needs_photo-ზე ბოლო ნაბიჯზე ჩანს „ახალი ფოტო“ "
-        "მოთხოვნა, ცოტა ხანში ჩნდება შემდეგი ფოტო (chip „ფოტო 2“) და ციკლი მეორდება; ბოლოს — დასრულების ეკრანი.",
+        "მოთხოვნა, ცოტა ხანში ჩნდება შემდეგი ფოტო (chip „ფოტო 2“) და ციკლი მეორდება; კითხვა/გაზომვა იმავე ფოტოზე "
+        "პასუხის შემდეგ ახალ ნაბიჯებს მოიტანს; ბოლოს — დასრულების ეკრანი (მიზეზით, თუ ნაპოვნია).",
         "",
     ]
     path = out / "report.md"
@@ -360,29 +490,54 @@ def main() -> int:
         write_atomic(out / "comment.txt", comment.encode())
         deliver(png, out, 1)
         number = 1
+        asked = 0
         while True:
-            def finished(n=number):
+            def finished(n=number, k=asked + 1):
                 if (out / f"round-{n}.error.json").exists():
                     return "error"
-                return "result" if (out / f"round-{n}.result.json").exists() else None
+                if (out / f"round-{n}.result.json").exists():
+                    return "result"
+                return "question" if (out / f"question-{k}.json").exists() else None
 
-            outcome = watcher.wait(args.timeout, finished)
-            if outcome is None:
+            event = watcher.wait(args.timeout, finished)
+            if event is None:
                 stop = f"timeout: round {number} gave no result in {args.timeout:.0f} s"
                 break
-            if outcome == "error":
+            if event == "question":
+                asked += 1
+                question = read_json(out / f"question-{asked}.json") or {}
+                rounds[-1].setdefault("questions", []).append(question)
+                total = spent(rounds)
+                if asked > MAX_QUESTIONS:
+                    stop = f"question cap ({MAX_QUESTIONS}) reached"
+                    break
+                heaviest = max([q.get("costUsd") or 0 for r in rounds for q in r.get("questions", [])]
+                               + [r["result"].get("costUsd") or 0 for r in rounds if r.get("result")])
+                if total + heaviest > args.cost_cap:
+                    stop = f"cost cap: ${total:.4f} spent, another answer turn (~${heaviest:.4f}) would pass ${args.cost_cap:.2f}"
+                    break
+                titles = question.get("stepTitles") or []
+                answer, note = codex.answer(asked, question, answer_prompt(args.scenario, titles, question))
+                unit = question.get("unit") if question.get("kind") == "needs_measurement" and answer != NO_TOOL else None
+                question.update({"answer": answer, "note": note, "answerUnit": unit})
+                write_atomic(out / f"answer-{asked}.txt", answer.encode())
+                log(f"question {asked}: {question.get('question')} → {answer}{' ' + unit if unit else ''}")
+                continue
+            if event == "error":
                 rounds[-1]["error"] = read_json(out / f"round-{number}.error.json") or {}
                 stop = f"error in round {number}: {rounds[-1]['error'].get('code')}"
                 break
             result = read_json(out / f"round-{number}.result.json") or {}
             rounds[-1]["result"] = result
             cont = result.get("continuation", {})
-            total = sum(r["result"].get("costUsd") or 0 for r in rounds if r.get("result"))
-            log(f"round {number}: {len(result.get('steps', []))} steps, {cont.get('kind')}, "
-                f"cost ${result.get('costUsd') or 0:.4f} (total ${total:.4f})")
+            total = spent(rounds)
+            log(f"round {number}: {len(result.get('steps', []))} steps, {len(result.get('turns', []))} answers, "
+                f"{cont.get('kind')}, cost ${result.get('costUsd') or 0:.4f} (total ${total:.4f})")
             if cont.get("kind") != "needs_photo":
                 watcher.wait(30, lambda: (out / "done.json").exists())
                 stop = f"complete after {number} round(s)"
+                if cont.get("cause"):
+                    stop += f", cause: {cont['cause']}"
                 break
             if number >= args.max_rounds:
                 stop = f"max rounds ({args.max_rounds}) reached with needs_photo"
@@ -403,6 +558,7 @@ def main() -> int:
         stop = "interrupted"
     finally:
         watcher.poll()
+        write_summary(out, args, rounds, stop)
         path = report(out, args, rounds, stop, watcher, codex)
         log(f"{stop}\nreport: {path}")
     return 0 if stop.startswith("complete") else 1
