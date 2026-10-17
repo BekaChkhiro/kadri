@@ -37,9 +37,20 @@ struct MockKadriAPI: KadriAPI {
         Part(id: "p3", name: "სიფონი", box: [300, 380, 670, 530]),
     ])
     static let sampleSteps = [
-        Step(index: 1, title: "დაკეტე წყალი", text: "მოატრიალე ონკანი საათის ისრის მიმართულებით ბოლომდე. შემდეგ მეორეც დაკეტე.", focus: ["p1"], avoid: ["p2"]),
-        Step(index: 2, title: "ჩადგი ვედრო სიფონის ქვეშ", text: "სიფონში წყალი დგას. ვედრო პირდაპირ მის ქვეშ დადგი.", focus: ["p3"]),
-        Step(index: 3, title: "მოუშვი ქანჩი", text: "ხელით მოუშვი საათის ისრის საწინააღმდეგოდ.", focus: ["p2"]),
+        Step(index: 1, title: "დაკეტე წყალი", text: "მოატრიალე ონკანი საათის ისრის მიმართულებით ბოლომდე. შემდეგ მეორეც დაკეტე.", focus: ["p1"], avoid: ["p2"],
+             markers: [StepMarker(part: "p1", label: "ონკანი")],
+             arrows: [StepArrow(part: "p1", type: "rotate", dir: "cw")],
+             tip: "მეორე ონკანი მარცხნივაა"),
+        Step(index: 2, title: "ჩადგი ვედრო სიფონის ქვეშ", text: "სიფონში წყალი დგას. ვედრო პირდაპირ მის ქვეშ დადგი.", focus: ["p3"],
+             markers: [StepMarker(part: "p3", label: "ვედრო აქ")],
+             arrows: [StepArrow(part: "p3", type: "move", dir: "down")],
+             tools: ["ვედრო", "ტილო"],
+             tip: "ვედრო პირდაპირ სიფონის ქვეშ დადგი."),
+        Step(index: 3, title: "მოუშვი ქანჩი", text: "ხელით მოუშვი საათის ისრის საწინააღმდეგოდ.", focus: ["p2"],
+             markers: [StepMarker(part: "p2", label: "ქანჩი · ჟონავს")],
+             arrows: [StepArrow(part: "p2", type: "rotate", dir: "ccw")],
+             tools: ["ხელთათმანი"],
+             warn: "პლასტმასისაა, ზედმეტ ძალას ნუ დაატან."),
     ]
 }
 
