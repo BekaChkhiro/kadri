@@ -204,7 +204,9 @@ enum PhotoIcon {
     ]
 
     static func action(_ key: String?) -> String? { available(key.flatMap { actions[$0] }) }
-    static func tool(_ key: String?) -> String? { available(key.flatMap { tools[$0] }) }
+    static func tool(_ key: String?) -> String? {
+        available(key.flatMap { tools[$0] }) ?? (key == "bucket" ? available("cylinder") : nil)
+    }
 
     private static func available(_ symbol: String?) -> String? {
         guard let symbol, UIImage(systemName: symbol) != nil else { return nil }

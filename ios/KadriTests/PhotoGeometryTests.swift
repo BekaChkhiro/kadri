@@ -112,5 +112,6 @@ final class PhotoIconTests: XCTestCase {
         }
         XCTAssertEqual(PhotoIcon.action("rotate_cw"), "arrow.clockwise")
         XCTAssertEqual(PhotoIcon.tool("cloth"), "rectangle.portrait")
+        XCTAssertNotNil(PhotoIcon.tool("bucket"))
     }
 }
