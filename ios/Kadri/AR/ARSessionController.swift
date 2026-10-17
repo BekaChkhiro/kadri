@@ -12,7 +12,11 @@ final class ARSessionController: NSObject, ObservableObject, ARSessionDelegate {
     private let picker = KeyframePicker()
     private var capturing = false
     private var running = false
-    let capacity = 24 // ~400 ms at 60 fps; bounds retained camera/depth buffers.
+    // ARKit has a small pool of camera/depth buffers; retaining many ARFrames stalls frame delivery
+    // (tracking stuck at initializing) and with LiDAR depth can crash. Keep one sample per 0.1 s,
+    // five samples = 0.4 s, enough for KeyframePicker's 0.3 s stability window.
+    let capacity = 5
+    let sampleInterval: TimeInterval = 0.1
     var supported: Bool { ARWorldTrackingConfiguration.isSupported }
 
     override init() {
@@ -28,16 +32,34 @@ final class ARSessionController: NSObject, ObservableObject, ARSessionDelegate {
         configuration.environmentTexturing = .none
         running = true
         session.run(configuration)
+        // RealityKit's ARView owns session.delegate once it renders this session, so delegate
+        // callbacks are not reliable here. Poll currentFrame on every screen refresh instead.
+        displayLink?.invalidate()
+        let link = CADisplayLink(target: self, selector: #selector(tick))
+        link.add(to: .main, forMode: .common)
+        displayLink = link
     }
 
-    func pause() { running = false; session.pause(); frames.removeAll(); latest = nil }
+    func pause() {
+        running = false; displayLink?.invalidate(); displayLink = nil
+        session.pause(); frames.removeAll(); latest = nil
+    }
+
+    private var displayLink: CADisplayLink?
+
+    @objc private func tick() {
+        guard running, let frame = session.currentFrame else { return }
+        ingest(frame)
+    }
 
     func capture() async {
         guard !capturing else { return }
         capturing = true
         defer { capturing = false }
         do {
-            let selected = try await picker.pick(frames)
+            var candidates = frames
+            if let latest, latest.timestamp > (candidates.last?.timestamp ?? 0) { candidates.append(latest) }
+            let selected = try await picker.pick(candidates)
             guard running else { return }
             keyframe = selected
             captureStatus = String(format: "სიმკვეთრე: %.1f", selected.sharpness)
@@ -47,25 +69,33 @@ final class ARSessionController: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     nonisolated func session(_ session: ARSession, didUpdate frame: ARFrame) {
+        Task { @MainActor [weak self] in self?.ingest(frame) }
+    }
+
+    private func ingest(_ frame: ARFrame) {
+        guard running, frame.timestamp != latest?.timestamp else { return }
         let snapshot = FrameSnapshot(frame: frame)
-        Task { @MainActor [weak self] in
-            guard let self, self.running else { return }
-            self.latest = snapshot
-            self.frames.append(snapshot)
-            if self.frames.count > self.capacity { self.frames.removeFirst(self.frames.count - self.capacity) }
-            switch frame.camera.trackingState {
-            case .normal: self.status = "ტრეკინგი ნორმალურია"
-            case .notAvailable: self.status = "ტრეკინგი მიუწვდომელია"
-            case .limited(let reason):
-                switch reason {
-                case .initializing: self.status = "ინიციალიზაცია"
-                case .excessiveMotion: self.status = "შეზღუდული: შეანელეთ მოძრაობა"
-                case .insufficientFeatures: self.status = "შეზღუდული: მიუშვირეთ ტექსტურიან ზედაპირს"
-                case .relocalizing: self.status = "შეზღუდული: მდებარეობის აღდგენა"
-                @unknown default: self.status = "ტრეკინგი შეზღუდულია"
-                }
+        latest = snapshot
+        if let last = frames.last, snapshot.timestamp - last.timestamp < sampleInterval {
+            // Not yet time for a new sample; `latest` is appended at capture time.
+        } else {
+            frames.append(snapshot)
+            if frames.count > capacity { frames.removeFirst(frames.count - capacity) }
+        }
+        let newStatus: String
+        switch frame.camera.trackingState {
+        case .normal: newStatus = "ტრეკინგი ნორმალურია"
+        case .notAvailable: newStatus = "ტრეკინგი მიუწვდომელია"
+        case .limited(let reason):
+            switch reason {
+            case .initializing: newStatus = "ინიციალიზაცია"
+            case .excessiveMotion: newStatus = "შეზღუდული: შეანელეთ მოძრაობა"
+            case .insufficientFeatures: newStatus = "შეზღუდული: მიუშვირეთ ტექსტურიან ზედაპირს"
+            case .relocalizing: newStatus = "შეზღუდული: მდებარეობის აღდგენა"
+            @unknown default: newStatus = "ტრეკინგი შეზღუდულია"
             }
         }
+        if status != newStatus { status = newStatus }
     }
 
     nonisolated func sessionWasInterrupted(_ session: ARSession) {

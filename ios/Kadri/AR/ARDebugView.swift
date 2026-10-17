@@ -153,11 +153,8 @@ private struct ARCameraView: UIViewRepresentable {
     func makeUIView(context: Context) -> ARView {
         let view = ARView(frame: .zero, cameraMode: .ar, automaticallyConfigureSession: false)
         view.session = session
-        // Assigning ARView.session takes over session.delegate; give frames back to our controller.
-        session.delegate = delegate
+        // ARView takes over session.delegate; ARSessionController polls currentFrame instead.
         return view
     }
-    func updateUIView(_ uiView: ARView, context: Context) {
-        if session.delegate !== delegate { session.delegate = delegate }
-    }
+    func updateUIView(_ uiView: ARView, context: Context) {}
 }
