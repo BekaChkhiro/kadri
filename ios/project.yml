@@ -7,7 +7,7 @@ options:
 settings:
   base:
     SWIFT_VERSION: "6.0"
-    DEVELOPMENT_TEAM: ""
+    DEVELOPMENT_TEAM: M49DJ3634D
     CODE_SIGN_STYLE: Automatic
 packages:
   KadriCore:
