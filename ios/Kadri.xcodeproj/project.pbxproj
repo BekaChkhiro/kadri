@@ -22,7 +22,9 @@
 		ADE3F74A26977B000BF655B1 /* KadriTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4910DAFAB764B1ABC03FDC1 /* KadriTests.swift */; };
 		B0C7B9CD0B78ADD51ED872B9 /* RealityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 929743E4A7FCA4EBC2F888D7 /* RealityKit.framework */; };
 		B71D30C9823A5FF91D0A3DBC /* CoreML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45B6800C7C6BC6DFD3FD195E /* CoreML.framework */; };
+		BD67D4209D70CC5DD7C4D768 /* ARSessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0284BC4ED2FA5475C1184EE9 /* ARSessionController.swift */; };
 		D6C97E8C50507362CE0C7B9F /* KadriApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD5A9F0403797194A257F7D /* KadriApp.swift */; };
+		D99995671C2CD82936EFFE51 /* KeyframePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889B405E7EAD71436F553E6 /* KeyframePicker.swift */; };
 		E130A68F5F393B8FEE871CA4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543FF004E3F31262D70B1ECA /* ContentView.swift */; };
 		EAF7180A4D2ECF039B84CD03 /* KadriCore in Frameworks */ = {isa = PBXBuildFile; productRef = 3B8FE85B572B4ACA38714736 /* KadriCore */; };
 		F3A6721520CD41B44AAC06CB /* OFL-Inter.txt in Resources */ = {isa = PBXBuildFile; fileRef = EC47E7F74A9863587D696784 /* OFL-Inter.txt */; };
@@ -41,6 +43,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0284BC4ED2FA5475C1184EE9 /* ARSessionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSessionController.swift; sourceTree = "<group>"; };
 		24F1F6DCECABEBE28315A574 /* NotoSansGeorgian-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansGeorgian-Bold.ttf"; sourceTree = "<group>"; };
 		317A97DEC8B919E1D5640FD6 /* OFL-NotoSansGeorgian.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OFL-NotoSansGeorgian.txt"; sourceTree = "<group>"; };
 		323ABB0C7AC98B5137031173 /* Kadri.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Kadri.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -49,6 +52,7 @@
 		543FF004E3F31262D70B1ECA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		5BC9A3615F9651942AE4DF2B /* KadriCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = KadriCore; path = Packages/KadriCore; sourceTree = SOURCE_ROOT; };
 		5BF721974DE7AA9474A9A606 /* NotoSansGeorgian-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansGeorgian-SemiBold.ttf"; sourceTree = "<group>"; };
+		7889B405E7EAD71436F553E6 /* KeyframePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyframePicker.swift; sourceTree = "<group>"; };
 		84CAC115ECF63FDB03CC26B8 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
 		929743E4A7FCA4EBC2F888D7 /* RealityKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealityKit.framework; path = System/Library/Frameworks/RealityKit.framework; sourceTree = SDKROOT; };
 		9A050936A9DE4965679EB720 /* ARKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARKit.framework; path = System/Library/Frameworks/ARKit.framework; sourceTree = SDKROOT; };
@@ -100,10 +104,20 @@
 				543FF004E3F31262D70B1ECA /* ContentView.swift */,
 				B46F495E5E37069B8DAB0CB7 /* Info.plist */,
 				ABD5A9F0403797194A257F7D /* KadriApp.swift */,
+				26AE2588A54B31F04C7D0DF7 /* AR */,
 				EAF36B7FB440F8813F254796 /* Design */,
 				FEB0235438BDD303D3660CCA /* Resources */,
 			);
 			path = Kadri;
+			sourceTree = "<group>";
+		};
+		26AE2588A54B31F04C7D0DF7 /* AR */ = {
+			isa = PBXGroup;
+			children = (
+				0284BC4ED2FA5475C1184EE9 /* ARSessionController.swift */,
+				7889B405E7EAD71436F553E6 /* KeyframePicker.swift */,
+			);
+			path = AR;
 			sourceTree = "<group>";
 		};
 		5CB0942AF44DA57FD6340EED /* KadriTests */ = {
@@ -293,9 +307,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD67D4209D70CC5DD7C4D768 /* ARSessionController.swift in Sources */,
 				E130A68F5F393B8FEE871CA4 /* ContentView.swift in Sources */,
 				7E63B1D4CFDD42BE7DF2BD56 /* Glass.swift in Sources */,
 				D6C97E8C50507362CE0C7B9F /* KadriApp.swift in Sources */,
+				D99995671C2CD82936EFFE51 /* KeyframePicker.swift in Sources */,
 				3A22A9DB0A7B1979BC715269 /* Theme.swift in Sources */,
 				5C58BFDF78CA098BC961D969 /* ThemePreview.swift in Sources */,
 			);
