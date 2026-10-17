@@ -1,4 +1,5 @@
 /** JPEG checks and base64 helpers for the photo the phone sends. */
+import { aiErrors } from "./errors";
 
 export const MAX_SIDE = 768;
 export const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
@@ -31,6 +32,18 @@ export function jpegSize(bytes: Uint8Array): { width: number; height: number } |
     i += 2 + length;
   }
   return null;
+}
+
+/** Checks the photo (JPEG, ≤768px, ≤2 MB) before any paid call; returns it as base64. */
+export function checkedJpegBase64(image: Uint8Array | null): string {
+  if (!image || image.length === 0) throw aiErrors.badRequest("ფოტო აკლია");
+  if (image.length > MAX_IMAGE_BYTES) throw aiErrors.badRequest("ფოტო ძალიან დიდია");
+  const size = jpegSize(image);
+  if (!size) throw aiErrors.badRequest("ფოტო უნდა იყოს JPEG");
+  if (Math.max(size.width, size.height) > MAX_SIDE) {
+    throw aiErrors.badRequest(`ფოტოს დიდი გვერდი უნდა იყოს ≤${MAX_SIDE}px`);
+  }
+  return toBase64(image);
 }
 
 export function toBase64(bytes: Uint8Array): string {

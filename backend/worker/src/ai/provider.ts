@@ -8,9 +8,11 @@ import { ApiError } from "../errors";
 import { aiErrors } from "./errors";
 import { DEFAULT_EFFORT, DEFAULT_MODEL, outputText, postResponses, responsesPayload, type ResponseObject } from "./openai";
 import { estimateCost, type Usage } from "./pricing";
-import { promptParts, type Instructions } from "./prompts";
-import { schemaParts } from "./schema";
-import { partsFromModel, type Part } from "./validate";
+import { promptParts, promptSteps, type Instructions } from "./prompts";
+import { schemaParts, schemaSteps, stepItemSchema, validateSchema } from "./schema";
+import { StepsStreamParser } from "./stepsParser";
+import { partsFromModel, stepRuleError, type Part, type Step } from "./validate";
+import { readSse } from "../sse";
 
 export const AI_TIMEOUT_MS = 60_000;
 
@@ -34,6 +36,34 @@ export interface PartsProvider {
   parts(input: PartsInput, signal?: AbortSignal): Promise<PartsResult>;
 }
 
+export interface StepsInput {
+  object: string;
+  /** The phone's parts; their IDs are the only ones the schema allows. */
+  parts: Part[];
+  instructions: Instructions;
+  count: number;
+  /** Optional JPEG as base64; the experiment attaches the photo to stage 2 too. */
+  imageBase64?: string;
+}
+
+export type StepsEvent =
+  | { type: "step"; index: number; step: Step }
+  | {
+      type: "done";
+      unknownParts: string[];
+      model: string;
+      usage: Usage | null;
+      costUsd: number | null;
+      latencyMs: number;
+      firstStepMs: number | null;
+    };
+
+export interface StepsProvider {
+  readonly name: string;
+  /** Yields each step as soon as it is complete and valid, then `done`. Throws ApiError. */
+  steps(input: StepsInput, signal?: AbortSignal): AsyncGenerator<StepsEvent>;
+}
+
 export interface AstraConfig {
   apiKey: string;
   model: string;
@@ -54,6 +84,7 @@ export function deadline(ms: number, outer?: AbortSignal) {
   return {
     signal: controller.signal,
     timedOut: () => timedOut,
+    abort: () => controller.abort(),
     clear: () => {
       clearTimeout(timer);
       outer?.removeEventListener("abort", onAbort);
@@ -61,7 +92,7 @@ export function deadline(ms: number, outer?: AbortSignal) {
   };
 }
 
-export class AstraProvider implements PartsProvider {
+export class AstraProvider implements PartsProvider, StepsProvider {
   readonly name = "astra";
   constructor(readonly config: AstraConfig) {}
 
@@ -109,18 +140,119 @@ export class AstraProvider implements PartsProvider {
     }
     return { ...result, model, usage, costUsd: estimateCost(usage, model), latencyMs };
   }
+
+  async *steps(input: StepsInput, signal?: AbortSignal): AsyncGenerator<StepsEvent> {
+    const { model, effort, apiKey } = this.config;
+    const ids = input.parts.map((p) => p.id);
+    const labels = new Map(input.parts.map((p) => [p.id, p.name]));
+    const schema = schemaSteps(ids, input.count);
+    const itemSchema = stepItemSchema(ids);
+    const promptParts = input.parts.map((p) => ({ id: p.id, label: p.name, box: p.box }));
+    const payload = responsesPayload({
+      model,
+      effort,
+      stage: "steps",
+      prompt: promptSteps(input.object, promptParts, input.instructions),
+      schema,
+      imageBase64: input.imageBase64,
+    });
+    const checkStep = (step: unknown): Step => {
+      const err = validateSchema(itemSchema, step) ?? stepRuleError(step as Step, labels);
+      if (err) {
+        console.error("ai/steps invalid step", err);
+        throw aiErrors.invalid();
+      }
+      return step as Step;
+    };
+
+    const limit = deadline(this.config.timeoutMs ?? AI_TIMEOUT_MS, signal);
+    const start = Date.now();
+    let firstStepMs: number | null = null;
+    try {
+      const res = await postResponses(apiKey, payload, limit.signal);
+      if (!res.ok || !res.body) {
+        console.error("ai/steps upstream status", res.status, (await res.text()).slice(0, 500));
+        throw aiErrors.upstream();
+      }
+      const parser = new StepsStreamParser();
+      let text = "";
+      let emitted = 0;
+      let final: ResponseObject | null = null;
+      for await (const msg of readSse(res.body)) {
+        if (msg.data === "[DONE]") continue;
+        let ev: { type?: string; delta?: string; response?: ResponseObject };
+        try {
+          ev = JSON.parse(msg.data);
+        } catch {
+          continue;
+        }
+        if (ev.type === "response.output_text.delta" && typeof ev.delta === "string") {
+          text += ev.delta;
+          for (const raw of parser.push(ev.delta)) {
+            if (emitted >= input.count) throw aiErrors.invalid();
+            const step = checkStep(raw);
+            firstStepMs ??= Date.now() - start;
+            yield { type: "step", index: emitted++, step };
+          }
+        } else if (
+          ev.type === "response.completed" ||
+          ev.type === "response.incomplete" ||
+          ev.type === "response.failed"
+        ) {
+          final = ev.response ?? null;
+        } else if (ev.type === "error") {
+          console.error("ai/steps stream error", msg.data.slice(0, 500));
+          throw aiErrors.upstream();
+        }
+      }
+      if (!final) throw aiErrors.upstream();
+      const latencyMs = Date.now() - start;
+      const usage = final.usage ?? null;
+      const full = outputText(final) || text;
+      if (final.status !== "completed" || !full) {
+        console.error("ai/steps incomplete", final.status);
+        throw aiErrors.incomplete();
+      }
+      let result: { steps: Step[]; unknown_parts: string[] };
+      try {
+        result = JSON.parse(full);
+      } catch {
+        throw aiErrors.invalid();
+      }
+      const err = validateSchema(schema, result);
+      if (err) {
+        console.error("ai/steps invalid result", err);
+        throw aiErrors.invalid();
+      }
+      // Normally every step was already streamed; this covers a stream the
+      // incremental parser could not follow.
+      for (; emitted < result.steps.length; emitted++) {
+        firstStepMs ??= Date.now() - start;
+        yield { type: "step", index: emitted, step: checkStep(result.steps[emitted]) };
+      }
+      yield {
+        type: "done",
+        unknownParts: result.unknown_parts,
+        model,
+        usage,
+        costUsd: estimateCost(usage, model),
+        latencyMs,
+        firstStepMs,
+      };
+    } catch (err) {
+      if (err instanceof ApiError) throw err;
+      if (limit.timedOut()) throw aiErrors.timeout();
+      console.error("ai/steps failed", err);
+      throw aiErrors.upstream();
+    } finally {
+      limit.clear();
+      // Also stops the upstream request when the consumer quits early.
+      limit.abort();
+    }
+  }
 }
 
-export function astraConfig(env: Env): AstraConfig {
-  if (!env.OPENAI_API_KEY) throw aiErrors.notConfigured();
-  return {
-    apiKey: env.OPENAI_API_KEY,
-    model: env.AI_MODEL || DEFAULT_MODEL,
-    effort: env.AI_EFFORT || DEFAULT_EFFORT,
-  };
-}
-
-export function partsProvider(env: Env): PartsProvider {
+function astraFor(env: Env): AstraProvider {
   switch (env.AI_PROVIDER ?? "astra") {
     case "astra":
       return new AstraProvider(astraConfig(env));
@@ -131,4 +263,21 @@ export function partsProvider(env: Env): PartsProvider {
     default:
       throw aiErrors.notConfigured();
   }
+}
+
+export function partsProvider(env: Env): PartsProvider {
+  return astraFor(env);
+}
+
+export function stepsProvider(env: Env): StepsProvider {
+  return astraFor(env);
+}
+
+export function astraConfig(env: Env): AstraConfig {
+  if (!env.OPENAI_API_KEY) throw aiErrors.notConfigured();
+  return {
+    apiKey: env.OPENAI_API_KEY,
+    model: env.AI_MODEL || DEFAULT_MODEL,
+    effort: env.AI_EFFORT || DEFAULT_EFFORT,
+  };
 }

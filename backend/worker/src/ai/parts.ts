@@ -8,7 +8,7 @@
 import { json } from "../errors";
 import type { Handler } from "../router";
 import { aiErrors } from "./errors";
-import { fromBase64, jpegSize, MAX_IMAGE_BYTES, MAX_SIDE, toBase64 } from "./image";
+import { checkedJpegBase64, fromBase64 } from "./image";
 import { partsProvider, type PartsInput } from "./provider";
 import { parseInstructions } from "./validate";
 
@@ -40,14 +40,7 @@ async function readBody(request: Request): Promise<{ image: Uint8Array | null; i
 
 export async function readPartsInput(request: Request): Promise<PartsInput> {
   const { image, instructions } = await readBody(request);
-  if (!image || image.length === 0) throw aiErrors.badRequest("ფოტო აკლია");
-  if (image.length > MAX_IMAGE_BYTES) throw aiErrors.badRequest("ფოტო ძალიან დიდია");
-  const size = jpegSize(image);
-  if (!size) throw aiErrors.badRequest("ფოტო უნდა იყოს JPEG");
-  if (Math.max(size.width, size.height) > MAX_SIDE) {
-    throw aiErrors.badRequest(`ფოტოს დიდი გვერდი უნდა იყოს ≤${MAX_SIDE}px`);
-  }
-  return { imageBase64: toBase64(image), instructions: parseInstructions(instructions) };
+  return { imageBase64: checkedJpegBase64(image), instructions: parseInstructions(instructions) };
 }
 
 export const partsHandler: Handler = async ({ request, env }) => {
