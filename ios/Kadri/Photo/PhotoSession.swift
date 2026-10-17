@@ -32,7 +32,7 @@ final class PhotoSession: ObservableObject {
         let storage: any TokenStorage
         do { storage = try DevAuth.storage(); authError = nil }
         catch { storage = InMemoryTokenStorage(); authError = SessionError(error) }
-        let live = { KadriClient(config: config, auth: AuthStore(config: config, storage: storage)) }
+        let live = { KadriClient(config: config, auth: LiveAuth.store(config: config, storage: storage)) }
         #if DEBUG
         #if targetEnvironment(simulator)
         let multiPhoto = ProcessInfo.processInfo.arguments.contains("--photo-multi")

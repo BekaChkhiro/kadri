@@ -122,6 +122,55 @@ final class APIAuthStoreTests: XCTestCase {
         }
     }
 
+    func testExpiredSessionReauthenticatesOnceForConcurrentRequests() async throws {
+        let fresh = StoredSession(token: "recovered", expiresAt: t0.addingTimeInterval(3600))
+        let storage = InMemoryTokenStorage(StoredSession(token: "expired", expiresAt: t0))
+        let calls = Locked(0)
+        let fixed = t0
+        let config = APIConfig(baseURL: MockURLProtocol.register { request, _ in
+            XCTAssertEqual(request.url?.path, "/ai/parts")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer recovered")
+            return .json(200, #"{"object":"sink","parts":[]}"#)
+        })
+        let auth = AuthStore(config: config, storage: storage, now: { fixed }, reauthenticate: {
+            calls.value += 1
+            try await Task.sleep(for: .milliseconds(100))
+            return fresh
+        })
+        let client = KadriClient(config: config, auth: auth, session: MockURLProtocol.session())
+        async let a = client.parts(keyframe: Data([1]), instructions: "a")
+        async let b = client.parts(keyframe: Data([2]), instructions: "b")
+        let results = try await [a, b]
+        XCTAssertEqual(results.map(\.object), ["sink", "sink"])
+        XCTAssertEqual(calls.value, 1)
+        XCTAssertEqual(try storage.load(), fresh)
+    }
+
+    func testFailedOrMissingGoogleRestoreIsUnauthorized() async throws {
+        for throwsError in [false, true] {
+            let storage = InMemoryTokenStorage(StoredSession(token: "expired", expiresAt: t0))
+            let fixed = t0
+            let auth = AuthStore(config: APIConfig(baseURL: URL(string: "https://unused.test")!),
+                                 storage: storage, now: { fixed }, reauthenticate: {
+                if throwsError { throw URLError(.notConnectedToInternet) }
+                return nil
+            })
+            do {
+                _ = try await auth.validToken()
+                XCTFail("Expected unauthorized")
+            } catch { XCTAssertEqual(error as? SessionError, .unauthorized) }
+            XCTAssertNil(try storage.load())
+        }
+    }
+
+    func testInteractiveSignInInAnotherStoreIsPickedUp() async throws {
+        let storage = InMemoryTokenStorage()
+        let auth = store(storage) { _, _ in XCTFail("No refresh expected"); return .json(500, "") }
+        try storage.save(StoredSession(token: "interactive", expiresAt: t0.addingTimeInterval(3600)))
+        let token = try await auth.validToken()
+        XCTAssertEqual(token, "interactive")
+    }
+
     func testSignOutClearsStorage() async throws {
         let storage = InMemoryTokenStorage(StoredSession(token: "s", expiresAt: t0.addingTimeInterval(3600)))
         let auth = store(storage) { _, _ in .json(500, "") }

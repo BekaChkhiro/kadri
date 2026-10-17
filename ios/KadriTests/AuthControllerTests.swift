@@ -1,4 +1,5 @@
 import UIKit
+import SwiftUI
 import XCTest
 @testable import Kadri
 
@@ -19,6 +20,66 @@ final class AuthControllerTests: XCTestCase {
         let session = URLSession(configuration: configuration)
         let store = AuthStore(config: config, storage: storage, session: session)
         controller = GoogleAuthController(google: google, worker: WorkerAuth(store: store, config: config, session: session))
+    }
+
+    func testLiveAuthSilentlyRestoresGoogleAndExchangesExpiredSession() async throws {
+        try storage.save(StoredSession(token: "expired", expiresAt: .distantPast))
+        google.restoredToken = "restored-google-token"
+        WorkerStub.routes["/auth/google"] = (200, Self.signInBody(token: "recovered"))
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [WorkerStub.self]
+        let auth = LiveAuth.store(config: APIConfig(baseURL: URL(string: "https://worker.test")!),
+                                  storage: storage, google: google, session: URLSession(configuration: configuration))
+        let token = try await auth.validToken()
+        XCTAssertEqual(token, "recovered")
+        XCTAssertEqual(google.restoreCount, 1)
+        XCTAssertNil(WorkerStub.authorization["/auth/refresh"])
+        let body = try XCTUnwrap(WorkerStub.bodies["/auth/google"])
+        XCTAssertEqual(try JSONDecoder().decode([String: String].self, from: body), ["idToken": "restored-google-token"])
+    }
+
+    func testLiveAuthWithoutGoogleSessionRequiresSignIn() async {
+        let auth = LiveAuth.store(config: APIConfig(baseURL: URL(string: "https://worker.test")!),
+                                  storage: storage, google: google)
+        do {
+            _ = try await auth.validToken()
+            XCTFail("Expected unauthorized")
+        } catch { XCTAssertEqual(error as? SessionError, .unauthorized) }
+        XCTAssertEqual(google.restoreCount, 1)
+        XCTAssertTrue(WorkerStub.bodies.isEmpty)
+    }
+
+    func testPhotoUnauthorizedScreenKeepsPhotoAndRendersRecoveryActions() async throws {
+        let photo = PhotoSession(api: MockKadriAPI())
+        photo.selectDemo()
+        photo.model.updateText("ნიჟარა ჟონავს")
+        photo.model.submit { throw SessionError.unauthorized }
+        try await Task.sleep(for: .milliseconds(100))
+        guard case .error(.unauthorized, _) = photo.model.phase else {
+            return XCTFail("Expected unauthorized photo screen")
+        }
+        XCTAssertNotNil(photo.image)
+        let host = UIHostingController(rootView: PhotoFlowView(session: photo).environment(controller))
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let previous = scene.windows.first(where: \.isKeyWindow)
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = host
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; previous?.makeKeyAndVisible() }
+        host.view.frame = window.bounds
+        host.view.layoutIfNeeded()
+        try await Task.sleep(for: .milliseconds(300))
+        var rendered = false
+        let image = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in
+            rendered = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+        }
+        XCTAssertTrue(rendered)
+        try XCTUnwrap(image.pngData()).write(to: URL(fileURLWithPath: "/tmp/kadri-reauth-error.png"))
+        let attachment = XCTAttachment(image: image)
+        attachment.name = "Photo unauthorized recovery"
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     func testSuccessfulSignInStoresWorkerSession() async throws {

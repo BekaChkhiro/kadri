@@ -152,7 +152,11 @@ struct PhotoFlowView: View {
                                 Text(error.localizedDescription).font(.kadri(14.5))
                             }.frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        Button("თავიდან", action: session.model.retry).buttonStyle(SessionButtonStyle())
+                        if error == .unauthorized {
+                            PhotoAuthActions(retry: session.model.retry)
+                        } else {
+                            Button("თავიდან", action: session.model.retry).buttonStyle(SessionButtonStyle())
+                        }
                         Button("სხვა ფოტო", action: session.retake).buttonStyle(SessionButtonStyle(primary: false))
                     }.padding(16)
                 default: EmptyView()

@@ -94,3 +94,24 @@ extension UIApplication {
         return top
     }
 }
+
+/// Recovery stays inline so the selected photo and instructions survive sign-in.
+struct PhotoAuthActions: View {
+    @Environment(GoogleAuthController.self) private var auth
+    let retry: () -> Void
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Button("თავიდან", action: retry).buttonStyle(SessionButtonStyle())
+            Button("შესვლა") {
+                guard let presenter = UIApplication.shared.kadriTopViewController else { return }
+                Task {
+                    await auth.signIn(presenting: presenter)
+                    if auth.user != nil { retry() }
+                }
+            }
+            .buttonStyle(SessionButtonStyle(primary: false))
+            .disabled(auth.state == .signingIn)
+        }
+    }
+}

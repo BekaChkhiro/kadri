@@ -59,7 +59,7 @@ final class LiveSessionDependencies: ObservableObject {
         let storage: any TokenStorage
         do { storage = try DevAuth.storage(); authError = nil }
         catch { storage = InMemoryTokenStorage(); authError = error }
-        model = SessionModel(api: api ?? KadriClient(config: config, auth: AuthStore(config: config, storage: storage)))
+        model = SessionModel(api: api ?? KadriClient(config: config, auth: LiveAuth.store(config: config, storage: storage)))
         #if DEBUG && targetEnvironment(simulator)
         if ProcessInfo.processInfo.arguments.contains("--mock-keyframe"),
            let url = Bundle.main.url(forResource: "input", withExtension: "png", subdirectory: "sink") {

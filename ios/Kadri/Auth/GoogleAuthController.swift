@@ -4,7 +4,7 @@ import UIKit
 
 /// Google's half of sign-in: an ID token the Worker can verify. `GIDTokenProvider` on the phone, a mock in tests.
 @MainActor
-protocol GoogleTokenProvider {
+protocol GoogleTokenProvider: Sendable {
     /// Interactive sign-in. Throws `GoogleSignInFailure`.
     func signIn(presenting: UIViewController) async throws -> String
     /// A fresh ID token for an earlier sign-in without showing UI; nil when there is none.
@@ -183,5 +183,21 @@ struct WorkerAuth: WorkerSessionAuth {
 
     private struct MeBody: Decodable {
         let user: AuthUser
+    }
+}
+
+/// Keeps Google SDK work on the main actor and lets AuthStore coalesce silent recovery.
+@MainActor
+enum LiveAuth {
+    static func store(config: APIConfig, storage: any TokenStorage,
+                      google: any GoogleTokenProvider = GIDTokenProvider(),
+                      session: URLSession? = nil) -> AuthStore {
+        AuthStore(config: config, storage: storage, session: session, reauthenticate: {
+            guard let idToken = await google.restore() else { return nil }
+            let recovered = InMemoryTokenStorage()
+            let exchange = AuthStore(config: config, storage: recovered, session: session)
+            try await exchange.signIn(googleIDToken: idToken)
+            return try recovered.load()
+        })
     }
 }

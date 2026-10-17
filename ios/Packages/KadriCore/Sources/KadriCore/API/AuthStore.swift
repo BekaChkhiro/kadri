@@ -97,21 +97,25 @@ public actor AuthStore: TokenProviding {
     private let storage: any TokenStorage
     private let now: @Sendable () -> Date
     private let refreshMargin: TimeInterval
+    private let reauthenticate: (@Sendable () async throws -> StoredSession?)?
     private var current: StoredSession?
     private var refreshing: Task<StoredSession, Error>?
 
+    /// Optional silent sign-in fallback, used when the Worker session is missing, expired or rejected.
     public init(
         config: APIConfig,
         storage: any TokenStorage = KeychainTokenStorage(),
         session: URLSession? = nil,
         refreshMargin: TimeInterval = 5 * 60,
-        now: @escaping @Sendable () -> Date = { Date() }
+        now: @escaping @Sendable () -> Date = { Date() },
+        reauthenticate: (@Sendable () async throws -> StoredSession?)? = nil
     ) {
         self.config = config
         self.storage = storage
         self.session = session ?? .kadri(config)
         self.refreshMargin = refreshMargin
         self.now = now
+        self.reauthenticate = reauthenticate
         self.current = try? storage.load()
     }
 
@@ -132,21 +136,17 @@ public actor AuthStore: TokenProviding {
     /// A token valid for at least `refreshMargin` (or until expiry if refreshing failed on the network).
     /// Throws `.unauthorized` when there is no usable session.
     public func validToken() async throws -> String {
-        guard let current, current.expiresAt > now() else {
-            try? clearSession()
-            throw SessionError.unauthorized
+        if let refreshing { return try await refreshing.value.token }
+        // Interactive sign-in may have updated the shared Keychain through another store.
+        current = try storage.load()
+        if let current, current.expiresAt.timeIntervalSince(now()) > refreshMargin {
+            return current.token
         }
-        if current.expiresAt.timeIntervalSince(now()) > refreshMargin { return current.token }
-        do {
-            return try await refresh(current).token
-        } catch SessionError.unauthorized {
-            try? clearSession()
-            throw SessionError.unauthorized
-        } catch {
-            // Offline or server hiccup: the old token still works until it expires.
-            if let latest = self.current, latest.expiresAt > now() { return latest.token }
-            throw error
-        }
+        let old = current
+        let task = Task { try await self.renew(old) }
+        refreshing = task
+        defer { refreshing = nil }
+        return try await task.value.token
     }
 
     public func signOut() {
@@ -155,20 +155,37 @@ public actor AuthStore: TokenProviding {
         try? clearSession()
     }
 
-    private func refresh(_ old: StoredSession) async throws -> StoredSession {
-        if let refreshing { return try await refreshing.value }
-        var request = URLRequest(url: config.url("/auth/refresh"), timeoutInterval: config.requestTimeout)
-        request.httpMethod = "POST"
-        request.setValue("Bearer \(old.token)", forHTTPHeaderField: "Authorization")
-        let session = self.session
-        let task = Task {
-            try decodeResponse(SessionBody.self, from: try await session.kadriData(for: request)).session()
+    private func renew(_ old: StoredSession?) async throws -> StoredSession {
+        if let old, old.expiresAt > now() {
+            var request = URLRequest(url: config.url("/auth/refresh"), timeoutInterval: config.requestTimeout)
+            request.httpMethod = "POST"
+            request.setValue("Bearer \(old.token)", forHTTPHeaderField: "Authorization")
+            do {
+                let fresh = try decodeResponse(SessionBody.self, from: try await session.kadriData(for: request)).session()
+                try Task.checkCancellation()
+                try store(fresh)
+                return fresh
+            } catch SessionError.unauthorized {
+                // A rejected session can still be recovered using Google's credentials.
+            } catch {
+                try Task.checkCancellation()
+                // Offline or server hiccup: the old token still works until it expires.
+                if old.expiresAt > now() { return old }
+                throw error
+            }
         }
-        refreshing = task
-        defer { refreshing = nil }
-        let fresh = try await task.value
-        try store(fresh)
-        return fresh
+        do {
+            guard let fresh = try await reauthenticate?(), fresh.expiresAt > now() else {
+                throw SessionError.unauthorized
+            }
+            try Task.checkCancellation()
+            try store(fresh)
+            return fresh
+        } catch {
+            try Task.checkCancellation()
+            try? clearSession()
+            throw SessionError.unauthorized
+        }
     }
 
     private func store(_ session: StoredSession) throws {
