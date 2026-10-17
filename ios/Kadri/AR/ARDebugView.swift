@@ -95,7 +95,8 @@ struct ARDebugView: View {
                                 ("p2", [550, 350, 750, 600])
                             ], session: controller.session)
                             contourKeyframe = keyframe
-                            if showContours { tracker.start(keyframe: keyframe, placements: anchors.placements) }
+                            // Contours turn on automatically once parts are placed; the toggle can still hide them.
+                            if showContours { tracker.start(keyframe: keyframe, placements: anchors.placements) } else { showContours = true }
                             arLog.notice("ge.kadri placed unanchored=\(anchors.unanchored.joined(separator: ","), privacy: .public)")
                         }.disabled(controller.keyframe == nil)
                     }.buttonStyle(.borderedProminent)
