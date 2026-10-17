@@ -93,7 +93,9 @@ final class PhotoAutopilot {
             guard let comment = try? String(contentsOf: file("comment.txt"), encoding: .utf8)
                 .trimmingCharacters(in: .whitespacesAndNewlines), !comment.isEmpty else { return }
             session.select(image)
-            session.submit(comment)
+            // Same choice the describe panel would send (UserDefaults "photoAIProvider").
+            let provider = UserDefaults.standard.string(forKey: "photoAIProvider").flatMap(AIProvider.init(rawValue:)) ?? .astra
+            session.submit(comment, provider: provider)
         } else {
             guard session.model.canContinueWithPhoto else { return }
             session.continueWithPhoto(image)
