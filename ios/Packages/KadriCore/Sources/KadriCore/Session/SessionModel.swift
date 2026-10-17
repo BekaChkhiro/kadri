@@ -366,7 +366,8 @@ public final class SessionModel {
     }
 
     /// Stops in-flight work. Scanning goes back to describing (text kept), streaming steps back to
-    /// parts (parts kept); any other phase ends the session. From round 2 on, cancelling the new photo
+    /// parts (parts kept); finished steps are left unchanged. Other phases end the session.
+    /// From round 2 on, cancelling the new photo
     /// (scanning, parts or an error) returns to the previous round's finished steps instead.
     public func cancel() {
         #if DEBUG
@@ -374,6 +375,7 @@ public final class SessionModel {
             print("PHOTO_RESET_TRACE \(#function)\n" + Thread.callStackSymbols.joined(separator: "\n"))
         }
         #endif
+        if case .steps(_, _, streaming: false) = phase { return }
         let previous = phase
         stopWork()
         switch previous {

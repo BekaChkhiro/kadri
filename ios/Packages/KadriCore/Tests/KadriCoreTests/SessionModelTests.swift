@@ -367,7 +367,45 @@ final class SessionModelTests: XCTestCase {
         XCTAssertEqual(model.phase, .parts(Fixtures.parts))
     }
 
-    func testCancelAfterStreamingEndsSession() async {
+    func testCancelKeepsFinishedAnswerTurnWaitingForPhoto() async {
+        await assertCancelKeepsFinishedAnswerTurn(.needsPhoto(prompt: "ახლოდან", reason: "შუასადები არ ჩანს"))
+        XCTAssertTrue(model.canContinueWithPhoto)
+    }
+
+    func testCancelKeepsFinishedAnswerTurnWaitingForAnswer() async {
+        await assertCancelKeepsFinishedAnswerTurn(answerRequest)
+        XCTAssertTrue(model.canContinueWithAnswer)
+    }
+
+    private func assertCancelKeepsFinishedAnswerTurn(_ continuation: StepsContinuation) async {
+        await reachParts()
+        model.startSteps()
+        await finishTurn(0, continuation: answerRequest)
+        model.continueWithAnswer("კი")
+        await finishTurn(1, steps: Array(Fixtures.steps.prefix(2)), continuation: continuation)
+        model.next()
+        let phase = model.phase
+        let steps = model.allSteps
+        let turns = model.completedTurns
+        let answers = model.answers
+        let context = model.pendingContext
+        let index = model.currentStepIndex
+
+        model.cancel()
+
+        XCTAssertEqual(model.phase, phase)
+        XCTAssertEqual(model.allSteps, steps)
+        XCTAssertEqual(model.completedTurns, turns)
+        XCTAssertEqual(model.answers, answers)
+        XCTAssertEqual(model.pendingContext, context)
+        XCTAssertEqual(model.continuation, continuation)
+        XCTAssertEqual(model.currentStepIndex, index)
+        XCTAssertEqual(model.partsResult, Fixtures.parts)
+        XCTAssertEqual(model.stepOffset, 3)
+        XCTAssertEqual(model.round, 1)
+    }
+
+    func testCancelFromPartsEndsSession() async {
         await reachParts()
         model.cancel()
         XCTAssertEqual(model.phase, .idle)
