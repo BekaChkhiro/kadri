@@ -1,0 +1,87 @@
+{
+  "metric": "Approximate IoU against design polygons; NOT verified semantic ID accuracy",
+  "steps": [
+    {
+      "step": 1,
+      "focus_design_iou": 0.6950644451430368,
+      "avoid_design_iou": 0.0
+    },
+    {
+      "step": 2,
+      "focus_design_iou": 0.6950644451430368,
+      "avoid_design_iou": 0.0
+    },
+    {
+      "step": 3,
+      "focus_design_iou": 0.0,
+      "avoid_design_iou": 0.0
+    },
+    {
+      "step": 4,
+      "focus_design_iou": 0.4987641053197206,
+      "avoid_design_iou": 0.172972037053069
+    },
+    {
+      "step": 5,
+      "focus_design_iou": 0.5487746275828929,
+      "avoid_design_iou": 0.0
+    }
+  ],
+  "parts": [
+    {
+      "id": "oil_dipstick_handle",
+      "design_ious": {
+        "COVER": 0.014445140885152124,
+        "CAP": 0.0,
+        "DIP": 0.6950644451430368,
+        "COOLANT": 0.0,
+        "WASHER": 0.0,
+        "BATTERY": 0.0
+      }
+    },
+    {
+      "id": "oil_filler_cap",
+      "design_ious": {
+        "COVER": 0.03348823113445803,
+        "CAP": 0.4987641053197206,
+        "DIP": 0.0,
+        "COOLANT": 0.0,
+        "WASHER": 0.0,
+        "BATTERY": 0.0
+      }
+    },
+    {
+      "id": "engine_cover",
+      "design_ious": {
+        "COVER": 0.8382102012324961,
+        "CAP": 0.037432015345389674,
+        "DIP": 0.0014787342035217854,
+        "COOLANT": 0.0,
+        "WASHER": 0.0,
+        "BATTERY": 0.0
+      }
+    },
+    {
+      "id": "coolant_cap",
+      "design_ious": {
+        "COVER": 0.0,
+        "CAP": 0.0,
+        "DIP": 0.0,
+        "COOLANT": 0.08018509729473185,
+        "WASHER": 0.0,
+        "BATTERY": 0.0
+      }
+    },
+    {
+      "id": "washer_fluid_cap",
+      "design_ious": {
+        "COVER": 0.0,
+        "CAP": 0.0,
+        "DIP": 0.0,
+        "COOLANT": 0.0,
+        "WASHER": 0.4233749599743836,
+        "BATTERY": 0.0
+      }
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "method": "Equal NFKC/casefold/whitespace-normalized labels; greedy one-to-one box IoU >= 0.5; synonyms not matched",
+  "runs": 3,
+  "pairs": [
+    {
+      "part_jaccard": 0.6666666666666666,
+      "matched_box_iou": 0.974211937757879,
+      "step_jaccard": 0.7666666666666666,
+      "matches": [
+        {
+          "a": "oil_dipstick_handle",
+          "b": "oil_dipstick_handle",
+          "iou": 1.0
+        },
+        {
+          "a": "engine_cover",
+          "b": "engine_cover",
+          "iou": 0.9888268156424581
+        },
+        {
+          "a": "coolant_cap",
+          "b": "coolant_cap",
+          "iou": 0.9651162790697675
+        },
+        {
+          "a": "oil_filler_cap",
+          "b": "oil_filler_cap",
+          "iou": 0.9429046563192904
+        }
+      ]
+    },
+    {
+      "part_jaccard": 0.6666666666666666,
+      "matched_box_iou": 0.967716500172326,
+      "step_jaccard": 0.5666666666666667,
+      "matches": [
+        {
+          "a": "coolant_cap",
+          "b": "coolant_cap",
+          "iou": 0.9882352941176471
+        },
+        {
+          "a": "engine_cover",
+          "b": "engine_cover",
+          "iou": 0.9834527568617926
+        },
+        {
+          "a": "oil_dipstick_handle",
+          "b": "oil_dipstick_handle",
+          "iou": 0.9787234042553191
+        },
+        {
+          "a": "oil_filler_cap",
+          "b": "oil_filler_cap",
+          "iou": 0.9204545454545454
+        }
+      ]
+    },
+    {
+      "part_jaccard": 0.6666666666666666,
+      "matched_box_iou": 0.9746823792922518,
+      "step_jaccard": 0.6166666666666666,
+      "matches": [
+        {
+          "a": "engine_cover",
+          "b": "engine_cover",
+          "iou": 0.9908779586022972
+        },
+        {
+          "a": "oil_dipstick_handle",
+          "b": "oil_dipstick_handle",
+          "iou": 0.9787234042553191
+        },
+        {
+          "a": "coolant_cap",
+          "b": "coolant_cap",
+          "iou": 0.9764705882352941
+        },
+        {
+          "a": "oil_filler_cap",
+          "b": "oil_filler_cap",
+          "iou": 0.9526575660760964
+        }
+      ]
+    }
+  ],
+  "mean_part_jaccard": 0.6666666666666666,
+  "mean_step_jaccard": 0.6499999999999999,
+  "successful_runs": [
+    1,
+    2,
+    3
+  ],
+  "requested_runs": 3
+}

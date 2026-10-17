@@ -1,0 +1,100 @@
+{
+  "method": "Equal NFKC/casefold/whitespace-normalized labels; greedy one-to-one box IoU >= 0.5; synonyms not matched",
+  "runs": 3,
+  "pairs": [
+    {
+      "part_jaccard": 0.2,
+      "matched_box_iou": 0.9755784435273434,
+      "step_jaccard": 0.6285714285714286,
+      "matches": [
+        {
+          "a": "left_bar_grip",
+          "b": "left_bar_end",
+          "iou": 1.0
+        },
+        {
+          "a": "seat",
+          "b": "seat",
+          "iou": 0.9960474308300395
+        },
+        {
+          "a": "right_bar_grip",
+          "b": "right_bar_end",
+          "iou": 0.9306878997519906
+        }
+      ]
+    },
+    {
+      "part_jaccard": 0.6363636363636364,
+      "matched_box_iou": 0.9862022926165334,
+      "step_jaccard": 0.8933333333333333,
+      "matches": [
+        {
+          "a": "pull_bar",
+          "b": "pull_bar",
+          "iou": 0.9987484355444305
+        },
+        {
+          "a": "left_knee_pad",
+          "b": "left_knee_pad",
+          "iou": 0.9940119760479041
+        },
+        {
+          "a": "right_knee_pad",
+          "b": "right_knee_pad",
+          "iou": 0.9938650306748467
+        },
+        {
+          "a": "seat",
+          "b": "seat",
+          "iou": 0.9921259842519685
+        },
+        {
+          "a": "left_bar_grip",
+          "b": "left_grip",
+          "iou": 0.9876543209876543
+        },
+        {
+          "a": "weight_stack",
+          "b": "weight_stack",
+          "iou": 0.9799550860850037
+        },
+        {
+          "a": "right_bar_grip",
+          "b": "right_grip",
+          "iou": 0.9570552147239264
+        }
+      ]
+    },
+    {
+      "part_jaccard": 0.2,
+      "matched_box_iou": 0.9853837626990058,
+      "step_jaccard": 0.6285714285714286,
+      "matches": [
+        {
+          "a": "seat",
+          "b": "seat",
+          "iou": 0.9960474308300395
+        },
+        {
+          "a": "left_bar_end",
+          "b": "left_grip",
+          "iou": 0.9876543209876543
+        },
+        {
+          "a": "right_bar_end",
+          "b": "right_grip",
+          "iou": 0.9724495362793235
+        }
+      ]
+    }
+  ],
+  "mean_part_jaccard": 0.34545454545454546,
+  "mean_step_jaccard": 0.7168253968253969,
+  "successful_runs": [
+    1,
+    2,
+    3
+  ],
+  "requested_runs": 3
+}

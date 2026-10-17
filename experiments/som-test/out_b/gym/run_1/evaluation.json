@@ -1,0 +1,149 @@
+{
+  "metric": "Approximate IoU against design polygons; NOT verified semantic ID accuracy",
+  "steps": [
+    {
+      "step": 1,
+      "focus_design_iou": 0.7108106043242417,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 2,
+      "focus_design_iou": 0.6590401355827749,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 3,
+      "focus_design_iou": 0.250615932110594,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 4,
+      "focus_design_iou": 0.6350718106796788,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 5,
+      "focus_design_iou": 0.3046492659053834,
+      "avoid_design_iou": 1.0
+    }
+  ],
+  "parts": [
+    {
+      "id": "height_knob",
+      "design_ious": {
+        "BAR": 0.0,
+        "UPRIGHTS": 0.0,
+        "CABLE": 0.0,
+        "STACK": 0.0,
+        "PADS": 0.0,
+        "SEAT": 0.0,
+        "BASE": 0.022617706690696102,
+        "POST": 0.04042844487396312
+      }
+    },
+    {
+      "id": "seat",
+      "design_ious": {
+        "BAR": 0.0,
+        "UPRIGHTS": 0.051897502432695426,
+        "CABLE": 0.0,
+        "STACK": 0.0,
+        "PADS": 0.0,
+        "SEAT": 0.9172423013503276,
+        "BASE": 0.0,
+        "POST": 0.004070188133140376
+      }
+    },
+    {
+      "id": "left_knee_pad",
+      "design_ious": {
+        "BAR": 0.0,
+        "UPRIGHTS": 0.044652488043146435,
+        "CABLE": 0.0,
+        "STACK": 0.07837340555291393,
+        "PADS": 0.41729918817239786,
+        "SEAT": 0.0,
+        "BASE": 0.0,
+        "POST": 0.0
+      }
+    },
+    {
+      "id": "right_knee_pad",
+      "design_ious": {
+        "BAR": 0.0,
+        "UPRIGHTS": 0.04496294710661244,
+        "CABLE": 0.0,
+        "STACK": 0.09038695342304952,
+        "PADS": 0.4226410077442085,
+        "SEAT": 0.0,
+        "BASE": 0.0,
+        "POST": 0.0
+      }
+    },
+    {
+      "id": "weight_pin",
+      "design_ious": {
+        "BAR": 0.0,
+        "UPRIGHTS": 0.0,
+        "CABLE": 0.0,
+        "STACK": 0.007458847736625514,
+        "PADS": 0.0,
+        "SEAT": 0.0,
+        "BASE": 0.0,
+        "POST": 0.0
+      }
+    },
+    {
+      "id": "weight_stack",
+      "design_ious": {
+        "BAR": 0.0,
+        "UPRIGHTS": 0.0,
+        "CABLE": 0.0005479331959847456,
+        "STACK": 0.6589630999152608,
+        "PADS": 0.03133669726478858,
+        "SEAT": 0.0,
+        "BASE": 0.0,
+        "POST": 0.0
+      }
+    },
+    {
+      "id": "pull_bar",
+      "design_ious": {
+        "BAR": 0.5194045093880116,
+        "UPRIGHTS": 0.02144396247541801,
+        "CABLE": 0.03296529135189392,
+        "STACK": 0.0,
+        "PADS": 0.0,
+        "SEAT": 0.0,
+        "BASE": 0.0,
+        "POST": 0.0
+      }
+    },
+    {
+      "id": "left_bar_grip",
+      "design_ious": {
+        "BAR": 0.12658834811795733,
+        "UPRIGHTS": 0.0,
+        "CABLE": 0.0,
+        "STACK": 0.0,
+        "PADS": 0.0,
+        "SEAT": 0.0,
+        "BASE": 0.0,
+        "POST": 0.0
+      }
+    },
+    {
+      "id": "right_bar_grip",
+      "design_ious": {
+        "BAR": 0.1387375996887765,
+        "UPRIGHTS": 0.0,
+        "CABLE": 0.0,
+        "STACK": 0.0,
+        "PADS": 0.0,
+        "SEAT": 0.0,
+        "BASE": 0.0,
+        "POST": 0.0
+      }
+    }
+  ]
+}

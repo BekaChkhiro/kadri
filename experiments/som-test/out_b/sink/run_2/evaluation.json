@@ -1,0 +1,87 @@
+{
+  "metric": "Approximate IoU against design polygons; NOT verified semantic ID accuracy",
+  "steps": [
+    {
+      "step": 1,
+      "focus_design_iou": 0.21083563403766778,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 2,
+      "focus_design_iou": 0.0,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 3,
+      "focus_design_iou": 0.6985786298653004,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 4,
+      "focus_design_iou": 0.0,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 5,
+      "focus_design_iou": 0.1912340233005316,
+      "avoid_design_iou": 1.0
+    }
+  ],
+  "parts": [
+    {
+      "id": "left_valve_handle",
+      "design_ious": {
+        "TAILPIPE": 0.0,
+        "TRAP": 0.0,
+        "NUT": 0.0,
+        "WALL": 0.0,
+        "VALVE_R": 0.0,
+        "VALVE_L": 0.19174447675901832
+      }
+    },
+    {
+      "id": "right_valve_handle",
+      "design_ious": {
+        "TAILPIPE": 0.0,
+        "TRAP": 0.0,
+        "NUT": 0.0,
+        "WALL": 0.0,
+        "VALVE_R": 0.2328662270372115,
+        "VALVE_L": 0.0
+      }
+    },
+    {
+      "id": "upper_trap_nut",
+      "design_ious": {
+        "TAILPIPE": 0.45096081856750686,
+        "TRAP": 0.0,
+        "NUT": 0.0,
+        "WALL": 0.0,
+        "VALVE_R": 0.0,
+        "VALVE_L": 0.0
+      }
+    },
+    {
+      "id": "outlet_trap_nut",
+      "design_ious": {
+        "TAILPIPE": 0.0,
+        "TRAP": 0.0,
+        "NUT": 0.6985786298653004,
+        "WALL": 0.0,
+        "VALVE_R": 0.0,
+        "VALVE_L": 0.0
+      }
+    },
+    {
+      "id": "trap_body",
+      "design_ious": {
+        "TAILPIPE": 0.1578095679457862,
+        "TRAP": 0.6498929789088079,
+        "NUT": 0.03448221937259563,
+        "WALL": 0.0,
+        "VALVE_R": 0.0036295029020034218,
+        "VALVE_L": 0.0
+      }
+    }
+  ]
+}

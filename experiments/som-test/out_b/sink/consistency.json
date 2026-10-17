@@ -1,0 +1,95 @@
+{
+  "method": "Equal NFKC/casefold/whitespace-normalized labels; greedy one-to-one box IoU >= 0.5; synonyms not matched",
+  "runs": 3,
+  "pairs": [
+    {
+      "part_jaccard": 0.5714285714285714,
+      "matched_box_iou": 0.8488117659033779,
+      "step_jaccard": 0.55,
+      "matches": [
+        {
+          "a": "upper_trap_nut",
+          "b": "upper_trap_nut",
+          "iou": 0.990909090909091
+        },
+        {
+          "a": "right_valve_handle",
+          "b": "right_valve_handle",
+          "iou": 0.8600416233090531
+        },
+        {
+          "a": "left_valve_handle",
+          "b": "left_valve_handle",
+          "iou": 0.8433179723502304
+        },
+        {
+          "a": "trap_body",
+          "b": "trap_body",
+          "iou": 0.7009783770451369
+        }
+      ]
+    },
+    {
+      "part_jaccard": 0.5714285714285714,
+      "matched_box_iou": 0.9043721245857652,
+      "step_jaccard": 0.45,
+      "matches": [
+        {
+          "a": "upper_trap_nut",
+          "b": "upper_union_nut",
+          "iou": 0.990990990990991
+        },
+        {
+          "a": "trap_body",
+          "b": "trap_body",
+          "iou": 0.968167890385616
+        },
+        {
+          "a": "left_valve_handle",
+          "b": "left_valve_handle",
+          "iou": 0.8448540706605223
+        },
+        {
+          "a": "right_valve_handle",
+          "b": "right_valve_handle",
+          "iou": 0.8134755463059313
+        }
+      ]
+    },
+    {
+      "part_jaccard": 0.6666666666666666,
+      "matched_box_iou": 0.874459311794618,
+      "step_jaccard": 0.75,
+      "matches": [
+        {
+          "a": "upper_trap_nut",
+          "b": "upper_union_nut",
+          "iou": 0.9819819819819819
+        },
+        {
+          "a": "left_valve_handle",
+          "b": "left_valve_handle",
+          "iou": 0.9660107334525939
+        },
+        {
+          "a": "right_valve_handle",
+          "b": "right_valve_handle",
+          "iou": 0.8544249063130586
+        },
+        {
+          "a": "trap_body",
+          "b": "trap_body",
+          "iou": 0.6954196254308376
+        }
+      ]
+    }
+  ],
+  "mean_part_jaccard": 0.6031746031746031,
+  "mean_step_jaccard": 0.5833333333333334,
+  "successful_runs": [
+    1,
+    2,
+    3
+  ],
+  "requested_runs": 3
+}

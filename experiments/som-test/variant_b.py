@@ -106,10 +106,11 @@ def request_b(client, model, source, truth, destination):
         "ინსტრუქციის ზომები/დოზები ფოტოდან დადასტურებულად არ მიიჩნიო. ეს კვლევაა, არა პროფესიული რჩევა.\n"
         + json.dumps(instructions, ensure_ascii=False)
     )
+    effort = os.getenv("REASONING_EFFORT", "high")
     save_json(destination / "request.json", {"model": model, "prompt": prompt, "schema": schema,
-                                             "original_image": str(source), "reasoning_effort": "high"})
+                                             "original_image": str(source), "reasoning_effort": effort})
     encoded = base64.b64encode(source.read_bytes()).decode()
-    kwargs = {"reasoning": {"effort": "high"}} if model.startswith(("gpt-5", "gpt-6")) else {}
+    kwargs = {"reasoning": {"effort": effort}} if model.startswith(("gpt-5", "gpt-6")) else {}
     start = time.perf_counter()
     response = client.responses.create(
         model=model, store=False, max_output_tokens=12000, **kwargs,

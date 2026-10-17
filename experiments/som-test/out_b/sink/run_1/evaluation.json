@@ -1,0 +1,98 @@
+{
+  "metric": "Approximate IoU against design polygons; NOT verified semantic ID accuracy",
+  "steps": [
+    {
+      "step": 1,
+      "focus_design_iou": 0.22596245799065548,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 2,
+      "focus_design_iou": 0.0,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 3,
+      "focus_design_iou": 0.698676044683492,
+      "avoid_design_iou": 0.0
+    },
+    {
+      "step": 4,
+      "focus_design_iou": 0.0,
+      "avoid_design_iou": 0.0
+    },
+    {
+      "step": 5,
+      "focus_design_iou": 0.18984609504109004,
+      "avoid_design_iou": 0.0
+    }
+  ],
+  "parts": [
+    {
+      "id": "left_valve_handle",
+      "design_ious": {
+        "TAILPIPE": 0.0,
+        "TRAP": 0.0,
+        "NUT": 0.0,
+        "WALL": 0.0,
+        "VALVE_R": 0.0,
+        "VALVE_L": 0.21490892392469005
+      }
+    },
+    {
+      "id": "right_valve_handle",
+      "design_ious": {
+        "TAILPIPE": 0.0,
+        "TRAP": 0.0,
+        "NUT": 0.0,
+        "WALL": 0.0,
+        "VALVE_R": 0.23870588235294118,
+        "VALVE_L": 0.0
+      }
+    },
+    {
+      "id": "upper_trap_nut",
+      "design_ious": {
+        "TAILPIPE": 0.4508927558590648,
+        "TRAP": 0.0,
+        "NUT": 0.0,
+        "WALL": 0.0,
+        "VALVE_R": 0.0,
+        "VALVE_L": 0.0
+      }
+    },
+    {
+      "id": "trap_body",
+      "design_ious": {
+        "TAILPIPE": 0.0,
+        "TRAP": 0.7777754957434354,
+        "NUT": 0.041921875442388096,
+        "WALL": 0.0,
+        "VALVE_R": 0.00026058757672856427,
+        "VALVE_L": 0.0
+      }
+    },
+    {
+      "id": "outlet_nut",
+      "design_ious": {
+        "TAILPIPE": 0.0,
+        "TRAP": 0.0,
+        "NUT": 0.698676044683492,
+        "WALL": 0.0,
+        "VALVE_R": 0.0,
+        "VALVE_L": 0.0
+      }
+    },
+    {
+      "id": "outlet_pipe",
+      "design_ious": {
+        "TAILPIPE": 0.0,
+        "TRAP": 0.0,
+        "NUT": 0.013932168633521641,
+        "WALL": 0.45383687806924033,
+        "VALVE_R": 0.0,
+        "VALVE_L": 0.0
+      }
+    }
+  ]
+}
