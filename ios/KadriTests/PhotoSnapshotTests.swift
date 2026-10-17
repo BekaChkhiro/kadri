@@ -27,17 +27,20 @@ final class PhotoSnapshotTests: XCTestCase {
             context.cgContext.rotate(by: .pi / 2)
             photo.draw(in: CGRect(origin: .zero, size: photo.size))
         }
-        for index in 0...9 {
+        for index in 0...10 {
+            let request = index == 10
             let waiting = index == 5
             let completed = index == 6
-            let stepIndex = min(index, MockKadriAPI.sampleSteps.count - 1)
+            let stepIndex = request ? 2 : min(index, MockKadriAPI.sampleSteps.count - 1)
             let emptyFocus = index == 7 || index == 8
             let step = emptyFocus ? Step(index: 5, title: "გადაამოწმე გაჟონვა", text: "მთელი ფოტო ჩანს. შეამოწმე ყველა შეერთება.", focus: []) : MockKadriAPI.sampleSteps[stepIndex]
             let screen = PhotoResultView(image: index == 8 ? landscape : photo, parts: result.parts, meshes: waiting ? [] : meshes,
                 step: waiting ? nil : step, index: waiting ? 0 : stepIndex,
-                count: waiting ? 0 : MockKadriAPI.sampleSteps.count, streaming: waiting || index == 9, object: result.object,
+                count: waiting ? 0 : request ? 3 : MockKadriAPI.sampleSteps.count, streaming: waiting || index == 9, object: result.object,
                 segmentationStatus: waiting ? "ვასკანერებ…" : nil,
-                close: {}, previous: {}, next: {}, finish: {}, completed: completed)
+                close: {}, previous: {}, next: {}, finish: {}, completed: completed,
+                continuation: request ? .needsPhoto(prompt: MockKadriAPI.round2Prompt, reason: "შუასადების მდგომარეობა ამ ფოტოზე არ ჩანს.") : nil,
+                initiallyShowingPhotoRequest: request)
                 .environment(\.meshWrapReduceMotion, true)
             let host = UIHostingController(rootView: screen)
             let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
@@ -57,7 +60,7 @@ final class PhotoSnapshotTests: XCTestCase {
             XCTAssertTrue(rendered)
             let data = try XCTUnwrap(image.pngData())
             XCTAssertGreaterThan(data.count, 1000)
-            let name = index == 7 ? "empty-focus-portrait" : index == 8 ? "empty-focus-landscape" : index == 9 ? "preparing-next" : completed ? "done" : waiting ? "waiting" : index == 4 ? "step-last" : "step-\(index + 1)"
+            let name = request ? "photo-request" : index == 7 ? "empty-focus-portrait" : index == 8 ? "empty-focus-landscape" : index == 9 ? "preparing-next" : completed ? "done" : waiting ? "waiting" : index == 4 ? "step-last" : "step-\(index + 1)"
             try data.write(to: directory.appendingPathComponent("\(name).png"))
             let attachment = XCTAttachment(image: image)
             attachment.name = name

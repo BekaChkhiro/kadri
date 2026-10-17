@@ -26,33 +26,60 @@ struct PhotoResultView: View {
     var picked: Binding<PhotosPickerItem?>? = nil
     var continueDemo: (() -> Void)? = nil
     var cameraAvailable = true
+    var initiallyShowingPhotoRequest = false
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var showingPhotoRequest = false
+    /// nil until the user toggles it, so `initiallyShowingPhotoRequest` seeds the first render.
+    @State private var photoRequestToggle: Bool?
+
+    private var showingPhotoRequest: Bool {
+        get { photoRequestToggle ?? initiallyShowingPhotoRequest }
+        nonmutating set { photoRequestToggle = newValue }
+    }
 
     private var photoRequest: (prompt: String, reason: String)? {
         if case .needsPhoto(let prompt, let reason) = continuation { return (prompt, reason) }
         return nil
     }
 
+    /// The next photo is framed on the whole first one, so the request state drops the zoom and annotations.
+    private var requesting: Bool { !completed && showingPhotoRequest && photoRequest != nil }
+
     var body: some View {
-        PhotoScreenLayout(title: object, close: close, newPhoto: newPhoto) {
+        PhotoScreenLayout(title: object, subtitle: requesting ? "ნაბიჯი \(count) დასრულდა" : nil,
+                          close: close, newPhoto: newPhoto) {
             GeometryReader { proxy in
                 let sourceBoxes = PhotoGeometry.boxes(parts: parts, imageSize: image.size, transform: .identity)
                 let transform = PhotoGeometry.focusTransform(imageSize: image.size, viewport: proxy.size,
                     visibleRect: CGRect(origin: .zero, size: proxy.size),
-                    focusBoxes: completed ? [] : (step?.focus ?? []).compactMap { sourceBoxes[$0] })
+                    focusBoxes: completed || requesting ? [] : (step?.focus ?? []).compactMap { sourceBoxes[$0] })
                 ZStack(alignment: .topLeading) {
                     Theme.Colors.ink[800]!
-                    PhotoFocusedImageLayer(image: image, parts: parts, meshes: meshes, step: completed ? nil : step,
+                    PhotoFocusedImageLayer(image: image, parts: parts, meshes: meshes,
+                        step: completed || requesting ? nil : step,
                         viewport: proxy.size, visibleHeight: proxy.size.height,
                         scale: transform.a, translationX: transform.tx, translationY: transform.ty)
                         .animation(reduceMotion ? nil : .spring(duration: 0.55), value: transform)
-                    HStack(spacing: 6) {
-                        PhotoChip(text: segmentationStatus ?? "\(parts.count) ნაწილი", symbol: "viewfinder")
-                        if totalRounds > 1 { PhotoChip(text: "ფოტო \(round)", symbol: "photo.stack") }
+                    if requesting {
+                        Theme.Colors.ink[900]!.opacity(0.4).accessibilityHidden(true)
+                        if let step {
+                            let boxes = PhotoGeometry.boxes(parts: parts, imageSize: image.size, transform: transform)
+                            let focused = step.focus.compactMap { boxes[$0] }
+                            if let union = focused.first.map({ focused.dropFirst().reduce($0) { $0.union($1) } }) {
+                                PhotoRequestFrame(rect: union.insetBy(dx: -8, dy: -8)
+                                                    .intersection(CGRect(origin: .zero, size: proxy.size).insetBy(dx: 2, dy: 2)),
+                                                  label: parts.filter { step.focus.contains($0.id) }.map(\.name)
+                                                    .joined(separator: ", "))
+                            }
+                        }
+                        PhotoChip(text: "ფოტო \(round)", symbol: "photo.stack").padding(12)
+                    } else {
+                        HStack(spacing: 6) {
+                            PhotoChip(text: segmentationStatus ?? "\(parts.count) ნაწილი", symbol: "viewfinder")
+                            if totalRounds > 1 { PhotoChip(text: "ფოტო \(round)", symbol: "photo.stack") }
+                        }
+                        .padding(12)
                     }
-                    .padding(12)
                 }
             }
         } panel: {
@@ -78,6 +105,40 @@ struct PhotoResultView: View {
         }
         .onChange(of: round) { showingPhotoRequest = false }
         .onChange(of: index) { showingPhotoRequest = false }
+    }
+}
+
+/// Where the next photo should look, drawn on the dimmed first photo with the focused parts' names above it.
+private struct PhotoRequestFrame: View {
+    let rect: CGRect
+    let label: String
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var appeared = false
+
+    var body: some View {
+        RoundedRectangle(cornerRadius: 22)
+            .strokeBorder(.white, style: StrokeStyle(lineWidth: 2.5, dash: [6, 5]))
+            .frame(width: rect.width, height: rect.height)
+            .overlay(alignment: .top) {
+                if !label.isEmpty {
+                    // Centred on the top edge, nudged down when the frame touches the photo's top.
+                    Text(label).font(.kadri(12.5, weight: .semibold)).foregroundStyle(Theme.Colors.ink[900]!)
+                        .lineLimit(1)
+                        .padding(.horizontal, 12).padding(.vertical, 4)
+                        .background(.white, in: Capsule())
+                        .shadow(Theme.Shadow.card)
+                        .alignmentGuide(.top) { $0[VerticalAlignment.center] }
+                        .offset(y: max(0, 16 - rect.minY))
+                        .fixedSize()
+                }
+            }
+            .scaleEffect(appeared || reduceMotion ? 1 : 1.08)
+            .opacity(appeared ? 1 : 0)
+            .position(x: rect.midX, y: rect.midY)
+        .accessibilityHidden(true)
+        .onAppear {
+            withAnimation(.timingCurve(0.22, 1, 0.36, 1, duration: reduceMotion ? 0.15 : 0.45)) { appeared = true }
+        }
     }
 }
 

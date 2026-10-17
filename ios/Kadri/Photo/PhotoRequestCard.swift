@@ -12,22 +12,59 @@ struct PhotoRequestCard: View {
     var demo: (() -> Void)?
     var back: () -> Void
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var appeared = false
+
+    /// General framing advice: the request names the part, but nothing on the wire says how to frame it.
+    private static let checklist = [("ნაწილი ცენტრში", "scope"), ("20–30 სმ-დან", "ruler"), ("კარგი განათება", "sun.max")]
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("ფოტო \(round)")
-                        .font(.kadri(13, weight: .semibold)).foregroundStyle(Theme.Colors.brand[600]!)
-                    Text(prompt).font(.kadri(21, weight: .semibold)).tracking(-0.3)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .accessibilityAddTraits(.isHeader).padding(.top, 10)
-                    Text(reason).font(.kadri(14.5)).lineSpacing(4)
-                        .foregroundStyle(Theme.Colors.ink[600]!)
-                        .fixedSize(horizontal: false, vertical: true).padding(.top, 6)
+                    HStack(alignment: .top, spacing: 14) {
+                        illustration
+                        VStack(alignment: .leading, spacing: 0) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "camera").font(.system(size: 14)).accessibilityHidden(true)
+                                Text("ფოტო \(round)").font(.kadri(12, weight: .semibold))
+                            }
+                            .foregroundStyle(Theme.Colors.brand[700]!)
+                            .padding(.horizontal, 8).padding(.vertical, 2)
+                            .background(Theme.Colors.brand[50]!, in: Capsule())
+                            Text(prompt).font(.kadri(20, weight: .semibold)).tracking(-0.3).lineSpacing(2)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .accessibilityAddTraits(.isHeader).padding(.top, 6)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                    if !reason.isEmpty {
+                        Text(reason).font(.kadri(14.5)).lineSpacing(4)
+                            .foregroundStyle(Theme.Colors.ink[600]!)
+                            .fixedSize(horizontal: false, vertical: true).padding(.top, 12)
+                    }
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 3), spacing: 6) {
+                        ForEach(Self.checklist, id: \.0) { text, symbol in
+                            VStack(spacing: 4) {
+                                Image(systemName: symbol).font(.system(size: 18))
+                                    .foregroundStyle(Theme.Colors.brand[600]!).accessibilityHidden(true)
+                                Text(text).font(.kadri(12, weight: .semibold)).foregroundStyle(Theme.Colors.ink[700]!)
+                                    .multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .padding(.horizontal, 4).padding(.vertical, 10)
+                            .background(.white, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
+                            .shadow(Theme.Shadow.card)
+                            .accessibilityElement(children: .combine)
+                        }
+                    }
+                    .padding(.top, 12)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 16).padding(.bottom, 8)
             }
             .scrollBounceBehavior(.basedOnSize)
+            Spacer(minLength: 0)
             VStack(spacing: 8) {
                 Button(action: camera) {
                     HStack(spacing: 8) {
@@ -40,8 +77,13 @@ struct PhotoRequestCard: View {
                 .disabled(!cameraAvailable)
                 HStack(spacing: 8) {
                     if let picked {
-                        PhotosPicker(selection: picked, matching: .images) { Text("გალერეიდან") }
-                            .buttonStyle(SessionButtonStyle(primary: false))
+                        PhotosPicker(selection: picked, matching: .images) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "photo.on.rectangle").font(.system(size: 16))
+                                Text("გალერეიდან")
+                            }
+                        }
+                        .buttonStyle(SessionButtonStyle(primary: false))
                     }
                     #if DEBUG && targetEnvironment(simulator)
                     if let demo {
@@ -52,9 +94,25 @@ struct PhotoRequestCard: View {
                         .buttonStyle(SessionButtonStyle(primary: false)).fixedSize(horizontal: true, vertical: false)
                         .accessibilityHint("ნაბიჯებს დაუბრუნდება")
                 }
-            }.padding(.top, 16)
+            }.padding(.top, 16).padding(.horizontal, 16)
         }
         .foregroundStyle(Theme.Colors.ink[900]!)
-        .padding(16)
+        .padding(.vertical, 16)
+        .onAppear {
+            withAnimation(reduceMotion ? .easeOut(duration: 0.15) : .easeOut(duration: 0.45).delay(0.1)) { appeared = true }
+        }
+    }
+
+    @ViewBuilder private var illustration: some View {
+        if let image = UIImage(named: "illo-another-angle") {
+            Image(uiImage: image).resizable().scaledToFill()
+                .frame(width: 104, height: 104)
+                .background(.white)
+                .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
+                .shadow(Theme.Shadow.card)
+                .opacity(appeared ? 1 : 0)
+                .scaleEffect(appeared || reduceMotion ? 1 : 0.9)
+                .accessibilityHidden(true)
+        }
     }
 }
