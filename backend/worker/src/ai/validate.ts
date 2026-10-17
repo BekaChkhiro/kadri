@@ -131,7 +131,9 @@ export function shortLabel(name: string): string {
  * title, texts within LIMITS, ≤3 tools/markers, tools split into names and
  * toolItems, unknown icons as null, and a marker on the focus part
  * when the model sent none. Every synthesized reference is focus[0], which
- * stepRuleError checks anyway.
+ * stepRuleError checks anyway. Also repairs what is safe to repair (one
+ * warning each): duplicate focus/avoid IDs, an ID in both (focus wins, its
+ * danger marker turns brand), and arrows whose type/dir do not match.
  */
 export function tidyStep(step: ModelStep, labels: Map<string, string>): Step {
   const optional = (value: string | null | undefined, max: number) => {
@@ -142,19 +144,36 @@ export function tidyStep(step: ModelStep, labels: Map<string, string>): Step {
   const toolItems = step.tools
     .slice(0, LIMITS.tools)
     .map((t) => ({ label: clampText(t.name, LIMITS.tool), icon: known(TOOL_ICONS, t.icon) }));
-  let markers = step.markers.slice(0, LIMITS.markers).map((m) => ({ ...m, label: clampText(m.label, LIMITS.markerLabel) }));
-  const target = step.focus[0];
+  const focus = [...new Set(step.focus)];
+  if (focus.length !== step.focus.length) console.warn("ai/steps tidy: duplicate focus ID dropped");
+  const uniqueAvoid = [...new Set(step.avoid)];
+  if (uniqueAvoid.length !== step.avoid.length) console.warn("ai/steps tidy: duplicate avoid ID dropped");
+  // The step's target wins: an ID in both lists stays focus only.
+  const avoid = uniqueAvoid.filter((id) => !focus.includes(id));
+  const overlap = uniqueAvoid.filter((id) => focus.includes(id));
+  if (overlap.length) console.warn("ai/steps tidy: ID in both focus and avoid kept as focus");
+  const arrows = step.arrows.filter((a) => (a.type === "rotate") === (a.dir === "cw" || a.dir === "ccw"));
+  if (arrows.length !== step.arrows.length) console.warn("ai/steps tidy: arrow with incompatible type/dir dropped");
+  let markers = step.markers.slice(0, LIMITS.markers).map((m) => ({
+    ...m,
+    label: clampText(m.label, LIMITS.markerLabel),
+    tone: overlap.includes(m.part) && m.tone === "danger" ? "brand" : m.tone,
+  }));
+  const target = focus[0];
   if (markers.length === 0 && target !== undefined) {
     markers = [
       {
         part: target,
         label: shortLabel(labels.get(target) ?? ""),
-        tone: step.avoid.includes(target) ? "danger" : "brand",
+        tone: avoid.includes(target) ? "danger" : "brand",
       },
     ];
   }
   return {
     ...step,
+    focus,
+    avoid,
+    arrows,
     title: clampText(title || step.title, LIMITS.title),
     text: clampText(step.text, LIMITS.text),
     markers,

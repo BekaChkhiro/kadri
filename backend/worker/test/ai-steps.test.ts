@@ -3,7 +3,7 @@ import { ApiError } from "../src/errors";
 import { promptSteps } from "../src/ai/prompts";
 import { AstraProvider } from "../src/ai/provider";
 import { LIMITS, schemaParts, schemaSteps, softened, STEP_ICONS, stepItemSchema, validateSchema } from "../src/ai/schema";
-import { clampText, shortLabel, tidyStep } from "../src/ai/validate";
+import { clampText, shortLabel, stepRuleError, tidyStep } from "../src/ai/validate";
 import { StepsStreamParser } from "../src/ai/stepsParser";
 import { readSse, sseEvent, SSE_HEADERS } from "../src/sse";
 import { call, mockFetch, responseBody } from "./ai-helpers";
@@ -198,6 +198,31 @@ describe("tidyStep", () => {
     expect(tidyStep(step1, labels).icon).toBe("rotate_cw");
   });
 
+  it("repairs duplicate IDs, focus/avoid overlap and mismatched arrows", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const dup = tidyStep({ ...step1, focus: ["p1", "p1"], avoid: ["p2", "p2"] }, labels);
+    expect(dup.focus).toEqual(["p1"]);
+    expect(dup.avoid).toEqual(["p2"]);
+    const overlap = tidyStep(
+      { ...step1, focus: ["p1"], avoid: ["p1", "p2"], markers: [{ part: "p1", label: "ონკანი", tone: "danger" }, { part: "p2", label: "ქანჩი", tone: "danger" }] },
+      labels,
+    );
+    expect(overlap.focus).toEqual(["p1"]);
+    expect(overlap.avoid).toEqual(["p2"]);
+    expect(overlap.markers.map((m) => m.tone)).toEqual(["brand", "danger"]);
+    expect(stepRuleError(overlap, labels)).toBeNull();
+    const arrows = [{ part: "p1", type: "rotate", dir: "up" }, { part: "p1", type: "push", dir: "cw" }, { part: "p1", type: "rotate", dir: "ccw" }];
+    expect(tidyStep({ ...step1, arrows: arrows.slice(0, 1) }, labels).arrows).toEqual([]);
+    expect(tidyStep({ ...step1, arrows }, labels).arrows).toEqual([arrows[2]]);
+    expect(warn).toHaveBeenCalledTimes(5);
+  });
+
+  it("stepRuleError still rejects a reference without a recognized label", () => {
+    const blank = new Map([["p1", "  "], ["p2", "სიფონის ქანჩი"]]);
+    expect(stepRuleError(tidyStep(step1, blank), blank)).toBe("Referenced ID must have a recognized label");
+    expect(stepRuleError(tidyStep(step1, labels), labels)).toBeNull();
+  });
+
   it("clampText and shortLabel", () => {
     expect(clampText("  მოკლე   ტექსტი ", 40)).toBe("მოკლე ტექსტი");
     expect([...clampText("ა".repeat(50), 40)].length).toBe(40);
@@ -292,8 +317,24 @@ describe("POST /ai/steps", () => {
     expect(events.map((e) => e.event)).toEqual(["step", "step", "done"]);
   });
 
+  it("repairs a step whose ID is both focus and avoid instead of failing", async () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    const overlapping = { steps: [{ ...step1, avoid: ["p1", "p2"] }, step2], unknown_parts: [] };
+    mockFetch(() => new Response(new ReadableStream({
+      start: (c) => {
+        c.enqueue(delta(JSON.stringify(overlapping)));
+        c.enqueue(frame({ type: "response.completed", response: responseBody(overlapping) }));
+        c.close();
+      },
+    })));
+    const events = await collect(await postSteps({ object: "სიფონი", parts, instructions }));
+    expect(events.map((e) => e.event)).toEqual(["step", "step", "done"]);
+    expect(events[0]!.data.focus).toEqual(["p1"]);
+    expect(events[0]!.data.avoid).toEqual(["p2"]);
+  });
+
   it("sends a Georgian error event for an invalid streamed step", async () => {
-    const bad = { steps: [{ ...step1, avoid: ["p1"] }, step2], unknown_parts: [] };
+    const bad = { steps: [{ ...step1, title: "" }, step2], unknown_parts: [] };
     mockFetch(() => new Response(new ReadableStream({ start: (c) => { c.enqueue(delta(JSON.stringify(bad))); c.close(); } })));
     const events = await collect(await postSteps({ object: "სიფონი", parts, instructions }));
     expect(events.map((e) => e.event)).toEqual(["error"]);
