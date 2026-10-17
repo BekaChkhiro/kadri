@@ -7,7 +7,7 @@ import { router } from "../src/index";
 import { recordUsage } from "../src/limits";
 import { issueSession } from "../src/session";
 import { readSse } from "../src/sse";
-import { b64, fakeJpeg, mockFetch, responseBody } from "./ai-helpers";
+import { b64, diagnosticContinuation, fakeJpeg, mockFetch, responseBody } from "./ai-helpers";
 import { env, migrate, testEnv } from "./auth-helpers";
 
 const aiEnv: Env = { ...testEnv, AI_PROVIDER: "astra", OPENAI_API_KEY: "test-key" };
@@ -405,4 +405,44 @@ describe("one paid retry", () => {
     expect(spy).toHaveBeenCalledTimes(1);
     expect((await usageOf(sub)).map(r => r.status)).toEqual(["error"]);
   });
+});
+
+
+it("diagnostic follow-ups keep steps usage and honor the configured answer limit", async () => {
+  const sub = "wiring-diagnostic-followup";
+  const auth = await token(sub);
+  await recordUsage(env, {
+    userId: sub, stage: "parts", provider: "astra", model: "gpt-6-astra",
+    inputTokens: 0, outputTokens: 0, reasoningTokens: 0, costUsd: 0, latencyMs: 1, status: "ok",
+  });
+  const sent: any[] = [];
+  mockFetch((_url, init) => {
+    sent.push(JSON.parse(String(init.body)));
+    const result = { ...stepsResult, continuation: diagnosticContinuation() };
+    return new Response(new ReadableStream({ start(c) {
+      c.enqueue(frame({ type: "response.output_text.delta", delta: JSON.stringify(result) } as any));
+      c.enqueue(frame({ type: "response.completed", response: responseBody(result) } as any));
+      c.close();
+    } }), { headers: { "content-type": "text/event-stream" } });
+  });
+  const body = {
+    object: "ძრავი", parts, instructions: "არ მუშაობს", sessionId: "diagnostic-1",
+    capabilities: ["needs_answer", "needs_measurement", "summary"],
+    context: { round: 1, doneSteps: ["შეამოწმე"], answers: [{ question: "ჩართულია?", answer: "დიახ" }] },
+  };
+  const overrides = { ANSWER_TURN_LIMIT: "2", DAILY_SESSION_LIMIT: "1" };
+  const first = await events(await post("/ai/steps", body, auth, overrides));
+  expect(first.at(-1)?.data.continuation.kind).toBe("needs_answer");
+  const second = await events(await post("/ai/steps", {
+    ...body, context: { ...body.context, answers: [...body.context.answers, { question: "ხმაური?", answer: "არა" }] },
+  }, auth, overrides));
+  expect(second.at(-1)?.data.continuation).toEqual({ kind: "complete", cause: null, summary: null });
+  expect(sent[0].text.format.schema.properties.continuation.properties.kind.enum).toContain("needs_answer");
+  expect(sent[1].text.format.schema.properties.continuation.properties.kind.enum).not.toContain("needs_answer");
+  expect(sent[1].input[0].content[0].text).toContain("კითხვა აღარ შეიძლება");
+  const rows = await usageOf(sub);
+  expect(rows.map(row => row.stage)).toEqual(["parts", "steps", "steps"]);
+  expect(rows.slice(1)).toMatchObject([
+    { status: "ok", session_id: "diagnostic-1" }, { status: "ok", session_id: "diagnostic-1" },
+  ]);
 });

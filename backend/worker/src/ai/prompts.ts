@@ -7,7 +7,8 @@
  * longer text.
  */
 import { pyDumps } from "./schema";
-import { MAX_ROUNDS } from "./validate";
+import { MAX_ROUNDS, type ContinuationOptions } from "./validate";
+import { DEFAULT_ANSWER_TURN_LIMIT } from "../limits";
 
 /** Step instructions as the experiment sends them, or free text from the phone. */
 export type Instructions = string | Array<{ title: string; text: string }>;
@@ -65,9 +66,46 @@ export function promptParts(instructions: Instructions, context?: Context): stri
  * When the steps call asks for another photo (`continuation`). The last
  * allowed round may only complete; schemaSteps enforces the same.
  */
-function continuationRule(context: Context | undefined, maxRound: number, count?: number): string {
+function continuationRule(context: Context | undefined, maxRound: number, count?: number, opts: ContinuationOptions = {}): string {
   const round = context?.round ?? 1;
   let rule = "";
+  const caps = opts.capabilities ?? [];
+  if (caps.some(c => ["needs_answer", "needs_measurement", "summary"].includes(c))) {
+    if (context) {
+      rule += `ეს მე-${round} ფოტოა. შესრულებული ნაბიჯები არ გაიმეორო: ${doneList(context.doneSteps)}. `;
+      if (context.photoPrompt) rule += `ფოტო გადაღებულია თხოვნით ${quoted(context.photoPrompt)}. `;
+      if (context.answers?.length) {
+        rule += "მომხმარებელმა უპასუხა. პასუხები: " + context.answers.map(a =>
+          `${quoted(a.question)} → ${quoted(a.answer + (a.unit ? ` (${a.unit})` : ""))}`
+        ).join("; ") + ". გაითვალისწინე ყველა პასუხი. ";
+      }
+    }
+    rule += "ჯერ შიგნით შეადგინე სავარაუდო მიზეზების ჰიპოთეზების სია: დაალაგე ალბათობით, შემოწმების სიიაფით და უსაფრთხოებით. " +
+      "ჰიპოთეზების სია და მსჯელობა JSON-ში არ გამოიტანო. ყოველი ნაბიჯი ერთ ჰიპოთეზას ამოწმებს ან გამორიცხავს; " +
+      "text-ში მოკლედ თქვი, რას ნიშნავს თუ X / თუ არა. " +
+      "ფოტოზე ხილული მდგომარეობა დაასახელე text-ში (მაგ. „ქვედა ავტომატი ჩამოვარდნილია“), მხოლოდ თუ ნამდვილად ჩანს. " +
+      "instructions-იდან და answers-იდან უკვე ნაცადი არ გაიმეორო; focus აირჩიე 1–2 სამიზნე ნაწილი, არა ყველა. " +
+      `თავისუფალ ტექსტზე დაწერე 2–4 ნაბიჯი შემოწმების წერტილამდე (არაუმეტეს ${count ?? 5}); მოცემულ ნაბიჯთა სიაზე დაიცავი სქემის რაოდენობა. ` +
+      "შემდეგ აირჩიე მხოლოდ სქემით ნებადართული continuation.kind. გამოუყენებელი ველები null, options ცარიელი სია. ";
+    const atLimit = (context?.answers?.length ?? 0) >= (opts.answerTurnLimit ?? DEFAULT_ANSWER_TURN_LIMIT);
+    if (atLimit) {
+      rule += round >= maxRound
+        ? "კითხვა და ახალი ფოტო აღარ შეიძლება: დაასრულე complete-ით. "
+        : "კითხვა აღარ შეიძლება: დაასრულე complete-ით ან needs_photo-თი. ";
+    } else {
+      if (caps.includes("needs_answer")) rule += "needs_answer: როცა პასუხი თვალით/ყურით შეიმჩნევა; question ≤80, options 2–4 განსხვავებული ვარიანტი თითო ≤24, „სხვა“ allowOther=true-ით, reason ≤100 ან null. ";
+      if (caps.includes("needs_measurement")) rule += "needs_measurement: როცა რიცხვია საჭირო; question ≤80, unit არაცარიელი ≤12 (mA, V, ბარი, °C, dBm), min/max დასაშვები საზღვრები ან null, how ≤100 — როგორ გაზომოს უსაფრთხოდ, reason ≤100 ან null. ";
+    }
+    rule += round >= maxRound
+      ? "ახალი ფოტო აღარ შეიძლება: needs_photo აკრძალულია. "
+      : "needs_photo: როცა ხილული მდგომარეობა გჭირდება (უკანა მხარე, მულტიმეტრის ჩვენება, მოხსნილი ნაწილი); prompt ≤60 — რა გადაიღოს, reason ≤100 — რატომ. ";
+    rule += "complete მხოლოდ მაშინ, როცა მიზეზი ნაპოვნია ან ჰიპოთეზები ამოიწურა/შემდეგი შემოწმება სახიფათოა. " +
+      "თუ უსაფრთხო გაგრძელება ვერ დგინდება, ბოლო ნაბიჯში დაწერე „სპეციალისტს უთხარი: …“ და მოკლედ აღწერე აღმოჩენილი ფაქტები. ";
+    rule += caps.includes("summary")
+      ? "complete-ზე cause ≤80 — ნაპოვნი მიზეზი, დაუდგენლისას null; summary ≤120 — შედეგი და შემდეგი მოქმედება. სხვა kind-ზე cause/summary null. "
+      : "cause/summary ყოველთვის null. ";
+    return rule;
+  }
   if (context) {
     rule +=
       `ეს მე-${round} ფოტოა, გადაღებული თხოვნით ${quoted(context.photoPrompt)}; ` +
@@ -93,10 +131,12 @@ export function promptSteps(
   parts: PromptPart[],
   instructions: Instructions,
   context?: Context,
-  opts: { maxRound?: number; count?: number } = {},
+  opts: ContinuationOptions & { maxRound?: number; count?: number } = {},
 ): string {
+  const diagnostic = opts.capabilities?.some(c => ["needs_answer", "needs_measurement", "summary"].includes(c));
   return (
-    "დაწერე მოცემული ნაბიჯები ქართულად, იმავე რიგით. ტონი: მოკლე, მკაფიო, მეგობრული. " +
+    (diagnostic ? "დაწერე დიაგნოსტიკური ნაბიჯები ქართულად. ტონი: მოკლე, მკაფიო, მეგობრული. " :
+      "დაწერე მოცემული ნაბიჯები ქართულად, იმავე რიგით. ტონი: მოკლე, მკაფიო, მეგობრული. ") +
     "title: ბრძანებითი, მაქსიმუმ 4 სიტყვა, ნომრის გარეშე (მაგ. „იპოვე ზეთის საზომი“). " +
     "text: 1–2 მოკლე წინადადება, მაქსიმუმ 120 სიმბოლო — სად არის ნაწილი და რა გააკეთოს " +
     "(მაგ. „ყვითელი რგოლი ძრავის საფარის ქვემოთ. ეს არის ზეთის საზომი ღერო.“). " +
@@ -116,10 +156,10 @@ export function promptSteps(
     "მაშინ არ გამოიგონო ID, არ აიძულო არარელევანტური ნაწილი და აღწერე unknown_parts-ში. " +
     "თუ დასადგმელი ნივთი (მაგ. ვედრო) არ ჩანს, დატოვე empty focus; " +
     "ცარიელი ადგილის, ფონის ან დასადგმელი ზონის ID-ის გამოყენება აკრძალულია. " +
-    "გაურკვევლობას, არჩევანის ახსნას ან ფოტოს შეზღუდვას text-ში, tip-ში და warn-ში ნუ წერ. " +
+    (diagnostic ? "" : "გაურკვევლობას, არჩევანის ახსნას ან ფოტოს შეზღუდვას text-ში, tip-ში და warn-ში ნუ წერ. ") +
     "ზომები/დოზები ფოტოდან დადასტურებულად არ მიიჩნიო. " +
     "rotate: cw/ccw; move: up/down/left/right/toward/away. " +
-    continuationRule(context, opts.maxRound ?? MAX_ROUNDS, opts.count) +
+    continuationRule(context, opts.maxRound ?? MAX_ROUNDS, opts.count, opts) +
     "პირველი JSON გასაღები იყოს steps.\n" +
     pyDumps({ object: objectName, parts, instructions, context })
   );

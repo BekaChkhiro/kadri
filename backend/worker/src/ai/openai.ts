@@ -9,7 +9,9 @@ export const RESPONSES_URL = "https://api.openai.com/v1/responses";
 export const DEFAULT_MODEL = "gpt-6-astra";
 /** `minimal` is not supported by gpt-6-astra; `low` is the measured setting. */
 export const DEFAULT_EFFORT = "low";
-export const OUTPUT_LIMITS = { parts: 1200, steps: 2200 } as const;
+/** Reasoning and visible output share this budget. Legacy steps retain their cap. */
+export const LEGACY_STEPS_OUTPUT_LIMIT = 2200;
+export const OUTPUT_LIMITS = { parts: 1200, steps: 4000 } as const;
 
 export type Stage = keyof typeof OUTPUT_LIMITS;
 

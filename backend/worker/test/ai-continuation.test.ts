@@ -402,3 +402,50 @@ describe("diagnostic SSE", () => {
     expect(sent[0]).toEqual(sent[2]);
   });
 });
+
+describe("diagnostic prompts", () => {
+  it("asks for hypothesis checks, visible evidence and short checkpoints", () => {
+    const prompt = promptSteps("x", [], "უკვე გადავტვირთე", { round: 1, photoPrompt: "", doneSteps: ["გადატვირთე"], answers: [{ question: "ძაბვა?", answer: "12", unit: "V" }] }, { capabilities, count: 5 });
+    for (const text of ["ჰიპოთეზების სია", "JSON-ში არ გამოიტანო", "თუ X / თუ არა", "ქვედა ავტომატი ჩამოვარდნილია", "2–4 ნაბიჯი", "focus აირჩიე 1–2", "სპეციალისტს უთხარი:", "მომხმარებელმა უპასუხა", "პასუხები: „ძაბვა?“ → „12 (V)“", "უკვე ნაცადი არ გაიმეორო", "needs_answer:", "needs_measurement:", "needs_photo:", "cause ≤80", "summary ≤120"]) expect(prompt).toContain(text);
+    expect(prompt).not.toContain("გადაღებულია თხოვნით „“");
+    expect(prompt).toContain("პირველი JSON გასაღები იყოს steps.");
+  });
+
+  it("only describes enabled kinds and respects both limits", () => {
+    const atLimit = { ...context, answers: Array(6).fill(answers[0]) };
+    const limited = promptSteps("x", [], "x", atLimit, { capabilities });
+    expect(limited).toContain("კითხვა აღარ შეიძლება: დაასრულე complete-ით ან needs_photo-თი");
+    expect(limited).not.toContain("needs_answer:");
+    expect(limited).not.toContain("needs_measurement:");
+    const last = promptSteps("x", [], "x", { ...context, round: 5 }, { capabilities });
+    expect(last).toContain("needs_answer:");
+    expect(last).toContain("needs_photo აკრძალულია");
+    const both = promptSteps("x", [], "x", { ...atLimit, round: 5 }, { capabilities });
+    expect(both).toContain("კითხვა და ახალი ფოტო აღარ შეიძლება: დაასრულე complete-ით");
+    const single = promptSteps("x", [], "x", undefined, { capabilities: ["needs_answer"] });
+    expect(single).not.toContain("needs_measurement:");
+    expect(single).toContain("cause/summary ყოველთვის null");
+  });
+
+  it("wires capabilities, answer limit and output budget into the upstream request", async () => {
+    const sent = upstreamSteps({ steps: [step], unknown_parts: [], continuation: diagnosticContinuation() });
+    await doneOf(await call("/ai/steps", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ object: "x", parts, instructions: "x", count: 10, capabilities, context: { round: 1, doneSteps: [], answers } }),
+    }, { ANSWER_TURN_LIMIT: "1" }));
+    expect(sent[0].max_output_tokens).toBe(4000);
+    expect(sent[0].text.format.schema.properties.steps.maxItems).toBe(5);
+    expect(sent[0].input[0].content[0].text).toContain("კითხვა აღარ შეიძლება");
+  });
+});
+
+
+it.each([
+  undefined, { kind: "future" }, { kind: "needs_answer", question: "q", options: ["a", "a"] },
+  { kind: "needs_measurement", question: "q", unit: " " },
+])("damaged diagnostic continuation %j completes without losing streamed steps", async continuation => {
+  upstreamSteps({ steps: [step], unknown_parts: [], continuation });
+  const result = await doneOf(await postSteps({ object: "x", parts, instructions: "x", capabilities }));
+  expect(result.steps).toHaveLength(1);
+  expect(result.done.continuation).toEqual({ kind: "complete", cause: null, summary: null });
+});

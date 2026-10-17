@@ -7,7 +7,7 @@ import { answerTurnLimit, DEFAULT_ANSWER_TURN_LIMIT } from "../limits";
 import type { Env } from "../env";
 import { ApiError } from "../errors";
 import { aiErrors } from "./errors";
-import { DEFAULT_EFFORT, DEFAULT_MODEL, outputText, postResponses, responsesPayload, type ResponseObject } from "./openai";
+import { DEFAULT_EFFORT, DEFAULT_MODEL, LEGACY_STEPS_OUTPUT_LIMIT, outputText, postResponses, responsesPayload, type ResponseObject } from "./openai";
 import { estimateCost, type Usage } from "./pricing";
 import { promptParts, promptSteps, type Context, type Instructions } from "./prompts";
 import { schemaParts, schemaSteps, softened, stepItemSchema, validateSchema, type JsonSchema } from "./schema";
@@ -182,12 +182,16 @@ export class AstraProvider implements PartsProvider, StepsProvider {
       effort,
       stage: "steps",
       prompt: promptSteps(input.object, promptParts, input.instructions, input.context, {
+        ...continuationOptions,
         maxRound: MAX_ROUNDS,
         count: input.count,
       }),
       schema,
       imageBase64: input.imageBase64,
     });
+    if (!input.capabilities?.some(c => ["needs_answer", "needs_measurement", "summary"].includes(c))) {
+      payload.max_output_tokens = LEGACY_STEPS_OUTPUT_LIMIT;
+    }
     const checkStep = (raw: unknown): Step => {
       const schemaErr = validateSchema(itemSchema, raw);
       const step = schemaErr ? null : tidyStep(raw as ModelStep, labels);
