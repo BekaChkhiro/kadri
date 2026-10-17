@@ -42,7 +42,8 @@ name = "kadri-worker-staging"
 [env.staging.vars]
 AI_PROVIDER = "astra"
 ENVIRONMENT = "staging"
-DAILY_SESSION_LIMIT = "20"
+# Raised for hands-on testing; production keeps 20.
+DAILY_SESSION_LIMIT = "1000"
 AI_TIMEOUT_MS = "60000"
 
 [[env.staging.d1_databases]]
