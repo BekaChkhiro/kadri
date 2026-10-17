@@ -5,6 +5,8 @@ import unittest
 
 from realism_report import (
     EXPECTED_KINDS,
+    EXPECTED_SCENES,
+    validate_campaign_plan,
     analyze_realism_metrics,
     calculate_percentiles,
     extract_latency_values,
@@ -39,6 +41,82 @@ class RealismReportTests(unittest.TestCase):
             self.assertEqual(len(report["original_repeats"]), 4)
             self.assertEqual(len(report["scene_kind"]), 18)
             self.assertEqual(sum(r["denominators"]["expected_total_trials"] for r in report["scene_kind"]), 28)
+
+    def test_explicit_scope_pilot_tracking_and_full_campaign(self):
+        for scenes, kinds, expected in [
+            (["sink"], ["original"], 1),
+            (list(EXPECTED_SCENES), ["original", "shift_left", "shift_right"], 21),
+            (list(EXPECTED_SCENES), list(EXPECTED_KINDS), 63),
+        ]:
+            with self.subTest(expected=expected), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                self.make_run(root)
+                plan = {"B": {"scenes": scenes, "kinds": kinds, "runs": 1}}
+                report = analyze_realism_metrics(scan_campaign_data(root), campaign_plan=plan)
+                d = report["denominators"]
+                self.assertEqual(d["scope"], "planned")
+                self.assertEqual(d["expected_total_trials"], expected)
+                self.assertEqual(d["missing_trials_count"], expected - 1)
+                self.assertEqual(len(report["scene_kind"]), expected)
+                self.assertEqual(sum(r["denominators"]["expected_total_trials"] for r in report["scene_kind"]), expected)
+                self.assertEqual(report["campaign_configurations"][0]["denominators"], d)
+
+    def test_explicit_scope_missing_campaign_and_excess_do_not_hide_gaps(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.make_run(root)
+            self.make_run(root, n=2)
+            self.make_run(root, campaign="unplanned")
+            plan = {"B": {"scenes": ["sink"], "kinds": ["original", "jpeg"], "runs": 1},
+                    "future": {"scenes": ["gym"], "kinds": ["original"], "runs": 2}}
+            report = analyze_realism_metrics(scan_campaign_data(root), campaign_plan=plan)
+            d = report["denominators"]
+            self.assertEqual(d["expected_total_trials"], 4)
+            self.assertEqual(d["missing_trials_count"], 3)
+            self.assertEqual(d["excess_runs_count"], 1)
+            self.assertEqual(d["out_of_scope_runs_count"], 1)
+            self.assertEqual(len(report["scene_kind"]), 3)
+
+    def test_incomplete_is_unverified_until_failure_artifact_exists(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            pending = self.make_run(root, complete=False)
+            self.make_run(root, kind="jpeg", complete=False, error={"type": "ValueError"})
+            nested = self.make_run(root, kind="lowres", complete=False)
+            (nested / "parts_request").mkdir()
+            (nested / "parts_request/request_error.json").write_text('{"error": "timeout"}')
+            self.make_run(root, kind="dark_noise", error={"type": "stale"})
+            scanned = scan_campaign_data(root)
+            d = analyze_realism_metrics(scanned)["denominators"]
+            self.assertEqual(d["complete_runs_count"], 1)
+            self.assertEqual(d["failed_runs_count"], 2)
+            self.assertEqual(d["incomplete_unverified_runs_count"], 1)
+            self.assertEqual(d["missing_trials_count"], 5)
+            (pending / "complete.json").unlink()
+            d = analyze_realism_metrics(scan_campaign_data(root))["denominators"]
+            self.assertEqual(d["incomplete_unverified_runs_count"], 1)
+
+    def test_plan_cli_and_zero_complete_do_not_claim_tariff_block(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            plan = root / "plan.json"
+            plan.write_text(json.dumps({"pilot": {"scenes": ["sink"], "kinds": ["original"], "runs": 1}}))
+            output = root / "report.md"
+            self.assertEqual(cli_main(["--root", str(root / "missing"), "--out", str(output),
+                                       "--campaign-plan", str(plan)]), 0)
+            report = json.loads(output.with_suffix(".json").read_text())
+            self.assertEqual(report["denominators"]["expected_total_trials"], 1)
+            self.assertIn("planned scope", output.read_text())
+            self.assertNotIn("დაბლოკილია", output.read_text())
+            cli_main(["--root", str(root / "missing"), "--out", str(output)])
+            self.assertIn("universal reference scope", output.read_text())
+
+    def test_invalid_campaign_plan_is_rejected(self):
+        for scope in ({}, {"scenes": ["sink"], "kinds": ["original"], "runs": True},
+                      {"scenes": ["sink"], "kinds": ["typo"], "runs": 1},
+                      {"scenes": ["sink", "sink"], "kinds": ["original"], "runs": 1}):
+            with self.subTest(scope=scope), self.assertRaises(ValueError):
+                validate_campaign_plan({"B": scope})
 
     def test_plan_empty_focus_counts_and_real_proxy_exclusion(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -170,13 +248,14 @@ class RealismReportTests(unittest.TestCase):
             (run_1 / "runner_config.json").write_text(json.dumps({"model": "gpt-6-astra"}))
             (run_1 / "latency.json").write_text(json.dumps({"first_box_full_response_seconds": 15.2, "sam_seconds": 1.8}))
 
-            # Create second kind: dark_noise with failed run (complete: false)
+            # Explicit error artifact confirms failure; complete:false alone does not.
             frame_dark = camp / "scene_1" / "photo_1" / "dark_noise"
             frame_dark.mkdir(parents=True, exist_ok=True)
             (frame_dark / "transform.json").write_text(json.dumps({"kind": "dark_noise"}))
             run_failed = frame_dark / "run_1"
             run_failed.mkdir(parents=True, exist_ok=True)
             (run_failed / "complete.json").write_text(json.dumps({"complete": False}))
+            (run_failed / "error.json").write_text(json.dumps({"type": "RuntimeError"}))
 
             # Create third kind: lowres with dry-run only (no run directory)
             frame_dry = camp / "scene_1" / "photo_1" / "lowres"

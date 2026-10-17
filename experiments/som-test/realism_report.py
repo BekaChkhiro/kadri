@@ -223,6 +223,9 @@ def scan_campaign_data(root: Path) -> dict:
             is_cached = is_run_cached_or_replay(r_dir, latency_data, runner_config)
             is_complete = bool(complete_data and complete_data.get("complete", False))
 
+            failure_artifacts = sorted(str(path.relative_to(r_dir))
+                for pattern in ("error.json", "failure.json", "failed.json", "*_error.json")
+                for path in r_dir.rglob(pattern) if path.is_file())
             parts_png = r_dir / "parts.png"
 
             run_entry = {
@@ -234,6 +237,10 @@ def scan_campaign_data(root: Path) -> dict:
                 "run_name": r_dir.name,
                 "run_dir": str(r_dir),
                 "complete": is_complete,
+                "confirmed_failed": not is_complete and bool(failure_artifacts),
+                "failure_artifacts": sorted(set(failure_artifacts)),
+                "status": "complete" if is_complete else (
+                    "confirmed_failed" if failure_artifacts else "incomplete_unverified"),
                 "runner_config": runner_config,
                 "latency_raw": latency_data,
                 "latency": extract_latency_values(latency_data),
@@ -263,12 +270,76 @@ def scan_campaign_data(root: Path) -> dict:
     }
 
 
-def analyze_realism_metrics(data: dict, grouped: bool = True) -> dict:
+def validate_campaign_plan(plan: dict) -> dict:
+    """Validate explicit scene × kind × runs scope; never infer extra trials."""
+    if not isinstance(plan, dict) or not plan:
+        raise ValueError("campaign plan must be a non-empty campaign -> scope object")
+    for campaign, scope in plan.items():
+        if not campaign or not isinstance(scope, dict):
+            raise ValueError("each campaign must have a scope object")
+        for field in ("scenes", "kinds"):
+            values = scope.get(field)
+            if (not isinstance(values, list) or not values
+                    or any(not isinstance(v, str) or not v for v in values)
+                    or len(set(values)) != len(values)):
+                raise ValueError(f"{campaign}.{field} must be a non-empty list of unique names")
+        if any(kind not in EXPECTED_KINDS for kind in scope["kinds"]):
+            raise ValueError(f"{campaign}.kinds contains an unknown mode")
+        if type(scope.get("runs")) is not int or scope["runs"] < 1:
+            raise ValueError(f"{campaign}.runs must be a positive integer")
+    return plan
+
+
+def trial_denominators(frames, runs, campaign_plan=None):
+    """Count each cell separately so excess observations cannot fill other cells.
+
+    Explicit runs is the trial count per scene/kind, across photos. Extra
+    observations are reported separately and never enlarge the planned scope.
+    The legacy reference scope instead uses discovered campaign/scene/photos.
+    """
+    if campaign_plan is not None:
+        keys = {(campaign, scene, kind): scope["runs"]
+                for campaign, scope in campaign_plan.items()
+                for scene in scope["scenes"] for kind in scope["kinds"]}
+        key = lambda row: (row["campaign"], row["scene"], row["kind"])
+    else:
+        keys = {}
+        key = lambda row: (row["campaign"], row["scene"], row["photo"], row["kind"])
+        for group in {(f["campaign"], f["scene"], f["photo"]) for f in frames}:
+            rows = [r for r in runs if key(r)[:3] == group]
+            repeats = max([int(r.get("runner_config", {}).get("runs", 1)) for r in rows] or [1])
+            for kind in EXPECTED_KINDS:
+                keys[(*group, kind)] = max([repeats] + [int(r["run_name"][4:]) for r in rows
+                    if r["kind"] == kind and r["run_name"][4:].isdigit()])
+    scoped_runs = [r for r in runs if key(r) in keys]
+    scoped_frames = [f for f in frames if key(f) in keys]
+    counts = {cell: sum(key(r) == cell for r in scoped_runs) for cell in keys}
+    complete = sum(bool(r["complete"]) for r in scoped_runs)
+    failed = sum(not r["complete"] and r.get("confirmed_failed", False) for r in scoped_runs)
+    return {
+        "scope": "planned" if campaign_plan is not None else "universal reference scope",
+        "expected_total_trials": sum(keys.values()),
+        "prepared_frames_count": len(scoped_frames),
+        "complete_runs_count": complete,
+        "failed_runs_count": failed,
+        "incomplete_unverified_runs_count": len(scoped_runs) - complete - failed,
+        "missing_trials_count": sum(max(0, expected - counts[cell]) for cell, expected in keys.items()),
+        "excess_runs_count": sum(max(0, counts[cell] - expected) for cell, expected in keys.items()),
+        "out_of_scope_runs_count": len(runs) - len(scoped_runs),
+        "dry_run_only_frames_count": sum(not any(r["frame_dir"] == f["frame_dir"] for r in runs) for f in scoped_frames),
+        "expected_modes_per_scene": None if campaign_plan is not None else len(EXPECTED_KINDS),
+    }
+
+
+def analyze_realism_metrics(data: dict, grouped: bool = True, campaign_plan: Optional[dict] = None) -> dict:
     """Compute consolidated statistics and tables from scanned data."""
     prepared_frames: List[dict] = data.get("prepared_frames", [])
     all_runs: List[dict] = data.get("all_runs", [])
     ledgers: Dict[str, dict] = data.get("ledgers", {})
     comparisons: List[dict] = data.get("summary_comparisons", [])
+
+    if campaign_plan is not None:
+        validate_campaign_plan(campaign_plan)
 
     # 1. Campaigns & Config Overview
     scenes_seen: Set[str] = set()
@@ -300,27 +371,10 @@ def analyze_realism_metrics(data: dict, grouped: bool = True) -> dict:
         if cfg.get("variant"):
             variants_seen.add(str(cfg["variant"]))
 
-    # 2. Denominators (Expected, Prepared, Complete, Failed, Missing)
-    # Expected modes: 9 per scene
-    # Each campaign/photo has its own mode/run grid; observed original repeats
-    # are additional trials, never multiplied across every degradation.
-    photo_groups = {(f["campaign"], f["scene"], f["photo"]) for f in prepared_frames}
-    expected_total_trials = 0
-    for group in photo_groups:
-        rows = [r for r in all_runs if (r["campaign"], r["scene"], r["photo"]) == group]
-        repeat_count = max([int(r.get("runner_config", {}).get("runs", 1)) for r in rows] or [1])
-        for kind in EXPECTED_KINDS:
-            observed = [r for r in rows if r["kind"] == kind]
-            expected_total_trials += max([repeat_count] + [int(r["run_name"].removeprefix("run_")) for r in observed if r["run_name"].removeprefix("run_").isdigit()])
+    # Planned scope affects coverage denominators/rows; metric and cost evidence
+    # remains available for every discovered run.
+    denominators = trial_denominators(prepared_frames, all_runs, campaign_plan)
     prepared_frames_count = len(prepared_frames)
-
-    complete_runs_count = sum(1 for r in all_runs if r["complete"])
-    failed_runs_count = sum(1 for r in all_runs if not r["complete"])
-    # If a prepared frame has no run at all (dry run), it's missing execution
-    dry_run_only_frames_count = sum(
-        1 for f in prepared_frames if not any(r["frame_dir"] == f["frame_dir"] for r in all_runs)
-    )
-    missing_trials_count = max(0, expected_total_trials - complete_runs_count - failed_runs_count)
 
     # 3. Step Focus and Avoid IoU (Proxy Geometry, NOT Semantic Accuracy)
     # Focus and Avoid are strictly decoupled: empty avoid does not dilute focus IoU.
@@ -494,7 +548,7 @@ def analyze_realism_metrics(data: dict, grouped: bool = True) -> dict:
     groups = []
     campaign_configs = []
     if grouped:
-        for campaign in sorted(campaigns_seen):
+        for campaign in sorted(campaign_plan if campaign_plan is not None else campaigns_seen):
             rows = [r for r in all_runs if r["campaign"] == campaign]
             configs = []
             for r in rows:
@@ -504,19 +558,33 @@ def analyze_realism_metrics(data: dict, grouped: bool = True) -> dict:
                         "max_side": cfg.get("max_side")}
                 if item not in configs:
                     configs.append(item)
-            campaign_metrics = analyze_realism_metrics({"all_runs": rows, "prepared_frames": [f for f in prepared_frames if f["campaign"] == campaign], "ledgers": {}}, grouped=False)
+            campaign_metrics = analyze_realism_metrics({"all_runs": rows, "prepared_frames": [f for f in prepared_frames if f["campaign"] == campaign], "ledgers": {}}, grouped=False, campaign_plan={campaign: campaign_plan[campaign]} if campaign_plan is not None else None)
             campaign_configs.append({"campaign": campaign, "configurations": configs,
                                      "latency": campaign_metrics["latency"], "denominators": campaign_metrics["denominators"]})
-        keys = sorted({(f["campaign"], f["scene"], kind) for f in prepared_frames for kind in EXPECTED_KINDS})
+        keys = sorted({(campaign, scene, kind) for campaign, scope in campaign_plan.items()
+                       for scene in scope["scenes"] for kind in scope["kinds"]}
+                      if campaign_plan is not None else
+                      {(f["campaign"], f["scene"], kind) for f in prepared_frames for kind in EXPECTED_KINDS})
         for campaign, scene, kind in keys:
             frames = [f for f in prepared_frames if (f["campaign"], f["scene"], f["kind"]) == (campaign, scene, kind)]
             rows = [r for r in all_runs if (r["campaign"], r["scene"], r["kind"]) == (campaign, scene, kind)]
             sub = analyze_realism_metrics({"prepared_frames": frames, "all_runs": rows, "ledgers": {}}, grouped=False)
-            photos = {f["photo"] for f in prepared_frames if f["campaign"] == campaign and f["scene"] == scene}
-            expected = sum(max([1] + [int(r["run_name"].removeprefix("run_")) for r in rows if r["photo"] == photo and r["run_name"].removeprefix("run_").isdigit()]) for photo in photos)
-            denom = sub["denominators"]
-            denom["expected_total_trials"] = expected
-            denom["missing_trials_count"] = expected - len(rows)
+            if campaign_plan is not None:
+                scope = {campaign: {"scenes": [scene], "kinds": [kind], "runs": campaign_plan[campaign]["runs"]}}
+                denom = trial_denominators(frames, rows, scope)
+            else:
+                # Use all scene frames to retain photo/repeat expectations for missing kinds.
+                scene_frames = [f for f in prepared_frames if f["campaign"] == campaign and f["scene"] == scene]
+                scene_runs = [r for r in all_runs if r["campaign"] == campaign and r["scene"] == scene]
+                expected = 0
+                for photo in {f["photo"] for f in scene_frames}:
+                    photo_runs = [r for r in scene_runs if r["photo"] == photo]
+                    repeats = max([int(r.get("runner_config", {}).get("runs", 1)) for r in photo_runs] or [1])
+                    expected += max([repeats] + [int(r["run_name"][4:]) for r in rows
+                        if r["photo"] == photo and r["run_name"][4:].isdigit()])
+                denom = sub["denominators"]
+                denom["expected_total_trials"] = expected
+                denom["missing_trials_count"] = max(0, expected - len(rows))
             groups.append({"campaign": campaign, "scene": scene, "kind": kind,
                            "denominators": denom, "proxy_iou": sub["proxy_iou"],
                            "latency": sub["latency"], "step_counts": sub["step_counts"]})
@@ -548,9 +616,11 @@ def analyze_realism_metrics(data: dict, grouped: bool = True) -> dict:
                               "run": r["run_name"], "complete": r["complete"], "latency": r["latency"]}
                              for r in all_runs if r["kind"] == "original"],
         "metadata": {
-            "campaigns": sorted(campaigns_seen),
-            "expected_scenes": list(EXPECTED_SCENES),
-            "missing_scenes": sorted(set(EXPECTED_SCENES) - scenes_seen),
+            "campaigns": sorted(campaigns_seen | set(campaign_plan or {})),
+            "campaign_plan": campaign_plan,
+            "coverage_scope": denominators["scope"],
+            "expected_scenes": sorted({scene for scope in campaign_plan.values() for scene in scope["scenes"]}) if campaign_plan is not None else list(EXPECTED_SCENES),
+            "missing_scenes": sorted(({scene for scope in campaign_plan.values() for scene in scope["scenes"]} if campaign_plan is not None else set(EXPECTED_SCENES)) - scenes_seen),
             "scenes": sorted(scenes_seen),
             "kinds": sorted(kinds_seen),
             "models": sorted(models_seen),
@@ -558,15 +628,7 @@ def analyze_realism_metrics(data: dict, grouped: bool = True) -> dict:
             "maxsides": sorted(maxsides_seen),
             "variants": sorted(variants_seen),
         },
-        "denominators": {
-            "expected_total_trials": expected_total_trials,
-            "prepared_frames_count": prepared_frames_count,
-            "complete_runs_count": complete_runs_count,
-            "failed_runs_count": failed_runs_count,
-            "dry_run_only_frames_count": dry_run_only_frames_count,
-            "missing_trials_count": missing_trials_count,
-            "expected_modes_per_scene": len(EXPECTED_KINDS),
-        },
+        "denominators": denominators,
         "proxy_iou": {
             "focus_full_iou": calculate_percentiles(focus_full_ious),
             "focus_visible_iou": calculate_percentiles(focus_visible_ious),
@@ -634,7 +696,7 @@ def generate_markdown_report(metrics: dict, output_file: Path, root_dir: Path) -
         md.append("")
     elif not status["is_ready_for_production"]:
         md.append("> [!WARNING]")
-        md.append("> მონაცემები არასრულია ან შეიცავს ჩაშლილ ცდებს. სისტემა ჯერ არ აკმაყოფილებს სრული მზადყოფნის კრიტერიუმებს.")
+        md.append("> არსებული ექსპერიმენტები რეალურ გარემოში მზადყოფნას არ ადასტურებს.")
         md.append("")
 
     md.append("> [!WARNING]")
@@ -655,10 +717,14 @@ def generate_markdown_report(metrics: dict, output_file: Path, root_dir: Path) -
     md.append(f"| Reasoning Effort | {', '.join(meta['efforts']) if meta['efforts'] else 'N/A'} |")
     md.append(f"| Max Side | {', '.join(meta['maxsides']) if meta['maxsides'] else 'N/A'} |")
     md.append(f"| სცენები (Scenes) | {len(meta['scenes'])} სცენა ({', '.join(meta['scenes']) if meta['scenes'] else 'არ არის'}) |")
-    md.append(f"| მოსალოდნელი რეჟიმები (Kinds) | {denom['expected_modes_per_scene']} თითო სცენაზე ({', '.join(EXPECTED_KINDS)}) |")
+    md.append(f"| დაფარვის ფარგლები | {meta['coverage_scope']} |")
     md.append("")
 
-    md.append("სრული სამიზნე: 7 სცენა × 9 რეჟიმი = 63 კადრი თითო კამპანიაზე. დაუფიქსირებელი სცენები: " + (", ".join(meta["missing_scenes"]) or "არცერთი") + ".")
+    if meta["campaign_plan"] is not None:
+        md.append("დაგეგმილი ფარგლები (planned scope): სცენები × რეჟიმები × runs თითო კამპანიაზე; runs ითვლება სცენა/რეჟიმზე, ყველა ფოტოს ჯამში.")
+        md.append("```json\n" + json.dumps(meta["campaign_plan"], ensure_ascii=False, indent=2) + "\n```")
+    else:
+        md.append("უნივერსალური ორიენტირი (universal reference scope): 7 სცენა × 9 რეჟიმი = 63 კადრი; ეს უნივერსალური ორიენტირია და არა კამპანიის შეთანხმებული გეგმა. მნიშვნელი ეფუძნება აღმოჩენილ კამპანია/ფოტოებს და განმეორებებს. დაუფიქსირებელი სცენები: " + (", ".join(meta["missing_scenes"]) or "არცერთი") + ".")
     md.append("")
     # Section 2: Denominators & Execution Completion
     md.append("| კამპანია | variant / model / effort / maxside |")
@@ -670,16 +736,20 @@ def generate_markdown_report(metrics: dict, output_file: Path, root_dir: Path) -
     md.append("")
     md.append("| კატეგორია | რაოდენობა | წილი / აღწერა |")
     md.append("|---|---:|---|")
-    md.append(f"| მოსალოდნელი ცდები აღმოჩენილ კამპანია/ფოტოებზე | **{denom['expected_total_trials']}** | 9 რეჟიმი თითო ფოტოზე + აღმოჩენილი განმეორებები |")
+    md.append(f"| ცდების მნიშვნელი | **{denom['expected_total_trials']}** | {denom['scope']} |")
     md.append(f"| მომზადებული კადრები (Prepared Frames) | **{denom['prepared_frames_count']}** | სინთეზური კადრები (dry-run) |")
     md.append(f"| დასრულებული API ცდები (Complete Runs) | **{denom['complete_runs_count']}** | წარმატებით დასრულებული |")
-    md.append(f"| ჩაშლილი ცდები (Failed Runs) | **{denom['failed_runs_count']}** | ერორები / შეუმოწმებელი |")
+    md.append(f"| დადასტურებული ჩაშლა (Confirmed Failed Runs) | **{denom['failed_runs_count']}** | failure/error არტეფაქტით |")
+    md.append(f"| დაუმთავრებელი / შეუმოწმებელი (Incomplete / Unverified) | **{denom['incomplete_unverified_runs_count']}** | ჩაშლა არ დასტურდება; შესაძლოა მიმდინარე იყოს |")
+    md.append(f"| ფარგლებს გარეთ ცდები / ჭარბი ცდები | {denom['out_of_scope_runs_count']} / {denom['excess_runs_count']} | არ ავსებს სხვა უჯრის ნაკლულ ცდებს |")
     md.append(f"| მხოლოდ Dry-run კადრები (No Run) | **{denom['dry_run_only_frames_count']}** | API მოთხოვნის გარეშე |")
     md.append(f"| ნაკლული ცდები (Missing Denominators) | **{denom['missing_trials_count']}** | დარჩენილი შესასრულებელი |")
     md.append("")
+    md.append("მეტრიკები და ხარჯის მტკიცებულებები ყველა აღმოჩენილ ცდას მოიცავს; დაგეგმილი ფარგლები განსაზღვრავს სისრულის მნიშვნელებსა და სცენა/რეჟიმის სტრიქონებს.")
+    md.append("")
     if denom["complete_runs_count"] == 0:
         md.append("> [!NOTE]")
-        md.append(f"> დასრულებული გაშვებების მნიშვნელია **0 / {denom['expected_total_trials']}**. ფასიანი API გაშვება დაბლოკილია explicit ტარიფისა და ledger-ის დადასტურებამდე.")
+        md.append(f"> დასრულებული გაშვებების მნიშვნელია **0 / {denom['expected_total_trials']}**.")
         md.append("")
 
     # Section 3: Design Geometry Proxy Evaluation (IoU)
@@ -711,13 +781,13 @@ def generate_markdown_report(metrics: dict, output_file: Path, root_dir: Path) -
 
     md.append("### სცენა × რეჟიმი (თითო კამპანია)")
     md.append("")
-    md.append("| კამპანია | სცენა | რეჟიმი | complete / fail / missing | Focus full / visible (n) | Avoid full / visible (n) | ნაბიჯები p50 / n | ცარიელი focus / n |")
+    md.append("| კამპანია | სცენა | რეჟიმი | complete / confirmed fail / incomplete / missing | Focus full / visible (n) | Avoid full / visible (n) | ნაბიჯები p50 / n | ცარიელი focus / n |")
     md.append("|---|---|---|---|---|---|---|---|")
     def cell(stats):
         return f"{stats['mean']:.3f} ({stats['n']})" if stats['mean'] is not None else "N/A (0)"
     for row in metrics["scene_kind"]:
         d, p = row["denominators"], row["proxy_iou"]
-        md.append(f"| {row['campaign']} | {row['scene']} | {row['kind']} | {d['complete_runs_count']} / {d['failed_runs_count']} / {d['missing_trials_count']} | {cell(p['focus_full_iou'])} / {cell(p['focus_visible_iou'])} | {cell(p['avoid_full_iou'])} / {cell(p['avoid_visible_iou'])} | {row['step_counts']['p50']} / {row['step_counts']['n']} | {p['empty_focus_steps']} / {p['empty_focus_denominator']} |")
+        md.append(f"| {row['campaign']} | {row['scene']} | {row['kind']} | {d['complete_runs_count']} / {d['failed_runs_count']} / {d['incomplete_unverified_runs_count']} / {d['missing_trials_count']} | {cell(p['focus_full_iou'])} / {cell(p['focus_visible_iou'])} | {cell(p['avoid_full_iou'])} / {cell(p['avoid_visible_iou'])} | {row['step_counts']['p50']} / {row['step_counts']['n']} | {p['empty_focus_steps']} / {p['empty_focus_denominator']} |")
     md.append("")
     md.append(f"Original განმეორებები ცალკეა JSON-ის original_repeats-ში: {len(metrics['original_repeats'])}. უანოტაციო რეალურ ფოტოებს proxy არ ენიჭება. ნაკლული გაზომვა არის N/A.")
     md.append("")
@@ -895,13 +965,21 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         type=Path,
         help="Optional path to output raw structured JSON metrics",
     )
+    parser.add_argument("--campaign-plan", type=Path,
+                        help='JSON campaign -> {scenes: [...], kinds: [...], runs: 1}; runs per scene/kind')
     args = parser.parse_args(argv)
+    campaign_plan = None
+    if args.campaign_plan is not None:
+        try:
+            campaign_plan = validate_campaign_plan(json.loads(args.campaign_plan.read_text(encoding="utf-8")))
+        except (OSError, ValueError) as exc:
+            parser.error(f"Invalid campaign plan: {exc}")
 
     root_path = args.root.resolve()
     out_path = args.out.resolve()
 
     data = scan_campaign_data(root_path)
-    metrics = analyze_realism_metrics(data)
+    metrics = analyze_realism_metrics(data, campaign_plan=campaign_plan)
     metrics["prepared_frames"] = data.get("prepared_frames", [])
 
     md_content = generate_markdown_report(metrics, out_path, root_path)
