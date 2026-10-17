@@ -132,7 +132,25 @@ final class PartAnchors: ObservableObject {
                 let local = keyframe.cameraTransform.inverse * hit.worldTransform.columns.3
                 return -local.z > 0 ? -local.z : nil
             }
-            guard let depth = FrameGeometry.medianDepth(depths) else { unanchored.append(part.id); continue }
+            // Without LiDAR, estimated-plane raycasts miss until ARKit has found a plane (often the first
+            // seconds after tracking turns normal). Fall back to sparse feature points inside the box, then
+            // to the median depth of all visible feature points.
+            func featureDepths(inside rect: [Int]?) -> [Float] {
+                guard let points = session.currentFrame?.rawFeaturePoints?.points else { return [] }
+                return points.compactMap { point in
+                    guard let p = FrameGeometry.project(point, intrinsics: keyframe.intrinsics, camera: keyframe.cameraTransform),
+                          p.x >= 0, p.y >= 0, Double(p.x) < keyframe.size.width, Double(p.y) < keyframe.size.height else { return nil }
+                    if let rect {
+                        let n = FrameGeometry.normalized(p, size: SIMD2(Float(keyframe.size.width), Float(keyframe.size.height)))
+                        guard n.x >= Float(rect[0]), n.x <= Float(rect[2]), n.y >= Float(rect[1]), n.y <= Float(rect[3]) else { return nil }
+                    }
+                    let local = keyframe.cameraTransform.inverse * SIMD4(point, 1)
+                    return -local.z
+                }
+            }
+            var fallback = depths.isEmpty ? featureDepths(inside: box) : []
+            if depths.isEmpty, fallback.count < 3 { fallback = featureDepths(inside: nil) }
+            guard let depth = FrameGeometry.medianDepth(depths.isEmpty ? fallback : depths) else { unanchored.append(part.id); continue }
             func world(_ point: CGPoint) -> SIMD3<Float> {
                 FrameGeometry.unproject(SIMD2(Float(point.x), Float(point.y)), depth: depth, intrinsics: keyframe.intrinsics, camera: keyframe.cameraTransform)
             }
