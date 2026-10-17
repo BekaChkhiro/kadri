@@ -2,8 +2,10 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { promptParts, promptSteps } from "../src/ai/prompts";
 import { LIMITS, schemaSteps, softened, validateSchema } from "../src/ai/schema";
 import { MAX_ROUNDS, parseContext, tidyContinuation } from "../src/ai/validate";
+import { answerTurnLimit } from "../src/limits";
+import { readStepsInput } from "../src/ai/steps";
 import { readSse } from "../src/sse";
-import { b64, call, fakeJpeg, mockFetch, responseBody } from "./ai-helpers";
+import { b64, call, diagnosticContinuation, fakeJpeg, mockFetch, responseBody } from "./ai-helpers";
 
 const parts = [
   { id: "p1", name: "სიფონის ქანჩი", box: [100, 100, 300, 400] },
@@ -262,5 +264,141 @@ describe("POST /ai/parts context", () => {
     });
     expect((await postParts({ image: b64(fakeJpeg(512, 512)), instructions: "ჟონავს" })).status).toBe(200);
     expect(prompt).toBe(promptParts("ჟონავს"));
+  });
+});
+
+it("locks the legacy prompt and schema", async () => {
+  const digest = async (value: string) => Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value))), b => b.toString(16).padStart(2, "0")).join("");
+  expect(await digest(promptSteps("x", [], "ზეთი", undefined, { count: 5 }))).toMatchInlineSnapshot(`"e1559541892bd01a6981fa9a97da361c0699a5353da2fa4750706b635cf09f3b"`);
+  expect(await digest(JSON.stringify(schemaSteps(["p1"], 5, { freeText: true })))).toMatchInlineSnapshot(`"b8071c946144f73c67a33ff2b09856ca7146e17ef0f7a2c961dda0e48d2f44cd"`);
+});
+
+const capabilities = ["needs_answer", "needs_measurement", "summary"];
+const answers = [{ question: "ჩართულია?", answer: "დიახ" }];
+const diagnosticOptions = { capabilities };
+
+describe("diagnostic request", () => {
+  it("accepts answer follow-ups on the same first photo", async () => {
+    const value = { round: 1, doneSteps: ["ჩართე"], answers };
+    expect(parseContext(value)).toEqual({ ...value, photoPrompt: "" });
+    const input = await readStepsInput(new Request("https://example.com/ai/steps", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ object: "x", parts, instructions: "x", capabilities: [...capabilities, "future", "summary"], context: value }),
+    }));
+    expect(input.capabilities).toEqual(capabilities);
+    expect(input.context?.answers).toEqual(answers);
+    expect(input.count).toBe(5);
+  });
+
+  it.each([null, "summary", [1], Array(9).fill("summary")])("rejects malformed capabilities %j", async caps => {
+    expect((await postSteps({ object: "x", parts, instructions: "x", capabilities: caps })).status).toBe(400);
+  });
+
+  it.each([
+    [], Array(9).fill(answers[0]), [{ question: "q", answer: "a".repeat(121) }],
+    [{ question: "q".repeat(121), answer: "a" }], [{ question: "q", answer: "a", unit: "x".repeat(13) }],
+    [{ question: "q", answer: " " }], [null], "bad",
+  ])("rejects invalid round-one answers %j", bad => {
+    expect(() => parseContext({ round: 1, doneSteps: [], answers: bad })).toThrow();
+  });
+
+  it("allows eight answers and validates later-photo context", () => {
+    expect(parseContext({ ...context, answers: Array(8).fill({ question: "q", answer: "1", unit: "V" }) })?.answers).toHaveLength(8);
+    expect(() => parseContext({ round: 2, doneSteps: [], answers })).toThrow();
+  });
+});
+
+describe("diagnostic schema and tidying", () => {
+  it("has one strict nullable object and gates each capability", () => {
+    const c = (schemaSteps(["p1"], 5, diagnosticOptions).properties as any).continuation;
+    expect(c.required).toEqual(["kind", "prompt", "reason", "question", "options", "allowOther", "unit", "min", "max", "how", "cause", "summary"]);
+    expect(c.additionalProperties).toBe(false);
+    expect(c.properties.kind.enum).toEqual(["complete", "needs_photo", "needs_answer", "needs_measurement"]);
+    for (const name of ["prompt", "reason", "question", "unit", "how", "cause", "summary"]) expect(c.properties[name].type).toEqual(["string", "null"]);
+    expect(validateSchema(c, diagnosticContinuation())).toBeNull();
+    const limited = (schemaSteps([], 5, { ...diagnosticOptions, answerCount: 6 }).properties as any).continuation;
+    expect(limited.properties.kind.enum).toEqual(["complete", "needs_photo"]);
+    const last = (schemaSteps([], 5, { ...diagnosticOptions, lastRound: true }).properties as any).continuation;
+    expect(last.properties.kind.enum).toEqual(["complete", "needs_answer", "needs_measurement"]);
+    const single = (schemaSteps([], 5, { capabilities: ["needs_answer"] }).properties as any).continuation;
+    expect(single.properties.kind.enum).toEqual(["complete", "needs_photo", "needs_answer"]);
+    expect(single.properties.summary).toEqual({ type: "null" });
+    expect(schemaSteps([], 5, { capabilities: ["future"] })).toEqual(schemaSteps([], 5));
+  });
+
+  it("clamps, deduplicates and defaults answer options", () => {
+    const result = tidyContinuation(diagnosticContinuation({ question: "q".repeat(100), options: ["a", "a", "b".repeat(40), "c", "d", "e"], allowOther: null, reason: "r".repeat(120) }), diagnosticOptions) as any;
+    expect(result.options).toHaveLength(4);
+    expect(result.options[1]).toHaveLength(24);
+    expect(result.question).toHaveLength(80);
+    expect(result.reason).toHaveLength(100);
+    expect(result.allowOther).toBe(true);
+    expect(tidyContinuation(diagnosticContinuation({ options: ["a", "a", " "] }), diagnosticOptions).kind).toBe("complete");
+    expect(tidyContinuation(diagnosticContinuation(), { ...diagnosticOptions, answerCount: 6 }).kind).toBe("complete");
+    expect(tidyContinuation(diagnosticContinuation()).kind).toBe("complete");
+  });
+
+  it("validates measurements and completion summaries", () => {
+    const measurement = { kind: "needs_measurement", question: "ძაბვა?", unit: " V ", min: 0, max: 12, how: "გაზომე", reason: null };
+    expect(tidyContinuation(measurement, diagnosticOptions)).toEqual({ ...measurement, unit: "V" });
+    expect(tidyContinuation({ ...measurement, unit: " " }, diagnosticOptions).kind).toBe("complete");
+    expect(tidyContinuation({ ...measurement, min: NaN, max: Infinity }, diagnosticOptions)).toMatchObject({ min: null, max: null });
+    expect(tidyContinuation(measurement, { ...diagnosticOptions, answerCount: 6 }).kind).toBe("complete");
+    expect(tidyContinuation({ kind: "complete", cause: "c".repeat(100), summary: "s".repeat(150) }, diagnosticOptions)).toMatchObject({ cause: "c".repeat(79) + "…", summary: "s".repeat(119) + "…" });
+    expect(tidyContinuation({ kind: "complete", cause: "c", summary: "s" })).toEqual({ kind: "complete" });
+    expect(tidyContinuation({ kind: "unknown" }, diagnosticOptions)).toEqual({ kind: "complete", cause: null, summary: null });
+  });
+
+  it("reads the configurable answer limit with a safe default", () => {
+    expect(answerTurnLimit({})).toBe(6);
+    for (const raw of ["0", "-1", "bad", "Infinity"]) expect(answerTurnLimit({ ANSWER_TURN_LIMIT: raw })).toBe(6);
+    expect(answerTurnLimit({ ANSWER_TURN_LIMIT: "2" })).toBe(2);
+  });
+});
+
+describe("diagnostic SSE", () => {
+  it.each([
+    [{}, { kind: "needs_answer", question: "ჩართულია?", options: ["დიახ", "არა"], allowOther: true, reason: null }],
+    [{ kind: "needs_measurement", question: "ძაბვა?", options: [], unit: "V", min: 0, max: 12, how: "გაზომე" }, { kind: "needs_measurement", question: "ძაბვა?", unit: "V", min: 0, max: 12, how: "გაზომე", reason: null }],
+    [{ kind: "complete", cause: "დაცლილი ელემენტი", summary: "შეცვალე ელემენტი" }, { kind: "complete", cause: "დაცლილი ელემენტი", summary: "შეცვალე ელემენტი" }],
+  ])("streams the negotiated continuation %j", async (fields, expected) => {
+    upstreamSteps({ steps: [step], unknown_parts: [], continuation: diagnosticContinuation(fields) });
+    const result = await doneOf(await postSteps({ object: "x", parts, instructions: "x", capabilities, context: { round: 1, doneSteps: [], answers } }));
+    expect(result.steps).toHaveLength(1);
+    expect(result.done.continuation).toEqual(expected);
+  });
+
+  it("allows answers on the last photo", async () => {
+    const sent = upstreamSteps({ steps: [step], unknown_parts: [], continuation: diagnosticContinuation() });
+    const { done } = await doneOf(await postSteps({ object: "x", parts, instructions: "x", capabilities, context: { ...context, round: 5 } }));
+    expect(done.continuation.kind).toBe("needs_answer");
+    expect(sent[0].text.format.schema.properties.continuation.properties.kind.enum).not.toContain("needs_photo");
+  });
+
+  it.each(["needs_answer", "needs_measurement"])("suppresses %s at the answer limit even if the model disobeys", async kind => {
+    const sent = upstreamSteps({ steps: [step], unknown_parts: [], continuation: diagnosticContinuation({ kind, unit: "V" }) });
+    const { done } = await doneOf(await postSteps({ object: "x", parts, instructions: "x", capabilities, context: { round: 1, doneSteps: [], answers: Array(6).fill(answers[0]) } }));
+    expect(done.continuation).toEqual({ kind: "complete", cause: null, summary: null });
+    expect(sent[0].text.format.schema.properties.continuation.properties.kind.enum).toEqual(["complete", "needs_photo"]);
+  });
+
+  it("uses ANSWER_TURN_LIMIT from Env", async () => {
+    const sent = upstreamSteps({ steps: [step], unknown_parts: [], continuation: diagnosticContinuation() });
+    const { done } = await doneOf(await call("/ai/steps", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ object: "x", parts, instructions: "x", capabilities, context: { round: 1, doneSteps: [], answers } }),
+    }, { ANSWER_TURN_LIMIT: "1" }));
+    expect(done.continuation.kind).toBe("complete");
+    expect(sent[0].text.format.schema.properties.continuation.properties.kind.enum).toEqual(["complete", "needs_photo"]);
+  });
+
+  it("preserves the exact legacy schema, prompt and done continuation", async () => {
+    const sent = upstreamSteps({ steps: [step], unknown_parts: [], continuation: { kind: "complete", prompt: null, reason: null } });
+    for (const caps of [undefined, [], ["future"]]) {
+      const { done } = await doneOf(await postSteps({ object: "x", parts, instructions: "x", capabilities: caps }));
+      expect(done.continuation).toEqual({ kind: "complete" });
+    }
+    expect(sent[0]).toEqual(sent[1]);
+    expect(sent[0]).toEqual(sent[2]);
   });
 });

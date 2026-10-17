@@ -23,13 +23,14 @@ export interface PromptPart {
  * sends it as is; the server keeps no session state.
  */
 export interface Context {
-  /** 2..MAX_ROUNDS; round 1 has no context. */
+  /** 1..MAX_ROUNDS; round 1 context requires answers. */
   round: number;
   /** What the previous round asked the person to photograph. */
   photoPrompt: string;
   /** Titles of every step already done, in order. */
   doneSteps: string[];
   previousObject?: string;
+  answers?: Array<{ question: string; answer: string; unit?: string }>;
 }
 
 const quoted = (text: string) => `„${text}“`;

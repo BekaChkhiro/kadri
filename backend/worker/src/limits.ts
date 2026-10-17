@@ -1,6 +1,12 @@
 import type { Env } from "./env";
 import { ApiError } from "./errors";
 
+export const DEFAULT_ANSWER_TURN_LIMIT = 6;
+
+export function answerTurnLimit(env: Pick<Env, "ANSWER_TURN_LIMIT">): number {
+  return Math.max(1, positiveInt(env.ANSWER_TURN_LIMIT, DEFAULT_ANSWER_TURN_LIMIT));
+}
+
 export const DEFAULT_DAILY_SESSION_LIMIT = 20;
 export const DEFAULT_AI_TIMEOUT_MS = 60_000;
 export const DEFAULT_AI_ATTEMPT_TIMEOUT_MS = 20_000;

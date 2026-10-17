@@ -48,3 +48,12 @@ export function responseBody(result: unknown, status = "completed") {
 export function mockFetch(impl: (url: string, init: RequestInit) => Response | Promise<Response>) {
   return vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => impl(String(input), init ?? {}));
 }
+
+/** Full strict-schema continuation; only fields relevant to its kind survive tidying. */
+export function diagnosticContinuation(fields: Record<string, unknown> = {}) {
+  return {
+    kind: "needs_answer", prompt: null, reason: null, question: "ჩართულია?",
+    options: ["დიახ", "არა"], allowOther: true, unit: null, min: null, max: null,
+    how: null, cause: null, summary: null, ...fields,
+  };
+}

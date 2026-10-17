@@ -4,6 +4,7 @@
  * vision.validate_plan); failures are thrown as plain Errors with an English
  * reason for logs and mapped to a Georgian 502 by the caller.
  */
+import { DEFAULT_ANSWER_TURN_LIMIT } from "../limits";
 import { aiErrors } from "./errors";
 import type { Context, Instructions } from "./prompts";
 import { LIMITS, schemaParts, softened, STEP_ICONS, TOOL_ICONS, validateSchema } from "./schema";
@@ -246,11 +247,20 @@ export function parseContext(raw: unknown): Context | undefined {
   if (typeof value !== "object" || value === null || Array.isArray(value)) {
     throw aiErrors.badRequest("context ობიექტი უნდა იყოს");
   }
-  const { round, photoPrompt, doneSteps, previousObject } = value as Record<string, unknown>;
-  if (typeof round !== "number" || !Number.isInteger(round) || round < 2 || round > MAX_ROUNDS) {
-    throw aiErrors.badRequest(`context.round უნდა იყოს 2–${MAX_ROUNDS}`);
+  const { round, photoPrompt, doneSteps, previousObject, answers } = value as Record<string, unknown>;
+  if (typeof round !== "number" || !Number.isInteger(round) || round < 1 || round > MAX_ROUNDS) {
+    throw aiErrors.badRequest(`context.round უნდა იყოს 1–${MAX_ROUNDS}`);
   }
-  if (typeof photoPrompt !== "string" || !photoPrompt.trim() || photoPrompt.length > 200) {
+  const validText = (v: unknown, max: number) => typeof v === "string" && v.trim().length > 0 && [...v].length <= max;
+  if (answers !== undefined && (!Array.isArray(answers) || answers.length > 8 || answers.some(a =>
+    typeof a !== "object" || a === null || Array.isArray(a) || !validText(a.question, 120) ||
+    !validText(a.answer, 120) || (a.unit !== undefined && !validText(a.unit, 12))
+  ))) throw aiErrors.badRequest("context.answers არასწორია");
+  if (round === 1 && (!Array.isArray(answers) || answers.length === 0)) {
+    throw aiErrors.badRequest("context.round 1-ს answers სჭირდება");
+  }
+  if ((round >= 2 || photoPrompt !== undefined) &&
+      (typeof photoPrompt !== "string" || !photoPrompt.trim() || photoPrompt.length > 200)) {
     throw aiErrors.badRequest("context.photoPrompt არასწორია");
   }
   if (!Array.isArray(doneSteps) || doneSteps.length > 40) {
@@ -264,25 +274,63 @@ export function parseContext(raw: unknown): Context | undefined {
   }
   return {
     round,
-    photoPrompt: photoPrompt.trim(),
+    photoPrompt: typeof photoPrompt === "string" ? photoPrompt.trim() : "",
+    ...(Array.isArray(answers) && { answers: answers.map(({ question, answer, unit }) => ({ question, answer, ...(unit !== undefined && { unit }) })) }),
     doneSteps: doneSteps as string[],
     ...(typeof previousObject === "string" && previousObject ? { previousObject } : {}),
   };
 }
 
-/** How a steps round ends: done, or a new photo is needed to go on. */
-export type Continuation = { kind: "complete" } | { kind: "needs_photo"; prompt: string; reason: string };
+/** Recognized capabilities; unknown strings are ignored for forward compatibility. */
+export function parseCapabilities(raw: unknown): string[] {
+  if (raw === undefined) return [];
+  if (!Array.isArray(raw) || raw.length > 8 || raw.some(c => typeof c !== "string")) {
+    throw aiErrors.badRequest("capabilities უნდა იყოს ≤8 სტრიქონის სია");
+  }
+  return [...new Set(raw.filter(c => ["needs_answer", "needs_measurement", "summary"].includes(c)))];
+}
 
-/**
- * The model's `continuation` in the phone's shape. Missing, unknown or a
- * needs_photo without a prompt becomes complete — the call is already paid
- * for, so no 502; texts are clamped to LIMITS.
- */
-export function tidyContinuation(raw: unknown): Continuation {
-  if (typeof raw !== "object" || raw === null) return { kind: "complete" };
-  const { kind, prompt, reason } = raw as Record<string, unknown>;
-  if (kind !== "needs_photo" || typeof prompt !== "string") return { kind: "complete" };
-  const text = clampText(prompt, LIMITS.photoPrompt);
-  if (!text) return { kind: "complete" };
-  return { kind: "needs_photo", prompt: text, reason: typeof reason === "string" ? clampText(reason, LIMITS.photoReason) : "" };
+export type Continuation =
+  | { kind: "complete"; cause?: string | null; summary?: string | null }
+  | { kind: "needs_photo"; prompt: string; reason: string }
+  | { kind: "needs_answer"; question: string; options: string[]; allowOther: boolean; reason: string | null }
+  | { kind: "needs_measurement"; question: string; unit: string; min: number | null; max: number | null; how: string; reason: string | null };
+
+export interface ContinuationOptions {
+  capabilities?: readonly string[];
+  answerCount?: number;
+  answerTurnLimit?: number;
+  lastRound?: boolean;
+}
+
+/** Invalid or unsupported continuations safely complete; legacy output stays unchanged. */
+export function tidyContinuation(raw: unknown, opts: ContinuationOptions = {}): Continuation {
+  const caps = opts.capabilities ?? [];
+  const optional = (value: unknown, max: number) => typeof value === "string" ? clampText(value, max) || null : null;
+  const complete = (value: Record<string, unknown> = {}): Continuation => caps.includes("summary")
+    ? { kind: "complete", cause: optional(value.cause, 80), summary: optional(value.summary, 120) }
+    : { kind: "complete" };
+  if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return complete();
+  const r = raw as Record<string, unknown>;
+  if (r.kind === "complete") return complete(r);
+  if (r.kind === "needs_photo") {
+    const prompt = optional(r.prompt, LIMITS.photoPrompt);
+    return !prompt || opts.lastRound ? complete() : { kind: "needs_photo", prompt, reason: optional(r.reason, LIMITS.photoReason) ?? "" };
+  }
+  if ((opts.answerCount ?? 0) >= (opts.answerTurnLimit ?? DEFAULT_ANSWER_TURN_LIMIT)) return complete();
+  const question = optional(r.question, 80);
+  const reason = optional(r.reason, 100);
+  if (!question) return complete();
+  if (r.kind === "needs_answer" && caps.includes("needs_answer")) {
+    const options = [...new Set((Array.isArray(r.options) ? r.options : []).map(o => optional(o, 24)).filter((o): o is string => o !== null))].slice(0, 4);
+    if (options.length < 2) return complete();
+    return { kind: "needs_answer", question, options, allowOther: typeof r.allowOther === "boolean" ? r.allowOther : true, reason };
+  }
+  if (r.kind === "needs_measurement" && caps.includes("needs_measurement")) {
+    const unit = optional(r.unit, 12);
+    if (!unit) return complete();
+    const number = (v: unknown) => typeof v === "number" && Number.isFinite(v) ? v : null;
+    return { kind: "needs_measurement", question, unit, min: number(r.min), max: number(r.max), how: optional(r.how, 100) ?? "", reason };
+  }
+  return complete();
 }

@@ -5,6 +5,8 @@
  * JSON Schema those schemas use.
  */
 
+import { DEFAULT_ANSWER_TURN_LIMIT } from "../limits";
+
 export type JsonSchema = { [key: string]: unknown };
 
 export function obj(properties: Record<string, JsonSchema>): JsonSchema {
@@ -136,6 +138,9 @@ export interface StepsSchemaOptions {
   freeText?: boolean;
   /** The last allowed round (MAX_ROUNDS): continuation can only be complete. */
   lastRound?: boolean;
+  capabilities?: readonly string[];
+  answerCount?: number;
+  answerTurnLimit?: number;
 }
 
 /**
@@ -144,10 +149,30 @@ export interface StepsSchemaOptions {
  */
 export function schemaSteps(ids: string[], count: number, opts: StepsSchemaOptions = {}): JsonSchema {
   const base = schemaFor(ids, count).properties as Props;
+  const kinds = opts.lastRound ? ["complete"] : ["complete", "needs_photo"];
+  const capabilities = opts.capabilities ?? [];
+  if ((opts.answerCount ?? 0) < (opts.answerTurnLimit ?? DEFAULT_ANSWER_TURN_LIMIT)) {
+    for (const kind of ["needs_answer", "needs_measurement"]) {
+      if (capabilities.includes(kind)) kinds.push(kind);
+    }
+  }
+  const nullable = (maxLength: number): JsonSchema => ({ type: ["string", "null"], maxLength });
+  const diagnostic = capabilities.some(c => ["needs_answer", "needs_measurement", "summary"].includes(c));
   const continuation = obj({
-    kind: { type: "string", enum: opts.lastRound ? ["complete"] : ["complete", "needs_photo"] },
+    kind: { type: "string", enum: kinds },
     prompt: { type: ["string", "null"], maxLength: LIMITS.photoPrompt },
     reason: { type: ["string", "null"], maxLength: LIMITS.photoReason },
+    ...(diagnostic ? {
+      question: nullable(80),
+      options: { ...array({ type: "string", maxLength: 24 }), maxItems: 4 },
+      allowOther: { type: ["boolean", "null"] },
+      unit: nullable(12),
+      min: { type: ["number", "null"] },
+      max: { type: ["number", "null"] },
+      how: nullable(100),
+      cause: capabilities.includes("summary") ? nullable(80) : { type: "null" },
+      summary: capabilities.includes("summary") ? nullable(120) : { type: "null" },
+    } : {}),
   });
   const steps = opts.freeText ? { ...base.steps!, minItems: 1, maxItems: count } : base.steps!;
   const result = obj({ steps, unknown_parts: base.unknown_parts!, continuation });

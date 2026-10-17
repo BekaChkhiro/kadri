@@ -2,10 +2,10 @@
  * POST /ai/steps — stage 2 of Astra C: object + the phone's parts (p1..pN)
  * + instructions → steps, streamed as SSE while the model is still writing.
  *
- * Body (JSON): { object, parts: [{id, name, box}], instructions, count?, image?, sessionId?, context? }
+ * Body (JSON): { object, parts: [{id, name, box}], instructions, count?, image?, sessionId?, context?, capabilities? }
  * `image` (JPEG base64, optional) is attached like the experiment does.
- * `context` {round 2..5, photoPrompt, doneSteps, previousObject?} marks a later
- * photo of a multi-photo session; absent = round 1. With free-text
+ * `context` {round 1..5, photoPrompt?, doneSteps, previousObject?, answers?}
+ * marks a follow-up; round 1 requires answers, later photos require photoPrompt. With free-text
  * instructions a round may return 1..count steps.
  *
  * Events: `step` {index, title, text, focus, avoid, markers, arrows, icon, tools,
@@ -14,7 +14,8 @@
  * firstStepMs, model, continuation}, or `error` {code, message} in Georgian.
  * `continuation` is always there: {kind: "complete"} or
  * {kind: "needs_photo", prompt, reason} — take that photo and call again with
- * `context`. Round 5 is always complete.
+ * `context`. Negotiated capabilities also allow needs_answer/needs_measurement
+ * on the same photo, and complete cause/summary. Round 5 forbids needs_photo.
  */
 import { ApiError } from "../errors";
 import type { Handler } from "../router";
@@ -23,7 +24,7 @@ import { aiErrors } from "./errors";
 import { checkedJpegBase64, fromBase64 } from "./image";
 import { parseSessionId } from "./parts";
 import { stepsProvider, type StepsEvent, type StepsInput, type StepsProvider } from "./provider";
-import { MAX_STEPS, parseContext, parseInstructions, parseParts } from "./validate";
+import { MAX_STEPS, parseCapabilities, parseContext, parseInstructions, parseParts } from "./validate";
 
 export async function readStepsRequest(request: Request): Promise<{ input: StepsInput; sessionId: string | null }> {
   if (!(request.headers.get("content-type") ?? "").startsWith("application/json")) {
@@ -52,8 +53,10 @@ export async function readStepsRequest(request: Request): Promise<{ input: Steps
     imageBase64 = checkedJpegBase64(typeof body.image === "string" ? fromBase64(body.image) : null);
   }
   const context = parseContext(body.context);
+  const capabilities = parseCapabilities(body.capabilities);
+  if (capabilities.length && typeof instructions === "string") count = Math.min(count, 5);
   return {
-    input: { object: body.object, parts, instructions, count, imageBase64, ...(context && { context }) },
+    input: { object: body.object, parts, instructions, count, imageBase64, capabilities, ...(context && { context }) },
     sessionId: parseSessionId(body.sessionId),
   };
 }

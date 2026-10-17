@@ -12,6 +12,8 @@ export interface Env {
   AI_MODEL?: string;
   /** Reasoning effort; defaults to "low" (gpt-6-astra rejects "minimal"). */
   AI_EFFORT?: string;
+  /** Answer follow-ups per diagnostic session; default 6. */
+  ANSWER_TURN_LIMIT?: string;
   GEMINI_API_KEY?: string;
   SESSION_SECRET?: string;
   GOOGLE_CLIENT_IDS?: string;

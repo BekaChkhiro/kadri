@@ -3,13 +3,14 @@
  * gpt-6-astra for both stages). `hybrid` (Gemini stage 1) is an interface
  * placeholder only — its quality is not confirmed.
  */
+import { answerTurnLimit, DEFAULT_ANSWER_TURN_LIMIT } from "../limits";
 import type { Env } from "../env";
 import { ApiError } from "../errors";
 import { aiErrors } from "./errors";
 import { DEFAULT_EFFORT, DEFAULT_MODEL, outputText, postResponses, responsesPayload, type ResponseObject } from "./openai";
 import { estimateCost, type Usage } from "./pricing";
 import { promptParts, promptSteps, type Context, type Instructions } from "./prompts";
-import { schemaParts, schemaSteps, softened, stepItemSchema, validateSchema } from "./schema";
+import { schemaParts, schemaSteps, softened, stepItemSchema, validateSchema, type JsonSchema } from "./schema";
 import { StepsStreamParser } from "./stepsParser";
 import {
   MAX_ROUNDS,
@@ -49,6 +50,7 @@ export interface PartsProvider {
 }
 
 export interface StepsInput {
+  capabilities?: readonly string[];
   object: string;
   /** The phone's parts; their IDs are the only ones the schema allows. */
   parts: Part[];
@@ -80,6 +82,7 @@ export interface StepsProvider {
 }
 
 export interface AstraConfig {
+  answerTurnLimit?: number;
   apiKey: string;
   model: string;
   effort: string;
@@ -164,7 +167,13 @@ export class AstraProvider implements PartsProvider, StepsProvider {
     const ids = input.parts.map((p) => p.id);
     const labels = new Map(input.parts.map((p) => [p.id, p.name]));
     const lastRound = (input.context?.round ?? 1) >= MAX_ROUNDS;
-    const schema = schemaSteps(ids, input.count, { freeText: typeof input.instructions === "string", lastRound });
+    const continuationOptions = {
+      capabilities: input.capabilities,
+      answerCount: input.context?.answers?.length ?? 0,
+      answerTurnLimit: this.config.answerTurnLimit ?? DEFAULT_ANSWER_TURN_LIMIT,
+      lastRound,
+    };
+    const schema = schemaSteps(ids, input.count, { freeText: typeof input.instructions === "string", ...continuationOptions });
     // Length caps are guidance for the model; tidyStep clamps instead of a 502.
     const itemSchema = softened(stepItemSchema(ids));
     const promptParts = input.parts.map((p) => ({ id: p.id, label: p.name, box: p.box }));
@@ -253,7 +262,15 @@ export class AstraProvider implements PartsProvider, StepsProvider {
       if (typeof result === "object" && result !== null) {
         result.continuation ??= { kind: "complete", prompt: null, reason: null };
       }
-      const err = validateSchema(softened(schema), result);
+      // Validate steps strictly, but let tidyContinuation handle damaged/unsupported
+      // continuation fields, including kinds excluded by the turn limit.
+      const continuationSchema = (schema.properties as Record<string, JsonSchema>).continuation!;
+      const validationResult = typeof result === "object" && result !== null ? {
+        ...result,
+        continuation: Object.fromEntries(Object.keys(continuationSchema.properties as Record<string, JsonSchema>).map(key =>
+          [key, key === "kind" ? "complete" : key === "options" ? [] : null])),
+      } : result;
+      const err = validateSchema(softened(schema), validationResult);
       if (err) {
         console.error("ai/steps invalid result", err);
         throw aiErrors.invalid();
@@ -273,7 +290,7 @@ export class AstraProvider implements PartsProvider, StepsProvider {
         costUsd: estimateCost(usage, model),
         latencyMs,
         firstStepMs,
-        continuation: lastRound ? { kind: "complete" } : tidyContinuation(result.continuation),
+        continuation: tidyContinuation(result.continuation, continuationOptions),
       };
     } catch (err) {
       if (err instanceof ApiError) throw err;
@@ -317,5 +334,6 @@ export function astraConfig(env: Env): AstraConfig {
     apiKey: env.OPENAI_API_KEY,
     model: env.AI_MODEL || DEFAULT_MODEL,
     effort: env.AI_EFFORT || DEFAULT_EFFORT,
+    answerTurnLimit: answerTurnLimit(env),
   };
 }
