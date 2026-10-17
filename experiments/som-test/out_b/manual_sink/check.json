@@ -1,0 +1,39 @@
+{
+  "kind": "manual box smoke test; no OpenAI call",
+  "parts": [
+    {
+      "id": "slip_nut_right",
+      "label": "მარჯვენა ქანჩი",
+      "box": [
+        620,
+        247,
+        750,
+        387
+      ]
+    }
+  ],
+  "device": "mps",
+  "seconds": 10.820488583999577,
+  "quality": [
+    {
+      "id": "slip_nut_right",
+      "box_pixels": [
+        634,
+        379,
+        768,
+        595
+      ],
+      "mask_pixels": 17608,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.6083471531232725,
+      "mask_to_box_area": 0.6083471531232725,
+      "image_fraction": 0.011194864908854166,
+      "empty": false,
+      "too_large": false
+    }
+  ],
+  "checkpoint_sha256": "f1a9cf2dd69d84bb463b5ad98246d03e2d47a130a9295db0ec967e6cd95e2e47",
+  "visual_review": "Contour follows the right slip nut, excluding adjacent pipe; small lower droplet also included.",
+  "timing_note": "Cold run includes checkpoint download/model initialization; not steady-state inference latency.",
+  "reproduce": "From experiments/som-test: segment_boxes(ROOT / \"Camera/assets/sink-trap.png\", parts, \"mps\") using variant_b.segment_boxes and the parts field above."
+}

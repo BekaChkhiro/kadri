@@ -1,0 +1,7 @@
+*
+!.gitignore
+!manual_sink/
+manual_sink/*
+!manual_sink/check.json
+!manual_sink/masks.npz
+!manual_sink/parts.png

@@ -46,3 +46,23 @@ key-ის გარეშე სეგმენტაცია სრულდ�
 `models.list()` ადგენს ანგარიშისთვის ხილულ ID-ებს; ხარისხის რეიტინგს/vision შესაძლებლობას ეს endpoint არ იძლევა. `vision.py`-ში მითითებულია ოფიციალური დოკუმენტაციით შერჩეული პრიორიტეტები (2026-10-17), პირველია `gpt-6-astra`. `OPENAI_MODEL` ცვლის არჩევანს და ასევე მოწმდება ანგარიშის სიაში. ახალი მოდელის დამატებისას განაახლეთ პრიორიტეტი და ფასიც. მიღებული მოდელის ზუსტი სახელი ინახება metrics-ში.
 
 ფასი არის standard short-context შეფასება, cached input-ის გამოყოფით. უცნობი ტარიფი/ბილინგის კატეგორია რჩება `null`, არა ნულოვანი ფასი. source/date ინახება metrics-ში; reasoning ტოკენები output usage-ში შედის. ინვოისისთვის შეამოწმეთ Platform usage. წყაროები `REPORT.md`-შია.
+
+## ვარიანტი B — AI-first
+
+ორიგინალი ფოტო + იგივე ნაბიჯების title/text → OpenAI strict JSON (`object`, დინამიკური `parts[{id,label,box}]`, A-ს ფორმატის `steps`, `unknown_parts`) → თითო box-ზე SAM2.1_b. ID არის ინგლისური snake_case, ტექსტი — ქართული; XYXY box ნორმალიზებულია 0..1000-ზე. უცნობი ID ყველა reference-ში შეცდომაა და ინახება `error.json`-ში. [Structured Outputs-ის კონტრაქტი](https://developers.openai.com/api/docs/guides/structured-outputs) დამატებით ადგილობრივად მოწმდება.
+
+```sh
+cd experiments/som-test
+uv run python run_b.py --help
+uv run python run_b.py --scenes sink gym car --runs 3
+# სურვილისამებრ: --model MODEL_ID --device mps
+uv run python -m unittest discover -s tests -v
+```
+
+`.env`, მოდელის default/ანგარიშზე ხელმისაწვდომობის შემოწმება, `OPENAI_MODEL`, ტოკენებისა და ფასის ლოგიკა A-ს ემთხვევა. key-ის გარეშე აბრუნებს 2-ს და API არ იძახება. SDK retry გამორთულია. B კითხულობს უკვე არსებულ `out/<scene>/ground_truth.json`-ს; A-ს შედეგები და `REPORT.md` არ იცვლება.
+
+`out_b/<scene>/run_<n>/` შეიცავს `request.json`, `response.json`, `plan.json`, `metrics.json` (API latency/usage/შეფასებული ფასი), `segmentation.json` (SAM latency და ხარისხი), `masks.npz` (მასკები და შესაბამისი ID-ები), `parts.png`, `step_<k>.png`, `evaluation.json`. სურათების `pN` ნომრები ლეგენდით უკავშირდება B-ს ID/ქართულ label-ს; რენდერი და ნაბიჯების IoU A-დანაა იმპორტირებული. ისევე როგორც A-ში, arrows JSON-ში რჩება, რენდერი მათ ცალკე არ ხატავს. `evaluation.json` არის დიზაინის კონტურებთან გეომეტრიული proxy და არა სემანტიკური სიზუსტის დადასტურება.
+
+ხარისხი: `mask_fraction_inside_box` = box-ში მოხვედრილი მასკის პიქსელები / მთელი მასკა; `box_occupancy` = იგივე პიქსელები / box-ის ფართობი. ცარიელი მასკა ინახება და აღინიშნება; `too_large` ნიშნავს ფოტოს >85%-ს ან box-ის ფართობის >2-გზის მასკას (ეს დიაგნოსტიკური ზღვრებია, მასკები არ იფილტრება). `consistency.json` ადარებს ყველა წარმატებული ცდის წყვილს: NFKC/casefold/whitespace-normalized თანაბარი label + box IoU≥0.5, greedy ერთი-ერთთან მატჩინგი; შემდეგ parts და ნაბიჯების focus/avoid Jaccard. სინონიმები არ ემთხვევა; თანხმობა სისწორეს არ ამტკიცებს.
+
+განმეორებით გაშვებისას ვალიდური `plan.json` თავიდან არ ითხოვება, SAM/რენდერი ახლდება. წარუმატებელი API ცდა ხელახლა იგზავნება და შეიძლება ფასიანი იყოს. მოდელის, ფოტოს, ground truth-ის ან device-ის შეცვლისას ძველი run ფოლდერი ჯერ ცალკე გადაიტანეთ — შეუთავსებელი ქეში არ გადაიწერება. `out_b/manual_sink/` არის ხელით არჩეული box-ის MPS შემოწმება, არა AI ცდა.
