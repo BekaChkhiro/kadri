@@ -5,7 +5,8 @@
  * Body (JSON): { object, parts: [{id, name, box}], instructions, count?, image?, sessionId? }
  * `image` (JPEG base64, optional) is attached like the experiment does.
  *
- * Events: `step` {index, title, text, focus, avoid, markers, arrows, tools, tip, warn}
+ * Events: `step` {index, title, text, focus, avoid, markers, arrows, icon, tools,
+ * toolItems, tip, warn}
  * per completed step, then `done` {unknownParts, usage, costUsd, latencyMs,
  * firstStepMs, model}, or `error` {code, message} in Georgian.
  */

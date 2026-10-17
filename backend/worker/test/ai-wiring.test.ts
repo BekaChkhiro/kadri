@@ -23,6 +23,7 @@ const stepsResult = {
       avoid: [],
       markers: [],
       arrows: [{ part: "p1", type: "rotate", dir: "cw" }],
+      icon: null,
       tools: [],
       tip: null,
       warn: null,

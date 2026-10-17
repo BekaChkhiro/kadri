@@ -11,7 +11,7 @@ import { estimateCost, type Usage } from "./pricing";
 import { promptParts, promptSteps, type Instructions } from "./prompts";
 import { schemaParts, schemaSteps, softened, stepItemSchema, validateSchema } from "./schema";
 import { StepsStreamParser } from "./stepsParser";
-import { partsFromModel, stepRuleError, tidyStep, type Part, type Step } from "./validate";
+import { partsFromModel, stepRuleError, tidyStep, type ModelStep, type Part, type Step } from "./validate";
 import { readSse } from "../sse";
 
 export const AI_TIMEOUT_MS = 60_000;
@@ -159,7 +159,7 @@ export class AstraProvider implements PartsProvider, StepsProvider {
     });
     const checkStep = (raw: unknown): Step => {
       const schemaErr = validateSchema(itemSchema, raw);
-      const step = schemaErr ? null : tidyStep(raw as Step, labels);
+      const step = schemaErr ? null : tidyStep(raw as ModelStep, labels);
       const err = schemaErr ?? stepRuleError(step!, labels);
       if (err) {
         console.error("ai/steps invalid step", err);
@@ -216,7 +216,7 @@ export class AstraProvider implements PartsProvider, StepsProvider {
         console.error("ai/steps incomplete", final.status);
         throw aiErrors.incomplete();
       }
-      let result: { steps: Step[]; unknown_parts: string[] };
+      let result: { steps: ModelStep[]; unknown_parts: string[] };
       try {
         result = JSON.parse(full);
       } catch {

@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "../src/errors";
 import { promptSteps } from "../src/ai/prompts";
 import { AstraProvider } from "../src/ai/provider";
-import { LIMITS, schemaParts, schemaSteps, softened, stepItemSchema, validateSchema } from "../src/ai/schema";
+import { LIMITS, schemaParts, schemaSteps, softened, STEP_ICONS, stepItemSchema, validateSchema } from "../src/ai/schema";
 import { clampText, shortLabel, tidyStep } from "../src/ai/validate";
 import { StepsStreamParser } from "../src/ai/stepsParser";
 import { readSse, sseEvent, SSE_HEADERS } from "../src/sse";
@@ -23,13 +23,21 @@ const step1 = {
   avoid: [],
   markers: [{ part: "p1", label: "ონკანი {ჯერ}", tone: "brand" }],
   arrows: [{ part: "p1", type: "rotate", dir: "cw" }],
-  tools: [],
+  icon: "rotate_cw",
+  tools: [] as Array<{ name: string; icon: string | null }>,
   tip: null,
   warn: null,
 };
-const step2 = { ...step1, title: "მოუშვი ქანჩი", text: "ხელით, \"საწინააღმდეგოდ\".", focus: ["p2"], markers: [], arrows: [{ part: "p2", type: "rotate", dir: "ccw" }], tip: "ქვეშ ვედრო დადგი." };
+const step2 = { ...step1, title: "მოუშვი ქანჩი", text: "ხელით, \"საწინააღმდეგოდ\".", focus: ["p2"], markers: [], arrows: [{ part: "p2", type: "rotate", dir: "ccw" }], icon: "unscrew", tools: [{ name: "ვედრო", icon: "bucket" }, { name: "ჩვარი", icon: null }], tip: "ქვეშ ვედრო დადგი." };
+/** step1 as the phone gets it: tools split into names and toolItems. */
+const step1Out = { ...step1, tools: [], toolItems: [] };
 /** step2 as the phone gets it: the empty markers get one on the focus part. */
-const step2Out = { ...step2, markers: [{ part: "p2", label: "სიფონის ქანჩი", tone: "brand" }] };
+const step2Out = {
+  ...step2,
+  markers: [{ part: "p2", label: "სიფონის ქანჩი", tone: "brand" }],
+  tools: ["ვედრო", "ჩვარი"],
+  toolItems: [{ label: "ვედრო", icon: "bucket" }, { label: "ჩვარი", icon: null }],
+};
 const result = { steps: [step1, step2], unknown_parts: ["ვედრო"] };
 
 const enc = new TextEncoder();
@@ -114,7 +122,14 @@ describe("schemaSteps", () => {
     expect(p.title).toEqual({ type: "string", minLength: 1, maxLength: 40 });
     expect(p.text.maxLength).toBe(120);
     expect(p.tools.maxItems).toBe(3);
-    expect(p.tools.items.maxLength).toBe(24);
+    expect(p.tools.items.properties.name.maxLength).toBe(24);
+    expect(p.tools.items.properties.icon.enum).toContain("wrench");
+    expect(p.tools.items.properties.icon.enum.at(-1)).toBeNull();
+    expect(p.icon.type).toEqual(["string", "null"]);
+    expect(p.icon.enum).toEqual([...STEP_ICONS, null]);
+    expect(step.required).toEqual(expect.arrayContaining(["icon", "tools"]));
+    expect(validateSchema(step, { ...step1, icon: "dance" })).not.toBeNull();
+    expect(validateSchema(step, { ...step1, icon: null })).toBeNull();
     expect(p.markers.maxItems).toBe(3);
     expect(p.markers.items.properties.label.maxLength).toBe(24);
     const parts = schemaParts() as any;
@@ -130,7 +145,8 @@ describe("schemaSteps", () => {
     expect(soft.properties.title.minLength).toBe(1);
     expect(soft.properties.focus.items.enum).toEqual(["p1"]);
     expect((softened(stepItemSchema([])) as any).properties.markers.maxItems).toBe(0);
-    const long = { ...step1, text: "ა".repeat(300), tools: ["a", "b", "c", "d"] };
+    const tool = { name: "ვედრო", icon: "bucket" };
+    const long = { ...step1, text: "ა".repeat(300), tools: [tool, tool, tool, tool] };
     expect(validateSchema(soft, long)).toBeNull();
     expect(validateSchema(stepItemSchema(["p1"]), long)).not.toBeNull();
   });
@@ -161,12 +177,25 @@ describe("tidyStep", () => {
   });
 
   it("keeps at most 3 tools and clamps long texts instead of failing", () => {
-    const out = tidyStep({ ...step1, tools: ["ქანჩის გასაღები", "ვედრო", "ჩვარი", "ფანარი"], text: "სიტყვა ".repeat(40), warn: "  " }, labels);
+    const tools = [
+      { name: "ქანჩის გასაღები", icon: "wrench" },
+      { name: "ვედრო", icon: "bucket" },
+      { name: "ჩვარი", icon: null },
+      { name: "ფანარი", icon: "flashlight" },
+    ];
+    const out = tidyStep({ ...step1, tools, text: "სიტყვა ".repeat(40), warn: "  " }, labels);
     expect(out.tools).toEqual(["ქანჩის გასაღები", "ვედრო", "ჩვარი"]);
+    expect(out.toolItems).toEqual([
+      { label: "ქანჩის გასაღები", icon: "wrench" },
+      { label: "ვედრო", icon: "bucket" },
+      { label: "ჩვარი", icon: null },
+    ]);
     expect([...out.text].length).toBeLessThanOrEqual(LIMITS.text);
     expect(out.text.endsWith("…")).toBe(true);
     expect(out.warn).toBeNull();
-    expect(validateSchema(stepItemSchema(["p1", "p2"]), out)).toBeNull();
+    expect(tidyStep({ ...step1, icon: "dance" }, labels).icon).toBeNull();
+    expect(tidyStep({ ...step1, tools: [{ name: "კოვზი", icon: "spoon" }] }, labels).toolItems).toEqual([{ label: "კოვზი", icon: null }]);
+    expect(tidyStep(step1, labels).icon).toBe("rotate_cw");
   });
 
   it("clampText and shortLabel", () => {
@@ -219,7 +248,7 @@ describe("POST /ai/steps", () => {
     const events = readSse(res.body!);
     const first = await events.next();
     expect(first.value!.event).toBe("step");
-    expect(JSON.parse(first.value!.data)).toEqual({ index: 0, ...step1 });
+    expect(JSON.parse(first.value!.data)).toEqual({ index: 0, ...step1Out });
 
     upstream.push(delta(text.slice(cut)));
     upstream.push(completed());
@@ -229,6 +258,7 @@ describe("POST /ai/steps", () => {
     expect(rest.map((e) => e.event)).toEqual(["step", "done"]);
     expect(rest[0]!.data).toEqual({ index: 1, ...step2Out });
     expect(rest[0]!.data.tip).toBe("ქვეშ ვედრო დადგი.");
+    expect(rest[0]!.data.icon).toBe("unscrew");
     expect(rest[1]!.data.unknownParts).toEqual(["ვედრო"]);
     expect(rest[1]!.data.costUsd).toBeGreaterThan(0);
     expect(typeof rest[1]!.data.firstStepMs).toBe("number");

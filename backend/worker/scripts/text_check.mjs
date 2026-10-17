@@ -130,7 +130,7 @@ function stepIssues(s) {
   if (s.text.endsWith("…") || (s.warn ?? "").endsWith("…") || (s.tip ?? "").endsWith("…")) issues.push("clamped by the Worker");
   return issues;
 }
-const brief = (s) => ({ title: s.title, text: s.text, tip: s.tip, warn: s.warn, tools: s.tools, focus: s.focus, markers: s.markers, issues: stepIssues(s) });
+const brief = (s) => ({ title: s.title, text: s.text, tip: s.tip, warn: s.warn, icon: s.icon ?? null, tools: s.tools, toolItems: s.toolItems ?? null, focus: s.focus, markers: s.markers, issues: stepIssues(s) });
 
 // ---------- main ----------
 const report = { at: new Date().toISOString(), base, cap, maxCalls };

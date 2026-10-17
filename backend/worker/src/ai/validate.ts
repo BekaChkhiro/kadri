@@ -6,7 +6,7 @@
  */
 import { aiErrors } from "./errors";
 import type { Instructions } from "./prompts";
-import { LIMITS, schemaParts, softened, validateSchema } from "./schema";
+import { LIMITS, schemaParts, softened, STEP_ICONS, TOOL_ICONS, validateSchema } from "./schema";
 
 export type Box = [number, number, number, number];
 
@@ -90,10 +90,22 @@ export interface Step {
   avoid: string[];
   markers: Array<{ part: string; label: string; tone: string }>;
   arrows: Array<{ part: string; type: string; dir: string }>;
+  /** Main action, one of STEP_ICONS. */
+  icon: string | null;
+  /** Tool names only, as before toolItems existed (older clients). */
   tools: string[];
+  toolItems: Array<{ label: string; icon: string | null }>;
   tip: string | null;
   warn: string | null;
 }
+
+/** A step as the model writes it (schemaFor): tools are {name, icon} objects. */
+export type ModelStep = Omit<Step, "tools" | "toolItems"> & {
+  tools: Array<{ name: string; icon: string | null }>;
+};
+
+const known = (set: readonly string[], icon: unknown): string | null =>
+  typeof icon === "string" && set.includes(icon) ? icon : null;
 
 /** "1. ", "2) ", "ნაბიჯი 3: " and the like in front of a title. */
 const TITLE_NUMBER = /^\s*(?:ნაბიჯი\s*)?\d+\s*(?:[.):](?!\d)|\s[-–—])\s*/u;
@@ -112,16 +124,20 @@ export function shortLabel(name: string): string {
 
 /**
  * Brings a schema-valid step to the design's shape: no number before the
- * title, texts within LIMITS, ≤3 tools/markers, and a marker on the focus part
+ * title, texts within LIMITS, ≤3 tools/markers, tools split into names and
+ * toolItems, unknown icons as null, and a marker on the focus part
  * when the model sent none. Every synthesized reference is focus[0], which
  * stepRuleError checks anyway.
  */
-export function tidyStep(step: Step, labels: Map<string, string>): Step {
+export function tidyStep(step: ModelStep, labels: Map<string, string>): Step {
   const optional = (value: string | null | undefined, max: number) => {
     const t = value == null ? "" : clampText(value, max);
     return t ? t : null;
   };
   const title = step.title.replace(TITLE_NUMBER, "").trim();
+  const toolItems = step.tools
+    .slice(0, LIMITS.tools)
+    .map((t) => ({ label: clampText(t.name, LIMITS.tool), icon: known(TOOL_ICONS, t.icon) }));
   let markers = step.markers.slice(0, LIMITS.markers).map((m) => ({ ...m, label: clampText(m.label, LIMITS.markerLabel) }));
   const target = step.focus[0];
   if (markers.length === 0 && target !== undefined) {
@@ -138,7 +154,9 @@ export function tidyStep(step: Step, labels: Map<string, string>): Step {
     title: clampText(title || step.title, LIMITS.title),
     text: clampText(step.text, LIMITS.text),
     markers,
-    tools: step.tools.slice(0, LIMITS.tools).map((t) => clampText(t, LIMITS.tool)),
+    icon: known(STEP_ICONS, step.icon),
+    tools: toolItems.map((t) => t.label),
+    toolItems,
     tip: optional(step.tip, LIMITS.tip),
     warn: optional(step.warn, LIMITS.warn),
   };

@@ -39,6 +39,18 @@ export const LIMITS = {
   markerLabel: 24,
 } as const;
 
+/** The phone's icon set for a step's main action (2026-10-17). */
+export const STEP_ICONS = [
+  "rotate_cw", "rotate_ccw", "unscrew", "tighten", "pull", "push", "press", "open",
+  "close", "pour", "check", "clean", "place", "remove", "wait", "warning",
+] as const;
+
+/** The phone's icon set for tools. */
+export const TOOL_ICONS = [
+  "wrench", "screwdriver", "pliers", "hex_key", "hammer", "bucket", "gloves", "towel", "cloth", "brush",
+  "flashlight", "tape", "knife", "funnel", "container", "oil", "water", "cable", "phone", "paper",
+] as const;
+
 /** variant_c.schema_parts */
 export function schemaParts(): JsonSchema {
   return obj({
@@ -89,7 +101,20 @@ export function schemaFor(ids: string[], count = 5): JsonSchema {
         },
       }),
     ),
-    tools: { ...array(capped(LIMITS.tool)), maxItems: LIMITS.tools },
+    icon: {
+      type: ["string", "null"],
+      enum: [...STEP_ICONS, null],
+      description: "ნაბიჯის მთავარი მოქმედება; თუ არცერთი არ ერგება — null",
+    },
+    tools: {
+      ...array(
+        obj({
+          name: capped(LIMITS.tool),
+          icon: { type: ["string", "null"], enum: [...TOOL_ICONS, null] },
+        }),
+      ),
+      maxItems: LIMITS.tools,
+    },
     tip: { type: ["string", "null"], maxLength: LIMITS.tip },
     warn: { type: ["string", "null"], maxLength: LIMITS.warn },
   });
