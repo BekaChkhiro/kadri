@@ -311,3 +311,32 @@ decoder ≈25 მს/box, post ≈22–28 მს/box.
    სამიზნეები: encoder ≤150 მს, decoder ≤30 მს/box. პირველი გაშვება აპის დაყენების
    შემდეგ ყველაზე ცივია (ANE compile) — ჩაინიშნე ცალკე.
 6. სურვილისამებრ: 5 წუთი ზედიზედ გაშვება და ტელეფონის გაცხელება (sustained ქცევა).
+
+## შეხებით prompt — საწყისი ხარისხის შემოწმება
+
+T3.6-ის პირველი ცდა: ეკრანის მოკლე მხარის 18%, 22% ან 25% ზომის
+კვადრატული box შეხების გარშემო → არსებული decoder → მიღებული მასკის
+bounding box (0–1000, floor/ceil გარეთ) → მეორე decode. არსებული box API
+და `SAMDecoder.mlpackage` არ შეცვლილა.
+
+ლოკალური, ქსელის გარეშე გამეორება:
+
+```sh
+/tmp/kadri-samtools-venv/bin/python ios/Tools/check_touch_box.py
+```
+
+2026-10-17, macOS Python Core ML `CPU_ONLY`, sink fixture, SAM2 `p5`:
+თითო ზომაზე შემოწმდა მასკის შიგნით მდებარე 22 წერტილი (30 px ბადე).
+მეორე decode-ის საუკეთესო IoU იყო 0.2174 (18%), 0.2683 (22%) და
+0.4526 (25%). ეს მოთხოვნილ ≥0.7-ს ვერ აღწევს: მცირე box U-სიფონის
+ცალკეულ მონაკვეთებს გამოყოფს და bounding-box დაზუსტება მთლიან საგანს ვერ აღადგენს.
+Encoder-ის ერთი გავლა preprocessing-ით იყო 103.8 ms; ეს **Mac-ის**
+გაზომვაა, არა iOS simulator-ის ან ტელეფონის შედეგი.
+
+შემდეგი მიდგომა: point-input decoder-ის re-export (positive label 1 და padding),
+ცალკე `SAMDecoderPoint.mlpackage`, Python parity ≥0.95-ის შემოწმებით.
+ჯერ არ შესრულებულა: ახალ package-ს app target-ში დასამატებლად საჭიროა
+`ios/project.yml`-ის Models source ჩანაწერი; ფაილი T3.6-ის ნებადართულ
+რედაქტირების სიაში არ არის. მხოლოდ გენერირებული pbxproj-ის შეცვლა
+`xcodegen generate`-ის შემდეგ დაიკარგებოდა. Touch UI და simulator/device
+შემოწმებები ამ ეტაპზე არ განხორციელებულა.
