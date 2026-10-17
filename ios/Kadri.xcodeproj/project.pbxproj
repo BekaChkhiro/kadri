@@ -9,18 +9,27 @@
 /* Begin PBXBuildFile section */
 		192F30E2CBC4A5B72BDAC499 /* NotoSansGeorgian-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A7232F6CADE38F5998CDD86B /* NotoSansGeorgian-Regular.ttf */; };
 		1BAD10810ED8DBAD455C6695 /* ARKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A050936A9DE4965679EB720 /* ARKit.framework */; };
+		2627612ADB843E044E6BAAD0 /* SessionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E8D3F09CEFA43CA7FA54609 /* SessionScreen.swift */; };
+		37789446591D4FB3C98C7948 /* SessionSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BF5F143404E75DF39FED04 /* SessionSnapshotTests.swift */; };
 		387879FE5284A5F25A697DAF /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A07FD3A6DD38BBD488C4C97D /* Inter-Regular.ttf */; };
 		3A22A9DB0A7B1979BC715269 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6F8715683CDD1468FCCEA2 /* Theme.swift */; };
 		3B5D76707165FAFED8C89035 /* ARControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0248C421A7F6709755E1292 /* ARControllerTests.swift */; };
 		4209CE751639036987E4CB8A /* OFL-NotoSansGeorgian.txt in Resources */ = {isa = PBXBuildFile; fileRef = 317A97DEC8B919E1D5640FD6 /* OFL-NotoSansGeorgian.txt */; };
+		54F0522C6E62571ABF309D4D /* PartsRevealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5A4C245D4AD9B3997F740D /* PartsRevealView.swift */; };
+		5BE739AD9DDDF79EFA649F4E /* StepCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57C76ED6947A710AECBC58E /* StepCard.swift */; };
 		5C58BFDF78CA098BC961D969 /* ThemePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50FB119A97C98B1472B896A /* ThemePreview.swift */; };
 		6D41E78BA702EF418494A06F /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAC9836272FB003780B518D6 /* Vision.framework */; };
+		729038930CAADDEFED6F3F3A /* SessionPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D624A7ABF50F3C99DA5D0ADF /* SessionPresentationTests.swift */; };
 		72B54F42CA10F4754BFF0864 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84CAC115ECF63FDB03CC26B8 /* Inter-SemiBold.ttf */; };
 		7E63B1D4CFDD42BE7DF2BD56 /* Glass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5147D5C2BA088C9E501729 /* Glass.swift */; };
+		89EF43D89D35C3880A687D29 /* SessionPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6881E6C4A4099231DB05929E /* SessionPresentation.swift */; };
 		9182092E4B5E128F09C0A614 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00B16E38C3E8EC7B01B52E4 /* Inter-Bold.ttf */; };
 		91ED3764D969F8DA61658440 /* NotoSansGeorgian-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BF721974DE7AA9474A9A606 /* NotoSansGeorgian-SemiBold.ttf */; };
 		A00C7230F3B50860C993A69A /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 340983717E658514DD60A10B /* Inter-Medium.ttf */; };
 		A021D80B098F055B3EF12B0B /* PartAnchors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF5D91DF61E491034224AFC /* PartAnchors.swift */; };
+		A03AEF2EEC043EE877C1A3BA /* DescribeBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE6EB632B576D6674E9FB23 /* DescribeBar.swift */; };
+		AA688D92A9EC9C0E84545F71 /* SessionPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73919932F619884CCB894798 /* SessionPreviews.swift */; };
+		AB7754BA7224CE2D04DD9517 /* MockKadriAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67531DAC3A9852818926C8F /* MockKadriAPI.swift */; };
 		ADE3F74A26977B000BF655B1 /* KadriTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4910DAFAB764B1ABC03FDC1 /* KadriTests.swift */; };
 		B0C7B9CD0B78ADD51ED872B9 /* RealityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 929743E4A7FCA4EBC2F888D7 /* RealityKit.framework */; };
 		B71D30C9823A5FF91D0A3DBC /* CoreML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45B6800C7C6BC6DFD3FD195E /* CoreML.framework */; };
@@ -30,6 +39,7 @@
 		E130A68F5F393B8FEE871CA4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543FF004E3F31262D70B1ECA /* ContentView.swift */; };
 		EA71BC0ADF6AB6242FFAB163 /* ARDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3F9A3ED45BED82339BC58F /* ARDebugView.swift */; };
 		EAF7180A4D2ECF039B84CD03 /* KadriCore in Frameworks */ = {isa = PBXBuildFile; productRef = 3B8FE85B572B4ACA38714736 /* KadriCore */; };
+		EC3A8417B62ECE05AFDFE721 /* ScanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F55593458662C90DBD1A8F7 /* ScanningView.swift */; };
 		F3A6721520CD41B44AAC06CB /* OFL-Inter.txt in Resources */ = {isa = PBXBuildFile; fileRef = EC47E7F74A9863587D696784 /* OFL-Inter.txt */; };
 		F4AAA1A1748F2F3BE3BF4AAD /* NotoSansGeorgian-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24F1F6DCECABEBE28315A574 /* NotoSansGeorgian-Bold.ttf */; };
 		FAE6EC25500266A74D9C602B /* NotoSansGeorgian-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B3D97CD203D0775D8B41AFD6 /* NotoSansGeorgian-Medium.ttf */; };
@@ -46,23 +56,32 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		00BF5F143404E75DF39FED04 /* SessionSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSnapshotTests.swift; sourceTree = "<group>"; };
 		0284BC4ED2FA5475C1184EE9 /* ARSessionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSessionController.swift; sourceTree = "<group>"; };
 		0B3F9A3ED45BED82339BC58F /* ARDebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARDebugView.swift; sourceTree = "<group>"; };
+		0F55593458662C90DBD1A8F7 /* ScanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanningView.swift; sourceTree = "<group>"; };
+		1B5A4C245D4AD9B3997F740D /* PartsRevealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartsRevealView.swift; sourceTree = "<group>"; };
 		24F1F6DCECABEBE28315A574 /* NotoSansGeorgian-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansGeorgian-Bold.ttf"; sourceTree = "<group>"; };
+		2CE6EB632B576D6674E9FB23 /* DescribeBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescribeBar.swift; sourceTree = "<group>"; };
 		317A97DEC8B919E1D5640FD6 /* OFL-NotoSansGeorgian.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OFL-NotoSansGeorgian.txt"; sourceTree = "<group>"; };
 		323ABB0C7AC98B5137031173 /* Kadri.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Kadri.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		340983717E658514DD60A10B /* Inter-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Medium.ttf"; sourceTree = "<group>"; };
 		45B6800C7C6BC6DFD3FD195E /* CoreML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreML.framework; path = System/Library/Frameworks/CoreML.framework; sourceTree = SDKROOT; };
 		4AF5D91DF61E491034224AFC /* PartAnchors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartAnchors.swift; sourceTree = "<group>"; };
+		4E8D3F09CEFA43CA7FA54609 /* SessionScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionScreen.swift; sourceTree = "<group>"; };
 		543FF004E3F31262D70B1ECA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		5BC9A3615F9651942AE4DF2B /* KadriCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = KadriCore; path = Packages/KadriCore; sourceTree = SOURCE_ROOT; };
 		5BF721974DE7AA9474A9A606 /* NotoSansGeorgian-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansGeorgian-SemiBold.ttf"; sourceTree = "<group>"; };
+		6881E6C4A4099231DB05929E /* SessionPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPresentation.swift; sourceTree = "<group>"; };
+		73919932F619884CCB894798 /* SessionPreviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPreviews.swift; sourceTree = "<group>"; };
 		7889B405E7EAD71436F553E6 /* KeyframePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyframePicker.swift; sourceTree = "<group>"; };
 		84CAC115ECF63FDB03CC26B8 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
 		929743E4A7FCA4EBC2F888D7 /* RealityKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealityKit.framework; path = System/Library/Frameworks/RealityKit.framework; sourceTree = SDKROOT; };
 		9A050936A9DE4965679EB720 /* ARKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARKit.framework; path = System/Library/Frameworks/ARKit.framework; sourceTree = SDKROOT; };
 		A00B16E38C3E8EC7B01B52E4 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		A07FD3A6DD38BBD488C4C97D /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
+		A57C76ED6947A710AECBC58E /* StepCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepCard.swift; sourceTree = "<group>"; };
+		A67531DAC3A9852818926C8F /* MockKadriAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockKadriAPI.swift; sourceTree = "<group>"; };
 		A7232F6CADE38F5998CDD86B /* NotoSansGeorgian-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansGeorgian-Regular.ttf"; sourceTree = "<group>"; };
 		ABD5A9F0403797194A257F7D /* KadriApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KadriApp.swift; sourceTree = "<group>"; };
 		B3D97CD203D0775D8B41AFD6 /* NotoSansGeorgian-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansGeorgian-Medium.ttf"; sourceTree = "<group>"; };
@@ -71,6 +90,7 @@
 		CA5147D5C2BA088C9E501729 /* Glass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Glass.swift; sourceTree = "<group>"; };
 		CAC9836272FB003780B518D6 /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
 		D014C6514CCF1D0423555B9B /* KadriTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = KadriTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D624A7ABF50F3C99DA5D0ADF /* SessionPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPresentationTests.swift; sourceTree = "<group>"; };
 		EC47E7F74A9863587D696784 /* OFL-Inter.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OFL-Inter.txt"; sourceTree = "<group>"; };
 		EC6F8715683CDD1468FCCEA2 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		F0248C421A7F6709755E1292 /* ARControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARControllerTests.swift; sourceTree = "<group>"; };
@@ -113,6 +133,7 @@
 				26AE2588A54B31F04C7D0DF7 /* AR */,
 				EAF36B7FB440F8813F254796 /* Design */,
 				FEB0235438BDD303D3660CCA /* Resources */,
+				303718F3E800726231EC8190 /* Session */,
 			);
 			path = Kadri;
 			sourceTree = "<group>";
@@ -128,13 +149,38 @@
 			path = AR;
 			sourceTree = "<group>";
 		};
+		303718F3E800726231EC8190 /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				2CE6EB632B576D6674E9FB23 /* DescribeBar.swift */,
+				1B5A4C245D4AD9B3997F740D /* PartsRevealView.swift */,
+				0F55593458662C90DBD1A8F7 /* ScanningView.swift */,
+				6881E6C4A4099231DB05929E /* SessionPresentation.swift */,
+				4E8D3F09CEFA43CA7FA54609 /* SessionScreen.swift */,
+				A57C76ED6947A710AECBC58E /* StepCard.swift */,
+				7FD44CA17D482AAAEE96ED16 /* Preview */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
 		5CB0942AF44DA57FD6340EED /* KadriTests */ = {
 			isa = PBXGroup;
 			children = (
 				F0248C421A7F6709755E1292 /* ARControllerTests.swift */,
 				F4910DAFAB764B1ABC03FDC1 /* KadriTests.swift */,
+				D624A7ABF50F3C99DA5D0ADF /* SessionPresentationTests.swift */,
+				00BF5F143404E75DF39FED04 /* SessionSnapshotTests.swift */,
 			);
 			path = KadriTests;
+			sourceTree = "<group>";
+		};
+		7FD44CA17D482AAAEE96ED16 /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				A67531DAC3A9852818926C8F /* MockKadriAPI.swift */,
+				73919932F619884CCB894798 /* SessionPreviews.swift */,
+			);
+			path = Preview;
 			sourceTree = "<group>";
 		};
 		8A52A449303034D9065D3279 = {
@@ -310,6 +356,8 @@
 			files = (
 				3B5D76707165FAFED8C89035 /* ARControllerTests.swift in Sources */,
 				ADE3F74A26977B000BF655B1 /* KadriTests.swift in Sources */,
+				729038930CAADDEFED6F3F3A /* SessionPresentationTests.swift in Sources */,
+				37789446591D4FB3C98C7948 /* SessionSnapshotTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,10 +368,18 @@
 				EA71BC0ADF6AB6242FFAB163 /* ARDebugView.swift in Sources */,
 				BD67D4209D70CC5DD7C4D768 /* ARSessionController.swift in Sources */,
 				E130A68F5F393B8FEE871CA4 /* ContentView.swift in Sources */,
+				A03AEF2EEC043EE877C1A3BA /* DescribeBar.swift in Sources */,
 				7E63B1D4CFDD42BE7DF2BD56 /* Glass.swift in Sources */,
 				D6C97E8C50507362CE0C7B9F /* KadriApp.swift in Sources */,
 				D99995671C2CD82936EFFE51 /* KeyframePicker.swift in Sources */,
+				AB7754BA7224CE2D04DD9517 /* MockKadriAPI.swift in Sources */,
 				A021D80B098F055B3EF12B0B /* PartAnchors.swift in Sources */,
+				54F0522C6E62571ABF309D4D /* PartsRevealView.swift in Sources */,
+				EC3A8417B62ECE05AFDFE721 /* ScanningView.swift in Sources */,
+				89EF43D89D35C3880A687D29 /* SessionPresentation.swift in Sources */,
+				AA688D92A9EC9C0E84545F71 /* SessionPreviews.swift in Sources */,
+				2627612ADB843E044E6BAAD0 /* SessionScreen.swift in Sources */,
+				5BE739AD9DDDF79EFA649F4E /* StepCard.swift in Sources */,
 				3A22A9DB0A7B1979BC715269 /* Theme.swift in Sources */,
 				5C58BFDF78CA098BC961D969 /* ThemePreview.swift in Sources */,
 			);
