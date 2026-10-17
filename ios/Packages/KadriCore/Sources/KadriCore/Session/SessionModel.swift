@@ -125,6 +125,11 @@ public final class SessionModel {
 
     /// Starts a new session from any phase, dropping whatever was in flight.
     public func beginDescribing() {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--photo-reset-trace") {
+            print("PHOTO_RESET_TRACE \(#function)\n" + Thread.callStackSymbols.joined(separator: "\n"))
+        }
+        #endif
         stopWork()
         resetSession()
         phase = .describing(text: "")
@@ -364,6 +369,11 @@ public final class SessionModel {
     /// parts (parts kept); any other phase ends the session. From round 2 on, cancelling the new photo
     /// (scanning, parts or an error) returns to the previous round's finished steps instead.
     public func cancel() {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--photo-reset-trace") {
+            print("PHOTO_RESET_TRACE \(#function)\n" + Thread.callStackSymbols.joined(separator: "\n"))
+        }
+        #endif
         let previous = phase
         stopWork()
         switch previous {

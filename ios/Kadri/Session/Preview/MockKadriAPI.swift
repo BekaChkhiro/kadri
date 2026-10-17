@@ -10,6 +10,10 @@ struct MockKadriAPI: KadriAPI {
     /// Two photos: the first stops after three steps and asks for the removed siphon, the second finishes.
     var multiPhoto = false
     var diagnostic = false
+    /// Three steps, an answer, two steps, then another photo with three final steps.
+    var answerThenPhoto = false
+    var answersBeforePhoto = 1
+    var answerOnSecondPhoto = false
 
     func parts(keyframe: Data, instructions: String, context: SessionContext?) async throws -> PartsResult {
         try await Task.sleep(for: scanDelay)
@@ -22,6 +26,21 @@ struct MockKadriAPI: KadriAPI {
         case (false, _): (Self.sampleSteps, .complete)
         case (true, nil): (Array(Self.sampleSteps.prefix(3)), .needsPhoto(prompt: Self.round2Prompt, reason: "შუასადების მდგომარეობა ამ ფოტოზე არ ჩანს."))
         case (true, _): (Self.round2Steps, .complete)
+        }
+        if answerThenPhoto {
+            if context?.round == 2 {
+                steps = Self.round2Steps
+                next = answerOnSecondPhoto && context?.answers.count == answersBeforePhoto ? Self.answerRequest : .complete
+            } else if context?.answers.isEmpty != false {
+                steps = Array(Self.sampleSteps.prefix(3))
+                next = Self.answerRequest
+            } else if (context?.answers.count ?? 0) < answersBeforePhoto {
+                steps = [Self.sampleSteps[3]]
+                next = Self.measurementRequest
+            } else {
+                steps = Array(Self.sampleSteps.suffix(2))
+                next = .needsPhoto(prompt: Self.round2Prompt, reason: "შუასადების მდგომარეობა ამ ფოტოზე არ ჩანს.")
+            }
         }
         if diagnostic {
             switch context?.answers.count ?? 0 {

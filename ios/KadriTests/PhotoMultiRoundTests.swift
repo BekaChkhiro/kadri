@@ -205,6 +205,48 @@ final class PhotoMultiRoundTests: XCTestCase {
         try await poll(2, "done") { if case .done = model.phase { return true }; return false }
     }
 
+    func testAnswerThenPhotoWaitKeepsThePhotoFlowOnSteps() async throws {
+        let session = PhotoSession(api: MockKadriAPI(scanDelay: .milliseconds(5), stepDelay: .milliseconds(5), answerThenPhoto: true))
+        let model = session.model
+        let host = UIHostingController(rootView: PhotoFlowView(session: session).environment(\.meshWrapReduceMotion, true))
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let previousWindow = scene.windows.first(where: \.isKeyWindow)
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = host
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; previousWindow?.makeKeyAndVisible() }
+        session.selectDemo()
+        session.submit("შეამოწმე")
+        try await waitForFinishedSteps(session)
+        let image = try XCTUnwrap(session.image)
+        model.next(); model.next()
+        try await poll(2, "answer action") { Self.element(in: host.view, label: "პასუხი") != nil }
+        XCTAssertTrue(try XCTUnwrap(Self.element(in: host.view, label: "პასუხი")).accessibilityActivate())
+        try await poll(2, "answer options") { Self.element(in: host.view, label: "კი") != nil }
+        XCTAssertTrue(try XCTUnwrap(Self.element(in: host.view, label: "კი")).accessibilityActivate())
+        try await poll(2, "answer sent") { model.answers.count == 1 }
+        try await waitForFinishedSteps(session)
+        model.next()
+        try await poll(2, "new photo action") { Self.element(in: host.view, label: "ახალი ფოტო") != nil }
+        try await Task.sleep(for: .seconds(25))
+        XCTAssertTrue(session.image === image)
+        XCTAssertTrue(model.canContinueWithPhoto)
+        XCTAssertEqual(model.allSteps.count, 5)
+        guard case .steps(_, _, streaming: false) = model.phase else { return XCTFail("expected finished steps") }
+        XCTAssertTrue(try XCTUnwrap(Self.element(in: host.view, label: "ახალი ფოტო")).accessibilityActivate())
+        let directory = URL(fileURLWithPath: "/tmp/kadri-photo-shots-square")
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try await shot("answer-then-photo-wait", window, directory)
+        XCTAssertTrue(session.image === image)
+        XCTAssertTrue(model.canContinueWithPhoto)
+        session.continueWithDemo()
+        try await waitForFinishedSteps(session)
+        XCTAssertEqual(model.allSteps.count, 8)
+        XCTAssertEqual(model.stepOffset, 5)
+        XCTAssertEqual(model.displayedRound, 2)
+    }
+
     // MARK: - Helpers
 
     private func waitForFinishedSteps(_ session: PhotoSession, timeout: TimeInterval = 5) async throws {

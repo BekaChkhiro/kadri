@@ -41,7 +41,7 @@ final class PhotoSession: ObservableObject {
         #else
         let multiPhoto = false
         #endif
-        model = SessionModel(api: api ?? (isMock ? MockKadriAPI(scanDelay: .seconds(1.2), stepDelay: .seconds(2.5), multiPhoto: multiPhoto, diagnostic: ProcessInfo.processInfo.arguments.contains("--photo-diagnostic")) : live()))
+        model = SessionModel(api: api ?? (isMock ? MockKadriAPI(scanDelay: .seconds(1.2), stepDelay: .seconds(2.5), multiPhoto: multiPhoto, diagnostic: ProcessInfo.processInfo.arguments.contains("--photo-diagnostic"), answerThenPhoto: ProcessInfo.processInfo.arguments.contains("--photo-answer-then-photo"), answerOnSecondPhoto: ProcessInfo.processInfo.arguments.contains("--photo-answer-on-second-photo")) : live()))
         #else
         model = SessionModel(api: api ?? live())
         #endif
@@ -49,6 +49,11 @@ final class PhotoSession: ObservableObject {
     }
 
     func select(_ source: UIImage) {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--photo-reset-trace") {
+            print("PHOTO_RESET_TRACE \(#function)\n" + Thread.callStackSymbols.joined(separator: "\n"))
+        }
+        #endif
         cancelSegmentation()
         if case .describing = model.phase {} else { model.beginDescribing() }
         rounds = []
@@ -146,6 +151,11 @@ final class PhotoSession: ObservableObject {
     }
 
     func retake() {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--photo-reset-trace") {
+            print("PHOTO_RESET_TRACE \(#function)\n" + Thread.callStackSymbols.joined(separator: "\n"))
+        }
+        #endif
         cancelSegmentation()
         image = nil; jpeg = nil; apiJPEG = nil; preparedResult = nil; rounds = []; startedAt = nil
         model.beginDescribing()

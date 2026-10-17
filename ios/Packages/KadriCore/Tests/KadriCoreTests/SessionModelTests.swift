@@ -72,6 +72,42 @@ final class SessionModelTests: XCTestCase {
         XCTAssertEqual(model.allSteps.count, 7)
     }
 
+    func testAnswerThenPhotoWaitKeepsStepsAndContinuesTheNextRound() async {
+        model = SessionModel(api: api, clock: clock, scanTimeout: .seconds(20), firstStepTimeout: .seconds(20))
+        await reachParts()
+        model.startSteps()
+        await finishTurn(0, continuation: answerRequest)
+        model.continueWithAnswer("კი")
+        let next = StepsContinuation.needsPhoto(prompt: "ახლოდან", reason: "შუასადები არ ჩანს")
+        await finishTurn(1, steps: Array(Fixtures.steps.prefix(2)), continuation: next)
+        model.next()
+        let phase = model.phase
+        clock.advance(by: .seconds(30))
+        await waitUntil { self.clock.sleeperCount == 0 }
+        await Task.yield()
+        XCTAssertEqual(model.phase, phase)
+        XCTAssertTrue(model.canContinueWithPhoto)
+        XCTAssertEqual(model.allSteps.count, 5)
+        XCTAssertEqual(model.currentStepIndex, 4)
+        XCTAssertEqual(model.displayedRound, 1)
+        XCTAssertEqual(model.stepOffset, 3)
+        XCTAssertNil(model.timeoutTask)
+
+        model.continueWithPhoto { Fixtures.keyframe }
+        await model.workTask?.value
+        model.startSteps()
+        await finishTurn(2, continuation: .complete)
+        XCTAssertEqual(model.round, 2)
+        XCTAssertEqual(model.allSteps.count, 8)
+        XCTAssertEqual(model.stepOffset, 5)
+        XCTAssertEqual(model.currentStepIndex, 5)
+        XCTAssertEqual(model.displayedRound, 2)
+        XCTAssertEqual(model.pendingContext?.answers.count, 1)
+        model.previous()
+        XCTAssertEqual(model.displayedRound, 1)
+        XCTAssertEqual(model.currentStepIndex, 4)
+    }
+
     func testAnswerTurnLimit() async {
         await reachParts()
         model.startSteps()

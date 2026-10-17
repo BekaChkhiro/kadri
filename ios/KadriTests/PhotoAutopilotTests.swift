@@ -1,4 +1,5 @@
 import XCTest
+import SwiftUI
 import KadriCore
 @testable import Kadri
 
@@ -139,6 +140,103 @@ final class PhotoAutopilotTests: XCTestCase {
         XCTAssertEqual(done["rounds"] as? Int, 1)
         XCTAssertEqual(session.model.answers.map(\.unit), [nil, "mA"])
         XCTAssertTrue(pilot.isStopped)
+    }
+
+    func testAnswerThenPhotoWaitKeepsSessionUntilTheNextPhotoArrives() async throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("autopilot-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let demo = try XCTUnwrap(Bundle.main.url(forResource: "PhotoDemo", withExtension: "png"))
+        let session = PhotoSession(api: MockKadriAPI(scanDelay: .milliseconds(5), stepDelay: .milliseconds(5), answerThenPhoto: true))
+        let pilot = PhotoAutopilot(session: session, directory: directory, stepDelay: 0.05, pollInterval: 0.02)
+        pilot.start()
+        defer { pilot.stop() }
+        try "შეამოწმე".write(to: directory.appendingPathComponent("comment.txt"), atomically: true, encoding: .utf8)
+        try FileManager.default.copyItem(at: demo, to: directory.appendingPathComponent("round-1.png"))
+        try await waitForFile("question-1.json", in: directory)
+        XCTAssertEqual(try json("question-1.json", in: directory)["stepsSoFar"] as? Int, 3)
+        try "კი".write(to: directory.appendingPathComponent("answer-1.txt"), atomically: true, encoding: .utf8)
+        try await waitForFile("round-1.result.json", in: directory)
+        let first = try json("round-1.result.json", in: directory)
+        XCTAssertEqual((first["continuation"] as? [String: Any])?["kind"] as? String, "needs_photo")
+        XCTAssertEqual((first["steps"] as? [[String: Any]])?.count, 5)
+        let image = try XCTUnwrap(session.image)
+        try await Task.sleep(for: .seconds(25))
+        XCTAssertTrue(session.image === image)
+        XCTAssertTrue(session.model.canContinueWithPhoto)
+        XCTAssertEqual(session.model.allSteps.count, 5)
+        let status = try json("status.json", in: directory)
+        XCTAssertEqual(status["phase"] as? String, "steps")
+        XCTAssertEqual(status["waitingForPhoto"] as? Int, 2)
+        XCTAssertFalse(pilot.isStopped)
+        try FileManager.default.copyItem(at: demo, to: directory.appendingPathComponent("round-2.jpg"))
+        try await waitForFile("done.json", in: directory)
+        let second = try json("round-2.result.json", in: directory)
+        XCTAssertEqual((second["steps"] as? [[String: Any]])?.map { $0["index"] as? Int }, [6, 7, 8])
+        XCTAssertEqual((second["continuation"] as? [String: Any])?["kind"] as? String, "complete")
+        XCTAssertEqual(session.model.allSteps.count, 8)
+        XCTAssertEqual(session.model.stepOffset, 5)
+        XCTAssertEqual(session.model.displayedRound, 2)
+    }
+
+    func testTwoAnswersThenPhotoWaitWithVisibleFlowAndRealAutopilotTiming() async throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("autopilot-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let demo = try XCTUnwrap(Bundle.main.url(forResource: "PhotoDemo", withExtension: "png"))
+        let session = PhotoSession(api: MockKadriAPI(scanDelay: .milliseconds(5), stepDelay: .milliseconds(5),
+                                                   answerThenPhoto: true, answersBeforePhoto: 2))
+        let host = UIHostingController(rootView: PhotoFlowView(session: session).environment(\.meshWrapReduceMotion, true))
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let previousWindow = scene.windows.first(where: \.isKeyWindow)
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = host
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; previousWindow?.makeKeyAndVisible() }
+        let pilot = PhotoAutopilot(session: session, directory: directory)
+        pilot.start()
+        defer { pilot.stop() }
+        try "შეამოწმე".write(to: directory.appendingPathComponent("comment.txt"), atomically: true, encoding: .utf8)
+        try FileManager.default.copyItem(at: demo, to: directory.appendingPathComponent("round-1.png"))
+        for number in 1...2 {
+            try await waitFor("question \(number)", timeout: 30) {
+                FileManager.default.fileExists(atPath: directory.appendingPathComponent("question-\(number).json").path)
+            }
+            try "კი".write(to: directory.appendingPathComponent("answer-\(number).txt"), atomically: true, encoding: .utf8)
+        }
+        try await waitFor("round 1 result", timeout: 30) {
+            FileManager.default.fileExists(atPath: directory.appendingPathComponent("round-1.result.json").path)
+        }
+        XCTAssertEqual(session.model.answers.count, 2)
+        XCTAssertEqual(session.model.allSteps.count, 6)
+        XCTAssertTrue(session.model.canContinueWithPhoto)
+        let image = try XCTUnwrap(session.image)
+        try await Task.sleep(for: .seconds(65))
+        XCTAssertTrue(session.image === image)
+        XCTAssertTrue(session.model.canContinueWithPhoto)
+        XCTAssertEqual(session.model.allSteps.count, 6)
+        XCTAssertEqual(session.model.currentStepIndex, 5)
+        let status = try json("status.json", in: directory)
+        XCTAssertEqual(status["phase"] as? String, "steps")
+        XCTAssertEqual(status["waitingForPhoto"] as? Int, 2)
+        let screenshot = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in
+            window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+        }
+        try screenshot.pngData()?.write(to: URL(fileURLWithPath: "/tmp/kadri-needsphoto-65s.png"))
+        let attachment = XCTAttachment(image: screenshot)
+        attachment.name = "Two answers, waiting 65 seconds for photo 2"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        try FileManager.default.copyItem(at: demo, to: directory.appendingPathComponent("round-2.png"))
+        try await waitFor("done", timeout: 30) {
+            FileManager.default.fileExists(atPath: directory.appendingPathComponent("done.json").path)
+        }
+        XCTAssertEqual(session.model.allSteps.count, 9)
+        XCTAssertEqual(session.model.round, 2)
+        XCTAssertEqual(session.model.displayedRound, 2)
+        XCTAssertEqual(session.model.stepOffset, 6)
+        XCTAssertEqual((try json("round-2.result.json", in: directory)["continuation"] as? [String: Any])?["kind"] as? String, "complete")
     }
 
     // MARK: - Helpers
