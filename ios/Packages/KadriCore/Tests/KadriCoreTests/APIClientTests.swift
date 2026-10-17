@@ -129,7 +129,7 @@ final class APIClientTests: XCTestCase {
         XCTAssertTrue(heldDoneUntilStep.value, "the first step must be delivered before the server sends done")
         XCTAssertEqual(events, [
             .step(Step(index: 0, title: "წყლის გადაკეტვა", text: "დაკეტე ონკანი.", focus: ["p1"])),
-            .step(Step(index: 1, title: "თხილის მოშვება", text: "მოატრიალე საათის ისრის საწინააღმდეგოდ.", focus: ["p2"], avoid: ["p1"])),
+            .step(Step(index: 1, title: "თხილის მოშვება", text: "მოატრიალე საათის ისრის საწინააღმდეგოდ.", focus: ["p2"], avoid: ["p1"], tools: ["ქანჩი"], warn: "წყალი დაიღვრება")),
             .done(StepsUsage(inputTokens: 1200, outputTokens: 300, reasoningTokens: 40, costUsd: 0.027, latencyMs: 5321)),
         ])
 

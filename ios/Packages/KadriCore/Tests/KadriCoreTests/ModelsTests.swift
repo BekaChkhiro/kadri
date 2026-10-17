@@ -17,4 +17,18 @@ final class ModelsTests: XCTestCase {
         let decoded = try JSONDecoder().decode(Step.self, from: JSONEncoder().encode(step))
         XCTAssertEqual(decoded, step)
     }
+    func testWorkerPresentationFieldsAndLegacySteps() throws {
+        let payload = #"{"index":1,"title":"მოუშვი","text":"ხელით","focus":["p1"],"avoid":[],"markers":[{"part":"p1","label":"ქანჩი","tone":"brand"}],"arrows":[{"part":"p1","type":"rotate","dir":"ccw"}],"tools":["ხელთათმანი"],"warn":"ფრთხილად"}"#
+        let step = try JSONDecoder().decode(Step.self, from: Data(payload.utf8))
+        XCTAssertEqual(step.arrows.first?.dir, "ccw")
+        XCTAssertEqual(step.markers.first?.label, "ქანჩი")
+        XCTAssertEqual(step.tools, ["ხელთათმანი"])
+        XCTAssertEqual(step.warn, "ფრთხილად")
+        XCTAssertEqual(try JSONDecoder().decode(Step.self, from: JSONEncoder().encode(step)), step)
+        let old = #"{"index":1,"title":"x","text":"y","focus":[],"avoid":[]}"#
+        let legacy = try JSONDecoder().decode(Step.self, from: Data(old.utf8))
+        XCTAssertTrue(legacy.arrows.isEmpty)
+        XCTAssertTrue(legacy.tools.isEmpty)
+        XCTAssertNil(legacy.warn)
+    }
 }

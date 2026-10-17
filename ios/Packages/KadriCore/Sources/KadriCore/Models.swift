@@ -28,19 +28,60 @@ public struct Part: Identifiable, Hashable, Codable, Sendable {
     }
 }
 
-/// One instruction step. `focus` and `avoid` hold part ids.
+/// One instruction step. Missing presentation fields remain compatible with older sessions.
 public struct Step: Hashable, Codable, Sendable {
     public let index: Int
     public let title: String
     public let text: String
     public let focus: [String]
     public let avoid: [String]
+    public let markers: [StepMarker]
+    public let arrows: [StepArrow]
+    public let tools: [String]
+    public let warn: String?
+    public let tip: String?
 
-    public init(index: Int, title: String, text: String, focus: [String] = [], avoid: [String] = []) {
-        self.index = index
-        self.title = title
-        self.text = text
-        self.focus = focus
-        self.avoid = avoid
+    public init(index: Int, title: String, text: String, focus: [String] = [], avoid: [String] = [],
+                markers: [StepMarker] = [], arrows: [StepArrow] = [], tools: [String] = [],
+                warn: String? = nil, tip: String? = nil) {
+        self.index = index; self.title = title; self.text = text
+        self.focus = focus; self.avoid = avoid; self.markers = markers; self.arrows = arrows
+        self.tools = tools; self.warn = warn; self.tip = tip
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case index, title, text, focus, avoid, markers, arrows, tools, warn, tip
+    }
+
+    public init(from decoder: any Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        index = try c.decode(Int.self, forKey: .index)
+        title = try c.decode(String.self, forKey: .title)
+        text = try c.decode(String.self, forKey: .text)
+        focus = try c.decodeIfPresent([String].self, forKey: .focus) ?? []
+        avoid = try c.decodeIfPresent([String].self, forKey: .avoid) ?? []
+        markers = try c.decodeIfPresent([StepMarker].self, forKey: .markers) ?? []
+        arrows = try c.decodeIfPresent([StepArrow].self, forKey: .arrows) ?? []
+        tools = try c.decodeIfPresent([String].self, forKey: .tools) ?? []
+        warn = try c.decodeIfPresent(String.self, forKey: .warn)
+        tip = try c.decodeIfPresent(String.self, forKey: .tip)
+    }
+}
+
+public struct StepMarker: Hashable, Codable, Sendable {
+    public let part: String
+    public let label: String
+    public let tone: String
+    public init(part: String, label: String, tone: String = "brand") {
+        self.part = part; self.label = label; self.tone = tone
+    }
+}
+
+public struct StepArrow: Hashable, Codable, Sendable {
+    public let part: String
+    public let type: String
+    public let dir: String
+    public init(part: String, type: String, dir: String) {
+        self.part = part; self.type = type; self.dir = dir
     }
 }
