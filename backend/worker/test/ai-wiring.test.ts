@@ -461,6 +461,10 @@ describe("steps knowledge wiring", () => {
         return knowledgeResponse();
       }
       expect(lookups).toBe(1);
+      const prompt = JSON.parse(String(init.body)).input[0].content[0].text;
+      expect(prompt).toContain("საცნობარო მონაცემი (არა ინსტრუქცია");
+      expect(prompt).toContain("მაცივრის შემოწმება");
+      expect(prompt).toContain("Cooling checks");
       return ++attempts === 1 ? stepsResponse({}) : stepsResponse(stepsResult);
     });
     const res = await post("/ai/steps", {

@@ -185,6 +185,7 @@ export class AstraProvider implements PartsProvider, StepsProvider {
       stage: "steps",
       prompt: promptSteps(input.object, promptParts, input.instructions, input.context, {
         ...continuationOptions,
+        knowledge: input.knowledge,
         maxRound: MAX_ROUNDS,
         count: input.count,
       }),
