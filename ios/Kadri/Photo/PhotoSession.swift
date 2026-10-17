@@ -12,6 +12,7 @@ final class PhotoSession: ObservableObject {
     @Published var selectionError: String?
     private var jpeg: Data?
     /// Worker `/ai/parts` rejects keyframes whose long side exceeds 768 px; boxes are 0–1000 so they still map onto `jpeg`.
+    /// Both copies are the same centre square, so the photo always fills a square photo area.
     private var apiJPEG: Data?
     private var segmentation: Task<Void, Never>?
     private var preparedResult: PartsResult?
@@ -19,7 +20,7 @@ final class PhotoSession: ObservableObject {
     /// A finished earlier round's photo; `rounds[i]` is round `i + 1`. The current round lives in `image`/`jpeg`/`meshes`.
     private struct PhotoRound { let image: UIImage; let jpeg: Data; let apiJPEG: Data; let meshes: [TrackedMesh] }
     private var rounds: [PhotoRound] = []
-    var imageSize: CGSize { image?.size ?? CGSize(width: 1024, height: 1536) }
+    var imageSize: CGSize { image?.size ?? CGSize(width: 1024, height: 1024) }
 
     init(api: (any KadriAPI)? = nil) {
         #if DEBUG && targetEnvironment(simulator)
@@ -53,11 +54,11 @@ final class PhotoSession: ObservableObject {
         jpeg = prepared.jpeg; apiJPEG = prepared.apiJPEG; image = prepared.image; selectionError = nil
     }
 
-    /// Rasterize orientation once. SAM and display consume the 1536 px JPEG; the detector gets a 768 px copy.
+    /// Square-crop and rasterize orientation once. SAM and display consume the ≤1536 px JPEG; the detector gets a ≤768 px copy.
     private func prepare(_ source: UIImage) -> (jpeg: Data, apiJPEG: Data, image: UIImage)? {
         guard source.size.width > 0, source.size.height > 0 else { selectionError = "ფოტოს წაკითხვა ვერ მოხერხდა."; return nil }
-        guard let data = Self.rasterize(source, maxSide: 1536), let decoded = UIImage(data: data),
-              let apiData = Self.rasterize(source, maxSide: 768) else {
+        guard let data = Self.squareJPEG(source, maxSide: 1536), let decoded = UIImage(data: data),
+              let apiData = Self.squareJPEG(source, maxSide: 768) else {
             selectionError = "ფოტოს დამუშავება ვერ მოხერხდა."; return nil
         }
         return (data, apiData, decoded)
@@ -87,12 +88,16 @@ final class PhotoSession: ObservableObject {
         return number < model.round && rounds.indices.contains(number - 1) ? rounds[number - 1].meshes : meshes
     }
 
-    private static func rasterize(_ source: UIImage, maxSide: CGFloat) -> Data? {
-        let factor = min(1, maxSide / max(source.size.width, source.size.height))
-        let size = CGSize(width: (source.size.width * factor).rounded(), height: (source.size.height * factor).rounded())
+    /// The centre square of `source`, upright, at most `maxSide` px per side — crop, scale and orientation in one draw.
+    static func squareJPEG(_ source: UIImage, maxSide: CGFloat) -> Data? {
+        let w = source.size.width, h = source.size.height
+        guard w > 0, h > 0, maxSide > 0 else { return nil }
+        let side = min(maxSide, min(w, h)).rounded(.down)
+        let factor = side / min(w, h)
         let format = UIGraphicsImageRendererFormat(); format.scale = 1
-        return UIGraphicsImageRenderer(size: size, format: format).image { _ in
-            source.draw(in: CGRect(origin: .zero, size: size))
+        return UIGraphicsImageRenderer(size: CGSize(width: side, height: side), format: format).image { _ in
+            source.draw(in: CGRect(x: -(w * factor - side) / 2, y: -(h * factor - side) / 2,
+                                   width: w * factor, height: h * factor))
         }.jpegData(compressionQuality: 0.88)
     }
 

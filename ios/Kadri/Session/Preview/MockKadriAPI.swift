@@ -39,9 +39,9 @@ struct MockKadriAPI: KadriAPI {
     }
 
     static let result = PartsResult(object: "ნიჟარის სიფონი", parts: [
-        Part(id: "p1", name: "ონკანი", box: [210, 210, 320, 335]),
-        Part(id: "p2", name: "ქანჩი", box: [615, 245, 755, 380]),
-        Part(id: "p3", name: "სიფონი", box: [300, 380, 670, 530]),
+        Part(id: "p1", name: "ონკანი", box: [210, 65, 320, 252]),
+        Part(id: "p2", name: "ქანჩი", box: [615, 117, 755, 320]),
+        Part(id: "p3", name: "სიფონი", box: [300, 320, 670, 545]),
     ])
     static let sampleSteps = [
         Step(index: 1, title: "დაკეტე წყალი", text: "მოატრიალე ონკანი საათის ისრის მიმართულებით ბოლომდე. შემდეგ მეორეც დაკეტე.", focus: ["p1"], avoid: ["p2"],
@@ -71,9 +71,9 @@ struct MockKadriAPI: KadriAPI {
 
     static let round2Prompt = "გადაიღე მოხსნილი სიფონის შიგნითა მხარე ახლოდან"
     static let round2Result = PartsResult(object: "მოხსნილი სიფონი", parts: [
-        Part(id: "p1", name: "შუასადები", box: [380, 420, 620, 560]),
-        Part(id: "p2", name: "ხრახნიანი შეერთება", box: [250, 300, 450, 460]),
-        Part(id: "p3", name: "სიფონის მილი", box: [300, 560, 700, 820]),
+        Part(id: "p1", name: "შუასადები", box: [380, 380, 620, 590]),
+        Part(id: "p2", name: "ხრახნიანი შეერთება", box: [250, 200, 450, 440]),
+        Part(id: "p3", name: "სიფონის მილი", box: [300, 590, 700, 980]),
     ])
     static let round2Steps = [
         Step(index: 1, title: "შეამოწმე შუასადები", text: "ამოიღე შუასადები და დაათვალიერე. გაბზარული ან გაბრტყელებული შეცვალე.", focus: ["p1"],

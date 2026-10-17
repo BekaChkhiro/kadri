@@ -9,6 +9,8 @@ struct PhotoCamera: UIViewControllerRepresentable {
         let picker = UIImagePickerController()
         picker.sourceType = .camera
         picker.cameraCaptureMode = .photo
+        // The square crop box; PhotoSession still centre-crops if the edit was not square.
+        picker.allowsEditing = true
         picker.delegate = context.coordinator
         return picker
     }
@@ -20,7 +22,7 @@ struct PhotoCamera: UIViewControllerRepresentable {
         init(_ parent: PhotoCamera) { self.parent = parent }
         func imagePickerController(_ picker: UIImagePickerController,
                                    didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-            if let image = info[.originalImage] as? UIImage { parent.selected(image) }
+            if let image = (info[.editedImage] ?? info[.originalImage]) as? UIImage { parent.selected(image) }
             parent.dismiss()
         }
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) { parent.dismiss() }
