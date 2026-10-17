@@ -1,0 +1,66 @@
+# Kadri API Worker.
+#
+# One-time setup (done by a human after `npx wrangler login`):
+#   npx wrangler d1 create kadri-dev
+#   npx wrangler d1 create kadri-staging
+#   npx wrangler d1 create kadri-prod
+#     → paste each printed database_id below.
+#   npx wrangler r2 bucket create kadri-photos-dev
+#   npx wrangler r2 bucket create kadri-photos-staging
+#   npx wrangler r2 bucket create kadri-photos-prod
+#   for each env (--env staging / --env production):
+#     npx wrangler secret put OPENAI_API_KEY --env <env>
+#     npx wrangler secret put GEMINI_API_KEY --env <env>
+#     npx wrangler secret put SESSION_SECRET --env <env>
+#     npx wrangler secret put GOOGLE_CLIENT_IDS --env <env>
+# Local dev reads secrets from .dev.vars (see .dev.vars.example).
+
+name = "kadri-worker"
+main = "src/index.ts"
+compatibility_date = "2026-10-17"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+AI_PROVIDER = "astra"
+ENVIRONMENT = "dev"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "kadri-dev"
+database_id = "TODO-set-after-wrangler-d1-create"
+
+[[r2_buckets]]
+binding = "PHOTOS"
+bucket_name = "kadri-photos-dev"
+
+[env.staging]
+name = "kadri-worker-staging"
+
+[env.staging.vars]
+AI_PROVIDER = "astra"
+ENVIRONMENT = "staging"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "kadri-staging"
+database_id = "TODO-set-after-wrangler-d1-create"
+
+[[env.staging.r2_buckets]]
+binding = "PHOTOS"
+bucket_name = "kadri-photos-staging"
+
+[env.production]
+name = "kadri-worker-prod"
+
+[env.production.vars]
+AI_PROVIDER = "astra"
+ENVIRONMENT = "production"
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "kadri-prod"
+database_id = "TODO-set-after-wrangler-d1-create"
+
+[[env.production.r2_buckets]]
+binding = "PHOTOS"
+bucket_name = "kadri-photos-prod"

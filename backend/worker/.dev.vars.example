@@ -1,0 +1,5 @@
+# Copy to .dev.vars (gitignored) for `wrangler dev`. Never commit real values.
+OPENAI_API_KEY=
+GEMINI_API_KEY=
+SESSION_SECRET=
+GOOGLE_CLIENT_IDS=
