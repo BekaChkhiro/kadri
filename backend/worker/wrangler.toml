@@ -16,6 +16,7 @@
 # Local dev reads secrets from .dev.vars (see .dev.vars.example).
 
 name = "kadri-worker"
+account_id = "25aa804574d6b37776f86ab4a6333ad5"
 main = "src/index.ts"
 compatibility_date = "2026-10-17"
 compatibility_flags = ["nodejs_compat"]
@@ -47,7 +48,7 @@ AI_TIMEOUT_MS = "60000"
 [[env.staging.d1_databases]]
 binding = "DB"
 database_name = "kadri-staging"
-database_id = "TODO-set-after-wrangler-d1-create"
+database_id = "3857740b-3d9a-4738-aaa8-14e7d8573789"
 
 [[env.staging.r2_buckets]]
 binding = "PHOTOS"

@@ -114,14 +114,20 @@ production-ისთვის იგივე `--env production`-ით (`kadri-
 - სია ახლიდან ძველისკენაა (`created_at DESC, id DESC`), `limit` 1–50; შემდეგი გვერდისთვის `nextCursor` → `cursor`.
 - Migration: `npx wrangler d1 migrations apply <db> --local|--remote --env <env>` (0000 და 0001 თანმიმდევრობით).
 
-## Deploy (ადამიანმა უნდა გააკეთოს)
+## Deploy
 
-1. `npx wrangler login`
-2. D1 და R2 შექმნა — ზუსტი ბრძანებები `wrangler.toml`-ის თავშია; დაბეჭდილი `database_id`-ები ჩასვი
-   `TODO-set-after-wrangler-d1-create`-ის ნაცვლად.
-3. Secret-ები თითო გარემოზე: `npx wrangler secret put OPENAI_API_KEY --env staging`
-   (ასევე `GEMINI_API_KEY`, `SESSION_SECRET`, `GOOGLE_CLIENT_IDS`; production-ისთვის `--env production`).
-4. `npm run deploy:staging` / `npm run deploy:prod`.
+**Staging უკვე deploy-ებულია:** https://kadri-worker-staging.bekachkhirodze1.workers.dev
+(D1 `kadri-staging`, R2 `kadri-photos-staging`, secret-ები `OPENAI_API_KEY`, `SESSION_SECRET`, `GOOGLE_CLIENT_IDS`).
+სრული აღწერა, production-ის ნაბიჯები, secret-ების როტაცია და ლოგები — [`docs/DEPLOY.md`](../../docs/DEPLOY.md).
+
+```sh
+npx wrangler d1 migrations apply kadri-staging --env staging --remote   # ახალი migration-ის შემდეგ, deploy-მდე
+npm run deploy:staging                                                  # wrangler deploy --env staging
+node scripts/deploy_check.mjs https://kadri-worker-staging.bekachkhirodze1.workers.dev --env staging   # უფასო smoke
+```
+
+`deploy_check.mjs` ამოწმებს `/health` → 200 `{ok:true, env}`, `POST /ai/parts` და `GET /sessions` auth-ის გარეშე → 401 JSON.
+Production (`kadri-worker-prod`) ჯერ არ შექმნილა — `wrangler.toml`-ში მისი `database_id` placeholder-ია.
 
 Key-ები არასდროს git-ში — მხოლოდ `.dev.vars` (ლოკალურად) ან `wrangler secret`.
 
