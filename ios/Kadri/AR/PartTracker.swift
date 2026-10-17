@@ -79,6 +79,16 @@ final class PartTracker: ObservableObject {
         launch(snapshot: keyframe.snapshot, jpeg: keyframe.jpegData, boxes: boxes)
     }
 
+    /// Adopt a completed point mask without another encoder/decoder pass.
+    /// Cancel an older batch so it cannot overwrite the newly injected contour.
+    func inject(_ contour: TrackedContour, embedMs: Double) {
+        generation += 1; task?.cancel(); task = nil
+        enabled = true; frameCount = 0
+        contours.removeAll { $0.id == contour.id }; contours.append(contour)
+        referenceBoxes[contour.id] = contour.referenceBox
+        self.embedMs = embedMs; status = ""
+    }
+
     func stop() {
         enabled = false; generation += 1; task?.cancel(); task = nil
         contours = []; referenceBoxes = [:]; frameCount = 0; embedMs = 0; status = ""
@@ -128,8 +138,11 @@ final class PartTracker: ObservableObject {
             do {
                 let result = try await withTaskCancellationHandler { try await work.value } onCancel: { work.cancel() }
                 guard let self, self.enabled, self.generation == token, !Task.isCancelled else { return }
-                self.contours = result.contours; self.embedMs = result.embedMs
-                self.referenceBoxes = boxes; self.status = ""; self.task = nil
+                // Preserve injected 2D contours that have no world projection in this batch.
+                self.contours.removeAll { boxes[$0.id] != nil }
+                self.contours.append(contentsOf: result.contours); self.embedMs = result.embedMs
+                self.referenceBoxes.merge(boxes, uniquingKeysWith: { _, new in new })
+                self.status = ""; self.task = nil
             } catch {
                 guard let self, self.enabled, self.generation == token, !Task.isCancelled else { return }
                 self.status = error.localizedDescription; self.task = nil

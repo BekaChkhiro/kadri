@@ -34,6 +34,8 @@ actor Segmenter {
     nonisolated let loadMs: Double
     private let encoder: MLModel
     private let decoder: MLModel
+    private var pointDecoder: MLModel?
+    private let bundle: Bundle
 
     init(computeUnits: MLComputeUnits = .all, bundle: Bundle = .main) throws {
         let start = Clock.now
@@ -41,6 +43,7 @@ actor Segmenter {
         configuration.computeUnits = computeUnits
         encoder = try MLModel(contentsOf: try Self.modelURL("SAMEncoder", bundle: bundle), configuration: configuration)
         decoder = try MLModel(contentsOf: try Self.modelURL("SAMDecoder", bundle: bundle), configuration: configuration)
+        self.bundle = bundle
         self.computeUnits = computeUnits
         loadMs = Clock.ms(since: start)
     }
@@ -80,6 +83,39 @@ actor Segmenter {
             "embedding": embedding.features, "box": boxArray,
         ]))
         let decodeMs = Clock.ms(since: decodeStart)
+        return try Self.makeMask(output, width: width, height: height, decodeMs: decodeMs)
+    }
+
+    /// Pixel coordinates in the same portrait image used for the embedding.
+    func maskFromPoint(embedding: Embedding, point: CGPoint, imageSize: CGSize? = nil) async throws -> Mask {
+        let width = imageSize.map { Int($0.width) } ?? embedding.width
+        let height = imageSize.map { Int($0.height) } ?? embedding.height
+        guard width > 0, height > 0, point.x.isFinite, point.y.isFinite,
+              point.x >= 0, point.y >= 0, point.x < CGFloat(width), point.y < CGFloat(height) else {
+            throw SegmentationError.unexpectedOutput("point outside image")
+        }
+        let model: MLModel
+        if let pointDecoder { model = pointDecoder }
+        else {
+            let configuration = MLModelConfiguration()
+            configuration.computeUnits = computeUnits
+            model = try MLModel(contentsOf: Self.modelURL("SAMDecoderPoint", bundle: bundle), configuration: configuration)
+            pointDecoder = model
+        }
+        let points = try MLMultiArray(shape: [1, 2, 2], dataType: .float32)
+        let labels = try MLMultiArray(shape: [1, 2], dataType: .float32)
+        points[0] = NSNumber(value: Double(point.x) * 1024 / Double(width))
+        points[1] = NSNumber(value: Double(point.y) * 1024 / Double(height))
+        points[2] = -1; points[3] = -1
+        labels[0] = 1; labels[1] = -1
+        let start = Clock.now
+        let output = try Self.predict(model, MLDictionaryFeatureProvider(dictionary: [
+            "embedding": embedding.features, "points": points, "labels": labels,
+        ]))
+        return try Self.makeMask(output, width: width, height: height, decodeMs: Clock.ms(since: start))
+    }
+
+    private static func makeMask(_ output: MLFeatureProvider, width: Int, height: Int, decodeMs: Double) throws -> Mask {
         guard let logits = output.featureValue(for: "mask_logits")?.multiArrayValue,
               logits.shape.map(\.intValue) == [1, 3, 256, 256], logits.dataType == .float32 else {
             throw SegmentationError.unexpectedOutput("mask_logits")

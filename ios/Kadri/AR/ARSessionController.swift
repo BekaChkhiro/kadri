@@ -68,6 +68,20 @@ final class ARSessionController: NSObject, ObservableObject, ARSessionDelegate {
         } catch { captureStatus = "გააჩერეთ კამერა 300 მწ-ით და დაელოდეთ ნორმალურ ტრეკინგს" }
     }
 
+    /// Transient selection only: detach pixels/geometry before inference and keep no extra ARFrame.
+    func captureTouch(viewport: CGSize) async throws -> TouchFrame {
+        guard running, !capturing else { throw KeyframePicker.Failure.unstable }
+        capturing = true
+        defer { capturing = false }
+        var candidates = frames
+        if let latest, latest.timestamp > (candidates.last?.timestamp ?? 0) { candidates.append(latest) }
+        let selected = try await picker.pick(candidates, allowBlurry: true)
+        guard running, case .normal = latest?.frame.camera.trackingState else { throw KeyframePicker.Failure.unstable }
+        return TouchFrame(jpegData: selected.jpegData, reference: PartReference(keyframe: selected),
+                          timestamp: selected.timestamp,
+                          displayTransform: selected.snapshot.frame.displayTransform(for: .portrait, viewportSize: viewport))
+    }
+
     nonisolated func session(_ session: ARSession, didUpdate frame: ARFrame) {
         Task { @MainActor [weak self] in self?.ingest(frame) }
     }

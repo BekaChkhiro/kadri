@@ -23,6 +23,7 @@ targets:
       - path: Kadri
       - path: Models/SAMEncoder.mlpackage
       - path: Models/SAMDecoder.mlpackage
+      - path: Models/SAMDecoderPoint.mlpackage
       - path: KadriTests/Fixtures/sink
         type: folder
         buildPhase: resources

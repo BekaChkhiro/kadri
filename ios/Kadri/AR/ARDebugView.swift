@@ -11,6 +11,8 @@ struct ARDebugView: View {
     @StateObject private var anchors = PartAnchors()
     @StateObject private var tracker = PartTracker()
     @StateObject private var displayRate = ContourDisplayRate()
+    @StateObject private var touch = TouchSegmentation()
+    @State private var touchMode = false
     @State private var showContours = false
     @State private var contourKeyframe: Keyframe?
     @Environment(\.displayScale) private var displayScale
@@ -30,10 +32,11 @@ struct ARDebugView: View {
                             .background(.orange).foregroundStyle(.black).position(item.point)
                     }
                     if let snapshot = controller.latest {
-                        if showContours {
+                        if showContours || touchMode {
                             ContourOverlay(contours: tracker.contours,
-                                           boxes: PartTracker.boxes(anchors.projections(frame: snapshot.frame, viewport: geometry.size, scale: displayScale)),
-                                           focus: ["p1"], avoid: ["p2"])
+                                           boxes: PartTracker.boxes(anchors.projections(frame: snapshot.frame, viewport: geometry.size, scale: displayScale))
+                                            .merging(anchors.unanchoredBoxes(viewport: geometry.size), uniquingKeysWith: { first, _ in first }),
+                                           focus: touchMode ? Set(tracker.contours.map(\.id)) : ["p1"], avoid: touchMode ? [] : ["p2"])
                                 .allowsHitTesting(false)
                         }
                         ForEach(anchors.projections(frame: snapshot.frame, viewport: geometry.size, scale: displayScale)) { projection in
@@ -55,6 +58,12 @@ struct ARDebugView: View {
                         }
                     }
                 }
+                if touchMode {
+                    Color.clear.contentShape(Rectangle())
+                        .onTapGesture { point in
+                            touch.touch(point, viewport: geometry.size, controller: controller, anchors: anchors, tracker: tracker)
+                        }
+                }
                 VStack(spacing: 12) {
                     if let snapshot = controller.latest {
                         ARStatusBar(frame: snapshot.frame, status: controller.status, fps: fps,
@@ -67,8 +76,14 @@ struct ARDebugView: View {
                     if !anchors.unanchored.isEmpty {
                         Text("მიბმის გარეშე (2D): " + anchors.unanchored.joined(separator: ", ")).font(.caption)
                     }
+                    Toggle("შეხება", isOn: $touchMode)
+                    if touchMode {
+                        Text(touch.status).font(.caption)
+                        Text(touch.timings).font(.caption.monospacedDigit())
+                        Button("გასუფთავება") { touch.clear(controller: controller, anchors: anchors, tracker: tracker) }
+                    }
                     Toggle("კონტურები", isOn: $showContours)
-                        .disabled(contourKeyframe == nil || anchors.placements.isEmpty)
+                        .disabled(touchMode || contourKeyframe == nil || anchors.placements.isEmpty)
                     if showContours {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(String(format: "UI %.0f fps · embed %.1f ms · N %d", displayRate.fps, tracker.embedMs, tracker.interval))
@@ -87,19 +102,23 @@ struct ARDebugView: View {
                             Task {
                                 await controller.capture()
                             }
-                        }.disabled(!controller.supported)
+                        }.disabled(!controller.supported || touchMode)
                         Button("სატესტო box-ები") {
                             guard let keyframe = controller.keyframe else { return }
                             arLog.notice("ge.kadri tap test-boxes")
                             placeTestBoxes(keyframe)
-                        }.disabled(controller.keyframe == nil)
+                        }.disabled(controller.keyframe == nil || touchMode)
                     }.buttonStyle(.borderedProminent)
                 }.padding().foregroundStyle(.white)
             }
             .onChange(of: controller.latest?.timestamp) { _, _ in
-                if let snapshot = controller.latest, showContours { tracker.update(snapshot: snapshot, anchors: anchors) }
-                if controller.latest == nil { tracker.stop(); showContours = false; contourKeyframe = nil }
+                if let snapshot = controller.latest, showContours || touchMode { tracker.update(snapshot: snapshot, anchors: anchors) }
+                if controller.latest == nil { touch.clear(controller: controller, anchors: anchors, tracker: tracker); tracker.stop(); showContours = false; contourKeyframe = nil }
             }
+        }
+        .onChange(of: touchMode) { _, _ in
+            touch.clear(controller: controller, anchors: anchors, tracker: tracker)
+            showContours = false; contourKeyframe = nil
         }
         .onChange(of: tracker.status) { _, status in arLog.notice("ge.kadri contour-status=\(status, privacy: .public)") }
         .onChange(of: tracker.contours.count) { _, count in arLog.notice("ge.kadri contours=\(count) embedMs=\(Int(tracker.embedMs))") }
@@ -139,7 +158,7 @@ struct ARDebugView: View {
             placeTestBoxes(keyframe)
         }
         .onAppear { arLog.notice("ge.kadri ar-debug appear supported=\(controller.supported)"); controller.start(); displayRate.start() }
-        .onDisappear { arLog.notice("ge.kadri ar-debug disappear"); tracker.stop(); showContours = false; contourKeyframe = nil; displayRate.stop(); anchors.clear(session: controller.session); controller.pause() }
+        .onDisappear { arLog.notice("ge.kadri ar-debug disappear"); touch.clear(controller: controller, anchors: anchors, tracker: tracker); tracker.stop(); showContours = false; contourKeyframe = nil; displayRate.stop(); anchors.clear(session: controller.session); controller.pause() }
     }
 
     private func placeTestBoxes(_ keyframe: Keyframe) {

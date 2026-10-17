@@ -44,7 +44,7 @@ actor KeyframePicker {
 
     init(configuration: Configuration = .init()) { self.configuration = configuration }
 
-    func pick(_ frames: [FrameSnapshot]) throws -> Keyframe {
+    func pick(_ frames: [FrameSnapshot], allowBlurry: Bool = false) throws -> Keyframe {
         guard let latest = frames.last else { throw Failure.unstable }
         // Frames are sampled ~0.1 s apart (ARSessionController), so allow one extra sample of slack;
         // with only 0.05 s the oldest sample in range was ~0.23 s old and the 0.3 s check never passed.
@@ -67,7 +67,7 @@ actor KeyframePicker {
                            bounds: CGRect(x: 0, y: 0, width: smallSize.x, height: smallSize.y), format: .L8, colorSpace: CGColorSpaceCreateDeviceGray())
         }
         let score = FrameGeometry.laplacianVariance(pixels, width: smallSize.x, height: smallSize.y)
-        guard score >= configuration.minimumSharpness else { throw Failure.blurry(score) }
+        guard allowBlurry || score >= configuration.minimumSharpness else { throw Failure.blurry(score) }
         let size = FrameGeometry.resized(width: Int(input.extent.width), height: Int(input.extent.height))
         let output = input.transformed(by: CGAffineTransform(scaleX: CGFloat(size.x) / input.extent.width, y: CGFloat(size.y) / input.extent.height))
         guard let data = context.jpegRepresentation(of: output, colorSpace: CGColorSpaceCreateDeviceRGB(), options: [kCGImageDestinationLossyCompressionQuality as CIImageRepresentationOption: 0.85]) else { throw Failure.encoding }
