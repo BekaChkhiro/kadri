@@ -15,12 +15,13 @@ struct ContentView: View {
                 .toolbar {
                     NavigationLink("AR დებაგი", value: "ar")
                     NavigationLink("SAM bench", value: "sam")
+                    NavigationLink("შესვლა", value: "signin")
                 }
                 .navigationDestination(for: String.self) { destination in
-                    if destination == "sam" {
-                        SegmentationBenchView()
-                    } else {
-                        ARDebugView()
+                    switch destination {
+                    case "sam": SegmentationBenchView()
+                    case "signin": SignInView()
+                    default: ARDebugView()
                     }
                 }
         }

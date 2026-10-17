@@ -12,6 +12,9 @@ settings:
 packages:
   KadriCore:
     path: Packages/KadriCore
+  GoogleSignIn:
+    url: https://github.com/google/GoogleSignIn-iOS
+    from: 10.0.0
 targets:
   Kadri:
     type: application
@@ -25,6 +28,10 @@ targets:
         buildPhase: resources
     dependencies:
       - package: KadriCore
+      - package: GoogleSignIn
+        product: GoogleSignIn
+      - package: GoogleSignIn
+        product: GoogleSignInSwift
       - sdk: ARKit.framework
       - sdk: RealityKit.framework
       - sdk: Vision.framework
@@ -44,6 +51,12 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
         COREML_CODEGEN_LANGUAGE: None
+        # Read through Info.plist ($(…) substitution) by APIConfig.fromBundle and GIDSignIn.
+        # Release points at staging too until a production Worker exists.
+        KADRI_API_URL: https://kadri-worker-staging.bekachkhirodze1.workers.dev
+        GID_CLIENT_ID: 366519256518-6oboqijftm0mbqct40tuogm36bnlt498.apps.googleusercontent.com
+        GID_SERVER_CLIENT_ID: 366519256518-17h7nfvfreh6c0nb8lt0mp74uskogfkl.apps.googleusercontent.com
+        GID_URL_SCHEME: com.googleusercontent.apps.366519256518-6oboqijftm0mbqct40tuogm36bnlt498
   KadriTests:
     type: bundle.unit-test
     platform: iOS
