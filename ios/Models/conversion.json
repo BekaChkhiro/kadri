@@ -1,0 +1,84 @@
+{
+  "candidate": "efficientsam",
+  "source": {
+    "repo": "yformer/EfficientSAM",
+    "commit": "d525f622e6f640acf5a0fc37c7ca1f243da5bde0",
+    "package": "efficient_sam",
+    "license": "Apache-2.0",
+    "weights_url": "https://raw.githubusercontent.com/yformer/EfficientSAM/d525f622e6f640acf5a0fc37c7ca1f243da5bde0/weights/efficient_sam_vitt.pt",
+    "weights_sha256": "dff858b19600a46461cbb7de98f796b23a7a888d9f5e34c0b033f7d6eb9e4e6a"
+  },
+  "models": {
+    "SAMEncoder": {
+      "bytes": 13959387,
+      "mil_ops": {
+        "const": 482,
+        "cast": 2,
+        "sub": 3,
+        "mul": 13,
+        "conv": 3,
+        "transpose": 26,
+        "add": 27,
+        "reshape": 26,
+        "layer_norm": 24,
+        "linear": 48,
+        "slice_by_index": 36,
+        "matmul": 24,
+        "softmax": 12,
+        "gelu": 12,
+        "reduce_mean": 4,
+        "pow": 2,
+        "sqrt": 2,
+        "real_div": 2,
+        "batch_norm": 2
+      },
+      "specification_version": 8,
+      "inputs": [
+        "name: \"image\"\ntype {\n  multiArrayType {\n    shape: 1\n    shape: 3\n    shape: 1024\n    shape: 1024\n    dataType: FLOAT32\n  }\n}\n"
+      ],
+      "outputs": [
+        "name: \"embedding\"\ntype {\n  multiArrayType {\n    shape: 1\n    shape: 256\n    shape: 64\n    shape: 64\n    dataType: FLOAT32\n  }\n}\n"
+      ]
+    },
+    "SAMDecoder": {
+      "bytes": 10335426,
+      "mil_ops": {
+        "const": 344,
+        "cast": 4,
+        "reshape": 42,
+        "pad": 1,
+        "add": 21,
+        "slice_by_index": 10,
+        "mul": 11,
+        "scatter": 2,
+        "sub": 2,
+        "linear": 48,
+        "sin": 1,
+        "cos": 1,
+        "concat": 2,
+        "expand_dims": 2,
+        "transpose": 30,
+        "matmul": 15,
+        "softmax": 7,
+        "layer_norm": 9,
+        "gelu": 14,
+        "conv_transpose": 2,
+        "reduce_mean": 2,
+        "square": 1,
+        "sqrt": 1,
+        "real_div": 1,
+        "batch_norm": 1,
+        "stack": 1
+      },
+      "specification_version": 8,
+      "inputs": [
+        "name: \"embedding\"\ntype {\n  multiArrayType {\n    shape: 1\n    shape: 256\n    shape: 64\n    shape: 64\n    dataType: FLOAT32\n  }\n}\n",
+        "name: \"box\"\ntype {\n  multiArrayType {\n    shape: 4\n    dataType: FLOAT32\n  }\n}\n"
+      ],
+      "outputs": [
+        "name: \"mask_logits\"\ntype {\n  multiArrayType {\n    shape: 1\n    shape: 3\n    shape: 256\n    shape: 256\n    dataType: FLOAT32\n  }\n}\n",
+        "name: \"iou_scores\"\ntype {\n  multiArrayType {\n    shape: 1\n    shape: 3\n    dataType: FLOAT32\n  }\n}\n"
+      ]
+    }
+  }
+}

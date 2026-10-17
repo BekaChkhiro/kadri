@@ -1,2 +1,8 @@
 *
 !.gitignore
+# Default EfficientSAM-Ti packages ship with the app (reproducible build/CI).
+!SAMEncoder.mlpackage/
+!SAMEncoder.mlpackage/**
+!SAMDecoder.mlpackage/
+!SAMDecoder.mlpackage/**
+!conversion.json
