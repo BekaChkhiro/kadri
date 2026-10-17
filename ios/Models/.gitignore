@@ -6,3 +6,5 @@
 !SAMDecoder.mlpackage/
 !SAMDecoder.mlpackage/**
 !conversion.json
+!SAMDecoderPoint.mlpackage/
+!SAMDecoderPoint.mlpackage/**

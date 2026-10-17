@@ -79,6 +79,48 @@
         "name: \"mask_logits\"\ntype {\n  multiArrayType {\n    shape: 1\n    shape: 3\n    shape: 256\n    shape: 256\n    dataType: FLOAT32\n  }\n}\n",
         "name: \"iou_scores\"\ntype {\n  multiArrayType {\n    shape: 1\n    shape: 3\n    dataType: FLOAT32\n  }\n}\n"
       ]
+    },
+    "SAMDecoderPoint": {
+      "bytes": 10333571,
+      "mil_ops": {
+        "const": 360,
+        "cast": 9,
+        "pad": 2,
+        "add": 22,
+        "slice_by_index": 10,
+        "mul": 15,
+        "reshape": 41,
+        "scatter": 2,
+        "sub": 2,
+        "linear": 48,
+        "sin": 1,
+        "cos": 1,
+        "concat": 2,
+        "equal": 4,
+        "expand_dims": 6,
+        "transpose": 30,
+        "matmul": 15,
+        "softmax": 7,
+        "layer_norm": 9,
+        "gelu": 14,
+        "conv_transpose": 2,
+        "reduce_mean": 2,
+        "square": 1,
+        "sqrt": 1,
+        "real_div": 1,
+        "batch_norm": 1,
+        "stack": 1
+      },
+      "specification_version": 8,
+      "inputs": [
+        "name: \"embedding\"\ntype {\n  multiArrayType {\n    shape: 1\n    shape: 256\n    shape: 64\n    shape: 64\n    dataType: FLOAT32\n  }\n}\n",
+        "name: \"points\"\ntype {\n  multiArrayType {\n    shape: 1\n    shape: 2\n    shape: 2\n    dataType: FLOAT32\n  }\n}\n",
+        "name: \"labels\"\ntype {\n  multiArrayType {\n    shape: 1\n    shape: 2\n    dataType: FLOAT32\n  }\n}\n"
+      ],
+      "outputs": [
+        "name: \"mask_logits\"\ntype {\n  multiArrayType {\n    shape: 1\n    shape: 3\n    shape: 256\n    shape: 256\n    dataType: FLOAT32\n  }\n}\n",
+        "name: \"iou_scores\"\ntype {\n  multiArrayType {\n    shape: 1\n    shape: 3\n    dataType: FLOAT32\n  }\n}\n"
+      ]
     }
   }
 }

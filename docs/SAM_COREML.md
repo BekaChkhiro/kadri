@@ -340,3 +340,56 @@ Encoder-ის ერთი გავლა preprocessing-ით იყო 103.8
 რედაქტირების სიაში არ არის. მხოლოდ გენერირებული pbxproj-ის შეცვლა
 `xcodegen generate`-ის შემდეგ დაიკარგებოდა. Touch UI და simulator/device
 შემოწმებები ამ ეტაპზე არ განხორციელებულა.
+
+## Point decoder re-export — 2026-10-17
+
+`ios/Tools/convert_sam_point.py` exports the same pinned EfficientSAM-Ti
+weights as `SAMDecoderPoint.mlpackage` (FP16 ML Program, iOS 17). The
+existing box decoder and encoder are unchanged. Inputs: `embedding`
+Float32 `[1,256,64,64]`, `points` Float32 `[1,2,2]` in 1024-square
+coordinates, and `labels` Float32 `[1,2]`. One foreground point uses
+`[[1,-1]]` and second coordinates `[-1,-1]`; four more padding slots
+are added inside the model, matching upstream's six-slot contract.
+Outputs are `mask_logits [1,3,256,256]` and `iou_scores [1,3]`.
+Use predicted-score argmax, bicubic resize, then threshold `>0`.
+Do not assume label 0 implements a trained negative-point prompt: the
+pinned upstream prompt encoder only explicitly handles labels -1, 1, 2, 3.
+
+Reproduce (first export downloads pinned source/verified weights if absent;
+quality inference is local, without paid APIs):
+
+```sh
+/tmp/kadri-samtools-venv/bin/python ios/Tools/convert_sam_point.py
+/tmp/kadri-samtools-venv/bin/python -m py_compile ios/Tools/convert_sam_point.py ios/Tools/check_touch_point.py
+/tmp/kadri-samtools-venv/bin/python ios/Tools/check_touch_point.py
+```
+
+Each point is chosen **before inference** as the SAM2 reference mask's
+maximum interior Euclidean-distance pixel (row-major tie break), with no
+search for a favorable decoder result. All five results are retained in
+`Fixtures/sink/point_results.json` and `point_coreml_pN.png`.
+
+| Part | Pixel x,y | Python Core ML vs SAM2 IoU | Python Core ML vs PyTorch IoU | Mac decode ms |
+|---|---|---:|---:|---:|
+| p1 | 178,93 | 0.9384 | 0.9948 | 10.23 |
+| p2 | 24,221 | 0.6315 | 0.9965 | 8.83 |
+| p3 | 127,225 | 0.6317 | 0.9922 | 8.90 |
+| p4 | 358,234 | 0.8157 | 0.9886 | 9.16 |
+| p5 | 210,323 | 0.7933 | 0.9998 | 8.96 |
+
+Both decoder implementations used the same Core ML embedding for the
+conversion parity check. These numbers are **not Swift parity**. Python
+Core ML ran CPU_ONLY on macOS; image preparation plus encoder took 153.00 ms.
+There are no simulator or device timings yet. Three distinct parts meet
+SAM2 IoU >=0.7; both small valves fail, even if selecting the best of all
+three candidate masks using the reference. The probe reports this all-five
+quality failure explicitly; it does not silently discard failures.
+
+Swift integration paused on a checkout/layout discrepancy: the brief names
+`ios/Kadri/AR/Overlays/` as MeshWrap-owned, but that directory is absent here;
+`MaskContours`, `TrackedContour`, and `ContourOverlay` live instead in
+`ios/Kadri/AR/ContourOverlay.swift`, outside this worker's allowed edit list.
+The package is not yet added to the app target. No Swift/AR files were changed;
+Swift parity, simulator tests, generic iOS build, and touch UI remain pending.
+`ARSessionController` has no diff; polling, deduplication, capacity=5 and
+sampleInterval=0.1 are unchanged. No device installation was performed.
