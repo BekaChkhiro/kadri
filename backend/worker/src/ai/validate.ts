@@ -65,8 +65,9 @@ export function partsFromModel(result: unknown): { object: string; parts: Part[]
   const err = validateSchema(softened(schemaParts()), result);
   if (err) throw new Error(`parts schema: ${err}`);
   const r = result as { object: string; parts: Array<{ label: string; box: number[] }> };
-  const parts = assignIds(r.parts).map((p) => ({ ...p, name: clampText(p.name, LIMITS.label) }));
-  if (parts.length > MAX_PARTS) throw new Error(`too many parts: ${parts.length} > ${MAX_PARTS}`);
+  // Busy scenes (microscope, motherboard) return more than MAX_PARTS; keep the model's first ones instead of a 502.
+  const kept = r.parts.slice(0, MAX_PARTS);
+  const parts = assignIds(kept).map((p) => ({ ...p, name: clampText(p.name, LIMITS.label) }));
   return { object: clampText(r.object, LIMITS.object), parts };
 }
 

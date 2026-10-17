@@ -107,11 +107,14 @@ describe("POST /ai/parts", () => {
     expect([...body.parts[0].name].length).toBeLessThanOrEqual(60);
   });
 
-  it("rejects more than 12 parts", async () => {
-    const parts = Array.from({ length: 13 }, (_, i) => ({ label: `ნაწილი ${i}`, box: [i, i, i + 10, i + 10] }));
+  it("keeps the model's first 12 parts instead of failing on more", async () => {
+    const parts = Array.from({ length: 16 }, (_, i) => ({ label: `ნაწილი ${i}`, box: [i, i, i + 10, i + 10] }));
     mockFetch(() => Response.json(responseBody({ object: "x", parts })));
     const res = await postParts({ image: b64(fakeJpeg(512, 512)), instructions });
-    expect(res.status).toBe(502);
+    expect(res.status).toBe(200);
+    const body = await res.json<any>();
+    expect(body.parts).toHaveLength(12);
+    expect(body.parts.map((p: any) => p.name)).not.toContain("ნაწილი 12");
   });
 
   it("maps incomplete responses and upstream errors to 502", async () => {
