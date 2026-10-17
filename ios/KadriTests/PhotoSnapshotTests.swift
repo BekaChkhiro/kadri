@@ -17,15 +17,17 @@ final class PhotoSnapshotTests: XCTestCase {
                 .map { CGPoint(x: $0.x * 1024, y: $0.y * 1024) }
             return TrackedMesh(id: part.id, mesh: MeshTriangulation.triangulate(polygons: [polygon]), referenceBox: rect)
         }
-        let directory = URL(fileURLWithPath: "/tmp/kadri-photo-shots")
+        let directory = URL(fileURLWithPath: "/tmp/kadri-photo-shots-v3")
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        for index in 0...3 {
-            let waiting = index == 3
+        for index in 0...6 {
+            let waiting = index == 5
+            let completed = index == 6
+            let stepIndex = min(index, MockKadriAPI.sampleSteps.count - 1)
             let screen = PhotoResultView(image: photo, parts: result.parts, meshes: waiting ? [] : meshes,
-                step: waiting ? nil : MockKadriAPI.sampleSteps[index], index: waiting ? 0 : index,
-                count: waiting ? 0 : 3, streaming: waiting, title: "ნიჟარა ჟონავს",
-                subtitle: "\(result.object) · \(result.parts.count) ნაწილი", status: nil,
-                close: {}, previous: {}, next: {}, finish: {})
+                step: waiting ? nil : MockKadriAPI.sampleSteps[stepIndex], index: waiting ? 0 : stepIndex,
+                count: waiting ? 0 : MockKadriAPI.sampleSteps.count, streaming: waiting, object: result.object,
+                segmentationStatus: waiting ? "ვასკანერებ…" : nil,
+                close: {}, previous: {}, next: {}, finish: {}, completed: completed)
                 .environment(\.meshWrapReduceMotion, true)
             let host = UIHostingController(rootView: screen)
             let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
@@ -45,7 +47,7 @@ final class PhotoSnapshotTests: XCTestCase {
             XCTAssertTrue(rendered)
             let data = try XCTUnwrap(image.pngData())
             XCTAssertGreaterThan(data.count, 1000)
-            let name = waiting ? "waiting" : "step-\(index + 1)"
+            let name = completed ? "done" : waiting ? "waiting" : index == 4 ? "step-last" : "step-\(index + 1)"
             try data.write(to: directory.appendingPathComponent("\(name).png"))
             let attachment = XCTAttachment(image: image)
             attachment.name = name

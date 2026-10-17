@@ -93,7 +93,7 @@ final class PhotoSession: ObservableObject {
     private func segment(_ parts: [Part]) {
         guard let jpeg else { return }
         segmentation?.cancel()
-        meshes = []; segmentationStatus = "ნაწილებს ვყოფ…"
+        meshes = []; segmentationStatus = "ვასკანერებ…"
         segmentation = Task { [weak self] in
             do {
                 try await Self.segment(jpeg, parts: parts) { [weak self] mesh in
@@ -104,7 +104,7 @@ final class PhotoSession: ObservableObject {
                 self?.segmentationStatus = nil
             } catch is CancellationError { }
             catch {
-                if !Task.isCancelled { self?.segmentationStatus = "ბადე ვერ მომზადდა. ნაწილები ეტიკეტებითაა მონიშნული." }
+                if !Task.isCancelled { self?.segmentationStatus = "ბადის გარეშე" }
             }
         }
     }

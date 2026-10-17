@@ -147,8 +147,8 @@ struct PhotoFlowView: View {
                             streaming: Bool, completed: Bool = false) -> some View {
         PhotoResultView(image: image, parts: result.parts, meshes: session.meshes,
                         step: session.model.currentStep, index: session.model.currentStepIndex,
-                        count: count, streaming: streaming, title: session.model.instructions,
-                        subtitle: "\(result.object) · \(result.parts.count) ნაწილი", status: session.segmentationStatus,
+                        count: count, streaming: streaming, object: result.object,
+                        segmentationStatus: session.segmentationStatus,
                         close: { session.model.cancel(); session.retake() },
                         previous: session.model.previous, next: session.model.next, finish: session.model.finish,
                         completed: completed, newPhoto: session.retake)

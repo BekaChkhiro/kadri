@@ -9,9 +9,8 @@ struct PhotoResultView: View {
     let index: Int
     let count: Int
     let streaming: Bool
-    let title: String
-    let subtitle: String
-    let status: String?
+    let object: String
+    let segmentationStatus: String?
     var close: () -> Void
     var previous: () -> Void
     var next: () -> Void
@@ -19,48 +18,61 @@ struct PhotoResultView: View {
     var completed = false
     var newPhoto: () -> Void = {}
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var pulse = false
+    @State private var cardHeight: CGFloat = 0
+
     var body: some View {
-        // Inset controls belong to a separate layer: they must never resize the photo coordinate space.
-        Color.clear
-            .background {
+        GeometryReader { screen in
+            VStack(spacing: 0) {
+                header.padding(.horizontal, 16).padding(.top, 8).padding(.bottom, 10)
                 GeometryReader { proxy in
                     let boxes = PhotoGeometry.boxes(parts: parts, viewport: proxy.size, imageSize: image.size)
-                    ZStack(alignment: .top) {
+                    ZStack(alignment: .topLeading) {
+                        Theme.Colors.ink[800]!
                         Image(uiImage: image).resizable().scaledToFill()
                             .frame(width: proxy.size.width, height: proxy.size.height).clipped()
                             .accessibilityHidden(true)
                         TrackedMeshOverlay(meshes: meshes, boxes: boxes, step: step)
                             .accessibilityHidden(true)
                         PhotoAnnotationsView(step: step, parts: parts, boxes: boxes,
-                                             meshReady: Set(meshes.filter { $0.mesh.triangleCount > 0 }.map(\.id)))
-                        LinearGradient(colors: [.black.opacity(0.3), .clear], startPoint: .top, endPoint: .bottom)
-                            .frame(height: 150).allowsHitTesting(false)
+                                             meshReady: Set(meshes.filter { $0.mesh.triangleCount > 0 }.map(\.id)),
+                                             visibleHeight: max(80, proxy.size.height - cardHeight - screen.safeAreaInsets.bottom - 16))
+                        Label(segmentationStatus ?? "\(parts.count) ნაწილი", systemImage: "viewfinder")
+                            .font(.kadri(12, weight: .semibold)).foregroundStyle(.white)
+                            .padding(.horizontal, 10).padding(.vertical, 6)
+                            .background {
+                                Capsule().fill(.ultraThinMaterial)
+                                    .overlay(Capsule().fill(Theme.Colors.ink[900]!.opacity(0.55)))
+                            }
+                            .padding(12)
                     }
-                    .frame(width: proxy.size.width, height: proxy.size.height).clipped()
-                }
-                .ignoresSafeArea()
-            }
-            .safeAreaInset(edge: .top, spacing: 0) {
-                header.padding(.horizontal, 16).padding(.top, 8)
-            }
-            .safeAreaInset(edge: .bottom, spacing: 0) {
-                ScrollView {
-                    if completed {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("შესრულდა").font(.kadri(21, weight: .semibold))
-                            Text("ყველა ნაბიჯი დასრულებულია.").font(.kadri(14.5))
-                            Button("ახალი ფოტო", action: newPhoto).buttonStyle(SessionButtonStyle())
-                        }.padding(16).glass().padding(.horizontal, 12).padding(.vertical, 8)
-                    } else {
-                        PhotoStepCard(step: step, index: index, count: count, streaming: streaming,
-                                      caption: status ?? subtitle, previous: previous, next: next, finish: finish)
-                            .padding(.horizontal, 12).padding(.vertical, 8)
+                    .overlay(alignment: .bottom) {
+                        ScrollView {
+                            if completed {
+                                VStack(alignment: .leading, spacing: 12) {
+                                    Text("დასრულდა").font(.kadri(21, weight: .semibold))
+                                    Text("ყველა ნაბიჯი დასრულებულია.").font(.kadri(14.5))
+                                    Button("ახალი ფოტო", action: newPhoto).buttonStyle(SessionButtonStyle())
+                                }.padding(16).glass()
+                            } else {
+                                PhotoStepCard(step: step, index: index, count: count, streaming: streaming,
+                                              caption: object, previous: previous, next: next, finish: finish)
+                            }
+                        }
+                        .scrollBounceBehavior(.basedOnSize)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { cardHeight = $0 }
+                        .padding(.horizontal, 12).padding(.bottom, screen.safeAreaInsets.bottom + 8)
                     }
+                    .clipShape(UnevenRoundedRectangle(topLeadingRadius: Theme.Radius.card,
+                                                     topTrailingRadius: Theme.Radius.card))
                 }
-                .scrollBounceBehavior(.basedOnSize)
-                .fixedSize(horizontal: false, vertical: true)
             }
-            .preferredColorScheme(.light)
+            .ignoresSafeArea(edges: .bottom)
+        }
+        .background(Theme.Colors.surface.ignoresSafeArea())
+        .preferredColorScheme(.light)
     }
 
     private var header: some View {
@@ -70,22 +82,26 @@ struct PhotoResultView: View {
                     .frame(width: 44, height: 44).glass(radius: 22)
             }
             .accessibilityLabel("დახურვა").accessibilityHint("დახურავს ფოტო სესიას")
-            HStack(spacing: 10) {
-                Image(systemName: "wrench.and.screwdriver.fill")
-                    .font(.system(size: 14)).foregroundStyle(.white)
-                    .frame(width: 32, height: 32)
-                    .background(Theme.Colors.brand[500]!, in: Circle())
+            HStack(spacing: 8) {
+                Circle().fill(Theme.Colors.brand[500]!).frame(width: 10, height: 10)
+                    .overlay {
+                        Circle().stroke(Theme.Colors.brand[400]!.opacity(pulse ? 0 : 0.6), lineWidth: 2)
+                            .scaleEffect(pulse ? 1.8 : 1)
+                            .animation(reduceMotion ? nil : .easeOut(duration: 1.5).repeatForever(autoreverses: false), value: pulse)
+                    }
                     .accessibilityHidden(true)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(title).font(.kadri(14, weight: .semibold)).lineLimit(1)
-                    Text(subtitle).font(.kadri(12)).foregroundStyle(Theme.Colors.ink[500]!).lineLimit(1)
-                }
-                Spacer(minLength: 0)
+                Text(object).font(.kadri(14, weight: .semibold)).lineLimit(1)
+            }.frame(maxWidth: .infinity)
+            Button(action: newPhoto) {
+                Image(systemName: "photo.on.rectangle").font(.system(size: 16, weight: .medium))
+                    .frame(width: 44, height: 44).glass(radius: 22)
             }
-            .padding(6).padding(.trailing, 10).glass(radius: 28)
+            .accessibilityLabel("სხვა ფოტო").accessibilityHint("ახალი ფოტოს არჩევაზე გადავა")
         }
         .foregroundStyle(Theme.Colors.ink[900]!)
+        .onAppear { pulse = !reduceMotion }
     }
+
 }
 
 #if DEBUG
@@ -120,7 +136,7 @@ private struct PhotoResultPreview: View {
         PhotoResultView(image: photo, parts: MockKadriAPI.result.parts, meshes: meshes,
                         step: waiting ? nil : MockKadriAPI.sampleSteps[index], index: index,
                         count: waiting ? 0 : MockKadriAPI.sampleSteps.count, streaming: waiting,
-                        title: "ნიჟარა ჟონავს", subtitle: "სიფონის შეკეთება · ~15 წთ", status: "ფოტოზე სიფონი ჩანს",
+                        object: MockKadriAPI.result.object, segmentationStatus: waiting ? "ვასკანერებ…" : nil,
                         close: { completed = true }, previous: { index = max(0, index - 1) },
                         next: { index = min(MockKadriAPI.sampleSteps.count - 1, index + 1) },
                         finish: { completed = true })

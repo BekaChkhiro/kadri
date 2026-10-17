@@ -20,7 +20,7 @@ struct PhotoMarkerPin: View {
                 Circle().fill(tone.color.opacity(0.25)).frame(width: 28, height: 28)
                 Circle().fill(tone.color).frame(width: 24, height: 24)
                     .overlay(Circle().strokeBorder(.white, lineWidth: 2))
-                Text("\(number)").font(.kadri(12, weight: .bold)).foregroundStyle(.white)
+                Text(tone == .danger ? "✕" : "\(number)").font(.kadri(12, weight: .bold)).foregroundStyle(.white)
             }
             Text(label).font(.kadri(12.5, weight: .semibold))
                 .foregroundStyle(Theme.Colors.ink[800]!).lineLimit(1)
@@ -169,6 +169,7 @@ struct PhotoAnnotationsView: View {
     let parts: [Part]
     let boxes: [String: CGRect]
     let meshReady: Set<String>
+    var visibleHeight: CGFloat? = nil
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -189,11 +190,12 @@ struct PhotoAnnotationsView: View {
                     ForEach(Array(step.markers.enumerated()), id: \.offset) { i, marker in
                         if let box = boxes[marker.part] {
                             let below = step.arrows.contains { $0.part == marker.part }
+                            let pinWidth = min(220.0, max(0, proxy.size.width - 16))
                             PhotoMarkerPin(number: i + 1, label: marker.label,
                                            tone: marker.tone == "danger" || step.avoid.contains(marker.part) ? .danger : .brand)
-                                .frame(width: min(170, max(0, proxy.size.width - 16)))
-                                .position(x: min(max(box.midX, 85), max(85, proxy.size.width - 85)),
-                                          y: min(max(below ? box.maxY + 14 : box.minY - 14, 20), max(20, proxy.size.height - 20)))
+                                .frame(width: pinWidth)
+                                .position(x: min(max(box.midX, pinWidth / 2 + 8), max(pinWidth / 2 + 8, proxy.size.width - pinWidth / 2 - 8)),
+                                          y: min(max(below ? box.maxY + 14 : box.minY - 14, 20), max(20, min(proxy.size.height, visibleHeight ?? proxy.size.height) - 20)))
                         }
                     }
                 }
