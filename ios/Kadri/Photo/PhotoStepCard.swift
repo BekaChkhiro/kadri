@@ -36,24 +36,30 @@ struct PhotoStepCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack(spacing: 8) {
-                Text(SessionPresentation.progress(index: index, count: count, streaming: streaming))
-                    .font(.kadri(13, weight: .semibold)).foregroundStyle(Theme.Colors.brand[600]!)
-                    .layoutPriority(1)
-                Spacer(minLength: 0)
-                if let caption {
-                    Text(caption).font(.kadri(12, weight: .medium))
-                        .foregroundStyle(Theme.Colors.ink[500]!).lineLimit(1)
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    HStack(spacing: 8) {
+                        Text(SessionPresentation.progress(index: index, count: count, streaming: streaming))
+                            .font(.kadri(13, weight: .semibold)).foregroundStyle(Theme.Colors.brand[600]!)
+                            .layoutPriority(1)
+                        Spacer(minLength: 0)
+                        if let caption {
+                            Text(caption).font(.kadri(12, weight: .medium))
+                                .foregroundStyle(Theme.Colors.ink[500]!).lineLimit(1)
+                        }
+                    }
+                    HStack(spacing: 4) {
+                        ForEach(0..<max(count, 1), id: \.self) { item in
+                            Capsule().fill(item <= index && count > 0 ? Theme.Colors.brand[500]! : Theme.Colors.ink[900]!.opacity(0.1))
+                                .frame(height: 4)
+                        }
+                    }.accessibilityHidden(true).padding(.top, 10)
+                    content.padding(.top, 14)
+                        .frame(maxWidth: .infinity, minHeight: 150, alignment: .topLeading)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            HStack(spacing: 4) {
-                ForEach(0..<max(count, 1), id: \.self) { item in
-                    Capsule().fill(item <= index && count > 0 ? Theme.Colors.brand[500]! : Theme.Colors.ink[900]!.opacity(0.1))
-                        .frame(height: 4)
-                }
-            }.accessibilityHidden(true).padding(.top, 10)
-            content.padding(.top, 14)
-                .frame(maxWidth: .infinity, minHeight: 150, alignment: .topLeading)
+            .scrollBounceBehavior(.basedOnSize)
             HStack(spacing: 8) {
                 Button {} label: {
                     Image(systemName: "mic").font(.system(size: 20))
@@ -84,7 +90,7 @@ struct PhotoStepCard: View {
 
         }
         .foregroundStyle(Theme.Colors.ink[900]!)
-        .padding(16).glass()
+        .padding(16)
         .transaction { $0.animation = nil }
     }
 

@@ -94,46 +94,45 @@ struct PhotoFlowView: View {
         case .done(let result, let steps):
             resultView(image, result: result, count: steps.count, streaming: false, completed: true)
         default:
-            Color.clear.background {
+            PhotoScreenLayout(title: "ფოტო", close: session.retake, newPhoto: session.retake) {
                 GeometryReader { proxy in
-                    Image(uiImage: image).resizable().scaledToFill()
-                        .frame(width: proxy.size.width, height: proxy.size.height).clipped()
-                        .overlay(alignment: .top) {
-                            LinearGradient(colors: [.black.opacity(0.3), .clear], startPoint: .top, endPoint: .bottom)
-                                .frame(height: 150)
-                        }
-                }.ignoresSafeArea().ignoresSafeArea(.keyboard)
-            }
-            .overlay {
-                if case .scanning(let startedAt) = session.model.phase {
-                    ScanningView(startedAt: startedAt, cancel: session.model.cancel)
+                    Image(uiImage: image).resizable().scaledToFit()
+                        .frame(width: proxy.size.width, height: proxy.size.height)
+                        .background(Theme.Colors.ink[800]!)
                 }
-            }
-            .safeAreaInset(edge: .top) {
-                HStack {
-                    Button(action: session.retake) {
-                        Image(systemName: "xmark").frame(width: 44, height: 44).glass(radius: 22)
-                    }.foregroundStyle(Theme.Colors.ink[900]!).accessibilityLabel("დახურვა")
-                    Spacer()
-                }.padding(.horizontal, 16).padding(.top, 8)
-            }
-            .safeAreaInset(edge: .bottom) {
-                VStack {
-                    switch session.model.phase {
-                    case .idle, .describing:
-                        DescribeBar(text: Binding(get: { description }, set: { session.model.updateText($0) })) {
-                            session.submit(description)
-                        }
-                    case .error(let error, _):
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("ვერ გავაგრძელე").font(.kadri(21, weight: .semibold))
-                            Text(error.localizedDescription).font(.kadri(14.5))
-                            Button("თავიდან", action: session.model.retry).buttonStyle(SessionButtonStyle())
-                            Button("სხვა ფოტო", action: session.retake).buttonStyle(SessionButtonStyle(primary: false))
-                        }.padding(16).glass()
-                    default: EmptyView()
+            } panel: {
+                switch session.model.phase {
+                case .idle, .describing:
+                    DescribeBar(text: Binding(get: { description }, set: { session.model.updateText($0) }), inPhotoPanel: true) {
+                        session.submit(description)
                     }
-                }.padding(.horizontal, 12).padding(.vertical, 8)
+                case .scanning(let startedAt):
+                    VStack(spacing: 16) {
+                        ScrollView {
+                            VStack(spacing: 16) {
+                                ProgressView().tint(Theme.Colors.brand[500]!)
+                                TimelineView(.periodic(from: startedAt, by: 1)) { context in
+                                    Text(SessionPresentation.scanStatus(elapsed: context.date.timeIntervalSince(startedAt)))
+                                        .font(.kadri(18, weight: .semibold))
+                                }
+                            }.frame(maxWidth: .infinity).padding(.top, 24)
+                        }
+                        Button("გაუქმება", action: session.model.cancel)
+                            .buttonStyle(SessionButtonStyle(primary: false))
+                    }.padding(16)
+                case .error(let error, _):
+                    VStack(alignment: .leading, spacing: 12) {
+                        ScrollView {
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text("ვერ გავაგრძელე").font(.kadri(21, weight: .semibold))
+                                Text(error.localizedDescription).font(.kadri(14.5))
+                            }.frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        Button("თავიდან", action: session.model.retry).buttonStyle(SessionButtonStyle())
+                        Button("სხვა ფოტო", action: session.retake).buttonStyle(SessionButtonStyle(primary: false))
+                    }.padding(16)
+                default: EmptyView()
+                }
             }
         }
     }

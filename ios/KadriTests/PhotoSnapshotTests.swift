@@ -17,15 +17,22 @@ final class PhotoSnapshotTests: XCTestCase {
                 .map { CGPoint(x: $0.x * 1024, y: $0.y * 1024) }
             return TrackedMesh(id: part.id, mesh: MeshTriangulation.triangulate(polygons: [polygon]), referenceBox: rect)
         }
-        let directory = URL(fileURLWithPath: "/tmp/kadri-photo-shots-v3")
+        let directory = URL(fileURLWithPath: "/tmp/kadri-photo-shots-v5")
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        for index in 0...6 {
+        let landscape = UIGraphicsImageRenderer(size: CGSize(width: photo.size.height, height: photo.size.width)).image { context in
+            context.cgContext.translateBy(x: photo.size.height, y: 0)
+            context.cgContext.rotate(by: .pi / 2)
+            photo.draw(in: CGRect(origin: .zero, size: photo.size))
+        }
+        for index in 0...9 {
             let waiting = index == 5
             let completed = index == 6
             let stepIndex = min(index, MockKadriAPI.sampleSteps.count - 1)
-            let screen = PhotoResultView(image: photo, parts: result.parts, meshes: waiting ? [] : meshes,
-                step: waiting ? nil : MockKadriAPI.sampleSteps[stepIndex], index: waiting ? 0 : stepIndex,
-                count: waiting ? 0 : MockKadriAPI.sampleSteps.count, streaming: waiting, object: result.object,
+            let emptyFocus = index == 7 || index == 8
+            let step = emptyFocus ? Step(index: 5, title: "გადაამოწმე გაჟონვა", text: "მთელი ფოტო ჩანს. შეამოწმე ყველა შეერთება.", focus: []) : MockKadriAPI.sampleSteps[stepIndex]
+            let screen = PhotoResultView(image: index == 8 ? landscape : photo, parts: result.parts, meshes: waiting ? [] : meshes,
+                step: waiting ? nil : step, index: waiting ? 0 : stepIndex,
+                count: waiting ? 0 : MockKadriAPI.sampleSteps.count, streaming: waiting || index == 9, object: result.object,
                 segmentationStatus: waiting ? "ვასკანერებ…" : nil,
                 close: {}, previous: {}, next: {}, finish: {}, completed: completed)
                 .environment(\.meshWrapReduceMotion, true)
@@ -47,7 +54,7 @@ final class PhotoSnapshotTests: XCTestCase {
             XCTAssertTrue(rendered)
             let data = try XCTUnwrap(image.pngData())
             XCTAssertGreaterThan(data.count, 1000)
-            let name = completed ? "done" : waiting ? "waiting" : index == 4 ? "step-last" : "step-\(index + 1)"
+            let name = index == 7 ? "empty-focus-portrait" : index == 8 ? "empty-focus-landscape" : index == 9 ? "preparing-next" : completed ? "done" : waiting ? "waiting" : index == 4 ? "step-last" : "step-\(index + 1)"
             try data.write(to: directory.appendingPathComponent("\(name).png"))
             let attachment = XCTAttachment(image: image)
             attachment.name = name
