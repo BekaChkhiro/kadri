@@ -1,0 +1,175 @@
+{
+  "model": "gpt-6-astra",
+  "prompt": "ორიგინალ ფოტოზე ამოიცანი მოცემული მოქმედებებისთვის საჭირო ხილული ნაწილები. object, label და სხვა ტექსტი დაწერე ქართულად. თითო ნაწილს მიანიჭე უნიკალური ინგლისური snake_case id და მჭიდრო box=[x0,y0,x1,y1], 0..1000 ნორმალიზებული ფოტოს სიგანის/სიმაღლის მიმართ, საწყისი ზედა მარცხენა კუთხეში. ნაბიჯებს შეუნარჩუნე title/text და რიგი. focus/avoid/markers/arrows-ში მიუთითე მხოლოდ parts-ის id. avoid არის ნაწილი, რომელსაც არ უნდა შეეხო. უხილავი ან გაურკვეველი ნაწილები არ გამოიგონო: აღწერე unknown_parts-ში, დატოვე focus ცარიელი და warn-ში ახსენი. rotate: cw/ccw; move: up/down/left/right/toward/away ეკრანის მიმართ, არა 3D. ინსტრუქციის ზომები/დოზები ფოტოდან დადასტურებულად არ მიიჩნიო. ეს კვლევაა, არა პროფესიული რჩევა.\n[{\"title\": \"შეავსე ბიურეტი\", \"text\": \"ონკანი დახურულია? ძაბრით ჩაასხი ტიტრანტი ნულოვან ნიშნულზე ოდნავ მაღლა.\"}, {\"title\": \"მოხსენი ძაბრი\", \"text\": \"ძაბრი ტიტრაციამდე აუცილებლად მოხსენი. მისგან ჩამოსული წვეთები მოცულობას გააფუჭებს.\"}, {\"title\": \"წაიკითხე საწყისი მოცულობა\", \"text\": \"თვალი სითხის დონეზე დაიჭირე და წაიკითხე მენისკის ქვედა კიდე. ჩაიწერე ჟურნალში.\"}, {\"title\": \"დაამატე ინდიკატორი\", \"text\": \"კოლბაში ჩააწვეთე 2–3 წვეთი ფენოლფთალეინი და დადე თეთრ ფილაზე ონკანის ქვეშ.\"}, {\"title\": \"ტიტრაცია\", \"text\": \"ონკანი ნელა გახსენი და კოლბა წრიულად ატრიალე. გაჩერდი, როცა ღია ვარდისფერი 30 წამს შენარჩუნდება.\"}]",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "object": {
+        "type": "string"
+      },
+      "parts": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$"
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "box": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1000
+              },
+              "minItems": 4,
+              "maxItems": 4
+            }
+          },
+          "required": [
+            "id",
+            "label",
+            "box"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "steps": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "focus": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "avoid": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "markers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "part": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  },
+                  "tone": {
+                    "type": "string",
+                    "enum": [
+                      "brand",
+                      "danger",
+                      "neutral"
+                    ]
+                  }
+                },
+                "required": [
+                  "part",
+                  "label",
+                  "tone"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "arrows": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "part": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "rotate",
+                      "move"
+                    ]
+                  },
+                  "dir": {
+                    "type": "string",
+                    "enum": [
+                      "cw",
+                      "ccw",
+                      "up",
+                      "down",
+                      "left",
+                      "right",
+                      "toward",
+                      "away"
+                    ]
+                  }
+                },
+                "required": [
+                  "part",
+                  "type",
+                  "dir"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "tools": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "warn": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "title",
+            "text",
+            "focus",
+            "avoid",
+            "markers",
+            "arrows",
+            "tools",
+            "warn"
+          ],
+          "additionalProperties": false
+        },
+        "minItems": 5,
+        "maxItems": 5
+      },
+      "unknown_parts": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "required": [
+      "object",
+      "parts",
+      "steps",
+      "unknown_parts"
+    ],
+    "additionalProperties": false
+  },
+  "original_image": "out_realism/b_astra/chemistry/chem-titration/original/image.png",
+  "reasoning_effort": "high"
+}

@@ -1,0 +1,152 @@
+{
+  "id": "resp_0fb4d0831f5cad8d016ad35da7b2d087d2b9d1cdd85eb1e414",
+  "created_at": 1792236967.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-6-astra",
+  "object": "response",
+  "output": [
+    {
+      "id": "rs_0fb4d0831f5cad8d016ad35da9a78087d2878f8b5edc5d3c42",
+      "summary": [],
+      "type": "reasoning",
+      "content": [],
+      "encrypted_content": "gAAAAABq0120sfHEmsSYyOo3xAjC7VvKE4MmciGwQ-JVqjgaOu2t2aIam-xsb0pWb-uqMnBaPUfGNMSBA7QsBoPoufbPc0uDIexW_I-_KvnmSO-P9tsgtI51Lr9hXXYQ2MvimG2H5cbWUzbBskB-81LT3rrmkboCJvGhhE0thWNQJMCVgCZe2V6diNKc5bUIY24rb6Zz8nhoXJawWrOJO7U0VrCe9fl0fQWotms-L3gS6JhpN5WdnHuc1q4xZo4DXOHrgZ7ykOnf-EmBeddC4AExkhByvihLtyUJ5c_XosjbV-PbxE5jcFOks_Do7HM8dyMgo_YrfYXsMEYAII1SNwWabdpY0t5zqZhwCtZV-hvVF-KyeuR7wI2XxLS95nDZsVqQQg_c-vBe67K4XP3GSb7mkYUIGsYyZGRkyeWZZE0PoQUMsdxsnRmZ4VHUvCDzZQCc6Risgez6Q_JDdi4vW4cw2naXTfekF_bmzTFXKzaEHp1ur_b45T8QfhLA1fLgrU4-0ws634gG9XriOgCe2hjEQSAPqal2T_7AxDenr-eBrSskTetUhQXFMaBegsPo66npyQ7_Ffzd9Yrt8VRiLCN-Q9lD6P4cvsQRfZ6p_Uwdog3QtoQuR5WVI1scG84PVke7gItvZOgAfRWos1dDKCvB2XIXLrpMyaBPyUeD6YQgxOdhqQnI93NFOenA6_tdL7ph6BMREQfPlQQZp7ssbU4oyQslmjdKUOTNhQgl_e-9qq7WxVsIAoj9m3vE_X9_OX7BWu0Uqu_MYNaKnb1ZRV0fPuNsI7Kw_FPf27tkR2LJepZg9o4lhRDd2Xxu2JbuS95BuJ3VsrGXztxgCp6iew9Dv08GuaR93WcBIEXkk1A6kK8Xc8ct0MlKISKo7JkUgA4Z629Tb3gsacgat4dVoUIXogvyi9SEk-mDTiaAQvvDPdSH8v7cseJiYA-tVyuvOAIMDshtylqABdQNeNJm8cehEeaK-f2gUP22S-GcsZBhYHfPRCRURu8dPuGs0cYGrCkTOslNJSDFYMqfKs9scQ7-3Jjpp3lSc0pG9IE1qTJ789DhosTxz1J22WLyvMQeMkGWpCtmP7G3VgxVNhNXjJLm-8FrtD3OX-aIWIz49kLuD2IFPtL8DX8jKLmKtlo9_g6FJr919BA4nlZHFww98xDL4s_MkYScKd7P-t8-45l4MkZrVIXUo2bMx3fRZUSwI37LYnsvi71otI1OXEhl-en2RrR81CjqaZMm-PFtOmnKHnryjcKUyf5wWGJnhg1T09mL4emueJRISiGqAP-U9ZP_2QfbXVvE4PmrQ_N76szl5AmcxfxEbyR_tvr9P-r_1UAmfg3o7gWldI2tuBAZPLRbEU_7jPaQn-S8VTxUltjXGsHFwJDQyiQ4m8iAzI7XqWn_pzsrCWBGh-QfHFdWbW_OUIUQfdZhC6GfTY3VaaTvJx2hMirTn0w7CjTwqCCVDdmY9pO4RnaP7Ez8vUxJuU3xIPnJsQpKNNIF-WaNnptOTnM69FGjAghz47Sa2jXp-Sze2l0tWNkgByoNKtu7lYjEKgEU1RLJXsCiIm_FoOia4-13OkMc9YNlppm_m9U6fsQzo4n-TJTZgvmzpmTqfu2mRu6Z46SljGFVU9xm4nIi4ZUqOdgj9JlFsPoLRj9rj6FMeG8vRUrLoBjaFmsyLsuUKvT5HqLk0Gnig2uDJUDBIYU1G4n6rNSfBbVNBHx2bATC95_iE4B5fDPP8pEWghQfMvG1zAJqo-IG_AK4sDRCqm7sTMUgCVM92TMK6PmP-eCqtApXLsdt71fbCyGNLaYCCwjefwYpJq9FZkhUhwRVsNUoPyMCi34wPEJu98_zgM12cjEjxdTONLBlTgdT35W4M9Hsx6FuBJ_6AOpCYmVIr8RUTpZYPFaZspxkRacDVlMxs7sBveqIcYrkrwi4tikKQm5XhBhbwuS2hrverZ4e1DF35vCBVRs83JCqh9AjffIvBC0QcVWvIr1T2oZFKXc0tGESEbDBfjjm33ZSJ6IP1TSnQZ_0fuha3pfIgTmYSNN7h6Xp6dgqlTB086dkKZ3xOPhkQdMzJSc-b_oI8qowQoIg8vSTulGfkApRaFnQf4o7F8ybTNgonoE6ul0r9JmA6TuwlY8bSzGI2B8_xJy_I1ycguSBINyTiKKEzNZLih02lttP3V-jW_cm1_JIUs5tdDtZoxRCbXPsz_meDCn9nA9Wb1W95OZcBPGTpArMb2XzrwDlTGZo_mhcoDcw5glaLym3wJC_9z7Uzrl8ZqU3Ri-ThgWDGo5o3j7MUZ0kUEH3jG5oCuAopdX9GSB-xm0NuGwvIjVc5ZV-WKkVGg7PEVuNRqKWeZP2Ofklg4fV2ROGxsbCJcFAGMs91YCQPGEMBjngJ6FZ7mO-Uo17FqsciluPx-uMSe5cU2hBZUb9UkJ5WyfBf8IEMcwYhNN7h5Qi0ntAjBZXCQxF0fCOLzvw5egrOD1tEDwtKvIHe171MfZBVftHLfeMQYqmyVcvN0PbGGntEhqbYQoBjalmsauQ6JXRpR5IzqbxR2rR7VpEkqrjSTd9AU49DeT45Ur1ZsZvwPNUQJnEfPIjLzvUPj14pNy7DwDJ57tilXG7bhf5-a0ZYzog1cJVUhKRTDDQmaXZld0_kusKG0QsniGdF4kT0UdhhmN-5Olz8_LtnNiTS9CMNSMjspgpudTc3YqbUvOAHp4wQ9PEEhIS00nNk1_sV-7K6n733vHHo2haYUUX6E4IuH2y9AaOXv9Hikz-S_MatIBeftXxhA==",
+      "status": null
+    },
+    {
+      "id": "msg_0fb4d0831f5cad8d016ad35dac4f9087d2ba9a4f4c2ca796db",
+      "content": [
+        {
+          "annotations": [],
+          "text": "{\"object\":\"ტიტრაციის მოწყობილობა\",\"parts\":[{\"label\":\"ზედა ძაბრი — ღერო ბიურეტის პირშია ჩასმული\",\"box\":[465,18,608,112]},{\"label\":\"ვერტიკალური მინის ბიურეტი — შიგნით სითხის დონე ჩანს\",\"box\":[509,94,555,398]},{\"label\":\"ბიურეტის ქვედა ონკანი — ლურჯი სახელურით\",\"box\":[481,382,595,431]},{\"label\":\"ბიურეტის ქვედა წვერი — ონკანიდან კოლბისკენ მიმართული\",\"box\":[521,426,553,464]},{\"label\":\"ქვედა ცენტრალური კონუსური კოლბა — ფსკერთან გამჭვირვალე სითხე ჩანს\",\"box\":[437,460,622,625]},{\"label\":\"მარცხენა პატარა საწვეთური ბოთლი — ლურჯი წვეტიანი თავსახურით\",\"box\":[319,487,405,625]},{\"label\":\"კოლბის ქვეშ მოთავსებული თეთრი ფილა\",\"box\":[354,593,676,646]},{\"label\":\"ზედა სამაგრი — ბიურეტს მარჯვენა შტატივთან აერთებს\",\"box\":[504,139,821,178]},{\"label\":\"მარჯვენა შტატივი — ვერტიკალური ლითონის ღერო და ნაცრისფერი ძირი\",\"box\":[669,14,995,634]}]}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message",
+      "phase": "final_answer"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1792236980.0,
+  "conversation": null,
+  "max_output_tokens": 1200,
+  "max_tool_calls": null,
+  "moderation": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_options": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "low",
+    "generate_summary": null,
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "name": "variant_c_parts",
+      "schema_": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "box": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "minItems": 4,
+                  "maxItems": 4
+                }
+              },
+              "required": [
+                "label",
+                "box"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 24
+          }
+        },
+        "required": [
+          "object",
+          "parts"
+        ],
+        "additionalProperties": false
+      },
+      "type": "json_schema",
+      "description": null,
+      "strict": true
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 959,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 455,
+    "output_tokens_details": {
+      "reasoning_tokens": 118
+    },
+    "total_tokens": 1414
+  },
+  "user": null,
+  "access_programs": null,
+  "billing": {
+    "payer": "developer"
+  },
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": false,
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  }
+}

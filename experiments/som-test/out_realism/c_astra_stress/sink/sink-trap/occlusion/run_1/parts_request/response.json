@@ -1,0 +1,152 @@
+{
+  "id": "resp_0b5e4adfdd4a3cc4016ad35d3bacb887d294be89c8671f48b8",
+  "created_at": 1792236859.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-6-astra",
+  "object": "response",
+  "output": [
+    {
+      "id": "rs_0b5e4adfdd4a3cc4016ad35d3d456087d2b5573c1efa1348ab",
+      "summary": [],
+      "type": "reasoning",
+      "content": [],
+      "encrypted_content": "gAAAAABq011EX8LGR3gIFaYGHfR0Dm6VPZ_1nKGedNwlnc3XfvI9eGBz0dEieyEYJOZ1HEoEyyMA7ziPhitgzaosrjLeg4pZbc3sdeQzBBtp0haGDhwE36LVqLItGwsELDw51ZCXwWzXjsB-A3bYdGHiZjssqkqbB_3VRWL-7H16bl-_MJIjaLJyDvHmaPn-EDEbKPmwBquI71qB1nSqcvbFRRO5ukcEoH8iiVmT-jQ_6M3LkHkvHd5Lsv9sj0k699lYK6evog34t71dO_R5JmSsz2evCxXwOAVDNKIu029SNaxj8e-OXsgFCQM7lBkRjiirwF2MuNkpdefmWzioK4U7eV9mZOCtMaRrmn3xeqSCENGDnivqa_dwByjOu2BPZbJ40vEhifUU3cqszdskbPdb7kzJhMsVozfAMO7Mz1wDfeEKtpGssKQgY4sk7MB8DwXoEnID5diyFmF7KXEbuuu2yh4IMEQ6G55SEkpxgZC6oCGXp_uYyxStuYzAEKuaJDu14s1ONfhK9ymHX6ONgW4hGJNZJSalXsEMmF0VR_Hkuv5G0iAM-oYcvOA8Wf7bhmPUFtjuP-6nP1ufZVslS9hK7twDmKJf0UpLY_on7wyvbvFKKaUGZaFqBEhb6QfJInbE50GxIqNaNLt3uwfTpcGMmLtx2scEVWn5-8Pci-XHtz3bNm1kQyGVUfAFVYN8eDeIoz7zgo8w_2WNMpuqMnX4qgwSZK0u_6cl5GTii9QOH5gYsCPV9Lx28gJod0y8TBOX5rHbMN2tu10iCq5xjH4D4u-aItPEygXbSHagwnatEM0PLRO0r_II4IQnsuAZ2qRPxlwCRfbOOsnsV8aCrXe0Vxmr2FdV0bOvCfgmV8Y0WXVr5HgSFFlZgvKjL4LJ5XRrGKQnn580AgtV3A0UZ3bpgRdRh6n2I8gyAuY3hqtocIxKVDUxucYFECUdtg86H_0pFbV1dK5Ei3TqOHYDMXKPYgAgXnQN_b-AQXJvE_ENZF5CPFZgxQ49--ETtDr4ubvDdmBAzV-razIaePXQgDtgNEj3Xf1cOKUvqLXND0Y-tVX3Hedk1c7B447jjVc2SOdjy0vsbF0bOLO6-jCtsV1iTrTI9Htamuc7uERZVlI0pEk1IPmA7-lUOQDQ_ZvEegc7gcuehnlN4VmjKD_nKRHZAxk4VwxpAm8pG4ovc_oznES_fenudB9h8a5vkkPqtWUe1yFnSPynqGvaZn3MnEfhEce7HalFwTl_6xLqKyf2SMLs_U-OzBLcVlSl8oqRXigI-TCNWuFhE_6H7_MOkE-628T4A12ofGElQo-XSTa9vkkiu2ZMM-JCCQWv0V0xxTHbY77Uqt4tEmoXEvifHxSt6biVb_fPhqFE3QmTKGMMaSOM2ejnJ_NH5CJqAS4w6EcfpSa0AosGaQmCK6EWy4pjfeDsJFF8vKyK23XC2zTgu4LUVHN3ftFljUzilitB1VuH-ZHb5RSsBnEwzNQTn8BL4bUz8MYF7u8He7EsdTOxpBccoobx8BktX6c5i5ZoArlOtzlOSnotv6b1AGGzbhaI0g0-Zig94INU6bV-0FYDs2zBgRNKbE5i3lCcToFxlW5561Om7Q8fGXaaBTBFKCEHrXWbPddPd74fhqkmR72TgsfaVVaLHPrQxoVbNUt_XX2JaTY5VB_-Ul2YnqGM5kxiVpm_kjYYggmhg2BML0aUjImKpsND6hCjnCrNj5DUavsH2YfgT3vpDJX3PxLMWzOuSlP5Bwd3nCytG29y1U1oUBR-tKUNB510Q6FpDrmlibfsh47dvBbwsQA5QZk8l1P7j7bKBUW2O0xULhJvqVGgM1LGQN6-Q8dwD0lfGi06kjhVKF2zsBXSWeNhiEL93nx-6jVpKaIhTAX6vnAK8vJzyZsjBgURMiulpqdi1py4Vexvsh00NRMHUcEv10gGtvu3dlDM1jQMAF6BDX9XwEjtKLB-1jvXaoEzZQjaXONgweBUD0sogYGwxJuJ8gYavMnCc6LxI0-e0EaNViRNjYC5AyXsPD7oeRN2RXF2fnX6_sNS0KzqW3A_BldincxmX6eMZ_S9-ZkAmXxIXgw8n3mdgJgrFEiunrdXK7xnDeOYlvgIQNWYRVZj",
+      "status": null
+    },
+    {
+      "id": "msg_0b5e4adfdd4a3cc4016ad35d3f51c087d29c3ec6573011caaf",
+      "content": [
+        {
+          "annotations": [],
+          "text": "{\"object\":\"ნიჟარის ქვეშ არსებული სანტექნიკა\",\"parts\":[{\"label\":\"მარცხენა ჩამკეტი ონკანი — მრგვალი მეტალის სახელური\",\"box\":[12,256,102,318]},{\"label\":\"მარჯვენა ჩამკეტი ონკანი — მრგვალი მეტალის სახელური\",\"box\":[219,259,299,323]},{\"label\":\"სიფონის მარჯვენა პლასტმასის ქანჩი — შეერთებაზე და ქვედა კიდეზე ხილული წყლის წვეთები\",\"box\":[623,247,748,385]},{\"label\":\"სიფონის ზედა პლასტმასის ქანჩი — ვერტიკალური მილის მეტალის მილთან შეერთება\",\"box\":[267,90,488,168]},{\"label\":\"თეთრი მოხრილი სიფონი — ქვედა შუა მონაკვეთი დაფარულია\",\"box\":[303,228,649,449]}]}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message",
+      "phase": "final_answer"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1792236868.0,
+  "conversation": null,
+  "max_output_tokens": 1200,
+  "max_tool_calls": null,
+  "moderation": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_options": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "low",
+    "generate_summary": null,
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "name": "variant_c_parts",
+      "schema_": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "box": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "minItems": 4,
+                  "maxItems": 4
+                }
+              },
+              "required": [
+                "label",
+                "box"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 24
+          }
+        },
+        "required": [
+          "object",
+          "parts"
+        ],
+        "additionalProperties": false
+      },
+      "type": "json_schema",
+      "description": null,
+      "strict": true
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 1027,
+    "input_tokens_details": {
+      "cache_write_tokens": 1024,
+      "cached_tokens": 0
+    },
+    "output_tokens": 273,
+    "output_tokens_details": {
+      "reasoning_tokens": 57
+    },
+    "total_tokens": 1300
+  },
+  "user": null,
+  "access_programs": null,
+  "billing": {
+    "payer": "developer"
+  },
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": false,
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "metric": "Design geometry proxy only; NOT real semantic validation",
+  "steps": [
+    {
+      "focus_full_iou": 0.28334060897086105,
+      "focus_visible_iou": 0.28334060897086105,
+      "avoid_full_iou": 1.0,
+      "avoid_visible_iou": 1.0
+    },
+    {
+      "focus_full_iou": 0.0,
+      "focus_visible_iou": 0.0,
+      "avoid_full_iou": 1.0,
+      "avoid_visible_iou": 1.0
+    },
+    {
+      "focus_full_iou": 0.703125,
+      "focus_visible_iou": 0.703125,
+      "avoid_full_iou": 0.0,
+      "avoid_visible_iou": 0.0
+    },
+    {
+      "focus_full_iou": 0.5511724934181179,
+      "focus_visible_iou": 0.8133004544515596,
+      "avoid_full_iou": 1.0,
+      "avoid_visible_iou": 1.0
+    },
+    {
+      "focus_full_iou": 0.18735824869342274,
+      "focus_visible_iou": 0.18735824869342274,
+      "avoid_full_iou": 1.0,
+      "avoid_visible_iou": 1.0
+    }
+  ]
+}

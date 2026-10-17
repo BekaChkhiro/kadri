@@ -1,0 +1,813 @@
+{
+  "limit": 13.0,
+  "requests": {
+    "bc46a8ec3123eaf579b00472bcacacf5c3b88acd9783ae70820cbf929da26452:count": {
+      "state": "reserved",
+      "usd": 1.25
+    },
+    "672e37bae5eda20dbdace9cb5ed2f94eda7595bd156b0caaab299f4481efdd16:count": {
+      "state": "reserved",
+      "usd": 1.25
+    },
+    "c107606d1608d0a0b6187d7b83850d73ddab50dd389487959e2641dfde37eebd:count": {
+      "state": "settled",
+      "usd": 0.0117
+    },
+    "c107606d1608d0a0b6187d7b83850d73ddab50dd389487959e2641dfde37eebd:gen": {
+      "state": "settled",
+      "usd": 0.02155
+    },
+    "1cb0d3e90b709b011b2eefecff62af2007a101cd9a5aa26064ada8287d1c3f1b:count": {
+      "state": "settled",
+      "usd": 0.0318
+    },
+    "1cb0d3e90b709b011b2eefecff62af2007a101cd9a5aa26064ada8287d1c3f1b:gen": {
+      "state": "settled",
+      "usd": 0.0981
+    },
+    "7d452f078663e685419210cf6d0d4ebbc4dc1ae01969f07d7871ecb62611dd4a:count": {
+      "state": "settled",
+      "usd": 0.033575
+    },
+    "7d452f078663e685419210cf6d0d4ebbc4dc1ae01969f07d7871ecb62611dd4a:gen": {
+      "state": "reserved",
+      "usd": 1.85
+    },
+    "ea534c8ac31908e7d333259f523fe69148dd2ac0f1a525745bd2aa68ae8ea804:count": {
+      "state": "settled",
+      "usd": 0.033575
+    },
+    "ea534c8ac31908e7d333259f523fe69148dd2ac0f1a525745bd2aa68ae8ea804:gen": {
+      "state": "settled",
+      "usd": 0.266825
+    },
+    "53661bc4a55b8e3f6b2fb7911d203661a9b1982e7cae102087cb4bd8265d37ac:count": {
+      "state": "settled",
+      "usd": 0.0325625
+    },
+    "53661bc4a55b8e3f6b2fb7911d203661a9b1982e7cae102087cb4bd8265d37ac:gen": {
+      "state": "settled",
+      "usd": 0.2540125
+    },
+    "9460c71fd02d00851d978d30376db88d523a1b9e5c5bb92163383aff706c941d:count": {
+      "state": "settled",
+      "usd": 0.0128375
+    },
+    "9460c71fd02d00851d978d30376db88d523a1b9e5c5bb92163383aff706c941d:gen": {
+      "state": "settled",
+      "usd": 0.0236375
+    },
+    "bb3ed680625dee6367a4c7ad6f1c7f544638249cc5c02d0c853e55a69d4ad060:count": {
+      "state": "settled",
+      "usd": 0.0334375
+    },
+    "b3de468e99f70e698ee91c84f55eecd2d791b61694fbfe00bfed701b72659965:count": {
+      "state": "settled",
+      "usd": 0.0388375
+    },
+    "b3de468e99f70e698ee91c84f55eecd2d791b61694fbfe00bfed701b72659965:gen": {
+      "state": "settled",
+      "usd": 0.0867375
+    },
+    "bb3ed680625dee6367a4c7ad6f1c7f544638249cc5c02d0c853e55a69d4ad060:gen": {
+      "state": "settled",
+      "usd": 0.2112875
+    },
+    "ae686044a2881d33e27b05b9bb4b33196eabc6b4b7442e9ffbf8e0a4e8718460:count": {
+      "state": "settled",
+      "usd": 0.00077025
+    },
+    "ae686044a2881d33e27b05b9bb4b33196eabc6b4b7442e9ffbf8e0a4e8718460:gen": {
+      "state": "settled",
+      "usd": 0.00316875
+    },
+    "f7dc60561c667fea7a7a4256bafe101cbc7468126333a6f1a325f42d57aa974a:count": {
+      "state": "settled",
+      "usd": 0.002199
+    },
+    "f7dc60561c667fea7a7a4256bafe101cbc7468126333a6f1a325f42d57aa974a:gen": {
+      "state": "settled",
+      "usd": 0.00561
+    },
+    "6b49af7c4850ab1836d37f8f590182362b48ffd13bbf50e859303996bc8fdbd9:count": {
+      "state": "settled",
+      "usd": 0.0326375
+    },
+    "6b49af7c4850ab1836d37f8f590182362b48ffd13bbf50e859303996bc8fdbd9:gen": {
+      "state": "settled",
+      "usd": 0.2427375
+    },
+    "03c4b5da25453982ab0c630217e07549dac5739b660d5fec11c46012090f844b:count": {
+      "state": "settled",
+      "usd": 0.00077025
+    },
+    "03c4b5da25453982ab0c630217e07549dac5739b660d5fec11c46012090f844b:gen": {
+      "state": "settled",
+      "usd": 0.00262425
+    },
+    "f2e8e789496830c0fc43df399443b0d0a7b96284fb3996919b643479a34cdf18:count": {
+      "state": "settled",
+      "usd": 0.00227775
+    },
+    "f2e8e789496830c0fc43df399443b0d0a7b96284fb3996919b643479a34cdf18:gen": {
+      "state": "settled",
+      "usd": 0.00497775
+    },
+    "e792d192a4e92d26067f3d01cfe1423541d743f899a8626bc6239da0e420a6b3:count": {
+      "state": "settled",
+      "usd": 0.00077025
+    },
+    "e792d192a4e92d26067f3d01cfe1423541d743f899a8626bc6239da0e420a6b3:gen": {
+      "state": "settled",
+      "usd": 0.00387975
+    },
+    "21edf10b66fc530e2ff8fd55b25d0484b272f5a4f92daece870d4c02d6fa69ba:count": {
+      "state": "settled",
+      "usd": 0.00222075
+    },
+    "21edf10b66fc530e2ff8fd55b25d0484b272f5a4f92daece870d4c02d6fa69ba:gen": {
+      "state": "settled",
+      "usd": 0.00652275
+    },
+    "f0e2d9988ac865900830638ca1b436a74aa689c38c1b2b83f13ace4d3305b505:count": {
+      "state": "settled",
+      "usd": 0.00077025
+    },
+    "f0e2d9988ac865900830638ca1b436a74aa689c38c1b2b83f13ace4d3305b505:gen": {
+      "state": "settled",
+      "usd": 0.00266475
+    },
+    "7816520141c7f131f5605c460a178995d8c765ec779b50e82b4279ea841658c8:count": {
+      "state": "settled",
+      "usd": 0.00221475
+    },
+    "7816520141c7f131f5605c460a178995d8c765ec779b50e82b4279ea841658c8:gen": {
+      "state": "settled",
+      "usd": 0.00640875
+    },
+    "fce189787cdf957f655a63f4c16e7ad29aba10f49b721b280cbc1032c8d366c1:count": {
+      "state": "settled",
+      "usd": 0.00077025
+    },
+    "fce189787cdf957f655a63f4c16e7ad29aba10f49b721b280cbc1032c8d366c1:gen": {
+      "state": "settled",
+      "usd": 0.00389775
+    },
+    "8dfddcb5453c8f854ed7092ce0ba62cf7d82ed7b2d3f15e3c4b3d917ef514b8d:count": {
+      "state": "settled",
+      "usd": 0.002301
+    },
+    "8dfddcb5453c8f854ed7092ce0ba62cf7d82ed7b2d3f15e3c4b3d917ef514b8d:gen": {
+      "state": "settled",
+      "usd": 0.00771
+    },
+    "06c3d1f58680178ad067b558fd04e13ebd529ef3a9c57a9880cfcfa5120796b4:count": {
+      "state": "settled",
+      "usd": 0.00077025
+    },
+    "06c3d1f58680178ad067b558fd04e13ebd529ef3a9c57a9880cfcfa5120796b4:gen": {
+      "state": "settled",
+      "usd": 0.00364575
+    },
+    "93eca3269608bf8be1074f968bab439b0b8f1da68dfd6485ac94778c608e80a6:count": {
+      "state": "settled",
+      "usd": 0.00224025
+    },
+    "93eca3269608bf8be1074f968bab439b0b8f1da68dfd6485ac94778c608e80a6:gen": {
+      "state": "settled",
+      "usd": 0.00656475
+    },
+    "d7c4208dc4c81ccf982a2bbf85229c0ecbcbf3e560c49355fc4d175a75fa58b0:count": {
+      "state": "settled",
+      "usd": 0.00077025
+    },
+    "d7c4208dc4c81ccf982a2bbf85229c0ecbcbf3e560c49355fc4d175a75fa58b0:gen": {
+      "state": "settled",
+      "usd": 0.00347475
+    },
+    "bb85e84b7245a2cb48e5c2f26f287d4b6645f8518bdba48c8589046c92550885:count": {
+      "state": "settled",
+      "usd": 0.00225075
+    },
+    "bb85e84b7245a2cb48e5c2f26f287d4b6645f8518bdba48c8589046c92550885:gen": {
+      "state": "settled",
+      "usd": 0.00642225
+    },
+    "1a87aa3d38878995e0b57e16c18004c65d4b34c17a78f3035ae43c9e66e707dc:count": {
+      "state": "settled",
+      "usd": 0.00077025
+    },
+    "1a87aa3d38878995e0b57e16c18004c65d4b34c17a78f3035ae43c9e66e707dc:gen": {
+      "state": "settled",
+      "usd": 0.00306975
+    },
+    "d4523173e9af20cda2da9925a5640296d15d91fd7031a97906e6f8d7fbf08800:count": {
+      "state": "settled",
+      "usd": 0.0022635
+    },
+    "d4523173e9af20cda2da9925a5640296d15d91fd7031a97906e6f8d7fbf08800:gen": {
+      "state": "settled",
+      "usd": 0.006777
+    },
+    "884cda190af44d93058fe896f50a8ba6ad0b7772bb2eb149679a62bb9df0e9c7:count": {
+      "state": "settled",
+      "usd": 0.00077025
+    },
+    "884cda190af44d93058fe896f50a8ba6ad0b7772bb2eb149679a62bb9df0e9c7:gen": {
+      "state": "settled",
+      "usd": 0.00283575
+    },
+    "f22ee2993ddc300a8ae543d1fcf45064372d284e0c29de045bc6e0cac454efc1:count": {
+      "state": "settled",
+      "usd": 0.002127
+    },
+    "f22ee2993ddc300a8ae543d1fcf45064372d284e0c29de045bc6e0cac454efc1:gen": {
+      "state": "settled",
+      "usd": 0.006069
+    },
+    "3746ea7b8592f8678afdae10455773df6673d4764dc0c98e4a7af93dfb4e29e8:count": {
+      "state": "settled",
+      "usd": 0.00077025
+    },
+    "3746ea7b8592f8678afdae10455773df6673d4764dc0c98e4a7af93dfb4e29e8:gen": {
+      "state": "settled",
+      "usd": 0.00267375
+    },
+    "1ddd2d8ac113b354c130e50dc075bbb480cd1cf96459c22354043e6f329d5bcd:count": {
+      "state": "settled",
+      "usd": 0.0022725
+    },
+    "1ddd2d8ac113b354c130e50dc075bbb480cd1cf96459c22354043e6f329d5bcd:gen": {
+      "state": "settled",
+      "usd": 0.006345
+    },
+    "3e05248bcdfd68adbb74c22e8306a313d62f7c7b01f2920cd60eebef53e51c17:count": {
+      "state": "settled",
+      "usd": 0.0128375
+    },
+    "3e05248bcdfd68adbb74c22e8306a313d62f7c7b01f2920cd60eebef53e51c17:gen": {
+      "state": "settled",
+      "usd": 0.0241875
+    },
+    "6caf83b42a4900e42809b138679a34a59881dd0620c8e3d88793db31a6c09882:count": {
+      "state": "settled",
+      "usd": 0.00072525
+    },
+    "6caf83b42a4900e42809b138679a34a59881dd0620c8e3d88793db31a6c09882:gen": {
+      "state": "settled",
+      "usd": 0.00364575
+    },
+    "20dce833cf8137066c3bd3409892ec0d910ebeee7489729cf3b482fe19e0ad04:count": {
+      "state": "settled",
+      "usd": 0.00227175
+    },
+    "20dce833cf8137066c3bd3409892ec0d910ebeee7489729cf3b482fe19e0ad04:gen": {
+      "state": "settled",
+      "usd": 0.00468825
+    },
+    "e7019cc20499455f70f3660b094ca556d3cab962d5b56c187cb696034152125d:count": {
+      "state": "settled",
+      "usd": 0.038975
+    },
+    "e7019cc20499455f70f3660b094ca556d3cab962d5b56c187cb696034152125d:gen": {
+      "state": "settled",
+      "usd": 0.104125
+    },
+    "d6febc807d4d90f72b94c4529d634b2e54d7249d67e8b64cf05b945c2fe37eb5:count": {
+      "state": "settled",
+      "usd": 0.00072525
+    },
+    "d6febc807d4d90f72b94c4529d634b2e54d7249d67e8b64cf05b945c2fe37eb5:gen": {
+      "state": "settled",
+      "usd": 0.00221925
+    },
+    "10bdfa7d85df02b16d97a4a25666555b0a5fb0ff155c5c49b6d521544c1ea8a2:count": {
+      "state": "settled",
+      "usd": 0.00225975
+    },
+    "10bdfa7d85df02b16d97a4a25666555b0a5fb0ff155c5c49b6d521544c1ea8a2:gen": {
+      "state": "settled",
+      "usd": 0.00588225
+    },
+    "96414c9a184a1eb4e82010c3ad5bddff4fe5f3b5f7e00b81c56b2e8273bda137:count": {
+      "state": "settled",
+      "usd": 0.00072525
+    },
+    "96414c9a184a1eb4e82010c3ad5bddff4fe5f3b5f7e00b81c56b2e8273bda137:gen": {
+      "state": "settled",
+      "usd": 0.00339825
+    },
+    "dd7b46811b0e7cd108a7b9770792f98169633aed7959e3b6d60e0107cd1829cd:count": {
+      "state": "settled",
+      "usd": 0.00227925
+    },
+    "dd7b46811b0e7cd108a7b9770792f98169633aed7959e3b6d60e0107cd1829cd:gen": {
+      "state": "settled",
+      "usd": 0.00694575
+    },
+    "c80b115a7b0472f82e290dea3e29c80eb45d51547e6e4e97fc3f5e12550f3ae3:count": {
+      "state": "settled",
+      "usd": 0.00072525
+    },
+    "c80b115a7b0472f82e290dea3e29c80eb45d51547e6e4e97fc3f5e12550f3ae3:gen": {
+      "state": "settled",
+      "usd": 0.00393825
+    },
+    "351a126b7792cce63ee88ef43dc7a0e1762044d33c0d81dc152830f50a35d56a:count": {
+      "state": "settled",
+      "usd": 0.0128375
+    },
+    "351a126b7792cce63ee88ef43dc7a0e1762044d33c0d81dc152830f50a35d56a:gen": {
+      "state": "settled",
+      "usd": 0.0237375
+    },
+    "286fc26a53d1bb61b05e3c23db740a055fe90cb646cc7ef159268ba450a5d58e:count": {
+      "state": "settled",
+      "usd": 0.00231675
+    },
+    "286fc26a53d1bb61b05e3c23db740a055fe90cb646cc7ef159268ba450a5d58e:gen": {
+      "state": "settled",
+      "usd": 0.00593925
+    },
+    "a97a43f89d9dfe136d1fa56571da1bb69d3ca99c55fb977a83feca33934bffe1:count": {
+      "state": "settled",
+      "usd": 0.0388625
+    },
+    "23e7a520c49ae8a08afc56acfbd2b727d22cfa7494b9f070bfc8e5d4b682d75f:count": {
+      "state": "settled",
+      "usd": 0.00072525
+    },
+    "a97a43f89d9dfe136d1fa56571da1bb69d3ca99c55fb977a83feca33934bffe1:gen": {
+      "state": "settled",
+      "usd": 0.0939125
+    },
+    "23e7a520c49ae8a08afc56acfbd2b727d22cfa7494b9f070bfc8e5d4b682d75f:gen": {
+      "state": "settled",
+      "usd": 0.00246225
+    },
+    "2d2cbfd0f83dd77f5baf65c5357d93c3504bf941cf2f470e361aaf49053d4d9c:count": {
+      "state": "settled",
+      "usd": 0.00231
+    },
+    "2d2cbfd0f83dd77f5baf65c5357d93c3504bf941cf2f470e361aaf49053d4d9c:gen": {
+      "state": "settled",
+      "usd": 0.0060315
+    },
+    "af02b6b595939d5531eb91e6dd009363336f5bbcb7d5bc1a163c756b2980064e:count": {
+      "state": "settled",
+      "usd": 0.00072525
+    },
+    "af02b6b595939d5531eb91e6dd009363336f5bbcb7d5bc1a163c756b2980064e:gen": {
+      "state": "settled",
+      "usd": 0.00308775
+    },
+    "4cd879c15957c3570cc921e703ea72b0107ba2a6f10da7bbdd305ccdbdf5108a:count": {
+      "state": "settled",
+      "usd": 0.002307
+    },
+    "d16e016e58db71bcd984524563c0059e7a60e3d54224575beb133344135872a8:count": {
+      "state": "settled",
+      "usd": 0.0128375
+    },
+    "4cd879c15957c3570cc921e703ea72b0107ba2a6f10da7bbdd305ccdbdf5108a:gen": {
+      "state": "settled",
+      "usd": 0.004728
+    },
+    "d16e016e58db71bcd984524563c0059e7a60e3d54224575beb133344135872a8:gen": {
+      "state": "settled",
+      "usd": 0.0234875
+    },
+    "4c50b343ff343c72ad455f536ec2df059d77764a9c670c2d1fae92b4965da9ed:count": {
+      "state": "settled",
+      "usd": 0.00072525
+    },
+    "4c50b343ff343c72ad455f536ec2df059d77764a9c670c2d1fae92b4965da9ed:gen": {
+      "state": "settled",
+      "usd": 0.00438825
+    },
+    "e78293d21ceac7593c73664ad1750d4d64ba35a12ffc7e94e850e80a3488b5c7:count": {
+      "state": "settled",
+      "usd": 0.00219675
+    },
+    "e78293d21ceac7593c73664ad1750d4d64ba35a12ffc7e94e850e80a3488b5c7:gen": {
+      "state": "settled",
+      "usd": 0.00616575
+    },
+    "27e87572906214be3a0572faa650a9ddab5aa699982bc12d9a03e5d2023db14e:count": {
+      "state": "settled",
+      "usd": 0.0388
+    },
+    "27e87572906214be3a0572faa650a9ddab5aa699982bc12d9a03e5d2023db14e:gen": {
+      "state": "settled",
+      "usd": 0.0936
+    },
+    "27bb2c0cedb51987271232dce89c6296d1c68f96cad05600c1b906a7cca29789:count": {
+      "state": "settled",
+      "usd": 0.00072525
+    },
+    "27bb2c0cedb51987271232dce89c6296d1c68f96cad05600c1b906a7cca29789:gen": {
+      "state": "settled",
+      "usd": 0.00374025
+    },
+    "48371288fbfbeeaf021877f9523319616628e511953807bfd93d23916aefb47d:count": {
+      "state": "settled",
+      "usd": 0.0022635
+    },
+    "48371288fbfbeeaf021877f9523319616628e511953807bfd93d23916aefb47d:gen": {
+      "state": "settled",
+      "usd": 0.007416
+    },
+    "ed9c2ffd749db04a911cc54eb5050fe9db6e7fc1d77e19ff9d59c36deaffb4dd:count": {
+      "state": "settled",
+      "usd": 0.00072525
+    },
+    "ed9c2ffd749db04a911cc54eb5050fe9db6e7fc1d77e19ff9d59c36deaffb4dd:gen": {
+      "state": "settled",
+      "usd": 0.00399675
+    },
+    "51f41cc7d33cc94566961ddad2475bd2157316d5413ea852cf0bd639d111fef8:count": {
+      "state": "settled",
+      "usd": 0.0120875
+    },
+    "51f41cc7d33cc94566961ddad2475bd2157316d5413ea852cf0bd639d111fef8:gen": {
+      "state": "settled",
+      "usd": 0.0244375
+    },
+    "0e186c33abe90030131a13a486bafdd34bd861d546c816ccdd813b5b64d4e29b:count": {
+      "state": "settled",
+      "usd": 0.00231675
+    },
+    "0e186c33abe90030131a13a486bafdd34bd861d546c816ccdd813b5b64d4e29b:gen": {
+      "state": "settled",
+      "usd": 0.00595725
+    },
+    "760db6c39abf09c4ee68baa9cf9523799c7753103072671ab961d45bb219ef26:count": {
+      "state": "settled",
+      "usd": 0.000708
+    },
+    "760db6c39abf09c4ee68baa9cf9523799c7753103072671ab961d45bb219ef26:gen": {
+      "state": "settled",
+      "usd": 0.0029895
+    },
+    "9c045551ad9442e01f631cc7f1e72e8f69cd18e573e684faac75e95c2dc59e33:count": {
+      "state": "settled",
+      "usd": 0.0391
+    },
+    "9c045551ad9442e01f631cc7f1e72e8f69cd18e573e684faac75e95c2dc59e33:gen": {
+      "state": "settled",
+      "usd": 0.0894
+    },
+    "c184dcdf34df164ffcf286f57b45fbbb6517210573244477d7d2e522e1c368de:count": {
+      "state": "settled",
+      "usd": 0.002127
+    },
+    "c184dcdf34df164ffcf286f57b45fbbb6517210573244477d7d2e522e1c368de:gen": {
+      "state": "settled",
+      "usd": 0.0053535
+    },
+    "bf61b132b0f77e7d57eb452ec8f711adea91f1eaae2a671d9c2c487ab27ab6dd:count": {
+      "state": "settled",
+      "usd": 0.000708
+    },
+    "bf61b132b0f77e7d57eb452ec8f711adea91f1eaae2a671d9c2c487ab27ab6dd:gen": {
+      "state": "settled",
+      "usd": 0.0023055
+    },
+    "ced0c2d5d6876e78a4df46052b4ae0792e7daa9fa00f8ab0ef5a66b1889a889d:count": {
+      "state": "settled",
+      "usd": 0.002073
+    },
+    "ced0c2d5d6876e78a4df46052b4ae0792e7daa9fa00f8ab0ef5a66b1889a889d:gen": {
+      "state": "settled",
+      "usd": 0.006303
+    },
+    "56ea750111ceaf0c097e45be3318af2fbf1490e8a37a7f1b07ce851c729b24ee:count": {
+      "state": "settled",
+      "usd": 0.000708
+    },
+    "56ea750111ceaf0c097e45be3318af2fbf1490e8a37a7f1b07ce851c729b24ee:gen": {
+      "state": "reserved",
+      "usd": 0.0804
+    },
+    "f4e4ffffe725c3b96222f52f371f03c888097929f13927962e7f284f3f68b5d0:count": {
+      "state": "settled",
+      "usd": 0.0120875
+    },
+    "f4e4ffffe725c3b96222f52f371f03c888097929f13927962e7f284f3f68b5d0:gen": {
+      "state": "settled",
+      "usd": 0.0263875
+    },
+    "ff68fa90ec067d9266d857b0e49a541741b764c1a4c302abd6a3a5b531c30c70:count": {
+      "state": "settled",
+      "usd": 0.0399
+    },
+    "ff68fa90ec067d9266d857b0e49a541741b764c1a4c302abd6a3a5b531c30c70:gen": {
+      "state": "settled",
+      "usd": 0.0867
+    },
+    "140e45168ca22efe436960de708fa255ae7c2ca5804fe6ca0d9f80646858a9c4:count": {
+      "state": "settled",
+      "usd": 0.0128375
+    },
+    "140e45168ca22efe436960de708fa255ae7c2ca5804fe6ca0d9f80646858a9c4:gen": {
+      "state": "settled",
+      "usd": 0.0238875
+    },
+    "f814d24e64e34417003a1fa8aa837259c1b60feaa6abca31b6296611f1fc8332:count": {
+      "state": "settled",
+      "usd": 0.0120875
+    },
+    "f814d24e64e34417003a1fa8aa837259c1b60feaa6abca31b6296611f1fc8332:gen": {
+      "state": "settled",
+      "usd": 0.0245375
+    },
+    "15755058e629d83af88f853e6531a2ee1e6cc78175d80dcb81470d19c648b273:count": {
+      "state": "settled",
+      "usd": 0.0389
+    },
+    "15755058e629d83af88f853e6531a2ee1e6cc78175d80dcb81470d19c648b273:gen": {
+      "state": "settled",
+      "usd": 0.102
+    },
+    "da07cc1ea578e91187a65fef0ee7a593b58e34f3aede63983eef609dd4ccedc2:count": {
+      "state": "settled",
+      "usd": 0.039125
+    },
+    "da07cc1ea578e91187a65fef0ee7a593b58e34f3aede63983eef609dd4ccedc2:gen": {
+      "state": "settled",
+      "usd": 0.088225
+    },
+    "78fea4b379c72300281cf6ee00e7da32ac8862ae8cb149744273357f342775bc:count": {
+      "state": "settled",
+      "usd": 0.0128375
+    },
+    "78fea4b379c72300281cf6ee00e7da32ac8862ae8cb149744273357f342775bc:gen": {
+      "state": "settled",
+      "usd": 0.0237875
+    },
+    "7d03178b4c99b666d8b98b8516efeb37397af5bef405275a29eba9bdde37859c:count": {
+      "state": "settled",
+      "usd": 0.0118
+    },
+    "7d03178b4c99b666d8b98b8516efeb37397af5bef405275a29eba9bdde37859c:gen": {
+      "state": "settled",
+      "usd": 0.018
+    },
+    "645dca18b597dafc7e22d02f6156f1cd675607800a1a5757f777dec365312122:count": {
+      "state": "settled",
+      "usd": 0.038875
+    },
+    "645dca18b597dafc7e22d02f6156f1cd675607800a1a5757f777dec365312122:gen": {
+      "state": "settled",
+      "usd": 0.098125
+    },
+    "421748e7ad3b55d534d42d21055bd54772c0102b55f3bf57cd9e741d204ff8ed:count": {
+      "state": "settled",
+      "usd": 0.0357125
+    },
+    "421748e7ad3b55d534d42d21055bd54772c0102b55f3bf57cd9e741d204ff8ed:gen": {
+      "state": "settled",
+      "usd": 0.0889625
+    },
+    "927f0116b931e0ff9533372a769f3d6d8c36e17711bdf041fee8be03784b46c3:count": {
+      "state": "settled",
+      "usd": 0.0118
+    },
+    "779a12bc95da7d15d99ea7943fda53935f6a134f19818d507efe01666946b6c7:count": {
+      "state": "settled",
+      "usd": 0.0128375
+    },
+    "927f0116b931e0ff9533372a769f3d6d8c36e17711bdf041fee8be03784b46c3:gen": {
+      "state": "settled",
+      "usd": 0.01765
+    },
+    "779a12bc95da7d15d99ea7943fda53935f6a134f19818d507efe01666946b6c7:gen": {
+      "state": "settled",
+      "usd": 0.0264875
+    },
+    "872b9d8475edc09eedfc876a5ff3aa12ec9869eec9cc4faf368899061e9a72eb:count": {
+      "state": "settled",
+      "usd": 0.035625
+    },
+    "872b9d8475edc09eedfc876a5ff3aa12ec9869eec9cc4faf368899061e9a72eb:gen": {
+      "state": "settled",
+      "usd": 0.080725
+    },
+    "edc87ec9ee963a5b8da4ba6d26ae1bc000efab2a0a1315cf2abddaba8fd978e4:count": {
+      "state": "settled",
+      "usd": 0.0388125
+    },
+    "edc87ec9ee963a5b8da4ba6d26ae1bc000efab2a0a1315cf2abddaba8fd978e4:gen": {
+      "state": "settled",
+      "usd": 0.0964625
+    },
+    "f5660f609ba7e111e3ea7fe0e79cabe27148cc0cb8d77406e2cca27ec61e4051:count": {
+      "state": "settled",
+      "usd": 0.0118
+    },
+    "f5660f609ba7e111e3ea7fe0e79cabe27148cc0cb8d77406e2cca27ec61e4051:gen": {
+      "state": "settled",
+      "usd": 0.0179
+    },
+    "5248be1610a5f2eb803debe37068a7dfbbc4ceebbb7e60f37e53bd562bb0916f:count": {
+      "state": "settled",
+      "usd": 0.0356875
+    },
+    "5248be1610a5f2eb803debe37068a7dfbbc4ceebbb7e60f37e53bd562bb0916f:gen": {
+      "state": "settled",
+      "usd": 0.0743375
+    },
+    "2183c06da995da176090cc4c97180125e1d608a44e5272b71816d324afcd4476:count": {
+      "state": "settled",
+      "usd": 0.0120875
+    },
+    "2183c06da995da176090cc4c97180125e1d608a44e5272b71816d324afcd4476:gen": {
+      "state": "settled",
+      "usd": 0.0251875
+    },
+    "bfb02741adbe095d27e1c1c01b35979a18886b003ec448c05c8f68e2b443dd74:count": {
+      "state": "settled",
+      "usd": 0.0392875
+    },
+    "bfb02741adbe095d27e1c1c01b35979a18886b003ec448c05c8f68e2b443dd74:gen": {
+      "state": "settled",
+      "usd": 0.0805375
+    },
+    "073871af9b36dd2485dd168a9a6a31dfe9ea292497872c9a569df4e6bcde76e2:count": {
+      "state": "settled",
+      "usd": 0.0119875
+    },
+    "073871af9b36dd2485dd168a9a6a31dfe9ea292497872c9a569df4e6bcde76e2:gen": {
+      "state": "settled",
+      "usd": 0.0278875
+    },
+    "9f1e7a30ff27490e8fdc145e5df849e5ea124a58524692f38c2d14f90f704557:count": {
+      "state": "settled",
+      "usd": 0.0120875
+    },
+    "9f1e7a30ff27490e8fdc145e5df849e5ea124a58524692f38c2d14f90f704557:gen": {
+      "state": "settled",
+      "usd": 0.0253375
+    },
+    "f505d85efeb3cc141ddf49592280f3cec7ea9d4295a68588d65410526f4b6b5a:count": {
+      "state": "settled",
+      "usd": 0.0405125
+    },
+    "f505d85efeb3cc141ddf49592280f3cec7ea9d4295a68588d65410526f4b6b5a:gen": {
+      "state": "settled",
+      "usd": 0.0853625
+    },
+    "aaad60b0296a4401ee0920bc5163bf895fbe6048fa18866829a7ea2ee5d4875f:count": {
+      "state": "settled",
+      "usd": 0.039325
+    },
+    "aaad60b0296a4401ee0920bc5163bf895fbe6048fa18866829a7ea2ee5d4875f:gen": {
+      "state": "settled",
+      "usd": 0.084825
+    },
+    "573331119756d6b821797beb89f6e714615df13a8d6059b270703a61f502fbe8:count": {
+      "state": "settled",
+      "usd": 0.0119875
+    },
+    "573331119756d6b821797beb89f6e714615df13a8d6059b270703a61f502fbe8:gen": {
+      "state": "settled",
+      "usd": 0.0248875
+    },
+    "dcefdb7e4d3c02e514b14ebdcb9ddad12e9ab5b2afdfe49a4e0925bb49e642de:count": {
+      "state": "settled",
+      "usd": 0.0120875
+    },
+    "dcefdb7e4d3c02e514b14ebdcb9ddad12e9ab5b2afdfe49a4e0925bb49e642de:gen": {
+      "state": "settled",
+      "usd": 0.0230375
+    },
+    "1153735880b524891b70dbc41cb19ff6ffb7d43b4a15b67b05ba144db6b7ad91:count": {
+      "state": "settled",
+      "usd": 0.0391375
+    },
+    "1153735880b524891b70dbc41cb19ff6ffb7d43b4a15b67b05ba144db6b7ad91:gen": {
+      "state": "settled",
+      "usd": 0.0820375
+    },
+    "6e751bc36b4999994c74cf379d46d22571cfbc6ed3a6e2e7012b5a9244415bb9:count": {
+      "state": "settled",
+      "usd": 0.0367
+    },
+    "6e751bc36b4999994c74cf379d46d22571cfbc6ed3a6e2e7012b5a9244415bb9:gen": {
+      "state": "settled",
+      "usd": 0.0843
+    },
+    "ba661c779be91f3219127de27cb177295c3f922e4ff24221d5d0a5cbbef9c5ae:count": {
+      "state": "settled",
+      "usd": 0.0119875
+    },
+    "ba661c779be91f3219127de27cb177295c3f922e4ff24221d5d0a5cbbef9c5ae:gen": {
+      "state": "settled",
+      "usd": 0.0347375
+    },
+    "0a6113a3f1a44676d5fc4e49629c8bee014620d45f3a9bb7b523a09743a49ba0:count": {
+      "state": "settled",
+      "usd": 0.0118
+    },
+    "0a6113a3f1a44676d5fc4e49629c8bee014620d45f3a9bb7b523a09743a49ba0:gen": {
+      "state": "settled",
+      "usd": 0.0179
+    },
+    "0cb79162eec2dda08b6836fb84c085ead80359e1d396b608587941b31458bab3:count": {
+      "state": "settled",
+      "usd": 0.0356875
+    },
+    "0cb79162eec2dda08b6836fb84c085ead80359e1d396b608587941b31458bab3:gen": {
+      "state": "settled",
+      "usd": 0.0804375
+    },
+    "d07366effd7a83ca8da1f4dcc5de840fee3d907143036ad6a39a7833ba7bb103:count": {
+      "state": "settled",
+      "usd": 0.040725
+    },
+    "d07366effd7a83ca8da1f4dcc5de840fee3d907143036ad6a39a7833ba7bb103:gen": {
+      "state": "settled",
+      "usd": 0.100275
+    },
+    "791b3bdef779f9ce2b0fa25199f7da9a577872ca2f15e8da634370f4f4520280:count": {
+      "state": "settled",
+      "usd": 0.0118
+    },
+    "791b3bdef779f9ce2b0fa25199f7da9a577872ca2f15e8da634370f4f4520280:gen": {
+      "state": "settled",
+      "usd": 0.01805
+    },
+    "7286a4ec3af8e56deb39566b5fbd67b25b544bdc3cdbce7f8d473b8eccc7fec4:count": {
+      "state": "settled",
+      "usd": 0.035725
+    },
+    "7286a4ec3af8e56deb39566b5fbd67b25b544bdc3cdbce7f8d473b8eccc7fec4:gen": {
+      "state": "settled",
+      "usd": 0.087725
+    },
+    "a658da1a76ef80945f2e03cc8d60a3974bcf0173979075bf371a882b1da5a2d2:count": {
+      "state": "settled",
+      "usd": 0.0125
+    },
+    "a658da1a76ef80945f2e03cc8d60a3974bcf0173979075bf371a882b1da5a2d2:gen": {
+      "state": "settled",
+      "usd": 0.03835
+    },
+    "7e634edf78d3e9754157709f708c3e77b9190850328718ed185105752dc96283:count": {
+      "state": "settled",
+      "usd": 0.0118
+    },
+    "7e634edf78d3e9754157709f708c3e77b9190850328718ed185105752dc96283:gen": {
+      "state": "settled",
+      "usd": 0.0206
+    },
+    "c5af87c26b8646f1d67a16404e9441c195bdacd3ec27af50380676a209ef26b9:count": {
+      "state": "settled",
+      "usd": 0.04355
+    },
+    "c5af87c26b8646f1d67a16404e9441c195bdacd3ec27af50380676a209ef26b9:gen": {
+      "state": "settled",
+      "usd": 0.09485
+    },
+    "9c46366fe9c8b6ef9d224dc98b6217cd777d98bee9a94cc0f7a2fbca22fed3f5:count": {
+      "state": "settled",
+      "usd": 0.03585
+    },
+    "9c46366fe9c8b6ef9d224dc98b6217cd777d98bee9a94cc0f7a2fbca22fed3f5:gen": {
+      "state": "settled",
+      "usd": 0.07235
+    },
+    "f8aee0bfebd96a15f435d7c7aea9361ee66c36f4cab4e5bc246abe5e02448ce5:count": {
+      "state": "settled",
+      "usd": 0.0125
+    },
+    "f8aee0bfebd96a15f435d7c7aea9361ee66c36f4cab4e5bc246abe5e02448ce5:gen": {
+      "state": "settled",
+      "usd": 0.03675
+    },
+    "9ec64d4cf7d2638c86656a4aefd7d3b819dc7206549c6555884df296851ecc31:count": {
+      "state": "settled",
+      "usd": 0.0119875
+    },
+    "9ec64d4cf7d2638c86656a4aefd7d3b819dc7206549c6555884df296851ecc31:gen": {
+      "state": "settled",
+      "usd": 0.0278875
+    },
+    "6815e082b9c2fd022f30a4d2aaea6bc8a14f879456b0b7e84d6ea89e37835ab8:count": {
+      "state": "settled",
+      "usd": 0.0384125
+    },
+    "6815e082b9c2fd022f30a4d2aaea6bc8a14f879456b0b7e84d6ea89e37835ab8:gen": {
+      "state": "reserved",
+      "usd": 1.36
+    },
+    "28c76ffc4dc069276e9c59f6afb29691da9a9d681ed8d057243ac84db3729499:count": {
+      "state": "settled",
+      "usd": 0.04345
+    },
+    "28c76ffc4dc069276e9c59f6afb29691da9a9d681ed8d057243ac84db3729499:gen": {
+      "state": "reserved",
+      "usd": 1.36
+    }
+  }
+}

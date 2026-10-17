@@ -1,0 +1,16 @@
+{
+  "variant": "c",
+  "model": "gpt-5.4-mini",
+  "device": "mps",
+  "rates": [
+    0.75,
+    4.5
+  ],
+  "ledger": "/Users/beqolozi/Library/Application Support/ThreadRig/engine/83EEB76C-FB77-4342-AD16-86C663084E7D/workspace/checkout/experiments/som-test/out_realism/budget.json",
+  "effort": "low",
+  "max_side": 768,
+  "seed": 20261017,
+  "truth": "d098d1719532a3f2b2830b445b72dbfdfe985bb5a3f7782874e40182336a6326",
+  "protocol": "207f295936a9e0e5400e3137cac158b0bbc549db4aad7b078ed3c85eb5493d41",
+  "input_hash": "c730620d6be5b8416d18c72e6b213965f7b7680235417518972bdbf2456f15e3"
+}

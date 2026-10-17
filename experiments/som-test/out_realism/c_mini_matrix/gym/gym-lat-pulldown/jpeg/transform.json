@@ -1,0 +1,36 @@
+{
+  "protocol": 1,
+  "kind": "jpeg",
+  "seed": 20261017,
+  "source_to_frame": [
+    [
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "size": [
+    941,
+    1672
+  ],
+  "parameters": {
+    "quality": 12,
+    "subsampling": 2
+  },
+  "border": "constant black",
+  "mask_interpolation": "nearest",
+  "source_sha256": "bdd7e78ac91f019b78d873e00aed9201222854ba07ca17d194381b045f8e8660",
+  "truth_sha256": "3edc87ac6926998c5e1b2c4662353ae0974376df28f52476148f84a139b8e6bb",
+  "real_photo": false,
+  "proxy_available": true
+}

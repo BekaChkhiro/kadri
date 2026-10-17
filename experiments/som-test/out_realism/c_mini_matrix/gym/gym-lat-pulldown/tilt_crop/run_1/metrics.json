@@ -1,0 +1,17 @@
+{
+  "time_to_first_outline_seconds": 7.638642666999658,
+  "parts_seconds": 3.696817957999883,
+  "sam_seconds": 3.864269667001281,
+  "part_count": 7,
+  "mode": "clean",
+  "model": "gpt-5.4-mini",
+  "effort": "low",
+  "image_size": [
+    432,
+    768
+  ],
+  "time_to_first_step_seconds": 3.146844000000783,
+  "time_to_first_step_from_start_seconds": 10.790914833001807,
+  "steps_seconds": 4.499354083000071,
+  "total_seconds": 12.251303208000536
+}

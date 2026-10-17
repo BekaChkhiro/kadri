@@ -1,0 +1,10 @@
+{
+  "count_allowance_usd": 0.0334375,
+  "count_billing_confirmed": false,
+  "generation_usd_estimate": 0.2112875,
+  "usd_upper_estimate": 0.244725,
+  "rates": [
+    12.5,
+    50.0
+  ]
+}

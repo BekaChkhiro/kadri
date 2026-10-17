@@ -1,0 +1,289 @@
+{
+  "id": "resp_0b81dd540a4198d8016ad35de2f1f487d2a0e8d88cb768638c",
+  "created_at": 1792237026.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-6-astra",
+  "object": "response",
+  "output": [
+    {
+      "id": "msg_0b81dd540a4198d8016ad35de44a2087d29d97211d7d632fde",
+      "content": [
+        {
+          "annotations": [],
+          "text": "{\n  \"steps\": [\n    {\n      \"title\": \"ჩართე განათება\",\n      \"text\": \"დააჭირე ჩამრთველს ფუძეზე. შუქი მაგიდის ქვემოდან უნდა ანთოს.\",\n      \"focus\": [\"p12\"],\n      \"avoid\": [],\n      \"markers\": [{\"part\": \"p12\", \"label\": \"ჩამრთველი\", \"tone\": \"brand\"}],\n      \"arrows\": [],\n      \"tools\": [],\n      \"warn\": null\n    },\n    {\n      \"title\": \"დააყენე 4× ობიექტივი\",\n      \"text\": \"მოატრიალე რევოლვერი, სანამ ყველაზე მოკლე ობიექტივი ქვემოთ არ დადგება და არ დაიწკაპუნებს.\",\n      \"focus\": [\"p2\", \"p3\"],\n      \"avoid\": [],\n      \"markers\": [\n        {\"part\": \"p2\", \"label\": \"მოატრიალე რევოლვერი\", \"tone\": \"brand\"},\n        {\"part\": \"p3\", \"label\": \"ყველაზე მოკლე ხილული ობიექტივი\", \"tone\": \"neutral\"}\n      ],\n      \"arrows\": [],\n      \"tools\": [],\n      \"warn\": \"მდებარეობისა და სიგრძის მიხედვით ყველაზე სავარაუდო სამიზნეა p3, თუმცა მისი ყვითელი რგოლი ჩვეულებრივ 10×-ს აღნიშნავს. ფოტოზე 4× წარწერა არ იკითხება; გამოყენებამდე გადაამოწმე ობიექტივის გადიდება.\"\n    },\n    {\n      \"title\": \"დადე პრეპარატი\",\n      \"text\": \"მინა დადე მაგიდაზე ისე, რომ ნიმუში ზუსტად ნახვრეტის თავზე იყოს, და ორივე სამაგრით დაამაგრე.\",\n      \"focus\": [\"p7\", \"p8\", \"p5\", \"p6\"],\n      \"avoid\": [],\n      \"markers\": [\n        {\"part\": \"p7\", \"label\": \"პრეპარატის მინა\", \"tone\": \"brand\"},\n        {\"part\": \"p5\", \"label\": \"მარჯვენა სამაგრი\", \"tone\": \"brand\"},\n        {\"part\": \"p6\", \"label\": \"მარცხენა სამაგრი\", \"tone\": \"brand\"}\n      ],\n      \"arrows\": [],\n      \"tools\": [],\n      \"warn\": \"მინა ფრთხილად დაამაგრე; ობიექტივი მინას არ უნდა შეეხოს.\"\n    },\n    {\n      \"title\": \"იპოვე გამოსახულება\",\n      \"text\": \"ოკულარში იყურე და დიდი ხრახნი ნელა ატრიალე, სანამ გამოსახულება არ გამოჩნდება.\",\n      \"focus\": [\"p1\", \"p10\"],\n      \"avoid\": [],\n      \"markers\": [\n        {\"part\": \"p1\", \"label\": \"ოკულარი\", \"tone\": \"brand\"},\n        {\"part\": \"p10\", \"label\": \"დიდი ფოკუსირების ხრახნი\", \"tone\": \"brand\"}\n      ],\n      \"arrows\": [],\n      \"tools\": [],\n      \"warn\": \"დიდი ხრახნი გამოიყენე მხოლოდ დაბალ გადიდებაზე. გვერდიდან გადაამოწმე დაშორება, რათა ობიექტივი მინას არ დაეჯახოს.\"\n    },\n    {\n      \"title\": \"გადადი 40×-ზე\",\n      \"text\": \"ჩართე 40× ობიექტივი და სიმკვეთრე მხოლოდ პატარა ხრახნით დაარეგულირე, ნახევარი ბრუნით.\",\n      \"focus\": [\"p2\", \"p4\", \"p9\"],\n      \"avoid\": [\"p10\"],\n      \"markers\": [\n        {\"part\": \"p4\", \"label\": \"სავარაუდო 40× — გადაამოწმე წარწერა\", \"tone\": \"neutral\"},\n        {\"part\": \"p9\", \"label\": \"პატარა ფოკუსირების ხრახნი\", \"tone\": \"brand\"},\n        {\"part\": \"p10\", \"label\": \"არ შეეხო\", \"tone\": \"danger\"}\n      ],\n      \"arrows\": [],\n      \"tools\": [],\n      \"warn\": \"ქვემოთ მიმართული გრძელი ობიექტივი p4 ყველაზე სავარაუდო კანდიდატია, თუმცა 40× წარწერა ფოტოზე არ დასტურდება. გადაამოწმე მარკირება. ნახევარი ბრუნი მოცემული ინსტრუქციის მითითებაა და არა ფოტოდან დადგენილი საჭიროება; ატრიალე მცირე მონაკვეთებით და შეჩერდი სიმკვეთრის მიღებისთანავე.\"\n    }\n  ],\n  \"unknown_parts\": []\n}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message",
+      "phase": "final_answer"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1792237042.0,
+  "conversation": null,
+  "max_output_tokens": 2200,
+  "max_tool_calls": null,
+  "moderation": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_options": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "low",
+    "generate_summary": null,
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "name": "variant_c_steps",
+      "schema_": {
+        "type": "object",
+        "properties": {
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "focus": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "p1",
+                      "p2",
+                      "p3",
+                      "p4",
+                      "p5",
+                      "p6",
+                      "p7",
+                      "p8",
+                      "p9",
+                      "p10",
+                      "p11",
+                      "p12"
+                    ]
+                  },
+                  "description": "მოქმედების სამიზნე ხილული ნაწილების ID-ები (p1..pN). როდესაც მოქმედების სამიზნის რამდენიმე plausible კანდიდატია, აირჩიე ყველაზე სავარაუდო ID მდებარეობის/ინსტრუქციის მიხედვით და warn-ში ჩაწერე გაურკვევლობა. empty focus დასაშვებია მხოლოდ მაშინ, როცა სამიზნე ნაწილი სიაში/ფოტოზე საერთოდ არ ჩანს (უხილავია). არ გამოიგონო ID."
+                },
+                "avoid": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "p1",
+                      "p2",
+                      "p3",
+                      "p4",
+                      "p5",
+                      "p6",
+                      "p7",
+                      "p8",
+                      "p9",
+                      "p10",
+                      "p11",
+                      "p12"
+                    ]
+                  }
+                },
+                "markers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "part": {
+                        "type": "string",
+                        "enum": [
+                          "p1",
+                          "p2",
+                          "p3",
+                          "p4",
+                          "p5",
+                          "p6",
+                          "p7",
+                          "p8",
+                          "p9",
+                          "p10",
+                          "p11",
+                          "p12"
+                        ]
+                      },
+                      "label": {
+                        "type": "string"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": [
+                          "brand",
+                          "danger",
+                          "neutral"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "part",
+                      "label",
+                      "tone"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "arrows": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "part": {
+                        "type": "string",
+                        "enum": [
+                          "p1",
+                          "p2",
+                          "p3",
+                          "p4",
+                          "p5",
+                          "p6",
+                          "p7",
+                          "p8",
+                          "p9",
+                          "p10",
+                          "p11",
+                          "p12"
+                        ]
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "rotate",
+                          "move"
+                        ]
+                      },
+                      "dir": {
+                        "type": "string",
+                        "enum": [
+                          "cw",
+                          "ccw",
+                          "up",
+                          "down",
+                          "left",
+                          "right",
+                          "toward",
+                          "away"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "part",
+                      "type",
+                      "dir"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "tools": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "warn": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "გაფრთხილება, უსაფრთხოების რჩევა ან გაურკვევლობის (uncertainty) ახსნა, მათ შორის თუ სამიზნე უხილავია ან რამდენიმე კანდიდატს შორის შეირჩა ყველაზე სავარაუდო."
+                }
+              },
+              "required": [
+                "title",
+                "text",
+                "focus",
+                "avoid",
+                "markers",
+                "arrows",
+                "tools",
+                "warn"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 5,
+            "maxItems": 5
+          },
+          "unknown_parts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "steps",
+          "unknown_parts"
+        ],
+        "additionalProperties": false
+      },
+      "type": "json_schema",
+      "description": null,
+      "strict": true
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 3484,
+    "input_tokens_details": {
+      "cache_write_tokens": 3481,
+      "cached_tokens": 0
+    },
+    "output_tokens": 1026,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 4510
+  },
+  "user": null,
+  "access_programs": null,
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": false,
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  }
+}

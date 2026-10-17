@@ -1,0 +1,269 @@
+{
+  "id": "resp_056fa3647f574269016ad35d11e9b087d2a55f16f2034b3ccd",
+  "created_at": 1792236817.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-6-astra",
+  "object": "response",
+  "output": [
+    {
+      "id": "msg_056fa3647f574269016ad35d13b74087d299e11630867cc556",
+      "content": [
+        {
+          "annotations": [],
+          "text": "{\n  \"steps\": [\n    {\n      \"title\": \"დაარეგულირე სიმაღლე\",\n      \"text\": \"გამოსწიე ყვითელი ღილაკი სავარძლის ქვეშ და ისე დააყენე, რომ ჯდომისას მუხლები ბალიშების ქვეშ მჭიდროდ მოექცეს.\",\n      \"focus\": [\"p7\", \"p6\"],\n      \"avoid\": [],\n      \"markers\": [\n        {\"part\": \"p7\", \"label\": \"სიმაღლის რეგულირების ღილაკი\", \"tone\": \"brand\"}\n      ],\n      \"arrows\": [\n        {\"part\": \"p7\", \"type\": \"move\", \"dir\": \"toward\"}\n      ],\n      \"tools\": [],\n      \"warn\": \"ფოტოზე სავარძლის ქვეშ მდებარე ყვითელი ღილაკი შეესაბამება p7-ს და არა წონის დასტასთან მდებარე p2-ს. რეგულირების ზუსტი მექანიზმი ფოტოდან არ დასტურდება; დაჯდომამდე დარწმუნდი, რომ სავარძელი მყარად დაფიქსირდა.\"\n    },\n    {\n      \"title\": \"აირჩიე წონა\",\n      \"text\": \"ყვითელი ქინძისთავი გადაიტანე სასურველ ფილაში და ბოლომდე ჩაარჭე.\",\n      \"focus\": [\"p2\", \"p3\"],\n      \"avoid\": [],\n      \"markers\": [\n        {\"part\": \"p2\", \"label\": \"წონის შესარჩევი ქინძისთავი\", \"tone\": \"brand\"}\n      ],\n      \"arrows\": [],\n      \"tools\": [],\n      \"warn\": \"სამიზნედ შერჩეულია წონის დასტის მარჯვენა მხარეს ხილული p2 და არა სავარძლის ქვემოთ მდებარე p7. წონა შეცვალე მხოლოდ მაშინ, როცა ფილები სრულად დაშვებულია; თითები ფილებს შორის არ მოათავსო.\"\n    },\n    {\n      \"title\": \"მოკიდე სახელურს\",\n      \"text\": \"ფეხზე მდგომმა მოკიდე ხელი მოხრილ ბოლოებთან, მხრებზე ოდნავ ფართოდ, ხელისგულები წინ.\",\n      \"focus\": [\"p1\"],\n      \"avoid\": [],\n      \"markers\": [\n        {\"part\": \"p1\", \"label\": \"მოჭიდება მოხრილ ბოლოებთან\", \"tone\": \"brand\"}\n      ],\n      \"arrows\": [],\n      \"tools\": [],\n      \"warn\": null\n    },\n    {\n      \"title\": \"დაჯექი და დაფიქსირდი\",\n      \"text\": \"სახელურით ხელში დაჯექი, ფეხები იატაკზე, მუხლები ბალიშების ქვეშ. მკერდი წინ, ზურგი სწორი.\",\n      \"focus\": [\"p6\", \"p4\", \"p5\", \"p1\"],\n      \"avoid\": [],\n      \"markers\": [\n        {\"part\": \"p6\", \"label\": \"სავარძელი\", \"tone\": \"brand\"},\n        {\"part\": \"p4\", \"label\": \"მარცხენა დამაფიქსირებელი ბალიში\", \"tone\": \"brand\"},\n        {\"part\": \"p5\", \"label\": \"მარჯვენა დამაფიქსირებელი ბალიში\", \"tone\": \"brand\"}\n      ],\n      \"arrows\": [],\n      \"tools\": [],\n      \"warn\": null\n    },\n    {\n      \"title\": \"ჩამოწიე მკერდამდე\",\n      \"text\": \"იდაყვები ქვემოთ და უკან, სახელური მკერდის ზედა ნაწილამდე. ზემოთ ნელა აუშვი, 2 წამში.\",\n      \"focus\": [\"p1\"],\n      \"avoid\": [],\n      \"markers\": [\n        {\"part\": \"p1\", \"label\": \"იმოძრავე კონტროლირებულად\", \"tone\": \"brand\"}\n      ],\n      \"arrows\": [\n        {\"part\": \"p1\", \"type\": \"move\", \"dir\": \"down\"},\n        {\"part\": \"p1\", \"type\": \"move\", \"dir\": \"up\"}\n      ],\n      \"tools\": [],\n      \"warn\": \"არ ჩამოწიო სახელური კისრის უკან და არ გამოიყენო სხეულის ქნევა. მითითებული 2 წამი ინსტრუქციის ტემპია და არა ფოტოდან დადგენილი მონაცემი.\"\n    }\n  ],\n  \"unknown_parts\": []\n}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message",
+      "phase": "final_answer"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1792236833.0,
+  "conversation": null,
+  "max_output_tokens": 2200,
+  "max_tool_calls": null,
+  "moderation": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_options": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "low",
+    "generate_summary": null,
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "name": "variant_c_steps",
+      "schema_": {
+        "type": "object",
+        "properties": {
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "focus": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "p1",
+                      "p2",
+                      "p3",
+                      "p4",
+                      "p5",
+                      "p6",
+                      "p7"
+                    ]
+                  },
+                  "description": "მოქმედების სამიზნე ხილული ნაწილების ID-ები (p1..pN). როდესაც მოქმედების სამიზნის რამდენიმე plausible კანდიდატია, აირჩიე ყველაზე სავარაუდო ID მდებარეობის/ინსტრუქციის მიხედვით და warn-ში ჩაწერე გაურკვევლობა. empty focus დასაშვებია მხოლოდ მაშინ, როცა სამიზნე ნაწილი სიაში/ფოტოზე საერთოდ არ ჩანს (უხილავია). არ გამოიგონო ID."
+                },
+                "avoid": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "p1",
+                      "p2",
+                      "p3",
+                      "p4",
+                      "p5",
+                      "p6",
+                      "p7"
+                    ]
+                  }
+                },
+                "markers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "part": {
+                        "type": "string",
+                        "enum": [
+                          "p1",
+                          "p2",
+                          "p3",
+                          "p4",
+                          "p5",
+                          "p6",
+                          "p7"
+                        ]
+                      },
+                      "label": {
+                        "type": "string"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": [
+                          "brand",
+                          "danger",
+                          "neutral"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "part",
+                      "label",
+                      "tone"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "arrows": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "part": {
+                        "type": "string",
+                        "enum": [
+                          "p1",
+                          "p2",
+                          "p3",
+                          "p4",
+                          "p5",
+                          "p6",
+                          "p7"
+                        ]
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "rotate",
+                          "move"
+                        ]
+                      },
+                      "dir": {
+                        "type": "string",
+                        "enum": [
+                          "cw",
+                          "ccw",
+                          "up",
+                          "down",
+                          "left",
+                          "right",
+                          "toward",
+                          "away"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "part",
+                      "type",
+                      "dir"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "tools": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "warn": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "გაფრთხილება, უსაფრთხოების რჩევა ან გაურკვევლობის (uncertainty) ახსნა, მათ შორის თუ სამიზნე უხილავია ან რამდენიმე კანდიდატს შორის შეირჩა ყველაზე სავარაუდო."
+                }
+              },
+              "required": [
+                "title",
+                "text",
+                "focus",
+                "avoid",
+                "markers",
+                "arrows",
+                "tools",
+                "warn"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 5,
+            "maxItems": 5
+          },
+          "unknown_parts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "steps",
+          "unknown_parts"
+        ],
+        "additionalProperties": false
+      },
+      "type": "json_schema",
+      "description": null,
+      "strict": true
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 3130,
+    "input_tokens_details": {
+      "cache_write_tokens": 3127,
+      "cached_tokens": 0
+    },
+    "output_tokens": 982,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 4112
+  },
+  "user": null,
+  "access_programs": null,
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": false,
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  }
+}

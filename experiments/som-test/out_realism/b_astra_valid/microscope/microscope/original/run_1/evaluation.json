@@ -1,0 +1,214 @@
+{
+  "metric": "Approximate IoU against design polygons; NOT verified semantic ID accuracy",
+  "steps": [
+    {
+      "step": 1,
+      "focus_design_iou": 0.8312220566318927,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 2,
+      "focus_design_iou": 0.0,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 3,
+      "focus_design_iou": 0.835915801783365,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 4,
+      "focus_design_iou": 0.5036454658468569,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 5,
+      "focus_design_iou": 0.0,
+      "avoid_design_iou": 0.7371164437450826
+    }
+  ],
+  "parts": [
+    {
+      "id": "power_switch",
+      "design_ious": {
+        "EYEPIECE": 0.0,
+        "NOSE": 0.0,
+        "STAGE": 0.0,
+        "SLIDE": 0.0,
+        "FINE": 0.0,
+        "COARSE": 0.0,
+        "LIGHT": 0.0,
+        "SWITCH": 0.6185495118549512
+      }
+    },
+    {
+      "id": "illuminator",
+      "design_ious": {
+        "EYEPIECE": 0.0,
+        "NOSE": 0.0,
+        "STAGE": 0.0,
+        "SLIDE": 0.0,
+        "FINE": 0.0,
+        "COARSE": 0.0,
+        "LIGHT": 0.8487956667050824,
+        "SWITCH": 0.0
+      }
+    },
+    {
+      "id": "revolving_nosepiece",
+      "design_ious": {
+        "EYEPIECE": 0.0,
+        "NOSE": 0.13049385941991115,
+        "STAGE": 0.0,
+        "SLIDE": 0.0,
+        "FINE": 0.0,
+        "COARSE": 0.0,
+        "LIGHT": 0.0,
+        "SWITCH": 0.0
+      }
+    },
+    {
+      "id": "left_objective",
+      "design_ious": {
+        "EYEPIECE": 0.0,
+        "NOSE": 0.25438711884027465,
+        "STAGE": 0.0,
+        "SLIDE": 0.0,
+        "FINE": 0.0,
+        "COARSE": 0.0,
+        "LIGHT": 0.0,
+        "SWITCH": 0.0
+      }
+    },
+    {
+      "id": "center_objective",
+      "design_ious": {
+        "EYEPIECE": 0.0,
+        "NOSE": 0.2728493561892725,
+        "STAGE": 0.004877707652231682,
+        "SLIDE": 0.011821071956297856,
+        "FINE": 0.0,
+        "COARSE": 0.0,
+        "LIGHT": 0.0,
+        "SWITCH": 0.0
+      }
+    },
+    {
+      "id": "right_objective",
+      "design_ious": {
+        "EYEPIECE": 0.0,
+        "NOSE": 0.11509621939069792,
+        "STAGE": 0.0,
+        "SLIDE": 0.0,
+        "FINE": 0.0,
+        "COARSE": 0.0,
+        "LIGHT": 0.0,
+        "SWITCH": 0.0
+      }
+    },
+    {
+      "id": "specimen_stage",
+      "design_ious": {
+        "EYEPIECE": 0.0,
+        "NOSE": 0.00037886657785708174,
+        "STAGE": 0.7005812323621209,
+        "SLIDE": 0.11368688472530962,
+        "FINE": 0.0,
+        "COARSE": 0.0,
+        "LIGHT": 0.0,
+        "SWITCH": 0.0
+      }
+    },
+    {
+      "id": "glass_slide",
+      "design_ious": {
+        "EYEPIECE": 0.0,
+        "NOSE": 0.0016301920500223315,
+        "STAGE": 0.1351680928452789,
+        "SLIDE": 0.4919978140370052,
+        "FINE": 0.0,
+        "COARSE": 0.0,
+        "LIGHT": 0.0,
+        "SWITCH": 0.0
+      }
+    },
+    {
+      "id": "stage_opening",
+      "design_ious": {
+        "EYEPIECE": 0.0,
+        "NOSE": 0.0,
+        "STAGE": 0.03857264231096007,
+        "SLIDE": 0.14886466103778997,
+        "FINE": 0.0,
+        "COARSE": 0.0,
+        "LIGHT": 0.0,
+        "SWITCH": 0.0
+      }
+    },
+    {
+      "id": "left_stage_clip",
+      "design_ious": {
+        "EYEPIECE": 0.0,
+        "NOSE": 0.0,
+        "STAGE": 0.019337074636904386,
+        "SLIDE": 0.022452504317789293,
+        "FINE": 0.0,
+        "COARSE": 0.0,
+        "LIGHT": 0.0,
+        "SWITCH": 0.0
+      }
+    },
+    {
+      "id": "right_stage_clip",
+      "design_ious": {
+        "EYEPIECE": 0.0,
+        "NOSE": 0.0,
+        "STAGE": 0.06119992397524972,
+        "SLIDE": 0.020381066188674236,
+        "FINE": 0.0,
+        "COARSE": 0.0,
+        "LIGHT": 0.0,
+        "SWITCH": 0.0
+      }
+    },
+    {
+      "id": "eyepiece",
+      "design_ious": {
+        "EYEPIECE": 0.3475600428331039,
+        "NOSE": 0.0,
+        "STAGE": 0.0,
+        "SLIDE": 0.0,
+        "FINE": 0.0,
+        "COARSE": 0.0,
+        "LIGHT": 0.0,
+        "SWITCH": 0.0
+      }
+    },
+    {
+      "id": "large_focus_knob",
+      "design_ious": {
+        "EYEPIECE": 0.0,
+        "NOSE": 0.0,
+        "STAGE": 0.0,
+        "SLIDE": 0.0,
+        "FINE": 0.01227790348306688,
+        "COARSE": 0.7371164437450826,
+        "LIGHT": 0.0,
+        "SWITCH": 0.0
+      }
+    },
+    {
+      "id": "small_focus_knob",
+      "design_ious": {
+        "EYEPIECE": 0.0,
+        "NOSE": 0.0,
+        "STAGE": 0.0,
+        "SLIDE": 0.0,
+        "FINE": 0.8274647887323944,
+        "COARSE": 0.0016548563669537913,
+        "LIGHT": 0.0,
+        "SWITCH": 0.0
+      }
+    }
+  ]
+}

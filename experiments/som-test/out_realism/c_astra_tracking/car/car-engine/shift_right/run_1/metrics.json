@@ -1,0 +1,17 @@
+{
+  "time_to_first_outline_seconds": 6.982534834000035,
+  "parts_seconds": 4.730471540999133,
+  "sam_seconds": 2.159344333000263,
+  "part_count": 2,
+  "mode": "clean",
+  "model": "gpt-6-astra",
+  "effort": "low",
+  "image_size": [
+    432,
+    768
+  ],
+  "time_to_first_step_seconds": 5.1604686670016235,
+  "time_to_first_step_from_start_seconds": 12.144991792001747,
+  "steps_seconds": 15.176170500000808,
+  "total_seconds": 22.294062459000997
+}

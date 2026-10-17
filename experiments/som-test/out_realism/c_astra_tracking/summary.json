@@ -1,0 +1,1439 @@
+{
+  "first_box_full_response_seconds": {
+    "n": 13,
+    "p50": 7.494434625001304,
+    "p90": 12.767030249399614
+  },
+  "sam_seconds": {
+    "n": 13,
+    "p50": 4.024221749999924,
+    "p90": 5.719253058199684
+  },
+  "preflight_seconds": {
+    "n": 13,
+    "p50": 1.0614574159990298,
+    "p90": 1.365882142201008
+  },
+  "real_wall_time_to_first_box_seconds": {
+    "n": 13,
+    "p50": 7.494434625001304,
+    "p90": 12.767030249399614
+  },
+  "time_to_first_outline_seconds": {
+    "n": 13,
+    "p50": 11.776111541999853,
+    "p90": 18.189020516800884
+  },
+  "time_to_first_step_seconds": {
+    "n": 13,
+    "p50": 6.018132582999897,
+    "p90": 7.573718758599353
+  },
+  "comparisons": [
+    {
+      "baseline": "car/car-engine/original/run_1/plan.json",
+      "current": "car/car-engine/shift_left/run_1/plan.json",
+      "confidence_available": false,
+      "sweep_parameter": "association_iou",
+      "results": [
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.25,
+          "matches": [
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.6423160951678084,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 1,
+              "current": 1,
+              "iou": 0.46406184417847546,
+              "phone_id": "phone_2",
+              "raw_id_equal": true,
+              "raw_label_equal": true
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_2"
+          ],
+          "unmatched": [],
+          "dropout": [],
+          "raw_id_stability": 1.0,
+          "raw_label_stability": 0.5
+        },
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.5,
+          "matches": [
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.6423160951678084,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_3"
+          ],
+          "unmatched": [
+            1
+          ],
+          "dropout": [
+            1
+          ],
+          "raw_id_stability": 1.0,
+          "raw_label_stability": 0.0
+        },
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.75,
+          "matches": [],
+          "phone_ids": [
+            "phone_3",
+            "phone_4"
+          ],
+          "unmatched": [
+            0,
+            1
+          ],
+          "dropout": [
+            0,
+            1
+          ],
+          "raw_id_stability": null,
+          "raw_label_stability": null
+        }
+      ]
+    },
+    {
+      "baseline": "car/car-engine/original/run_1/plan.json",
+      "current": "car/car-engine/shift_right/run_1/plan.json",
+      "confidence_available": false,
+      "sweep_parameter": "association_iou",
+      "results": [
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.25,
+          "matches": [
+            {
+              "previous": 1,
+              "current": 1,
+              "iou": 0.8715056366748755,
+              "phone_id": "phone_2",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.8454051607062019,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_2"
+          ],
+          "unmatched": [],
+          "dropout": [],
+          "raw_id_stability": 1.0,
+          "raw_label_stability": 0.0
+        },
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.5,
+          "matches": [
+            {
+              "previous": 1,
+              "current": 1,
+              "iou": 0.8715056366748755,
+              "phone_id": "phone_2",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.8454051607062019,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_2"
+          ],
+          "unmatched": [],
+          "dropout": [],
+          "raw_id_stability": 1.0,
+          "raw_label_stability": 0.0
+        },
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.75,
+          "matches": [
+            {
+              "previous": 1,
+              "current": 1,
+              "iou": 0.8715056366748755,
+              "phone_id": "phone_2",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.8454051607062019,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_2"
+          ],
+          "unmatched": [],
+          "dropout": [],
+          "raw_id_stability": 1.0,
+          "raw_label_stability": 0.0
+        }
+      ]
+    },
+    {
+      "baseline": "chemistry/chem-titration/original/run_1/plan.json",
+      "current": "chemistry/chem-titration/shift_left/run_1/plan.json",
+      "confidence_available": false,
+      "sweep_parameter": "association_iou",
+      "results": [
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.25,
+          "matches": [
+            {
+              "previous": 8,
+              "current": 6,
+              "iou": 0.8670910967268819,
+              "phone_id": "phone_9",
+              "raw_id_equal": false,
+              "raw_label_equal": true
+            },
+            {
+              "previous": 6,
+              "current": 4,
+              "iou": 0.82178058079657,
+              "phone_id": "phone_7",
+              "raw_id_equal": false,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 7,
+              "current": 5,
+              "iou": 0.7875370951524693,
+              "phone_id": "phone_8",
+              "raw_id_equal": false,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.7825832117350905,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 4,
+              "current": 2,
+              "iou": 0.7081656461556518,
+              "phone_id": "phone_5",
+              "raw_id_equal": false,
+              "raw_label_equal": true
+            },
+            {
+              "previous": 2,
+              "current": 1,
+              "iou": 0.38422491818256216,
+              "phone_id": "phone_3",
+              "raw_id_equal": false,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 5,
+              "current": 3,
+              "iou": 0.25412303323275454,
+              "phone_id": "phone_6",
+              "raw_id_equal": false,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_3",
+            "phone_5",
+            "phone_6",
+            "phone_7",
+            "phone_8",
+            "phone_9"
+          ],
+          "unmatched": [],
+          "dropout": [
+            1,
+            3
+          ],
+          "raw_id_stability": 0.14285714285714285,
+          "raw_label_stability": 0.2857142857142857
+        },
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.5,
+          "matches": [
+            {
+              "previous": 8,
+              "current": 6,
+              "iou": 0.8670910967268819,
+              "phone_id": "phone_9",
+              "raw_id_equal": false,
+              "raw_label_equal": true
+            },
+            {
+              "previous": 6,
+              "current": 4,
+              "iou": 0.82178058079657,
+              "phone_id": "phone_7",
+              "raw_id_equal": false,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 7,
+              "current": 5,
+              "iou": 0.7875370951524693,
+              "phone_id": "phone_8",
+              "raw_id_equal": false,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.7825832117350905,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 4,
+              "current": 2,
+              "iou": 0.7081656461556518,
+              "phone_id": "phone_5",
+              "raw_id_equal": false,
+              "raw_label_equal": true
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_10",
+            "phone_5",
+            "phone_11",
+            "phone_7",
+            "phone_8",
+            "phone_9"
+          ],
+          "unmatched": [
+            1,
+            3
+          ],
+          "dropout": [
+            1,
+            2,
+            3,
+            5
+          ],
+          "raw_id_stability": 0.2,
+          "raw_label_stability": 0.4
+        },
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.75,
+          "matches": [
+            {
+              "previous": 8,
+              "current": 6,
+              "iou": 0.8670910967268819,
+              "phone_id": "phone_9",
+              "raw_id_equal": false,
+              "raw_label_equal": true
+            },
+            {
+              "previous": 6,
+              "current": 4,
+              "iou": 0.82178058079657,
+              "phone_id": "phone_7",
+              "raw_id_equal": false,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 7,
+              "current": 5,
+              "iou": 0.7875370951524693,
+              "phone_id": "phone_8",
+              "raw_id_equal": false,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.7825832117350905,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_10",
+            "phone_11",
+            "phone_12",
+            "phone_7",
+            "phone_8",
+            "phone_9"
+          ],
+          "unmatched": [
+            1,
+            2,
+            3
+          ],
+          "dropout": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "raw_id_stability": 0.25,
+          "raw_label_stability": 0.25
+        }
+      ]
+    },
+    {
+      "baseline": "chemistry/chem-titration/original/run_1/plan.json",
+      "current": "chemistry/chem-titration/shift_right/run_1/plan.json",
+      "confidence_available": false,
+      "sweep_parameter": "association_iou",
+      "results": [
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.25,
+          "matches": [
+            {
+              "previous": 7,
+              "current": 7,
+              "iou": 0.9878244573752426,
+              "phone_id": "phone_8",
+              "raw_id_equal": true,
+              "raw_label_equal": true
+            },
+            {
+              "previous": 3,
+              "current": 3,
+              "iou": 0.9837855849532469,
+              "phone_id": "phone_4",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 8,
+              "current": 8,
+              "iou": 0.9704820216853389,
+              "phone_id": "phone_9",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 4,
+              "current": 4,
+              "iou": 0.9611585307375086,
+              "phone_id": "phone_5",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 6,
+              "current": 6,
+              "iou": 0.9605896805896802,
+              "phone_id": "phone_7",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 1,
+              "current": 1,
+              "iou": 0.9396687764516763,
+              "phone_id": "phone_2",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 2,
+              "current": 2,
+              "iou": 0.8964258459732928,
+              "phone_id": "phone_3",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.729275173611111,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": true
+            },
+            {
+              "previous": 5,
+              "current": 5,
+              "iou": 0.6480218281036838,
+              "phone_id": "phone_6",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_2",
+            "phone_3",
+            "phone_4",
+            "phone_5",
+            "phone_6",
+            "phone_7",
+            "phone_8",
+            "phone_9"
+          ],
+          "unmatched": [],
+          "dropout": [],
+          "raw_id_stability": 1.0,
+          "raw_label_stability": 0.2222222222222222
+        },
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.5,
+          "matches": [
+            {
+              "previous": 7,
+              "current": 7,
+              "iou": 0.9878244573752426,
+              "phone_id": "phone_8",
+              "raw_id_equal": true,
+              "raw_label_equal": true
+            },
+            {
+              "previous": 3,
+              "current": 3,
+              "iou": 0.9837855849532469,
+              "phone_id": "phone_4",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 8,
+              "current": 8,
+              "iou": 0.9704820216853389,
+              "phone_id": "phone_9",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 4,
+              "current": 4,
+              "iou": 0.9611585307375086,
+              "phone_id": "phone_5",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 6,
+              "current": 6,
+              "iou": 0.9605896805896802,
+              "phone_id": "phone_7",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 1,
+              "current": 1,
+              "iou": 0.9396687764516763,
+              "phone_id": "phone_2",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 2,
+              "current": 2,
+              "iou": 0.8964258459732928,
+              "phone_id": "phone_3",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.729275173611111,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": true
+            },
+            {
+              "previous": 5,
+              "current": 5,
+              "iou": 0.6480218281036838,
+              "phone_id": "phone_6",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_2",
+            "phone_3",
+            "phone_4",
+            "phone_5",
+            "phone_6",
+            "phone_7",
+            "phone_8",
+            "phone_9"
+          ],
+          "unmatched": [],
+          "dropout": [],
+          "raw_id_stability": 1.0,
+          "raw_label_stability": 0.2222222222222222
+        },
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.75,
+          "matches": [
+            {
+              "previous": 7,
+              "current": 7,
+              "iou": 0.9878244573752426,
+              "phone_id": "phone_8",
+              "raw_id_equal": true,
+              "raw_label_equal": true
+            },
+            {
+              "previous": 3,
+              "current": 3,
+              "iou": 0.9837855849532469,
+              "phone_id": "phone_4",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 8,
+              "current": 8,
+              "iou": 0.9704820216853389,
+              "phone_id": "phone_9",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 4,
+              "current": 4,
+              "iou": 0.9611585307375086,
+              "phone_id": "phone_5",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 6,
+              "current": 6,
+              "iou": 0.9605896805896802,
+              "phone_id": "phone_7",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 1,
+              "current": 1,
+              "iou": 0.9396687764516763,
+              "phone_id": "phone_2",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 2,
+              "current": 2,
+              "iou": 0.8964258459732928,
+              "phone_id": "phone_3",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_10",
+            "phone_2",
+            "phone_3",
+            "phone_4",
+            "phone_5",
+            "phone_11",
+            "phone_7",
+            "phone_8",
+            "phone_9"
+          ],
+          "unmatched": [
+            0,
+            5
+          ],
+          "dropout": [
+            0,
+            5
+          ],
+          "raw_id_stability": 1.0,
+          "raw_label_stability": 0.14285714285714285
+        }
+      ]
+    },
+    {
+      "baseline": "gym/gym-lat-pulldown/original/run_1/plan.json",
+      "current": "gym/gym-lat-pulldown/shift_left/run_1/plan.json",
+      "confidence_available": false,
+      "sweep_parameter": "association_iou",
+      "results": [
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.25,
+          "matches": [
+            {
+              "previous": 5,
+              "current": 6,
+              "iou": 0.848983095948757,
+              "phone_id": "phone_6",
+              "raw_id_equal": false,
+              "raw_label_equal": true
+            },
+            {
+              "previous": 3,
+              "current": 4,
+              "iou": 0.8431606353766127,
+              "phone_id": "phone_4",
+              "raw_id_equal": false,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 4,
+              "current": 5,
+              "iou": 0.7644294046716799,
+              "phone_id": "phone_5",
+              "raw_id_equal": false,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 2,
+              "current": 3,
+              "iou": 0.5336734463531907,
+              "phone_id": "phone_3",
+              "raw_id_equal": false,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_8",
+            "phone_9",
+            "phone_10",
+            "phone_3",
+            "phone_4",
+            "phone_5",
+            "phone_6",
+            "phone_11"
+          ],
+          "unmatched": [
+            0,
+            1,
+            2,
+            7
+          ],
+          "dropout": [
+            0,
+            1,
+            6
+          ],
+          "raw_id_stability": 0.0,
+          "raw_label_stability": 0.25
+        },
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.5,
+          "matches": [
+            {
+              "previous": 5,
+              "current": 6,
+              "iou": 0.848983095948757,
+              "phone_id": "phone_6",
+              "raw_id_equal": false,
+              "raw_label_equal": true
+            },
+            {
+              "previous": 3,
+              "current": 4,
+              "iou": 0.8431606353766127,
+              "phone_id": "phone_4",
+              "raw_id_equal": false,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 4,
+              "current": 5,
+              "iou": 0.7644294046716799,
+              "phone_id": "phone_5",
+              "raw_id_equal": false,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 2,
+              "current": 3,
+              "iou": 0.5336734463531907,
+              "phone_id": "phone_3",
+              "raw_id_equal": false,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_8",
+            "phone_9",
+            "phone_10",
+            "phone_3",
+            "phone_4",
+            "phone_5",
+            "phone_6",
+            "phone_11"
+          ],
+          "unmatched": [
+            0,
+            1,
+            2,
+            7
+          ],
+          "dropout": [
+            0,
+            1,
+            6
+          ],
+          "raw_id_stability": 0.0,
+          "raw_label_stability": 0.25
+        },
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.75,
+          "matches": [
+            {
+              "previous": 5,
+              "current": 6,
+              "iou": 0.848983095948757,
+              "phone_id": "phone_6",
+              "raw_id_equal": false,
+              "raw_label_equal": true
+            },
+            {
+              "previous": 3,
+              "current": 4,
+              "iou": 0.8431606353766127,
+              "phone_id": "phone_4",
+              "raw_id_equal": false,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 4,
+              "current": 5,
+              "iou": 0.7644294046716799,
+              "phone_id": "phone_5",
+              "raw_id_equal": false,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_8",
+            "phone_9",
+            "phone_10",
+            "phone_11",
+            "phone_4",
+            "phone_5",
+            "phone_6",
+            "phone_12"
+          ],
+          "unmatched": [
+            0,
+            1,
+            2,
+            3,
+            7
+          ],
+          "dropout": [
+            0,
+            1,
+            2,
+            6
+          ],
+          "raw_id_stability": 0.0,
+          "raw_label_stability": 0.3333333333333333
+        }
+      ]
+    },
+    {
+      "baseline": "gym/gym-lat-pulldown/original/run_1/plan.json",
+      "current": "gym/gym-lat-pulldown/shift_right/run_1/plan.json",
+      "confidence_available": false,
+      "sweep_parameter": "association_iou",
+      "results": [
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.25,
+          "matches": [
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.9958040612923519,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 5,
+              "current": 5,
+              "iou": 0.97808063511569,
+              "phone_id": "phone_6",
+              "raw_id_equal": true,
+              "raw_label_equal": true
+            },
+            {
+              "previous": 3,
+              "current": 3,
+              "iou": 0.9273782075417731,
+              "phone_id": "phone_4",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 4,
+              "current": 4,
+              "iou": 0.9158117974975007,
+              "phone_id": "phone_5",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 6,
+              "current": 6,
+              "iou": 0.7833704379903567,
+              "phone_id": "phone_7",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 1,
+              "current": 1,
+              "iou": 0.7103887247101648,
+              "phone_id": "phone_2",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 2,
+              "current": 2,
+              "iou": 0.6496909413420263,
+              "phone_id": "phone_3",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_2",
+            "phone_3",
+            "phone_4",
+            "phone_5",
+            "phone_6",
+            "phone_7"
+          ],
+          "unmatched": [],
+          "dropout": [],
+          "raw_id_stability": 1.0,
+          "raw_label_stability": 0.14285714285714285
+        },
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.5,
+          "matches": [
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.9958040612923519,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 5,
+              "current": 5,
+              "iou": 0.97808063511569,
+              "phone_id": "phone_6",
+              "raw_id_equal": true,
+              "raw_label_equal": true
+            },
+            {
+              "previous": 3,
+              "current": 3,
+              "iou": 0.9273782075417731,
+              "phone_id": "phone_4",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 4,
+              "current": 4,
+              "iou": 0.9158117974975007,
+              "phone_id": "phone_5",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 6,
+              "current": 6,
+              "iou": 0.7833704379903567,
+              "phone_id": "phone_7",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 1,
+              "current": 1,
+              "iou": 0.7103887247101648,
+              "phone_id": "phone_2",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 2,
+              "current": 2,
+              "iou": 0.6496909413420263,
+              "phone_id": "phone_3",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_2",
+            "phone_3",
+            "phone_4",
+            "phone_5",
+            "phone_6",
+            "phone_7"
+          ],
+          "unmatched": [],
+          "dropout": [],
+          "raw_id_stability": 1.0,
+          "raw_label_stability": 0.14285714285714285
+        },
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.75,
+          "matches": [
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.9958040612923519,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 5,
+              "current": 5,
+              "iou": 0.97808063511569,
+              "phone_id": "phone_6",
+              "raw_id_equal": true,
+              "raw_label_equal": true
+            },
+            {
+              "previous": 3,
+              "current": 3,
+              "iou": 0.9273782075417731,
+              "phone_id": "phone_4",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 4,
+              "current": 4,
+              "iou": 0.9158117974975007,
+              "phone_id": "phone_5",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 6,
+              "current": 6,
+              "iou": 0.7833704379903567,
+              "phone_id": "phone_7",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_8",
+            "phone_9",
+            "phone_4",
+            "phone_5",
+            "phone_6",
+            "phone_7"
+          ],
+          "unmatched": [
+            1,
+            2
+          ],
+          "dropout": [
+            1,
+            2
+          ],
+          "raw_id_stability": 1.0,
+          "raw_label_stability": 0.2
+        }
+      ]
+    },
+    {
+      "baseline": "sink/sink-trap/original/run_1/plan.json",
+      "current": "sink/sink-trap/shift_left/run_1/plan.json",
+      "confidence_available": false,
+      "sweep_parameter": "association_iou",
+      "results": [
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.25,
+          "matches": [
+            {
+              "previous": 4,
+              "current": 4,
+              "iou": 0.922445026797112,
+              "phone_id": "phone_5",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.9144247548829443,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 3,
+              "current": 3,
+              "iou": 0.6921797727295498,
+              "phone_id": "phone_4",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 2,
+              "current": 2,
+              "iou": 0.5800137813656506,
+              "phone_id": "phone_3",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 1,
+              "current": 1,
+              "iou": 0.3422929693073083,
+              "phone_id": "phone_2",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_2",
+            "phone_3",
+            "phone_4",
+            "phone_5"
+          ],
+          "unmatched": [],
+          "dropout": [],
+          "raw_id_stability": 1.0,
+          "raw_label_stability": 0.0
+        },
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.5,
+          "matches": [
+            {
+              "previous": 4,
+              "current": 4,
+              "iou": 0.922445026797112,
+              "phone_id": "phone_5",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.9144247548829443,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 3,
+              "current": 3,
+              "iou": 0.6921797727295498,
+              "phone_id": "phone_4",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 2,
+              "current": 2,
+              "iou": 0.5800137813656506,
+              "phone_id": "phone_3",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_6",
+            "phone_3",
+            "phone_4",
+            "phone_5"
+          ],
+          "unmatched": [
+            1
+          ],
+          "dropout": [
+            1
+          ],
+          "raw_id_stability": 1.0,
+          "raw_label_stability": 0.0
+        },
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.75,
+          "matches": [
+            {
+              "previous": 4,
+              "current": 4,
+              "iou": 0.922445026797112,
+              "phone_id": "phone_5",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.9144247548829443,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_6",
+            "phone_7",
+            "phone_8",
+            "phone_5"
+          ],
+          "unmatched": [
+            1,
+            2,
+            3
+          ],
+          "dropout": [
+            1,
+            2,
+            3
+          ],
+          "raw_id_stability": 1.0,
+          "raw_label_stability": 0.0
+        }
+      ]
+    },
+    {
+      "baseline": "sink/sink-trap/original/run_1/plan.json",
+      "current": "sink/sink-trap/shift_right/run_1/plan.json",
+      "confidence_available": false,
+      "sweep_parameter": "association_iou",
+      "results": [
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.25,
+          "matches": [
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.9781661541086839,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 4,
+              "current": 4,
+              "iou": 0.938193297096618,
+              "phone_id": "phone_5",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 3,
+              "current": 3,
+              "iou": 0.8861304741958673,
+              "phone_id": "phone_4",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 2,
+              "current": 2,
+              "iou": 0.6309309446551802,
+              "phone_id": "phone_3",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 1,
+              "current": 1,
+              "iou": 0.4776553020593009,
+              "phone_id": "phone_2",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_2",
+            "phone_3",
+            "phone_4",
+            "phone_5"
+          ],
+          "unmatched": [],
+          "dropout": [],
+          "raw_id_stability": 1.0,
+          "raw_label_stability": 0.0
+        },
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.5,
+          "matches": [
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.9781661541086839,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 4,
+              "current": 4,
+              "iou": 0.938193297096618,
+              "phone_id": "phone_5",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 3,
+              "current": 3,
+              "iou": 0.8861304741958673,
+              "phone_id": "phone_4",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 2,
+              "current": 2,
+              "iou": 0.6309309446551802,
+              "phone_id": "phone_3",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_6",
+            "phone_3",
+            "phone_4",
+            "phone_5"
+          ],
+          "unmatched": [
+            1
+          ],
+          "dropout": [
+            1
+          ],
+          "raw_id_stability": 1.0,
+          "raw_label_stability": 0.0
+        },
+        {
+          "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+          "threshold": 0.75,
+          "matches": [
+            {
+              "previous": 0,
+              "current": 0,
+              "iou": 0.9781661541086839,
+              "phone_id": "phone_1",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 4,
+              "current": 4,
+              "iou": 0.938193297096618,
+              "phone_id": "phone_5",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            },
+            {
+              "previous": 3,
+              "current": 3,
+              "iou": 0.8861304741958673,
+              "phone_id": "phone_4",
+              "raw_id_equal": true,
+              "raw_label_equal": false
+            }
+          ],
+          "phone_ids": [
+            "phone_1",
+            "phone_6",
+            "phone_7",
+            "phone_4",
+            "phone_5"
+          ],
+          "unmatched": [
+            1,
+            2
+          ],
+          "dropout": [
+            1,
+            2
+          ],
+          "raw_id_stability": 1.0,
+          "raw_label_stability": 0.0
+        }
+      ]
+    }
+  ],
+  "realism_claim": "Synthetic stress is not real-photo validation"
+}

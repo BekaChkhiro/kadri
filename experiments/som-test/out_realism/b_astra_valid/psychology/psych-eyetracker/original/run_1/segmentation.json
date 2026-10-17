@@ -1,0 +1,151 @@
+{
+  "seconds": 4.536743042001035,
+  "device": "mps",
+  "model": "sam2.1_b.pt",
+  "quality": [
+    {
+      "id": "chin_rest",
+      "box_pixels": [
+        104,
+        514,
+        377,
+        611
+      ],
+      "mask_pixels": 19225,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.7259922208375816,
+      "mask_to_box_area": 0.7259922208375816,
+      "image_fraction": 0.012219134688232512,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "height_adjustment_knob",
+      "box_pixels": [
+        138,
+        772,
+        250,
+        872
+      ],
+      "mask_pixels": 8109,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.7240178571428572,
+      "mask_to_box_area": 0.7240178571428572,
+      "image_fraction": 0.005153964275000127,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "forehead_rest",
+      "box_pixels": [
+        79,
+        150,
+        414,
+        266
+      ],
+      "mask_pixels": 33353,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.8582861554297478,
+      "mask_to_box_area": 0.8582861554297478,
+      "image_fraction": 0.021198689168094614,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "monitor_screen",
+      "box_pixels": [
+        182,
+        197,
+        888,
+        614
+      ],
+      "mask_pixels": 249435,
+      "mask_fraction_inside_box": 0.9784713452402429,
+      "box_occupancy": 0.8290195039435874,
+      "mask_to_box_area": 0.8472598691584976,
+      "image_fraction": 0.1585373139640716,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "eye_tracker",
+      "box_pixels": [
+        287,
+        625,
+        795,
+        684
+      ],
+      "mask_pixels": 20534,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.6851060990257574,
+      "mask_to_box_area": 0.6851060990257574,
+      "image_fraction": 0.01305111634268746,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "screen_dot",
+      "box_pixels": [
+        510,
+        411,
+        524,
+        424
+      ],
+      "mask_pixels": 125,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.6868131868131868,
+      "mask_to_box_area": 0.6868131868131868,
+      "image_fraction": 7.944820993649228e-05,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "response_pad",
+      "box_pixels": [
+        736,
+        794,
+        934,
+        910
+      ],
+      "mask_pixels": 19030,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.828544061302682,
+      "mask_to_box_area": 0.828544061302682,
+      "image_fraction": 0.012095195480731584,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "red_button",
+      "box_pixels": [
+        771,
+        810,
+        820,
+        843
+      ],
+      "mask_pixels": 1047,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.647495361781076,
+      "mask_to_box_area": 0.647495361781076,
+      "image_fraction": 0.0006654582064280593,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "blue_button",
+      "box_pixels": [
+        851,
+        815,
+        902,
+        850
+      ],
+      "mask_pixels": 1298,
+      "mask_fraction_inside_box": 0.9807395993836672,
+      "box_occupancy": 0.7131652661064426,
+      "mask_to_box_area": 0.7271708683473389,
+      "image_fraction": 0.0008249902119805358,
+      "empty": false,
+      "too_large": false
+    }
+  ]
+}

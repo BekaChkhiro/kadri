@@ -1,0 +1,118 @@
+{
+  "seconds": 3.5710382079996634,
+  "device": "mps",
+  "quality": [
+    {
+      "id": "p1",
+      "box_pixels": [
+        27,
+        89,
+        404,
+        144
+      ],
+      "mask_pixels": 6815,
+      "mask_fraction_inside_box": 0.8972853998532648,
+      "box_occupancy": 0.294911984567157,
+      "mask_to_box_area": 0.32867132867132864,
+      "image_fraction": 0.020540967399691357,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "p2",
+      "box_pixels": [
+        241,
+        242,
+        263,
+        265
+      ],
+      "mask_pixels": 534,
+      "mask_fraction_inside_box": 0.7078651685393258,
+      "box_occupancy": 0.7470355731225297,
+      "mask_to_box_area": 1.0553359683794465,
+      "image_fraction": 0.001609519675925926,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "p3",
+      "box_pixels": [
+        194,
+        185,
+        260,
+        460
+      ],
+      "mask_pixels": 6618,
+      "mask_fraction_inside_box": 0.9218797219703838,
+      "box_occupancy": 0.3361432506887052,
+      "mask_to_box_area": 0.3646280991735537,
+      "image_fraction": 0.01994719328703704,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "p4",
+      "box_pixels": [
+        155,
+        367,
+        204,
+        471
+      ],
+      "mask_pixels": 3640,
+      "mask_fraction_inside_box": 0.789010989010989,
+      "box_occupancy": 0.5635792778649922,
+      "mask_to_box_area": 0.7142857142857143,
+      "image_fraction": 0.010971257716049383,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "p5",
+      "box_pixels": [
+        95,
+        368,
+        150,
+        471
+      ],
+      "mask_pixels": 0,
+      "mask_fraction_inside_box": 0.0,
+      "box_occupancy": 0.0,
+      "mask_to_box_area": 0.0,
+      "image_fraction": 0.0,
+      "empty": true,
+      "too_large": false
+    },
+    {
+      "id": "p6",
+      "box_pixels": [
+        107,
+        423,
+        180,
+        500
+      ],
+      "mask_pixels": 1518,
+      "mask_fraction_inside_box": 0.9598155467720685,
+      "box_occupancy": 0.2592065468777798,
+      "mask_to_box_area": 0.2700587084148728,
+      "image_fraction": 0.004575376157407407,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "p7",
+      "box_pixels": [
+        208,
+        585,
+        222,
+        607
+      ],
+      "mask_pixels": 490,
+      "mask_fraction_inside_box": 0.6081632653061224,
+      "box_occupancy": 0.9675324675324676,
+      "mask_to_box_area": 1.5909090909090908,
+      "image_fraction": 0.0014769000771604939,
+      "empty": false,
+      "too_large": false
+    }
+  ]
+}

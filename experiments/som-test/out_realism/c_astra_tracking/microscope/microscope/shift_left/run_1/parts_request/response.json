@@ -1,0 +1,152 @@
+{
+  "id": "resp_02649c9a5b1653ce016ad35df40a8487d28a3de8b502e4018e",
+  "created_at": 1792237044.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-6-astra",
+  "object": "response",
+  "output": [
+    {
+      "id": "rs_02649c9a5b1653ce016ad35df50c7c87d2b8f015fc5994736c",
+      "summary": [],
+      "type": "reasoning",
+      "content": [],
+      "encrypted_content": "gAAAAABq013_-VA0tfTpJPtj8fNu4cafcHOT0qNc7a1SV9JYwKNz99ANH2FdKvSTq7WTJLERw9sac0hHwsta8t_IhWRvMXQBVEyUNkLeHHlC45pGAH02wJuVo3ERpwULzMU3Ba-wLYMYxnCIm868Hts_QWGNhPowGbXDxGdUCKFk9LXgDLXWog3k1ADWXhuzZiqVm3tjfNsr1EjoAD0JriuCR4BW0jk6IczqJx4eUgTdklem07lxPapotdaArOKNbHrY6jUC_8B_46hiRkFOsfOvG9OZ53bgVoBz5n_q_dkrqtWPxaU--q2vMx-Gcba0TNFb0d2ZB_SON2jNrEDOJbYiIooLsjxs1mWbKlXD2h4sRk5GijUHF-WWP1anm562eK7u2i5Tc6_PgAh4UGsnZ9aJnO-m0hTj1ZIXKYSz7Z-TBJsQky3yZItkMgAwkBqXq5z12XU6V4HsQunWWr7DEo-tdCe5jWbQ470iEchPFTwS5JgmVacVXKW3aiozpe9_-c2MX53FtvW4VbWwaq5vr_4y6m-4VC3Lko4RdJWlR98EBsV7IsCj7Xy4RBT6J4tl4lHj91gm54Vv3NMq5ncDjJKHx0eWj4E_fa6f6qyOO4GjYSEOyfxcd0KVCQxOpDbuZQ4v0vJqHuX7arZxLo7eCPeJGn8tVLU6toibmNtuoFTby4mYFTYmT2KaqyMvN4iAkIJBTVCI4Gock4ypikgXV5sljkW99PT9D1QZhIWFw4gX6rQNIh_7GJjauPYdMYy8kzDK7GR-iD-28XEB8Iq4dQA8ol6ipw6kXvs6gLjUqDfxwcibv8E9QtqQumA9Vnk_TSw-fe1w80OLbiJIi-bYjQ-C_9f6VRnslXpyddkKC93NUgAWOn_Qv0XOF_GzxXdSH3XqBVATUogP3taWgMLZ0JiqkguyK5DzKy5bvUtpTIIi3CuNH5FKDJG36LSGVuhdu0vytSfo_zhQIhmxxSHzwkTHLybeeLPD3AMKoCBCM5Kq4H06WofH5pohakAFw3bDkz8AQgOlaxPMwCmLgjaafxmIx7nH6TaIU2jVvw-nwf5rtkY2FK0rkn83Gg3L52z4Jz7KpYlkV5xtAgs8zv_NZScAp8oFTBORvB12s51uIWcC6IDqlHccvdHyngunHgHFHSAdUGOwKhB9UXlQE8hfbgK0_OQETBO1swZjcvSVPKxopc2OdEus9ca2jQtiZiQBQ_ltxeuLGTeP121LWKrnBY42ThCi7VnS3WTIEvtxkSlFNRtg6g_N4RzPmURJbaooDV5BPRkNf_IhyAKzB3aMWlHkJa75eJqmZftnknPiqu_zssN8ZIxT0vzs3eH5sdeynHa9aiO70CCeI7-Wufus40g-ocynN4En_zgsaWFSwIS49Dz_nImSBsEVaZif-kNw2LGVyZcDuC_Txw2eg4ggTMycX9pLgnNd_fK5NOU3V7WPPtYcnTd2Mto1e5nXhxDZxfVOD9AkN43npFFupMp2FIZW-PZRToqLlATwopqDFcLf2a9I_80SFLQWDEsenA_IzuUs7nv9pQ5ZaLjl_DWp4kq3iXMmf3DjHEgHAmBMzr5qSEx5qKTAFl0qwJvUC5aMPEJnbii2q4ava60k3MVrmBVguz_CPC-_TrhdG_S3aSdczuzFxBcpGRsKVt5z180mEZJ1vM80JwfpZ-OPpxmI-z8J-tasw4130PVCnmLv_nW3tVFhfyQ3PZ_CHxA1NiYEdt2dOj-gcyKpXOrJQAC2MhocExmkvroCjEW-XoQxnlEE6MDBA-N-r8owYTseNw05GyHo1B5iFKB0ps69PgxnPV_Jq4l1MvwsYzo9O29YNglBfAWuDQGTh18HQIkQeo4ZvNoWzPUrjEteE8XW0oKvA79yMXXdGwvbggoqm_lIL-QZJt8-TlYS5Q4nSfiS6EE8lHWXvL3yiF5SC3faETaawTF5f0sASUAR2z7JodISKwO2MTKY0M5VZAXa9sJhmlhbvYkpUA0gZFY5MmfxMRYUnBSXbzIjBq_EsSHI-6J_F2vIe-PM5Y_sAGE=",
+      "status": null
+    },
+    {
+      "id": "msg_02649c9a5b1653ce016ad35df66c8087d2a1752ec736e30e6e",
+      "content": [
+        {
+          "annotations": [],
+          "text": "{\"object\":\"მიკროსკოპი\",\"parts\":[{\"label\":\"ფუძეზე მდებარე შავი ჩამრთველი\",\"box\":[574,567,626,590]},{\"label\":\"მაგიდის ქვემოთ მდებარე სანათი — ცენტრი განათებულია\",\"box\":[334,490,508,566]},{\"label\":\"ობიექტივების მბრუნავი რევოლვერი — ზედა შავი დისკი\",\"box\":[304,229,504,286]},{\"label\":\"მარჯვენა ყველაზე მოკლე ობიექტივი — ყვითელი ზოლით\",\"box\":[446,275,518,340]},{\"label\":\"ცენტრში ქვემოთ მიმართული გრძელი ობიექტივი — ლურჯი ზოლით\",\"box\":[370,268,456,375]},{\"label\":\"საგნობრივი მაგიდა — შავი მართკუთხა პლატფორმა\",\"box\":[182,354,654,464]},{\"label\":\"მაგიდაზე მოთავსებული პრეპარატის მინა — გამჭვირვალე, წაგრძელებული\",\"box\":[310,369,488,422]},{\"label\":\"მარცხენა სამაგრი — მარცხენა ხრახნიდან მინისკენ მიმართული მეტალის ზოლი\",\"box\":[278,365,390,408]},{\"label\":\"მარჯვენა სამაგრი — მარჯვენა ხრახნთან დაკავშირებული მოხრილი მეტალის ზოლი\",\"box\":[454,354,580,410]},{\"label\":\"ზედა მარცხენა ოკულარი — შავი დახრილი მილი\",\"box\":[124,34,374,176]},{\"label\":\"მარჯვენა ქვედა დიდი ფოკუსირების ხრახნი — ფართო დაკბილული კიდით\",\"box\":[676,463,854,568]},{\"label\":\"მარჯვენა ზედა პატარა ფოკუსირების ხრახნი — დიდი ხრახნის ზემოთ\",\"box\":[700,405,818,468]}]}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message",
+      "phase": "final_answer"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1792237055.0,
+  "conversation": null,
+  "max_output_tokens": 1200,
+  "max_tool_calls": null,
+  "moderation": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_options": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "low",
+    "generate_summary": null,
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "name": "variant_c_parts",
+      "schema_": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "box": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "minItems": 4,
+                  "maxItems": 4
+                }
+              },
+              "required": [
+                "label",
+                "box"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 24
+          }
+        },
+        "required": [
+          "object",
+          "parts"
+        ],
+        "additionalProperties": false
+      },
+      "type": "json_schema",
+      "description": null,
+      "strict": true
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 1000,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 485,
+    "output_tokens_details": {
+      "reasoning_tokens": 46
+    },
+    "total_tokens": 1485
+  },
+  "user": null,
+  "access_programs": null,
+  "billing": {
+    "payer": "developer"
+  },
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": false,
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  }
+}

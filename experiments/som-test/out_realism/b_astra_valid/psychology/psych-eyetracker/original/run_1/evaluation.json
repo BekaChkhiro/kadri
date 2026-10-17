@@ -1,0 +1,131 @@
+{
+  "metric": "Approximate IoU against design polygons; NOT verified semantic ID accuracy",
+  "steps": [
+    {
+      "step": 1,
+      "focus_design_iou": 0.09766920050916571,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 2,
+      "focus_design_iou": 0.9356258286552512,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 3,
+      "focus_design_iou": 0.853282987203692,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 4,
+      "focus_design_iou": 0.0,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 5,
+      "focus_design_iou": 0.9238645828229876,
+      "avoid_design_iou": 1.0
+    }
+  ],
+  "parts": [
+    {
+      "id": "chin_rest",
+      "design_ious": {
+        "FOREHEAD": 0.0,
+        "CHIN": 0.7397302268546904,
+        "KNOB": 0.0,
+        "SCREEN": 0.043875071352850036,
+        "TRACKER": 0.0,
+        "BOX": 0.0
+      }
+    },
+    {
+      "id": "height_adjustment_knob",
+      "design_ious": {
+        "FOREHEAD": 0.0,
+        "CHIN": 0.0,
+        "KNOB": 0.911000355998576,
+        "SCREEN": 0.0,
+        "TRACKER": 0.0,
+        "BOX": 0.0
+      }
+    },
+    {
+      "id": "forehead_rest",
+      "design_ious": {
+        "FOREHEAD": 0.9356258286552512,
+        "CHIN": 0.0,
+        "KNOB": 0.0,
+        "SCREEN": 0.05139717889742275,
+        "TRACKER": 0.0,
+        "BOX": 0.0
+      }
+    },
+    {
+      "id": "monitor_screen",
+      "design_ious": {
+        "FOREHEAD": 0.0006924404483639777,
+        "CHIN": 0.00970296363071882,
+        "KNOB": 0.0,
+        "SCREEN": 0.7955925687824904,
+        "TRACKER": 0.0,
+        "BOX": 0.0
+      }
+    },
+    {
+      "id": "eye_tracker",
+      "design_ious": {
+        "FOREHEAD": 0.0,
+        "CHIN": 0.0,
+        "KNOB": 0.0,
+        "SCREEN": 0.0,
+        "TRACKER": 0.853282987203692,
+        "BOX": 0.0
+      }
+    },
+    {
+      "id": "screen_dot",
+      "design_ious": {
+        "FOREHEAD": 0.0,
+        "CHIN": 0.0,
+        "KNOB": 0.0,
+        "SCREEN": 0.00041555712913188454,
+        "TRACKER": 0.0,
+        "BOX": 0.0
+      }
+    },
+    {
+      "id": "response_pad",
+      "design_ious": {
+        "FOREHEAD": 0.0,
+        "CHIN": 0.0,
+        "KNOB": 0.0,
+        "SCREEN": 0.0,
+        "TRACKER": 0.0,
+        "BOX": 0.9238645828229876
+      }
+    },
+    {
+      "id": "red_button",
+      "design_ious": {
+        "FOREHEAD": 0.0,
+        "CHIN": 0.0,
+        "KNOB": 0.0,
+        "SCREEN": 0.0,
+        "TRACKER": 0.0,
+        "BOX": 0.05173436110287578
+      }
+    },
+    {
+      "id": "blue_button",
+      "design_ious": {
+        "FOREHEAD": 0.0,
+        "CHIN": 0.0,
+        "KNOB": 0.0,
+        "SCREEN": 0.0,
+        "TRACKER": 0.0,
+        "BOX": 0.06413677240834074
+      }
+    }
+  ]
+}

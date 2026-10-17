@@ -1,0 +1,23 @@
+{
+  "seconds": 13.620705249999446,
+  "time_to_first_step_seconds": null,
+  "usage": {
+    "input_tokens": 959,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 455,
+    "output_tokens_details": {
+      "reasoning_tokens": 118
+    },
+    "total_tokens": 1414
+  },
+  "estimated_usd": 0.0347375,
+  "reserved_usd": 0.26,
+  "price_source": "manual --price",
+  "price_checked": "manual",
+  "model": "gpt-6-astra",
+  "returned_model": "gpt-6-astra",
+  "status": "completed"
+}

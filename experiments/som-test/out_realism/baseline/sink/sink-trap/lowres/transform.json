@@ -1,0 +1,38 @@
+{
+  "protocol": 1,
+  "kind": "lowres",
+  "seed": 20261017,
+  "source_to_frame": [
+    [
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "size": [
+    1024,
+    1536
+  ],
+  "parameters": {
+    "small_size": [
+      128,
+      192
+    ]
+  },
+  "border": "constant black",
+  "mask_interpolation": "nearest",
+  "source_sha256": "0c776234ec148fdeb011bd4d2b2d88e27a6036fe72bad04daea0a2c38ebe48f6",
+  "truth_sha256": "6c24ccfd276caaad6dd2554979a83bc43b3482eb8f9d026a1a7cf764ce76f7a0",
+  "real_photo": false,
+  "proxy_available": true
+}

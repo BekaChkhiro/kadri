@@ -1,0 +1,152 @@
+{
+  "id": "resp_050c25c0159efe16016ad35dcf2e2087d2b85d82834b4ef40f",
+  "created_at": 1792237007.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-6-astra",
+  "object": "response",
+  "output": [
+    {
+      "id": "rs_050c25c0159efe16016ad35dd0a57087d2aa85ac59d756f1f5",
+      "summary": [],
+      "type": "reasoning",
+      "content": [],
+      "encrypted_content": "gAAAAABq013b3WQxg7uJ86gsgzE-wSSCW2rqrrJclEDxO02ty92UQ426CzsSS5bWYZkljSknn4-S7nBP2C9oWYHhj62c7WjnUybQV0dbmudKKhYwuCKmRCGI4LOEJOp1pLaGpe35XjDI-lv-zJyqs7JxcIpXfyDoALm8oNH6wozsvArLHsBRkxwIotNXp0ookm3W6G35WjEp7wFjkQrzqYfn5ibyDHwXZrAuDPqCP2iuGkqBu5Yu1RGwl_FhyEUUa7etdF-sJkeO3SAEOav52eqFaUw66VE9taPq0Gu-E8M99FULuAUILb2gY2HDw0KtHkZzfM0cZzLOWjz8-YfzZVGktAsUeuK2JitMlfVC_PboU5t24E6pA9-wDmRnP7DfkeNsL4zsTA37Dj601pW9hBJSCuL3Mu4lkslav99GFIBkviSwN683CsRTAP331Dijoks4Hm7gTLoeyCFpNj8slDl5YQTyohWGEiTNysTnA4ptxClV967EN-nAA6oR-flAj-5RpNiCagI_uFwjvym3et8VFMl9JcXS7n-Qt4e4nmBkMOdqYWGKY6TtHrHk9uzurb7GQKz_w-bLzmQQLeLaT9lXYPIYF6MxpWyHqywRKOLK4CBxMQfMK1ZQY1TN23iiSdIGXgT3bMSJQKqSlTpGKNXJ1lud4PwGtiWXyIker9kdEUg8I3VryV8JbyN4UW_se1-l-s2eu46lfdPXtpp3KtaCTqJjjbiLNc3YOW78zN3lfYokF6yPnd_9stBqJdN6ACfl-BXwBgnl7d5UE-LNRUG4axuQoYVjUmOnq4pPi-qI6roiGKm0NS49nBpBJsvuuwr7XXYl6rPT9TfgjferCdi7aCb-xm22_Zo-9ZiVS7loG-te5cCgLpK4SLBvKQw2c5-c1GLxqD8kBFUefKQ17XmsH8e_LYNlTRu6l7F4zBg8-YRnOjwiZCZQJ_n3yH7bo-mke-3z9bVCxDQNCvp3NQil2fXPKk8AFkaKGPTNf3WrJwHlO9vUfxpXigqD0RGxaAtccfV44xTvMFehvw0ahfcepmeLubbPN6AvioFROuc982gyu2FE4Rw2YsHRZLDtfygyR3-Y4ZH-3GEyxoNXc05mF4DhlOfm40ev6SOmcYPL26rlQCBY3lKdv5lZq1AqXRjWJBpCTeWmZL5jdpbRiTwa4tXamMO4qUEzfo4rjXERyqw9c_S7l8G4DdWtUvLFngwEw9mQ7QR9Kio-XGG0U8vYcGDQ3CmMaSd7qjhke3x11r1MHahtZLAy72nDbj5aNZ6YLv8mKclOqH2Uv6LUn81kLhUp26-zrzmyKT-6UXuAqE90lNIFiGmqUWjJnssoIhnXMGoNK2ZQftkG0QkbfGB1ckTWgYimQEViCiVekf7qRWwZMcTlx7QCIyg0m_gw-hSPFVeIp6EdLSO9g5vDoIt9YrX3_sOCTP0HVJvuhsjMqJMRquz2YEgxOyUguEoVBqW1tXCGQB0H47IZrA-rm5tTS7Ex8IN_dA5HXxrgYGEh2OZHUF88tlbDr0bbfEmkEDtF1-xpZ7pzdk7QTnepryzRJpHUHzBxO-ouWX2ca7pCUjt-v-mrvh3I36E-Ah8T_nKpm0YnbrGyc2x5Gtt4hTv5VSIlJ-glmzvld5qsegRdIlHgKhzHT3KYJDEMAMvz90AT_JhBDzgTnXsu_pRNnC7UUHT6kF_ce6hXo_tIQaiDV6w8tYmmkjYb-dE7rY4nBplFyCw_CfhC5NSHHeoIy8d8RfzvbOQ7Ma3jBSp-Grn_X-ZZaFR7eksG0rjlB2NHJ4h2UdJPMxZiURhekHo96DnM0V39J4KhncA9qCZEKkX7WKjyjEBj9hYIe7dx-rryMIHvsXEO_GAAAemnlthobyEcB2_zdB4cOaztXZM66b_5yuWKXBAvIUXKv8ZsSsgxmmeTVKWuovqEUUJcSLpQEgL60b6lV6B9mIxpS78UmGCoNtkO8piFFc85GPa5JfWWp2BJirw0EY9297nSHaehIUgu-itJl6Pz0vFoemdtisokgVDZlUJySOXj9TrhzSqu8Roa5wwD0jaQZLDRy8afYlVyv3T-17ywA3tu0a1C1co3E7uyJEEHbf38TVp5gdur851j6178IWgiMB-or6evpp2VGHUlm9JUc69_1l1TA5rAm66SzBJUgJgrAmaqsGGtT3YEXQuOmAxPySh1B1I8um7sLY7HPFjePFGkJD3haqgyKfLqH61ShtySi1bexdLr4z-GOOIfvOaomy3fv-hkLh39wDLchhd7Ow==",
+      "status": null
+    },
+    {
+      "id": "msg_050c25c0159efe16016ad35dd29d8487d28fe2f222a71c90a5",
+      "content": [
+        {
+          "annotations": [],
+          "text": "{\"object\":\"მიკროსკოპი\",\"parts\":[{\"label\":\"ფუძეზე მდებარე შავი ჩამრთველი\",\"box\":[599,553,649,576]},{\"label\":\"ზედა მარცხენა დახრილი ოკულარი\",\"box\":[160,21,398,160]},{\"label\":\"ობიექტივების მბრუნავი რევოლვერი — სამი ობიექტივის შეერთების ადგილი\",\"box\":[336,215,529,265]},{\"label\":\"მარჯვენა ყველაზე მოკლე ობიექტივი — ყვითელი რგოლით\",\"box\":[476,259,545,323]},{\"label\":\"შუა ქვემოთ მიმართული გრძელი ობიექტივი — შავი ფართო რგოლით\",\"box\":[403,246,485,359]},{\"label\":\"შავი საგნობრივი მაგიდა\",\"box\":[220,338,674,448]},{\"label\":\"მაგიდაზე დადებული გამჭვირვალე პრეპარატის მინა\",\"box\":[338,352,517,405]},{\"label\":\"მაგიდის მარცხენა სამაგრი — მარცხენა ხრახნიდან მინისკენ მიმართული ლითონის ზოლი\",\"box\":[306,350,453,377]},{\"label\":\"მაგიდის მარჯვენა სამაგრი — მარჯვენა ხრახნიდან ქვემოთ დახრილი ლითონის ზოლი\",\"box\":[479,339,584,383]},{\"label\":\"მარჯვენა ქვედა დიდი ფოკუსირების ხრახნი — ფართო დაკბილული შავი სახელური\",\"box\":[695,449,870,548]},{\"label\":\"მარჯვენა ზედა პატარა ფოკუსირების ხრახნი — ვიწრო დაკბილული შავი სახელური\",\"box\":[720,390,831,455]},{\"label\":\"მაგიდის ქვემოთ, ფუძეზე მოთავსებული გამანათებელი — ნათელი მრგვალი ზედაპირით\",\"box\":[363,473,535,552]}]}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message",
+      "phase": "final_answer"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1792237019.0,
+  "conversation": null,
+  "max_output_tokens": 1200,
+  "max_tool_calls": null,
+  "moderation": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_options": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "low",
+    "generate_summary": null,
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "name": "variant_c_parts",
+      "schema_": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "box": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "minItems": 4,
+                  "maxItems": 4
+                }
+              },
+              "required": [
+                "label",
+                "box"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 24
+          }
+        },
+        "required": [
+          "object",
+          "parts"
+        ],
+        "additionalProperties": false
+      },
+      "type": "json_schema",
+      "description": null,
+      "strict": true
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 1000,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 517,
+    "output_tokens_details": {
+      "reasoning_tokens": 70
+    },
+    "total_tokens": 1517
+  },
+  "user": null,
+  "access_programs": null,
+  "billing": {
+    "payer": "developer"
+  },
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": false,
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  }
+}

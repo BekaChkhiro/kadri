@@ -1,0 +1,11 @@
+{
+  "count_allowance_usd": 0.051187500000000004,
+  "count_billing_confirmed": false,
+  "parts_usd_estimate": 0.0244375,
+  "steps_usd_estimate": 0.0894,
+  "usd_upper_estimate": 0.165025,
+  "rates": [
+    12.5,
+    50.0
+  ]
+}

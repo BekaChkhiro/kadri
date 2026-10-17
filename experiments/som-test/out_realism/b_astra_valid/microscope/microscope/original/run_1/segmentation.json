@@ -1,0 +1,231 @@
+{
+  "seconds": 7.6271381250007835,
+  "device": "mps",
+  "model": "sam2.1_b.pt",
+  "quality": [
+    {
+      "id": "power_switch",
+      "box_pixels": [
+        614,
+        849,
+        665,
+        882
+      ],
+      "mask_pixels": 1244,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.7391562685680333,
+      "mask_to_box_area": 0.7391562685680333,
+      "image_fraction": 0.0007909138997395834,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "illuminator",
+      "box_pixels": [
+        373,
+        729,
+        544,
+        848
+      ],
+      "mask_pixels": 17241,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.847265221878225,
+      "mask_to_box_area": 0.847265221878225,
+      "image_fraction": 0.010961532592773438,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "revolving_nosepiece",
+      "box_pixels": [
+        346,
+        330,
+        545,
+        409
+      ],
+      "mask_pixels": 5323,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.3385916926404173,
+      "mask_to_box_area": 0.3385916926404173,
+      "image_fraction": 0.003384272257486979,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "left_objective",
+      "box_pixels": [
+        293,
+        359,
+        422,
+        503
+      ],
+      "mask_pixels": 9737,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.5241709732988803,
+      "mask_to_box_area": 0.5241709732988803,
+      "image_fraction": 0.0061906178792317705,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "center_objective",
+      "box_pixels": [
+        414,
+        384,
+        495,
+        552
+      ],
+      "mask_pixels": 10398,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.7641093474426808,
+      "mask_to_box_area": 0.7641093474426808,
+      "image_fraction": 0.006610870361328125,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "right_objective",
+      "box_pixels": [
+        488,
+        400,
+        558,
+        495
+      ],
+      "mask_pixels": 4591,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.6903759398496241,
+      "mask_to_box_area": 0.6903759398496241,
+      "image_fraction": 0.002918879191080729,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "specimen_stage",
+      "box_pixels": [
+        227,
+        523,
+        688,
+        687
+      ],
+      "mask_pixels": 43913,
+      "mask_fraction_inside_box": 0.9996128709038326,
+      "box_occupancy": 0.5806042008359346,
+      "mask_to_box_area": 0.5808290566636686,
+      "image_fraction": 0.02791913350423177,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "glass_slide",
+      "box_pixels": [
+        354,
+        537,
+        527,
+        624
+      ],
+      "mask_pixels": 6912,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.4592385887980865,
+      "mask_to_box_area": 0.4592385887980865,
+      "image_fraction": 0.00439453125,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "stage_opening",
+      "box_pixels": [
+        390,
+        565,
+        500,
+        601
+      ],
+      "mask_pixels": 1816,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.4585858585858586,
+      "mask_to_box_area": 0.4585858585858586,
+      "image_fraction": 0.0011545817057291667,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "left_stage_clip",
+      "box_pixels": [
+        314,
+        540,
+        375,
+        576
+      ],
+      "mask_pixels": 1417,
+      "mask_fraction_inside_box": 0.9880028228652082,
+      "box_occupancy": 0.6375227686703097,
+      "mask_to_box_area": 0.645264116575592,
+      "image_fraction": 0.0009009043375651041,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "right_stage_clip",
+      "box_pixels": [
+        490,
+        520,
+        601,
+        603
+      ],
+      "mask_pixels": 3171,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.34418756105503095,
+      "mask_to_box_area": 0.34418756105503095,
+      "image_fraction": 0.0020160675048828125,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "eyepiece",
+      "box_pixels": [
+        166,
+        30,
+        297,
+        169
+      ],
+      "mask_pixels": 9427,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.517711022022077,
+      "mask_to_box_area": 0.517711022022077,
+      "image_fraction": 0.0059935251871744795,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "large_focus_knob",
+      "box_pixels": [
+        713,
+        686,
+        888,
+        844
+      ],
+      "mask_pixels": 19295,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.6978300180831827,
+      "mask_to_box_area": 0.6978300180831827,
+      "image_fraction": 0.012267430623372396,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "small_focus_knob",
+      "box_pixels": [
+        739,
+        602,
+        850,
+        698
+      ],
+      "mask_pixels": 7575,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.7108671171171171,
+      "mask_to_box_area": 0.7108671171171171,
+      "image_fraction": 0.0048160552978515625,
+      "empty": false,
+      "too_large": false
+    }
+  ]
+}

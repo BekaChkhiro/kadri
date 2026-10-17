@@ -1,0 +1,34 @@
+{
+  "first_box_full_response_seconds": {
+    "n": 0,
+    "p50": null,
+    "p90": null
+  },
+  "sam_seconds": {
+    "n": 0,
+    "p50": null,
+    "p90": null
+  },
+  "preflight_seconds": {
+    "n": 0,
+    "p50": null,
+    "p90": null
+  },
+  "real_wall_time_to_first_box_seconds": {
+    "n": 0,
+    "p50": null,
+    "p90": null
+  },
+  "time_to_first_outline_seconds": {
+    "n": 0,
+    "p50": null,
+    "p90": null
+  },
+  "time_to_first_step_seconds": {
+    "n": 0,
+    "p50": null,
+    "p90": null
+  },
+  "comparisons": [],
+  "realism_claim": "Synthetic stress is not real-photo validation"
+}

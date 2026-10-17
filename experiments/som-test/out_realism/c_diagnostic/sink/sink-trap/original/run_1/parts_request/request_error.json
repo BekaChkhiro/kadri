@@ -1,0 +1,8 @@
+{
+  "stage": "count",
+  "http_status": 400,
+  "code": "unsupported_value",
+  "type": "invalid_request_error",
+  "param": "reasoning.effort",
+  "message": "Unsupported value: 'minimal' is not supported with the 'gpt-6-astra' model. Supported values are: 'low', 'medium', 'high', 'xhigh', and 'max'."
+}

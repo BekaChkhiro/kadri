@@ -1,0 +1,152 @@
+{
+  "id": "resp_04c900652da125b9016ad35df703f487d29c3d787a13ea6533",
+  "created_at": 1792237047.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-6-astra",
+  "object": "response",
+  "output": [
+    {
+      "id": "rs_04c900652da125b9016ad35df8078087d2b19e8d2ba9f997de",
+      "summary": [],
+      "type": "reasoning",
+      "content": [],
+      "encrypted_content": "gAAAAABq013-dGgMYDHv93PB1VYKlcefYfoQ2KIPsTz682wnFjGRhNDLVjxACvz6UJ6nCX_zPPKTW6DLTYZkMsyxMhb_bWcxi-vscMJUsEZpO6l_d8OGqX-7rPqDuxSf4ynWoI4mkHBPeAL2ud5mHLDqqSeC5ISP3vQmz57zktIm-9DXwl6PzXn1eVJQQAVsGC7GzP2vlkpx5YGAawLQjGiMzIOkjwzrJa702l3r_aCk5xPmPPOYfiYKp1vj02yy2YVoe6SDn-JDzcJakYhWkHWhLteJ9kki-DB8-EfqJ5s0GfJ0l8zSxuzF1ofi9C8O66C5BFpw8a9GbuFYh5HHzx1LC4XCcBn3iTTiZKfs5gOnv44Tzv1_f3hHWehmRAUFVPy1VXX7DEaCaAN6Bh2zGyY-9cnWfEC4qyYxR7E-bP-kI7FCw2WT1ZWSd-HV9jv0cOZFEXQAvjcmgJqLV5Bp_4-cVynjHsgdnuSe7IkFDFa4XkxYWqQsF3A098I2qINjsWoh2FpyV89jCjkT2JamcSaPPK1KwWNGKvCzHRBCrWDfe36U9iG26Q0qE7rSj4pIL_edO8Ce93HdNBCTeU6XdE0gnUKP-eYvlsSXCdtS0_qVkm1gwg9mUzBoE4gQklEe4NqnzxkzT930qx3OEgeiWDKNJ8Pb4duyDGufErlMdOZG0YyJHpyhp12VTkLGlmrd31739xcBMnL0dieMGLG6z8LP55aYXpAIpaZtDTEMv0c83ZBiFNaRaWBPE-ETDRVGLAqH0IrokfnbzK-_o-4kOAyyOz15x3raNFvvhoKwZH-woYjXvvv8xtr0IKEcpO3a5ZLo4Vcsu7FBd5boTjEiHaX1uOt_Yg4Auypl8hrjvaYibhi80EZky5YPfeqFBbNPVbN0vm_e9Azu05Nz9yj6xbJPKAFrmcfos1bkPHWgzn9b6P1seAYAhi2vwPFlUN7fChyCP5kwfx2joTC2zias6FasSz_F43MqiAGyt37C0HUn75oSTt29hr7HfUu9ljk6z0_cWsqEJD272KsIrwYZcd_mun4oKi5vF-2rtLG41XCZ1EE05p_M8tvYboManHyJtv7rFkDljSVvX6JCE4_ly0w29LbvVbeRMfLAZHrzVOmxOycCYzneYldI1Y40KSixIKpmkrBN-AQxTDTyzXvhYD8INx1bm0OkJPHl_sUsYnSp5IMw8qS8nw2RPCOr4xtGyodsviKLBfe1R8GPxGik1OT57XrdS06IubBM5pCxZ6Y7ihoFcTtEHtg3HM6Jj-SjcHHCcY-X49PZatVaQOXu4Vm0NSo4UOb6dOaDlfEicr0ozarKQ2GWEkJ8Z9BIyiNBDUVSt9GJkgnpBJzloCWBuSlrI4-MW5kNA9FUnJjCkc8GqmU2rft8ju3Ngligzf2pHQQFWiQWtP5Lg5hIRYibCeXz3oAIsNcWS-O7gYMnzgxQI3NjEETxaxv_kkwr2hIalf_8ZYvMGLm4xiiXIKU0OHhjscGJ9ie3roCSfJ5FXLr0TCHDTPxmgDpguYkeyoP1vuFzL1skrG7PrPpwg9kraxE37dSEzow7LweBESHOnmzWFYMiyqyV_lA2y2ppJkK0hudNM7y-8S7qoi6baZNBwq1dUd4VcuG5ouu6KI39Vy9HFhT6buQs_pXn-X3h-LVfT4A03Sf4XO5iFKen9yT-WVJujRVCQDIZ1jA7F6u9zrT5kX_4GqSdFligKGwENfRsTtqWWWaGbNPadBqfmEg-q1N30pRWvhtMdkL8dL5WnyZ1qFBNngeYTY-4lZEvoUz99CXqqoRsBS31UhkDkO0GrWueIwrj3UcVCotSalmgjKuYt-fqNmrWrOIZTwBK0TygDdyuxUa7H84ZFFMnAmLT2YCDfR44Zpe-KrvPWU82oud1n-F08hRVbTKJBtJF7zLTcD-wJUdJNJHVcRGJkgZPGB8E1_eCeZd3Ob0WJ-puvZs93YEVpK2lb7VhJWDzKuVKuoHRJr9gRQqzx_lzFR4QJYsTfYmBYAhApdj52EtSnoBvysTB6KDGdwudna2MK5XH21odF24bG33Vr6XRingAmJYpreYrZxHrGJKpQ4GvCG3CrI_j9lqu2vc_ucWPKDTvTYdR70IOHIfKXZUvwfrgnpOieNFOUGxZsuq1Y9vbTNTDOe7qAPn8ZcXN_HVXm3AUKs9oMYGI4dx4dkZLyoaL6eU8ZBeVGBIaH5s5D2NPQiuQpPhq-TxJMmS5DLr-n1TywiluXr9qcR9r_AY78SxYxxrU_NXAZnmbviO0GakCqDg3fZ92CkRpdjrSuLwynzUIqMbOnGIinuP1kPBV1DyCdoZQrhQPVylEuKz9GIBszJMYwS3-I5x9sdn8lyc-MiafQNj3GPjtziuNCUwBXXOy89F_DamHhLaQXfEfi6a-MIkLIqWOJnCqbss=",
+      "status": null
+    },
+    {
+      "id": "msg_04c900652da125b9016ad35dfa603087d29d5eb9305e93b4d7",
+      "content": [
+        {
+          "annotations": [],
+          "text": "{\"object\":\"ტიტრაციის მოწყობილობა\",\"parts\":[{\"label\":\"ზედა ძაბრი — ვიწრო ღერო ბიურეტის ზედა ბოლოშია ჩასმული\",\"box\":[428,1,567,129]},{\"label\":\"ცენტრში ვერტიკალური მინის ბიურეტი\",\"box\":[470,83,521,457]},{\"label\":\"ბიურეტის ქვედა ონკანი — მარჯვნივ ლურჯი სახელურით\",\"box\":[440,367,562,418]},{\"label\":\"ქვედა ცენტრალური კონუსური კოლბა — ყელი ბიურეტის წვერის ქვეშაა\",\"box\":[405,445,600,607]},{\"label\":\"მარცხენა საწვეთურიანი ბოთლი — ლურჯი წვეტიანი თავსახურით\",\"box\":[280,474,368,599]},{\"label\":\"კოლბის ქვეშ მოთავსებული თეთრი ფილა\",\"box\":[315,584,650,630]}]}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message",
+      "phase": "final_answer"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1792237054.0,
+  "conversation": null,
+  "max_output_tokens": 1200,
+  "max_tool_calls": null,
+  "moderation": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_options": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "low",
+    "generate_summary": null,
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "name": "variant_c_parts",
+      "schema_": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "box": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "minItems": 4,
+                  "maxItems": 4
+                }
+              },
+              "required": [
+                "label",
+                "box"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 24
+          }
+        },
+        "required": [
+          "object",
+          "parts"
+        ],
+        "additionalProperties": false
+      },
+      "type": "json_schema",
+      "description": null,
+      "strict": true
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 959,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 318,
+    "output_tokens_details": {
+      "reasoning_tokens": 91
+    },
+    "total_tokens": 1277
+  },
+  "user": null,
+  "access_programs": null,
+  "billing": {
+    "payer": "developer"
+  },
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": false,
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  }
+}

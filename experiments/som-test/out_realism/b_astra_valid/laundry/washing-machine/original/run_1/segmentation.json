@@ -1,0 +1,199 @@
+{
+  "seconds": 6.048850707999009,
+  "device": "mps",
+  "model": "sam2.1_b.pt",
+  "quality": [
+    {
+      "id": "loading_door",
+      "box_pixels": [
+        200,
+        368,
+        875,
+        956
+      ],
+      "mask_pixels": 163101,
+      "mask_fraction_inside_box": 0.9999448194676918,
+      "box_occupancy": 0.4109145880574452,
+      "mask_to_box_area": 0.41093726379440665,
+      "image_fraction": 0.10369682312011719,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "door_handle",
+      "box_pixels": [
+        742,
+        572,
+        800,
+        790
+      ],
+      "mask_pixels": 7819,
+      "mask_fraction_inside_box": 0.9982094897045658,
+      "box_occupancy": 0.6172888326478962,
+      "mask_to_box_area": 0.6183960771907624,
+      "image_fraction": 0.0049711863199869795,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "visible_towels",
+      "box_pixels": [
+        351,
+        560,
+        731,
+        795
+      ],
+      "mask_pixels": 66874,
+      "mask_fraction_inside_box": 0.9997906510751563,
+      "box_occupancy": 0.7487122060470325,
+      "mask_to_box_area": 0.7488689809630459,
+      "image_fraction": 0.04251734415690104,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "detergent_drawer_front",
+      "box_pixels": [
+        50,
+        304,
+        424,
+        446
+      ],
+      "mask_pixels": 50804,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.95661670558108,
+      "mask_to_box_area": 0.95661670558108,
+      "image_fraction": 0.032300313313802086,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "drawer_left_compartment",
+      "box_pixels": [
+        102,
+        193,
+        269,
+        306
+      ],
+      "mask_pixels": 15978,
+      "mask_fraction_inside_box": 0.9953686318688196,
+      "box_occupancy": 0.8427746277356791,
+      "mask_to_box_area": 0.8466959885538657,
+      "image_fraction": 0.010158538818359375,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "drawer_middle_compartment",
+      "box_pixels": [
+        257,
+        207,
+        317,
+        306
+      ],
+      "mask_pixels": 5128,
+      "mask_fraction_inside_box": 0.9869344773790951,
+      "box_occupancy": 0.852020202020202,
+      "mask_to_box_area": 0.8632996632996633,
+      "image_fraction": 0.0032602945963541665,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "drawer_right_compartment",
+      "box_pixels": [
+        314,
+        207,
+        398,
+        306
+      ],
+      "mask_pixels": 7234,
+      "mask_fraction_inside_box": 0.9883881669892176,
+      "box_occupancy": 0.8597883597883598,
+      "mask_to_box_area": 0.8698893698893699,
+      "image_fraction": 0.004599253336588542,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "rotary_knob",
+      "box_pixels": [
+        532,
+        219,
+        628,
+        322
+      ],
+      "mask_pixels": 7340,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.7423139158576052,
+      "mask_to_box_area": 0.7423139158576052,
+      "image_fraction": 0.004666646321614583,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "small_button_left",
+      "box_pixels": [
+        701,
+        271,
+        732,
+        303
+      ],
+      "mask_pixels": 802,
+      "mask_fraction_inside_box": 0.9912718204488778,
+      "box_occupancy": 0.8014112903225806,
+      "mask_to_box_area": 0.8084677419354839,
+      "image_fraction": 0.0005098978678385416,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "small_button_middle",
+      "box_pixels": [
+        748,
+        271,
+        780,
+        303
+      ],
+      "mask_pixels": 793,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.7744140625,
+      "mask_to_box_area": 0.7744140625,
+      "image_fraction": 0.0005041758219401041,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "small_button_right",
+      "box_pixels": [
+        794,
+        271,
+        826,
+        303
+      ],
+      "mask_pixels": 793,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.7744140625,
+      "mask_to_box_area": 0.7744140625,
+      "image_fraction": 0.0005041758219401041,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "large_button_right",
+      "box_pixels": [
+        868,
+        242,
+        932,
+        309
+      ],
+      "mask_pixels": 3198,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.7458022388059702,
+      "mask_to_box_area": 0.7458022388059702,
+      "image_fraction": 0.002033233642578125,
+      "empty": false,
+      "too_large": false
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "is_replay": false,
+  "first_box_full_response_seconds": 76.51950195800055,
+  "first_box_model_only_seconds": 74.2537211660001,
+  "preflight_seconds": 2.2657807920004416,
+  "real_wall_time_to_first_box_seconds": 76.51950195800055,
+  "sam_seconds": 6.048850707999009,
+  "adapter_wall_seconds": 83.40610783400007,
+  "first_box_definition": "B full response; no streaming; includes preflight in real wall time; excludes SAM"
+}

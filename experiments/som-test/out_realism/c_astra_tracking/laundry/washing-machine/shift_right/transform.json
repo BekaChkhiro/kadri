@@ -1,0 +1,33 @@
+{
+  "protocol": 1,
+  "kind": "shift_right",
+  "seed": 20261017,
+  "source_to_frame": [
+    [
+      1.0,
+      0.0,
+      41.0
+    ],
+    [
+      0.0,
+      1.0,
+      23.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "size": [
+    1024,
+    1536
+  ],
+  "parameters": {},
+  "border": "constant black",
+  "mask_interpolation": "nearest",
+  "source_sha256": "13736d2a3a411df83f5dda8641fc466238b2d4fb9e98183ea860358008e5cf13",
+  "truth_sha256": "d190399564766e2f88f485cf3102dc56f9afca639bb7a85401147fe902c97e36",
+  "real_photo": false,
+  "proxy_available": true
+}

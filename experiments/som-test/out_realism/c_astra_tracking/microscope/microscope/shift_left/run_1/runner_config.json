@@ -1,0 +1,16 @@
+{
+  "variant": "c",
+  "model": "gpt-6-astra",
+  "device": "mps",
+  "rates": [
+    12.5,
+    50.0
+  ],
+  "ledger": "/Users/beqolozi/Library/Application Support/ThreadRig/engine/83EEB76C-FB77-4342-AD16-86C663084E7D/workspace/checkout/experiments/som-test/out_realism/budget.json",
+  "effort": "low",
+  "reasoning_effort": "low",
+  "max_side": 768,
+  "hash": "ad1309c4c3a8dfbbf5e8c84d363b0772c81b655e1030fbc3f18a3c088eb90287",
+  "truth_hash": "30d30b5b71c74aa205147e2445c21040b7454bfe8298d7c6f0e0dd537eb43f51",
+  "seed": 20261017
+}

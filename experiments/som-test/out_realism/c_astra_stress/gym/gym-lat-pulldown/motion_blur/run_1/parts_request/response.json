@@ -1,0 +1,144 @@
+{
+  "id": "resp_0f5a74e5a1e64cdd016ad35d7898f487d2996d8092b3f1817e",
+  "created_at": 1792236920.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-6-astra",
+  "object": "response",
+  "output": [
+    {
+      "id": "msg_0f5a74e5a1e64cdd016ad35d79c0c487d2bfe4328f3c416135",
+      "content": [
+        {
+          "annotations": [],
+          "text": "{\"object\":\"ზედა ბლოკის ჩამოსაწევი ტრენაჟორი\",\"parts\":[{\"label\":\"ზედა ჩამოსაწევი სახელური, მარცხენა და მარჯვენა მოხრილი ბოლოებით\",\"box\":[90,64,905,125]},{\"label\":\"მარცხენა მუხლის დამჭერი შავი ბალიში\",\"box\":[310,384,498,451]},{\"label\":\"მარჯვენა მუხლის დამჭერი შავი ბალიში\",\"box\":[502,385,689,448]},{\"label\":\"ქვედა შავი დასაჯდომი ბალიში\",\"box\":[363,466,633,537]},{\"label\":\"სავარძლის ქვეშ მდებარე სიმაღლის მარეგულირებელი ყვითელი ღილაკი\",\"box\":[476,550,520,580]},{\"label\":\"ცენტრალური წონის ფილების დასტა, ბალიშების ზემოთ\",\"box\":[428,284,571,396]},{\"label\":\"წონის ასარჩევი ყვითელი ქინძისთავი, ფილების დასტის მარჯვენა მხარეს\",\"box\":[530,323,567,347]}]}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message",
+      "phase": "final_answer"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1792236927.0,
+  "conversation": null,
+  "max_output_tokens": 1200,
+  "max_tool_calls": null,
+  "moderation": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_options": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "low",
+    "generate_summary": null,
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "name": "variant_c_parts",
+      "schema_": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "box": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "minItems": 4,
+                  "maxItems": 4
+                }
+              },
+              "required": [
+                "label",
+                "box"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 24
+          }
+        },
+        "required": [
+          "object",
+          "parts"
+        ],
+        "additionalProperties": false
+      },
+      "type": "json_schema",
+      "description": null,
+      "strict": true
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 967,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 265,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 1232
+  },
+  "user": null,
+  "access_programs": null,
+  "billing": {
+    "payer": "developer"
+  },
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": false,
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  }
+}

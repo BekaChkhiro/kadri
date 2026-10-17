@@ -1,0 +1,144 @@
+{
+  "id": "resp_00572ea69b207600016ad35ce6553087d2bcf273cafa5df369",
+  "created_at": 1792236774.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-6-astra",
+  "object": "response",
+  "output": [
+    {
+      "id": "msg_00572ea69b207600016ad35ce7a36087d2bea28b025b6ba0b2",
+      "content": [
+        {
+          "annotations": [],
+          "text": "{\"object\":\"ზედა ბლოკის ჩამოსაწევი ტრენაჟორი\",\"parts\":[{\"label\":\"სავარძლის ქვეშ მდებარე სიმაღლის რეგულირების ყვითელი ღილაკი\",\"box\":[458,573,491,591]},{\"label\":\"წონის ასარჩევი ყვითელი ქინძისთავი, ფილების მარჯვენა მხარეს\",\"box\":[513,343,539,356]},{\"label\":\"წონის ფილების ვერტიკალური დასტა სავარძლის უკან\",\"box\":[405,303,553,477]},{\"label\":\"ზედა სახელურის მარცხენა მოღუნული მოსაჭიდი ბოლო\",\"box\":[60,86,240,133]},{\"label\":\"ზედა სახელურის მარჯვენა მოღუნული მოსაჭიდი ბოლო\",\"box\":[709,86,884,133]},{\"label\":\"მარცხენა მუხლის დასაფიქსირებელი შავი ბალიში\",\"box\":[285,402,455,459]},{\"label\":\"მარჯვენა მუხლის დასაფიქსირებელი შავი ბალიში\",\"box\":[496,402,664,459]},{\"label\":\"ქვედა შავი სავარძელი\",\"box\":[342,485,606,546]}]}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message",
+      "phase": "final_answer"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1792236781.0,
+  "conversation": null,
+  "max_output_tokens": 1200,
+  "max_tool_calls": null,
+  "moderation": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_options": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "low",
+    "generate_summary": null,
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "name": "variant_c_parts",
+      "schema_": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "box": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "minItems": 4,
+                  "maxItems": 4
+                }
+              },
+              "required": [
+                "label",
+                "box"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 24
+          }
+        },
+        "required": [
+          "object",
+          "parts"
+        ],
+        "additionalProperties": false
+      },
+      "type": "json_schema",
+      "description": null,
+      "strict": true
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 967,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 286,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 1253
+  },
+  "user": null,
+  "access_programs": null,
+  "billing": {
+    "payer": "developer"
+  },
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": false,
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  }
+}

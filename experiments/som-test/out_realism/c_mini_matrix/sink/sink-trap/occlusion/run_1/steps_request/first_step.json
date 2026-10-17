@@ -1,0 +1,35 @@
+{
+  "title": "დაკეტე წყალი",
+  "text": "მოატრიალე ონკანი საათის ისრის მიმართულებით ბოლომდე. შემდეგ მეორეც დაკეტე.",
+  "focus": [
+    "p3",
+    "p4"
+  ],
+  "avoid": [],
+  "markers": [
+    {
+      "part": "p3",
+      "label": "დაკეტე",
+      "tone": "neutral"
+    },
+    {
+      "part": "p4",
+      "label": "დაკეტე",
+      "tone": "neutral"
+    }
+  ],
+  "arrows": [
+    {
+      "part": "p3",
+      "type": "rotate",
+      "dir": "cw"
+    },
+    {
+      "part": "p4",
+      "type": "rotate",
+      "dir": "cw"
+    }
+  ],
+  "tools": [],
+  "warn": null
+}

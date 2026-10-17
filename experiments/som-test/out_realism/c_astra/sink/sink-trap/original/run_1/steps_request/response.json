@@ -1,0 +1,273 @@
+{
+  "id": "resp_09f4e4c0b891b66a016ad359bae8b887d2a2d49e08ef8da1c2",
+  "created_at": 1792235962.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-6-astra",
+  "object": "response",
+  "output": [
+    {
+      "id": "rs_09f4e4c0b891b66a016ad359bc874487d2931268ec53a45f29",
+      "summary": [],
+      "type": "reasoning",
+      "content": [],
+      "encrypted_content": "gAAAAABq01nRHgdsQuJypOhP51n1Gs0YzTBOJ0Pmg9gn37RSfOcjhr2QLseyxzwCs5K3L4fDmejrAW7y8hCUyPYqKlxJdxAUjLCKHAl6CjV5AX1CUAQqg7Fof1R3YGFOVPCMK2CyKvTouzGle7zky2p7OsH8c1LJCYpoKr2YuWEK02Lc4Bh8YG2jKvs8Ie_HMmioM_8dk9FpVgSh1KKpUJEgKpFanjHbZzLf0lIBVjCDUjAgjTfR9PXPEIffRPmg_5EOgSFOQJVMQaw6DTCvu_KpzSdbg5tksOdAFDf2RN0_VapcdqYun5rigwX0AcLwos_71qG7mB6SbO_HBShg3k4046fwT6iwtCP0jBfxaeTudIWFjmEA1Z2w66XNmafUkE3ImDFJAAgqvZ65Jii9-2xWt0pkRDxiRItHjhKBNsT6aLPcT54ZzVoMcKHLp9lMGeVW7aHqwmB81ya90pjXcxOzBSztnl74oQhCHw7WEco-kLg8G9YhNA2BoV07KD4Id-LXEF4idqFBqnbd8OxOvF0vVX1pqdImkkdtjraR1xa_5gQ8FOZ4H8mfwzMGHPHUVKFMH-0dVsBsx4xky527SU8BgQ378FW5Q-UhuMJFFUwcW4htJnYeYxG7dxbizLroP1POK5wWYjHpBwb1kIBgMoFg8GzA8bNnJ--loWe6YziNGYJ78D07_7RdvuDlDcho-5_yusOegLyjKg0DjO3qn6_JzRTWam7vxhgIdUzP6ev3Zxe-tAD1jK5XUQnFHLa4ERaBNpPx3jJHAAimbCUNCPSgdU6tT-ovpmGSR-gKnz_cp2GZ7UWeyhlmQFLz3kheK4UZm101Ov0bdEAIj1jy5JYsg3FsdBIWUJmhIJ8UPK2Z5XkQKQFg_HUv9ZKJQ5c-NG6p06dJgHxwcX6ViMU-HzbSvvGJx9A1oZWuyI-yNoqHv1vAG8rziJHxKctnLcoyGuevtd71xAFg4is07QHkS766eq5hFcBkYwMoutDaqQ71xS9h38llmBd-uXMNitj7_QvD-X152bLQBlaqTwz-goTmzxbrmYPt44OAOsWdqP12lNJPjvnRc8xX4yt749F9Em8xl_eorE9fYW4l3Tub03FxrewVuPfs_eoyIHPWNezzeGpHBXZRiJFBxr2zsDGsPTK0BtXtMku6reOM55_wZaIfy1C5z7ku-oKNC_JWLSUAAGzJ8EbuQpf--6uclQ0vv7QSbNuQWpbrI5G5t1kD3YQ8Dy0LBWJhyp2XwO5N6gL7kfNNKWXP_seGMh09lVSe1-7IEa4NyCqyR2JosdKeg_OjowPgWuE8IEnc-B4PUYtQ7t5sAB7C7Uh_L5tkYKNWHi_y-_ueSBNhuXApVNYTP9r8bfh4slnWvxTtIW8csMqbFTJnwct9NDkV0YR76lLhp8yp6G7KpHtsD4GzH9xfl1g73YBn8PytQ5sC00FvKlJaqLO2_A8mx9EiIAoy3gCgOd6RZgMOXy_6K7_DbcUEo-t_0N3cHQISpxuGVeezfnJd7j2a5jzYdd0ET9GbOrJp5wXgr43vzn4_kcT-sd9oVIyrvfKTEMJ5-VIg49iGh_xHcA86cyULobQXWb5kZKiu95U0tRcPfRhbZvwWzfA4XhyjmGK6QGYJE_f-yIMRXZDbbPz8K-rZLEmL-P1dt9zV4mqAMGRIk-WjJzXHwyQQxVVwEREO-uqJilVknigBgNWqJ4ekbBKzoh8WN7uY83AyVe4sd2FdX9Ei8yaHKk9mB6oLOUZoMHz9gM7-GmNdQbydzLphapGFbKl0YR3ZZmYrYAVrcyyw7_cgd_iugsPd6H0E7LBigzOh_j5sEZ34GJzCOY6DhGALy8A=",
+      "status": null
+    },
+    {
+      "id": "msg_09f4e4c0b891b66a016ad359bdd0f087d2beb3cdbf8af84190",
+      "content": [
+        {
+          "annotations": [],
+          "text": "{\n  \"steps\": [\n    {\n      \"title\": \"დაკეტე წყალი\",\n      \"text\": \"მოატრიალე ონკანი საათის ისრის მიმართულებით ბოლომდე. შემდეგ მეორეც დაკეტე.\",\n      \"focus\": [\"p2\", \"p3\"],\n      \"avoid\": [],\n      \"markers\": [\n        {\"part\": \"p2\", \"label\": \"პირველი ონკანი\", \"tone\": \"brand\"},\n        {\"part\": \"p3\", \"label\": \"მეორე ონკანი\", \"tone\": \"brand\"}\n      ],\n      \"arrows\": [\n        {\"part\": \"p2\", \"type\": \"rotate\", \"dir\": \"cw\"},\n        {\"part\": \"p3\", \"type\": \"rotate\", \"dir\": \"cw\"}\n      ],\n      \"tools\": [],\n      \"warn\": \"დაკეტე ნაზად; თუ ონკანი გაჭედილია, ძალა არ დაატანო.\"\n    },\n    {\n      \"title\": \"ჩადგი ვედრო სიფონის ქვეშ\",\n      \"text\": \"სიფონში წყალი დგას. გახსნისას ჩამოიღვრება, ამიტომ ვედრო ან ღრმა თასი პირდაპირ მის ქვეშ დადგი.\",\n      \"focus\": [\"p6\"],\n      \"avoid\": [],\n      \"markers\": [\n        {\"part\": \"p6\", \"label\": \"ვედროს დასადგმელი ადგილი\", \"tone\": \"brand\"}\n      ],\n      \"arrows\": [],\n      \"tools\": [\"ვედრო ან ღრმა თასი\"],\n      \"warn\": null\n    },\n    {\n      \"title\": \"მოუშვი ქანჩი\",\n      \"text\": \"ეს ქანჩი ჟონავს. ხელით მოუშვი საათის ისრის საწინააღმდეგოდ. პლასტმასისაა, გასაღები არ დაგჭირდება.\",\n      \"focus\": [\"p1\"],\n      \"avoid\": [\"p2\", \"p3\"],\n      \"markers\": [\n        {\"part\": \"p1\", \"label\": \"სავარაუდო მოსაშვები ქანჩი\", \"tone\": \"brand\"}\n      ],\n      \"arrows\": [\n        {\"part\": \"p1\", \"type\": \"rotate\", \"dir\": \"ccw\"}\n      ],\n      \"tools\": [],\n      \"warn\": \"სამიზნედ დაშვებულია ზედა ქანჩი p1; მარჯვენა ქანჩიც p4 შესაძლო კანდიდატია. მოცემული აღწერით გაჟონვის ადგილი დადასტურებული არ არის — გახსნამდე გადაამოწმე. მოშვებისას სიფონი ხელით დაიჭირე.\"\n    },\n    {\n      \"title\": \"შეამოწმე შუასადები\",\n      \"text\": \"მოხსენი სიფონი და ნახე ქანჩის შიგნით რეზინის რგოლი. თუ დაბზარულია ან გვერდზეა გადაწეული, შეცვალე. ზომა: 40 მმ.\",\n      \"focus\": [\"p5\", \"p1\"],\n      \"avoid\": [\"p2\", \"p3\"],\n      \"markers\": [\n        {\"part\": \"p5\", \"label\": \"მოსახსნელი სიფონი\", \"tone\": \"brand\"},\n        {\"part\": \"p1\", \"label\": \"შუასადების სავარაუდო მდებარეობა\", \"tone\": \"neutral\"}\n      ],\n      \"arrows\": [],\n      \"tools\": [\"შესაბამისი ზომის ახალი შუასადები\"],\n      \"warn\": \"რეზინის რგოლი შიგნითაა და ხილულ ნაწილებში არ არის მონიშნული; p1-ის არჩევა წინა ნაბიჯის დაშვებას ეყრდნობა. სიფონის მოსახსნელად შესაძლოა p4-ის მოშვებაც გახდეს საჭირო — მილს ძალით ნუ მოქაჩავ. 40 მმ ინსტრუქციაშია მითითებული და ფოტოდან დადასტურებული არ არის; ზომა შეძენამდე გადაამოწმე.\"\n    },\n    {\n      \"title\": \"მოუჭირე და შეამოწმე\",\n      \"text\": \"ხელით მოუჭირე ბოლომდე, შემდეგ კიდევ მეოთხედი ბრუნი. გახსენი წყალი და ერთი წუთი დააკვირდი.\",\n      \"focus\": [\"p1\", \"p2\", \"p3\"],\n      \"avoid\": [],\n      \"markers\": [\n        {\"part\": \"p1\", \"label\": \"მოჭერა და გაჟონვის შემოწმება\", \"tone\": \"brand\"},\n        {\"part\": \"p2\", \"label\": \"წყლის გახსნა\", \"tone\": \"brand\"},\n        {\"part\": \"p3\", \"label\": \"წყლის გახსნა\", \"tone\": \"brand\"}\n      ],\n      \"arrows\": [\n        {\"part\": \"p1\", \"type\": \"rotate\", \"dir\": \"cw\"},\n        {\"part\": \"p2\", \"type\": \"rotate\", \"dir\": \"ccw\"},\n        {\"part\": \"p3\", \"type\": \"rotate\", \"dir\": \"ccw\"}\n      ],\n      \"tools\": [],\n      \"warn\": \"p1 კვლავ სავარაუდო სამიზნეა; თუ p4-იც მოხსენი, ისიც საიმედოდ დააბრუნე. დამატებითი მეოთხედი ბრუნი უნივერსალური მოთხოვნა არ არის — პლასტმასი არ გადაჭიმო და დაიცავი მწარმოებლის მითითება. სიფონის შესამოწმებლად ნიჟარის ონკანიც გაუშვი; ის ნაწილების სიაში არ ჩანს.\"\n    }\n  ],\n  \"unknown_parts\": [\n    \"ქანჩის შიგნით არსებული რეზინის შუასადები — გარედან უხილავია და ID არ აქვს.\",\n    \"ნიჟარის ონკანი, საიდანაც წყალი უნდა გაუშვა სიფონის შესამოწმებლად — ნაწილების სიაში არ არის.\"\n  ]\n}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message",
+      "phase": "final_answer"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1792235985.0,
+  "conversation": null,
+  "max_output_tokens": 2200,
+  "max_tool_calls": null,
+  "moderation": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_options": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "low",
+    "generate_summary": null,
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "name": "variant_c_steps",
+      "schema_": {
+        "type": "object",
+        "properties": {
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "focus": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "p1",
+                      "p2",
+                      "p3",
+                      "p4",
+                      "p5",
+                      "p6"
+                    ]
+                  },
+                  "description": "მოქმედების სამიზნე ხილული ნაწილების ID-ები (p1..pN). როდესაც მოქმედების სამიზნის რამდენიმე plausible კანდიდატია, აირჩიე ყველაზე სავარაუდო ID მდებარეობის/ინსტრუქციის მიხედვით და warn-ში ჩაწერე გაურკვევლობა. empty focus დასაშვებია მხოლოდ მაშინ, როცა სამიზნე ნაწილი სიაში/ფოტოზე საერთოდ არ ჩანს (უხილავია). არ გამოიგონო ID."
+                },
+                "avoid": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "p1",
+                      "p2",
+                      "p3",
+                      "p4",
+                      "p5",
+                      "p6"
+                    ]
+                  }
+                },
+                "markers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "part": {
+                        "type": "string",
+                        "enum": [
+                          "p1",
+                          "p2",
+                          "p3",
+                          "p4",
+                          "p5",
+                          "p6"
+                        ]
+                      },
+                      "label": {
+                        "type": "string"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": [
+                          "brand",
+                          "danger",
+                          "neutral"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "part",
+                      "label",
+                      "tone"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "arrows": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "part": {
+                        "type": "string",
+                        "enum": [
+                          "p1",
+                          "p2",
+                          "p3",
+                          "p4",
+                          "p5",
+                          "p6"
+                        ]
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "rotate",
+                          "move"
+                        ]
+                      },
+                      "dir": {
+                        "type": "string",
+                        "enum": [
+                          "cw",
+                          "ccw",
+                          "up",
+                          "down",
+                          "left",
+                          "right",
+                          "toward",
+                          "away"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "part",
+                      "type",
+                      "dir"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "tools": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "warn": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "გაფრთხილება, უსაფრთხოების რჩევა ან გაურკვევლობის (uncertainty) ახსნა, მათ შორის თუ სამიზნე უხილავია ან რამდენიმე კანდიდატს შორის შეირჩა ყველაზე სავარაუდო."
+                }
+              },
+              "required": [
+                "title",
+                "text",
+                "focus",
+                "avoid",
+                "markers",
+                "arrows",
+                "tools",
+                "warn"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 5,
+            "maxItems": 5
+          },
+          "unknown_parts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "steps",
+          "unknown_parts"
+        ],
+        "additionalProperties": false
+      },
+      "type": "json_schema",
+      "description": null,
+      "strict": true
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 2544,
+    "input_tokens_details": {
+      "cache_write_tokens": 2541,
+      "cached_tokens": 0
+    },
+    "output_tokens": 1326,
+    "output_tokens_details": {
+      "reasoning_tokens": 35
+    },
+    "total_tokens": 3870
+  },
+  "user": null,
+  "access_programs": null,
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": false,
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  }
+}

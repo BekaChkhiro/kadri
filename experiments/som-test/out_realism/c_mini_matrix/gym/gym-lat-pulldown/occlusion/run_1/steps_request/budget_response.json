@@ -1,0 +1,265 @@
+{
+  "id": "resp_028bd43276e1be34016ad35cb30c7487d2965802d46ddef97d",
+  "created_at": 1792236723.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-5.4-mini-2026-03-17",
+  "object": "response",
+  "output": [
+    {
+      "id": "rs_028bd43276e1be34016ad35cb37d2c87d2b575f5a85d49debb",
+      "summary": [],
+      "type": "reasoning",
+      "content": [],
+      "encrypted_content": "gAAAAABq01y2IfxbAyHvolqL47htEciyw_Vbu2tGS4mciViv9pIA-9SNyyGjvn-ZZ8prrU0mLvI50IFQQ_kYJuX-17A6PZeVdkMMiJ9TVCu-jzTkNpRo6Bu-epVZ6IwA3ruyjRNhxzAzpBwGL-x_wKxYM1WdbgH6S0VyAVVxZpPX2x8pGbjdc02lnA7sUPmV8ynXUzplUGiXBNDxwqlVBzb4hBwcZy1h-H6fQpLYG5UxswfD1SSDUpkun7TrW5tZJSxfr3a14ODwyVLVIx3DuLsU_mT9mGcC0IpWEjz0tGorB4L9IUUoGB4oeMbnHIEapLruoa22AWhQiQ6oBN85fj-nImVKaRdrIvI-ZZpZUvbMwcpHbquuE8M0HQcYHg5qbx8MdKStdk6u3lU0_kzZKTO5Hu16-x-OZr4SfLFJQz115d-YGch3dsnlqvjbjJ4fVP26hEEZgUZvweLWh4KwJHYYL4-wUEKWSCCvpyK0tYpRPih01j6ihsu1w4VE0Ny_fQ3iMFsdFpGVe8dZgcxxgj5aw2FGH5lSF77MlBw33RVRBhlSJo7SrFkkAxNUaiDtBaDMW_JgGlfXifAUOpDBflLasNaHtO0IR2wfrr125rKAOHP5PsSQqPUDcy-YAzrQB6O8OuCG2GXbb9fHIWz4cNsqe8bYbepM5vXRtBgup1nPuKXVBqy7OcrjeMmCd5b9Q4bw-CB8ZPewZOzM4rEmzine5ELcRou8rVsOeS7TEMDL7KEj7M-Vgr1wbch0DFDtnHUlGB5xLgVGQrahW2k4eOtqYZJLqFFlztRDqHCAuiB6e734MvRLg7ZkmO54nCaavJK81lGZFEYdNHbCahAwMKiduea4eg92Kf4CPLsYI-qLXZd2IY6i6Qvusj6FxZzLy9cTgYVEYqihgPOwWBgfMpxZkbuoa4-5JAVQzSLQ7GDmFmIKdXmA9YqHppYwjOeD1sFYc08Nh6lzZ5kif_cHmdAqBmZq12kzsIa9ZcdS_Wo7yJLWrrUcHrXZzqGunbgkLvhSG3oCxusIuNGmo0vPRN0GukbWk1p66vmsREKQ8VrmRapl7gBK7Fpd0Ipyj1WWgMPeKJ4DBRLF4ZwIjY1E5NuyNaSPDeJe43VH_k-jqhmjA6mxtbdERJy1gaX6iiT-qKCmmvhWjpF9KnUlvbaQNEkWIta_pjeaPxq-XR1nfCpzi2JPrNOq759-tMOTJYKqQW6GHwtWzvLKOmrM6yYAbaaHUbNgqdwJ1YV4v0VflXLopaVODKa05nSrEFXxEZtDtLTE5AonDOYle9k4xpFfg-DWqNvq4ILX7fJiLMav6uNgknlqRSaqy_h984DUC7Sf76MAiQkwEej-o1qtsuX52PJb976IS5l9QKabPV9ogsw9nd-p5gvdFcYLrVnTY7rBSUQxftdaM_qLfGHw3xBYXFl42hByCeuh5lFCm371dQCk8GdrgXWS71cas4DBM3sEGHgiJ9oZ5KlGZSTJLv9d9mPRVrj_hamxj9l3G8YvswkzJV_DYI9nlisbEDyuSdcy6pXL8Yt026RgiraZjaqS56j51puJotp3EGXbAr7OD87noSGss7Nd8htdwqhiajV9-W6MhsTVDRMuRgbbLBB_G0Um9Qo1oktj-omhVrYVtaIS9w8vGYvfF31DbSgN9JAspNhlecmdT54i5dppY3MPyPrFddR9D7Cp_JNTl-9SUUI0jVZyfVm4lWfstjx6ABIAGNkEo6U-jzBtCb7woHYErtiYk4pqjlXnd_m5ElHb-jNfPMmUi_IJRurF7HI0IXf-dLHMNBuKUMuoXH6Pf-KKsBI5go-D_hJ8_axnG9C-ac2xcWsRuiKjtqED6u2bDObjWgZKSJ4yRHldSRrrZsYbiWJeH9U3ABbrhcV-AJ1uzUX0rbRphoTEAYblagllq6BUyyOVWCeTCBHLHJsmrBeUW55mO6I5nOcg4nVrOwhQgUlgdYR-V6gZHU1VAPwVKqWmtBHaneDbrRwabMJ1hHiifiSckH9QCVaQvqUMZawV78V1GWzt_9cXYXcqs5HVFemCQwDE-WXOmJWJcznsjxprwx42FU13OwZF009lN4MIuZPtd9cgf_Pr8ovKN1tp___R7exi7X4qqGjYbIwf7F5gMhHPYvU_Wek_L53WoaM-pecnoZPULx7oDFf-q79noLFlbIkbCZ6UrEkZLRUyW71N1nRYgZMLqO_OHmVZrSElEIDBzB0VQyUDGTfIUMOi5zkuslwafL6fuhPQQ-KhuIxPhGLid3ySOu5gsMnrZFOLLqnCg0IvUpZGCLCriX1Spo_ufIA4KtTD7HC5d3mqTmUAg4_yQ0VkxrfOuYe9uwhpvFWBAKAjQ-AZF8xTV1szZT0Hy-L0EFWfa9H8YjUxeiF6_JpY04tljG-kwkqsLVLz-QLVMpi2qk6CuVo5TuvxzxYl_rRSvTCXK_EpWf-cwx7of3svTsWN_-mde_sYpHUA6EHo3U_PUjSkMufdTdDFSXySL0Fn_TY4zspvO1aRLCkkLRivgLf_P9lM1sxQ9_9JhunLjaRutGIEKzPeryMpJsGAHDsl4Xg3sJ1pQU67Gj7WLZJ8QtTKNcFUofV2-PgkrWPbj2tkyT-5V_a_d7lfCEAdQftkSFeH_o9NLhY6BWF3MczfeKlmpgolv9GF4oBUq9Dg9BY_TfLpvJtcoiyegrMNqHC33Cn7zcBMxVGmSr69_C0ZRawZQ8Mt3bo1uI8PUsqVZnAIRbmzKtVyhFgI29xBH4azpt9Gpy8P7EDApo26XfTo3VKWdQoRkoN4wFDeoTeu4IYLQE_HFx24BT-_LuBmGtJYExjYMfqYq75xPSU3QCEWu_Cm4jGRywMC7imBEoGTbEa4BprvGofiQ9IsiTMQeD9e9uZgdL-Zh4BsfkzwZ7BZ7hDd1-SHNmHwz_e0MfhtBNlNxHO52o-XKIWxsrW2-e1lgnAPYFvpuisc2TlW_gUp99QZbknRYxaEv4JV7exj8D4PuxdNwzBCyhOQJJso_ou-2bPozkOp2NMyUS0iQfYeXDrcoWd9QS5ty-A66yYVGZ03BnjWQYhHnOZxvL4OB0z1llbtJ1R00jg7_fJz3zK4q3Sr6OOLQhLVGZzPg-8bX1r9onJOXlubSUiv7bvWJFQiYyKC9-EQbFPQrlR6LBw8xp59dHMmSlKAdfOm6AozCvuyEGsxv397YrlADJkA_5wgDRIm-BNEBHjZ7AfbN4RlO-Vk0GfW4Elqr7bcRocvdMKJxo1Yixou2k8TYHfZC2FLJD85NWUaldh7kHUD64ZFJ5fltSL5qjVmcBQty_0_P6hPdlk0J6nGwuUhP1M7g7ojfFR3T4BcnEzTSOBycmgUTYfF2KPpOJFBm7BUNhhIaNOlOSfxgJT2Zv-KDv4QbxYaL1bTeQslSBL4B60h2JE_Okvc5CwneCBjYK737AWA6yR85DHl7NmAWJwqrBSUVjntT6B_BiIQ2Zs4fMgD2JQKSGZjRFF2Z3qhBMOmzuQxKnsTUbum3Dcu0FB_miNEqrx3up7-cZaOiKw_kymRkIB9yxxuJQ9253Q4t1ILrsUDgIWMrU6fJhzCkTvNBzUQtYNzSKe_ZRMuSCAiHa0ajzdzB5iNVzt2TFBjtZrmfq1YBuZeNU51jDf-GQRuLvgSwLT9w13vnaC43VRTIEGSgODlfYmoNY_sE_x809uyWuuZwmrgn0VlOxKjLr8bIFql_mICAyOxufhE9fgvsw0i4YcNXEDRMwVR86vsezMsKWKsZ9mKa4yp_2f_DNIWmRbvt_Zdq6BbVId62lxshqKqI73UM1DtCkiIZH4Us3-sIpl789gWJgCea38geX6Wd0HRqXe8JxGIGk_EkuZaamaIpRfZPDQQ_Mt_aiHCVhhHT3UQythlZL__5hL-xzfehKe5_ng6mKkn_dgO5PS1h-mok5BABiiR3lx69lzDpmioMYhGYuxrjPJ09MlrFv4eyk-f7LLVj6q1-V1d5VC12eq0mBEySqYHGiD6Byqzqde6e-j2TZkj3FmVNprqjEfyCM4W_MMzhiz4XwZhGi98vzZaR_kJnL7lCRV3syCNXcqtiRY6z4UjzZYzxa1iFmLc0eVLpGdgRpQikc_CszsFovywDVhLqg-hzN4mY-N9c74TbGsA8EusdfkmEypxIYdngawF6RpJg8r6HWysVu4P_T0cfx4JSRoZaOLWdJqlOujTHec9wpIzDE3Aa_27dlt8kSfY0pSqZlpBPuIi1cR1wuR-FaV1Mn7Y7YseINPz_EhvgIhXIzws4AkhJRoWqxos0l4rRi4B1b1UoG6BHT8jKtL5PfRz0EQrdl7b8djmFCrhdM3i-Y1dIv7caza4h_s2t_eda8y850R2CSxDFMXyjDavyhAysITI8ps5yEQoQ5FuNaBzn5TRlr5TvCucihOfOJM3PMrDs1rCQNb1x3Me0gXDl109CMbvonHImhKn6sQEIvqgoROtPi-0Za4dauUcYlGRHPt8gByZJqX5_e0tNokfENK_6-0wdlecyc7Xr4ADRbW74aUqbjgXhucEo6rx3L8pPkfwJAjdZAczB06ZIzCqkNbLl-2LPOYdKcqbOu-beBnbfOIaqsTZeSN8jXHANEV_ltLP-EphePjk7h2YBMZN9NLsethM4IhkYX1maHyAtT1FEbIE_5vM9A2koaC756fWcWxl_N8JiSUJD-zoN6C5ENDbdxEU5rPDbQ7FQUQRdf6liEsvWg99gM7P4KPV9dIRzUcbX78Jct-sUEht2gk5xpypHjOGk-tcxOJCoZK7pAnfXp6ZMtz6p6Pw1-xhUY2PpLsC6qEGPX2ShSc9q9yxB10clKdIz64csA1ijq_bG0cBqiEvw3-CxJRVUz86wxCb9BOBZqF4HNMXWApEL2KnpJN6no9_0dl2H1sCAyom_YRsv8oWs1zGIa8YsyLPWg8UdUAouuDHLMZ1_MPjB3FmfK8BASRuQCDuS2Ze34gdayXz9wNP-oYCy_ASBaRwxI89JOp05oVRtcsAdrJ2kjLI_Fay1cvhqrSQbuoXsdDkrOGmlmjnGOsdK4X6PJlV7WHSjgfwbVidMU-__h86Mvq_FW756d5c4Vh5oUHpIjqyee-qINbjaOXLDFK2KY3StLrYdpNHpkjCgqEwtnV8TKJ5RGMNNNehdqMEfynYDYMi3NhXIfSIT-U3eUqUDkSFlruUF_w-HqsOh6hPVrvrdbYkO0iJcIw6EPu8iBWEh_OqUa9or9Tyrwbf5q6BPKdwuEcvLFmutAtwAYNIPojz5fRxAsfA361b7WDIs0rES9r4x4PAeyruSpsQA3ggb9GayIBADZ99WgNz1tdViv87E5VUjxzYLOO3Q9qBl9T6w1bZRRymdSwde1hfrbqwm16ZGv_zLyPLVCTl8swHJb5R9DtWR7wIJuwzRNo7QjYG8Cx2B_305LEaNDR83G32ptK6DhOUfJ1zOUwM1M8ixH4tijvpGM3ZXDDWuT987Ba4HTY90LbiSCzrHZ6YTaOBLDoLRK47ebDPw2I2wfP5Ynmz_knMSnJflbIt1W9hTk_viOljfhhq3w-TwajMq61pvqy9BI-k-n-ZUTRJn9GvMSysyNeE6nWp-hULP4_GmA5xkDZUEv3rnziZ_zUygL4zc-aE-F2T08nC3S4MUiNC-ympBurU-mHQE6TfbG3WYR1ekN7aaXSrMF6ScRgk7uylmZu4XHnJlapF0uPftryRE5yeGzk8_GJjlQDL6OBuuMrXk2IzSo9e_UpXg4CgCyWPNvQ9qHPhphrW2AAehJpUTAMT83hyVd3swBcwRH_HN_0TzP2PDha3lphjdja1iPU=",
+      "status": null
+    },
+    {
+      "id": "msg_028bd43276e1be34016ad35cb4fe1c87d2956c6186c464714e",
+      "content": [
+        {
+          "annotations": [],
+          "text": "{\"steps\":[{\"title\":\"დაარეგულირე სიმაღლე\",\"text\":\"გამოსწიე ყვითელი ღილაკი სავარძლის ქვეშ და ისე დააყენე, რომ ჯდომისას მუხლები ბალიშების ქვეშ მჭიდროდ მოექცეს.\",\"focus\":[],\"avoid\":[],\"markers\":[],\"arrows\":[],\"tools\":[],\"warn\":\"ყვითელი ღილაკი/სიმაღლის რეგულატორი ფოტოზე არ ჩანს; მოცემული target უხილავია, ამიტომ ID არ არის მითითებული.\"},{\"title\":\"აირჩიე წონა\",\"text\":\"ყვითელი ქინძისთავი გადაიტანე სასურველ ფილაში და ბოლომდე ჩაარჭე.\",\"focus\":[],\"avoid\":[],\"markers\":[],\"arrows\":[],\"tools\":[],\"warn\":\"ქინძისთავი და ფილების არჩევის ზონა ფოტოზე არ ჩანს; მოცემული target უხილავია, ამიტომ ID არ არის მითითებული.\"},{\"title\":\"მოკიდე სახელურს\",\"text\":\"ფეხზე მდგომმა მოკიდე ხელი მოხრილ ბოლოებთან, მხრებზე ოდნავ ფართოდ, ხელისგულები წინ.\",\"focus\":[\"p1\"],\"avoid\":[],\"markers\":[],\"arrows\":[],\"tools\":[],\"warn\":null},{\"title\":\"დაჯექი და დაფიქსირდი\",\"text\":\"სახელურით ხელში დაჯექი, ფეხები იატაკზე, მუხლები ბალიშების ქვეშ. მკერდი წინ, ზურგი სწორი.\",\"focus\":[\"p2\",\"p3\",\"p4\"],\"avoid\":[],\"markers\":[],\"arrows\":[],\"tools\":[],\"warn\":\"სავარძელი თავად არ ჩანს, ამიტომ ფოკუსი მივანიჭე ხილულ ცენტრალურ ჩარჩოსა და მუხლის ბალიშებს; ეს მხოლოდ ახლო შესაბამისობაა.\"},{\"title\":\"ჩამოწიე მკერდამდე\",\"text\":\"იდაყვები ქვემოთ და უკან, სახელური მკერდის ზედა ნაწილამდე. ზემოთ ნელა აუშვი, 2 წამში.\",\"focus\":[\"p1\"],\"avoid\":[],\"markers\":[],\"arrows\":[],\"tools\":[],\"warn\":null}],\"unknown_parts\":[\"ყვითელი რეგულატორი/ღილაკი\",\"ყვითელი ქინძისთავი/წონის ფილები\",\"სავარძელი\"]}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message",
+      "phase": "final_answer"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1792236726.0,
+  "conversation": null,
+  "max_output_tokens": 2200,
+  "max_tool_calls": null,
+  "moderation": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_options": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "current_turn",
+    "effort": "low",
+    "generate_summary": null,
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "name": "variant_c_steps",
+      "schema_": {
+        "type": "object",
+        "properties": {
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "focus": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "p1",
+                      "p2",
+                      "p3",
+                      "p4"
+                    ]
+                  },
+                  "description": "მოქმედების სამიზნე ხილული ნაწილების ID-ები (p1..pN). როდესაც მოქმედების სამიზნის რამდენიმე plausible კანდიდატია, აირჩიე ყველაზე სავარაუდო ID მდებარეობის/ინსტრუქციის მიხედვით და warn-ში ჩაწერე გაურკვევლობა. empty focus დასაშვებია მხოლოდ მაშინ, როცა სამიზნე ნაწილი სიაში/ფოტოზე საერთოდ არ ჩანს (უხილავია). არ გამოიგონო ID."
+                },
+                "avoid": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "p1",
+                      "p2",
+                      "p3",
+                      "p4"
+                    ]
+                  }
+                },
+                "markers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "part": {
+                        "type": "string",
+                        "enum": [
+                          "p1",
+                          "p2",
+                          "p3",
+                          "p4"
+                        ]
+                      },
+                      "label": {
+                        "type": "string"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": [
+                          "brand",
+                          "danger",
+                          "neutral"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "part",
+                      "label",
+                      "tone"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "arrows": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "part": {
+                        "type": "string",
+                        "enum": [
+                          "p1",
+                          "p2",
+                          "p3",
+                          "p4"
+                        ]
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "rotate",
+                          "move"
+                        ]
+                      },
+                      "dir": {
+                        "type": "string",
+                        "enum": [
+                          "cw",
+                          "ccw",
+                          "up",
+                          "down",
+                          "left",
+                          "right",
+                          "toward",
+                          "away"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "part",
+                      "type",
+                      "dir"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "tools": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "warn": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "გაფრთხილება, უსაფრთხოების რჩევა ან გაურკვევლობის (uncertainty) ახსნა, მათ შორის თუ სამიზნე უხილავია ან რამდენიმე კანდიდატს შორის შეირჩა ყველაზე სავარაუდო."
+                }
+              },
+              "required": [
+                "title",
+                "text",
+                "focus",
+                "avoid",
+                "markers",
+                "arrows",
+                "tools",
+                "warn"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 5,
+            "maxItems": 5
+          },
+          "unknown_parts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "steps",
+          "unknown_parts"
+        ],
+        "additionalProperties": false
+      },
+      "type": "json_schema",
+      "description": null,
+      "strict": true
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 2929,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 882,
+    "output_tokens_details": {
+      "reasoning_tokens": 357
+    },
+    "total_tokens": 3811
+  },
+  "user": null,
+  "access_programs": null,
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": false,
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  }
+}

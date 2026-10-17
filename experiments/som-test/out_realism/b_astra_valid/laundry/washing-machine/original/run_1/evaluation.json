@@ -1,0 +1,176 @@
+{
+  "metric": "Approximate IoU against design polygons; NOT verified semantic ID accuracy",
+  "steps": [
+    {
+      "step": 1,
+      "focus_design_iou": 0.5100790571486916,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 2,
+      "focus_design_iou": 0.0,
+      "avoid_design_iou": 0.0
+    },
+    {
+      "step": 3,
+      "focus_design_iou": 0.0,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 4,
+      "focus_design_iou": 0.0,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 5,
+      "focus_design_iou": 0.0,
+      "avoid_design_iou": 1.0
+    }
+  ],
+  "parts": [
+    {
+      "id": "loading_door",
+      "design_ious": {
+        "DOOR": 0.5100725743976714,
+        "MAIN": 0.0,
+        "PREWASH": 0.0,
+        "SOFTENER": 0.0,
+        "DIAL": 0.0,
+        "BUTTONS": 0.0,
+        "START": 0.0
+      }
+    },
+    {
+      "id": "door_handle",
+      "design_ious": {
+        "DOOR": 0.025824627691372743,
+        "MAIN": 0.0,
+        "PREWASH": 0.0,
+        "SOFTENER": 0.0,
+        "DIAL": 0.0,
+        "BUTTONS": 0.0,
+        "START": 0.0
+      }
+    },
+    {
+      "id": "visible_towels",
+      "design_ious": {
+        "DOOR": 0.22087174219629888,
+        "MAIN": 0.0,
+        "PREWASH": 0.0,
+        "SOFTENER": 0.0,
+        "DIAL": 0.0,
+        "BUTTONS": 0.0,
+        "START": 0.0
+      }
+    },
+    {
+      "id": "detergent_drawer_front",
+      "design_ious": {
+        "DOOR": 0.009006309553365809,
+        "MAIN": 0.0,
+        "PREWASH": 0.0,
+        "SOFTENER": 0.0,
+        "DIAL": 0.0,
+        "BUTTONS": 0.0,
+        "START": 0.0
+      }
+    },
+    {
+      "id": "drawer_left_compartment",
+      "design_ious": {
+        "DOOR": 0.0,
+        "MAIN": 0.8423136405815033,
+        "PREWASH": 0.005150175470580193,
+        "SOFTENER": 0.0,
+        "DIAL": 0.0,
+        "BUTTONS": 0.0,
+        "START": 0.0
+      }
+    },
+    {
+      "id": "drawer_middle_compartment",
+      "design_ious": {
+        "DOOR": 0.0,
+        "MAIN": 5.282620179609086e-05,
+        "PREWASH": 0.7852135117909497,
+        "SOFTENER": 0.0,
+        "DIAL": 0.0,
+        "BUTTONS": 0.0,
+        "START": 0.0
+      }
+    },
+    {
+      "id": "drawer_right_compartment",
+      "design_ious": {
+        "DOOR": 0.0,
+        "MAIN": 0.0,
+        "PREWASH": 0.005135175955293762,
+        "SOFTENER": 0.7604351687388987,
+        "DIAL": 0.0,
+        "BUTTONS": 0.0,
+        "START": 0.0
+      }
+    },
+    {
+      "id": "rotary_knob",
+      "design_ious": {
+        "DOOR": 0.0,
+        "MAIN": 0.0,
+        "PREWASH": 0.0,
+        "SOFTENER": 0.0,
+        "DIAL": 0.9377102112202341,
+        "BUTTONS": 0.0,
+        "START": 0.0
+      }
+    },
+    {
+      "id": "small_button_left",
+      "design_ious": {
+        "DOOR": 0.0,
+        "MAIN": 0.0,
+        "PREWASH": 0.0,
+        "SOFTENER": 0.0,
+        "DIAL": 0.0,
+        "BUTTONS": 0.16297500508026824,
+        "START": 0.0
+      }
+    },
+    {
+      "id": "small_button_middle",
+      "design_ious": {
+        "DOOR": 0.0,
+        "MAIN": 0.0,
+        "PREWASH": 0.0,
+        "SOFTENER": 0.0,
+        "DIAL": 0.0,
+        "BUTTONS": 0.16114610851452957,
+        "START": 0.0
+      }
+    },
+    {
+      "id": "small_button_right",
+      "design_ious": {
+        "DOOR": 0.0,
+        "MAIN": 0.0,
+        "PREWASH": 0.0,
+        "SOFTENER": 0.0,
+        "DIAL": 0.0,
+        "BUTTONS": 0.16114610851452957,
+        "START": 0.0
+      }
+    },
+    {
+      "id": "large_button_right",
+      "design_ious": {
+        "DOOR": 0.0,
+        "MAIN": 0.0,
+        "PREWASH": 0.0,
+        "SOFTENER": 0.0,
+        "DIAL": 0.0,
+        "BUTTONS": 0.0,
+        "START": 0.9351567301782422
+      }
+    }
+  ]
+}

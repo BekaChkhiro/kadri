@@ -1,0 +1,92 @@
+{
+  "metric": "Approximate IoU against design polygons; NOT verified semantic ID accuracy",
+  "steps": [
+    {
+      "step": 1,
+      "focus_design_iou": 0.7468142078265638,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 2,
+      "focus_design_iou": 0.0,
+      "avoid_design_iou": 0.0
+    },
+    {
+      "step": 3,
+      "focus_design_iou": 0.0,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 4,
+      "focus_design_iou": 0.4985711403980635,
+      "avoid_design_iou": 1.0
+    },
+    {
+      "step": 5,
+      "focus_design_iou": 0.8564065184568126,
+      "avoid_design_iou": 1.0
+    }
+  ],
+  "parts": [
+    {
+      "id": "funnel",
+      "design_ious": {
+        "FUNNEL": 0.8797304302747537,
+        "BURETTE": 0.0002645902630783187,
+        "STOPCOCK": 0.0,
+        "FLASK": 0.0,
+        "BOTTLE": 0.0
+      }
+    },
+    {
+      "id": "burette_tube",
+      "design_ious": {
+        "FUNNEL": 0.03167880738607488,
+        "BURETTE": 0.7757346203188955,
+        "STOPCOCK": 0.009251101321585903,
+        "FLASK": 0.0,
+        "BOTTLE": 0.0
+      }
+    },
+    {
+      "id": "burette_stopcock",
+      "design_ious": {
+        "FUNNEL": 0.0,
+        "BURETTE": 0.0,
+        "STOPCOCK": 0.51386737998029,
+        "FLASK": 0.0,
+        "BOTTLE": 0.0
+      }
+    },
+    {
+      "id": "conical_flask",
+      "design_ious": {
+        "FUNNEL": 0.0,
+        "BURETTE": 0.0,
+        "STOPCOCK": 0.0,
+        "FLASK": 0.9341126121810226,
+        "BOTTLE": 0.0
+      }
+    },
+    {
+      "id": "dropper_bottle",
+      "design_ious": {
+        "FUNNEL": 0.0,
+        "BURETTE": 0.0,
+        "STOPCOCK": 0.0,
+        "FLASK": 0.0,
+        "BOTTLE": 0.8992506922951621
+      }
+    },
+    {
+      "id": "white_tile",
+      "design_ious": {
+        "FUNNEL": 0.0,
+        "BURETTE": 0.0,
+        "STOPCOCK": 0.0,
+        "FLASK": 0.0060528091783364265,
+        "BOTTLE": 0.0043554618897084655
+      }
+    }
+  ]
+}

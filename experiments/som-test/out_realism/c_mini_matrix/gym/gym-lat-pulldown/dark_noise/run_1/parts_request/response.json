@@ -1,0 +1,152 @@
+{
+  "id": "resp_045290e8c85ba16f016ad35c715de487d288ea2f317da3cea4",
+  "created_at": 1792236657.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-5.4-mini-2026-03-17",
+  "object": "response",
+  "output": [
+    {
+      "id": "rs_045290e8c85ba16f016ad35c71c48487d286ef19b976736eb9",
+      "summary": [],
+      "type": "reasoning",
+      "content": [],
+      "encrypted_content": "gAAAAABq01xzFSVEvIPDfQEslvbTwjS_kqIoMfDJ3-G4o7Cgt7lq_D9wTomMbEhSycBPWAmctxvAhCr-4pLkWnUyoWtqlRYXKnMK3W0WL30bTz3_E4D8ORRcmtdnudrG7siPKc7jZQx0h-BG88kl7tqh9mP26iUPa4MSwVYaThYRO5KYOd4jXrECI1Mdi2zJzyB5ipAoBZl0Ht2p80OpLu5sj6oqeF5ytRut-4atI1zzLMGrt0ca93GU4Iu-d9DPoYol7POWDv_zfISkrOgJi7TAFGbCAuOR05ECTbWZx1fidnzcekzlkJjIfIxAEbOgQFj7vBhPhMf0blVtlC2K0OaoPXNEfhzli_bellvYF_CMkOKj7mpfJry95iljJ8bGMpC3-Xm3ka03EXOgweVyGIVUwZxuO_q0cewbqTzmz0UqQmUwaDeTE1EdLSNbWiQRF3eA7yUBb4Nek4q0TRO9Z741dvsa0gi5xBI4e2vHaoaQSwEYvgGvrONV96UEA09GRcBud9nNE0gpHOfNmrXTOm4QcABePPf1I-2zDscOK3A9T5lljXC9y1vUyueIUFiEHnm-sPZqvMJiLyEqJKtU_VfrWbVB2fz8Qr0-OdY8FQkRVaR5XLOpqvO24ARgkE6N6J6V1c1aiUagfLXonFrJZFIKyJjDXuEQyXP_6dhmrb9wa4kmkmjJMQw3NGVnTrttu8TpD-mz9NYbfInulUTiNVVj6prk1tt2Zro-3g05Ku_5jyso9wwbH__MHkJVlHKA3Nhos56LeTGumYVfCLrF-2MooGGQFvDGyogK6rSyiDTr7WmqAVDhvq20RsRgT0VwImcqfpRFq5wlM1QrK2bx1S_5Wrf1jxB7UP4wC6gnabGvVhTEwkNDQSQVUBcIYsUmluXLgjJWo7laP0tKD2McgGcmIT5YMSDyTZoX0R0NhFBLWuWHIDctKuTOaFgZkXb9c-iRUAQK0qmaG34xGKOy9w0N72RckmGgwhjlgxQCcfFYIfFJBcjNjAnG2pJZNk-X_tl6-DyASXVNwmXYCYLU6TTXqiHXOLDF_j0RpHa0-qUOxMQBItx1rVUFrjxM1tQcBnN32R-FYvMkC8pvjAW5ftoILj-iLasziStFBLKFxnn-EnoSenF91mOrWooBxMhusatr80xrrX8Q9qDLSVUXYn5BTWN9Jx2TfXdVE_qa7Y_qP1yXevvYfhtlbhIo8RiP5ljTQZsZS4s46VmFNg74waYlYfU-iQ-aui1jHbK4c7LQ2Q4e1dGb8njX6QVssPD9xUWgkfQqgDrNCqXgEPEJWvyuOj9g09o7rq9aOS-gGwb6sZ9iTMPysGy1m7dmvgvzIA4SCDNSIoNZ6ckjSph03BwlYhQ6ZLWUveDH4KDXdmHe0s7uSAjkdCNJAtLIx7_EOBVBIVRR8U-LPMcbqT2aG-viDE9WvPgFpQHUyJDHnUAmp1P8HMIetQWZxf64Cn05c5Gx2T2d_dMAZ_8TBhfmel7flMWpTug2px0xMMOa0jcA_oC-FfJU-ZWX2ZmJqZh-2SF_bDuIsbuA_Lw4BDMn-y1rZK_wJxPmfvJdUzjTAUCGhNvSg2RaWu8Nrmz7hCOaTLjJ7zqnPvmKTr3UmwM2q8fpKFDr9y2pby0pNYSosX9d_pQnJy9q8OUes9-3wURkMPyoI7nXvHU4F14xTC90cnUCIulvCMYVWQir_MHUmBV0qam1Oy2M_GAdEWpZiY7s2YtA-RuqgWsa1iwSZU-N4Qfi0L3oFTWgxZbnIJuXhI21SsJzU3PWJyIJK19e81AUMtpZ4qfe5P2R0oOipa8Sbgei59G2NEvhTKqFajjCkJdxkyvO7bIVPPwMyrFlxrhui0HE4a4xt5DPFNwve5buKhHv9bdY_zUAwO5DxWv8UAKU8LY1CKPm-8XoVZLpRuuMV9M1ZYGvsMO10N4hPwkLPBvUvtnP2bbLXY9swRqivsZYjw5E_azMlODYFcWwS0DPu9i73etGWYXx4GnDeRNt3K9oCFgEhwlk4R8hEZBgGYapYj3Tqsbahn-boh-ZZXwKHPxc8eNyEmgMiiEU9eCDN8HfqY5DO9JSPwNxpNOTWcIuAgQdZyiDPLjVl5r2KuWUQY0F74dbFDSRSKPZAxJuHL-uamRZ60Zkyjh8r2V84u9Bgw1WxXpn7WptM7yJiLvDLHDYT0BGEqE1iyeAj1nTOaAhvzXhI9836uFilnEdIj_525-Q0XNbkF1qcCI4MC3zi4OmUptvevb4ni_0nrEBOSnAAcaZVPcolTPjuv85DZp8Tc8mGi6Ci-mk7bEAq-ZiaT9FZwJR2xxH-5I0IkXCNXHGcYTv3wiK2pYaJvOGZzK9sUJ92kV1ecVoTjGejKeEyQX5n_HkHBHeyB6iuT9D-qwFGORE-KlOY-EXlStHMjQM_qW8QiAjqRMdTALPMZhKvfb0kp4_VEQQTuudDXznVIwoEjoec_ePnNdMNTuseeqGBWj1UvvgVqH_da3lzbNjuNG3vJ0nJRivz0GVHvDfNIc929BnZ7rbmk8adGQyQeB4JFcFMmzVdlfNOn2ili1sG8gacaRrY1he0OEyC4T3vaHLTRe4t6fBQHvE0i0ffbTfih3PDt0VfaSarxT5BmARbbsW4lKFSGOjUIWEgBjHh3Pl9DlSF3BXyXiEjZzGpgrWhdqedNsrx9lSJt_7O-GGQ6iQIntEOlkhpEQo-DEpsiPqj9-NDMDLnv5o3g4JUXBvvQZwNc5qHjLrow7cwVkhK1OM_1C2-5N4-LnfHh5H1lPvAw7izjXQlfQbfH4Ph9w209FPSHh7lxd8LFYM3ADbPSJy-sJSP8NcXQgSAbibeVv53eHNaliae1Ua9dbrSGXtuKEUmvpWGllVAtGrxUHb7gDGgIvF26l4vEtl7L6C53PPHKAbljjxAsM1eIyh56tlWUFraruBAjV9vKSMZtJ46-8RIw0tUV4JhXUgIe0VtwGbVxaGKe_-Bq84qnWwmQg-u4_regGYs4vkKElbgFzaPptIPdolIAf5rToYAy1lTXfGbLxx3udfP1UTwmZh8SNfXen_PpKW1MIxRZSx0GZw96v1gSShr4aZSjD_B8PqFa3_sTgH7hZgYKVyTjiM0UfZGH2k-iICcIco7vjtlCwCTxw5u6c89UkA4g3n--6WZdiYBCBo3XfyZU6Y9pBF0ElPym-Im0l7z56tIUmCV8rebWNNkJ3bsEI63a7jpD5uJipeUY6pMp4jjEAQyPmPX85o66w01oC-Al9k6EoVT2PtW5hah1A3sVyChKqG1It61qvGXBm7tVovoSULwzI1De0G6f7FvrXscgomaD1OaW-WviUYkOaSB-XemoLdalzrkUot7T3gIkeUNwa-aXzjoMlR52zR0BIeyF7b3K-9pdLjYJPXL8gks5NyghoDtr6mBXD4IhS0eN_-b_l7m_aK5IJjhNmuwVqSmOc=",
+      "status": null
+    },
+    {
+      "id": "msg_045290e8c85ba16f016ad35c727b8487d2b0731a9b7c0190b7",
+      "content": [
+        {
+          "annotations": [],
+          "text": "{\"object\":\"სავარჯიშო ტრენაჟორი\",\"parts\":[{\"label\":\"ზედა მოხრილი სახელური\",\"box\":[215,53,815,168]},{\"label\":\"მარცხენა ბალიში\",\"box\":[333,403,462,506]},{\"label\":\"მარჯვენა ბალიში\",\"box\":[524,403,654,506]},{\"label\":\"საჯდომი ბალიში\",\"box\":[337,502,639,626]},{\"label\":\"წონის ბლოკი\",\"box\":[448,263,618,601]},{\"label\":\"ქვედა ყვითელი რეგულირების ღილაკი\",\"box\":[472,767,512,794]}]}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message",
+      "phase": "final_answer"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1792236659.0,
+  "conversation": null,
+  "max_output_tokens": 1200,
+  "max_tool_calls": null,
+  "moderation": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_options": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "current_turn",
+    "effort": "low",
+    "generate_summary": null,
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "name": "variant_c_parts",
+      "schema_": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "box": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "minItems": 4,
+                  "maxItems": 4
+                }
+              },
+              "required": [
+                "label",
+                "box"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 24
+          }
+        },
+        "required": [
+          "object",
+          "parts"
+        ],
+        "additionalProperties": false
+      },
+      "type": "json_schema",
+      "description": null,
+      "strict": true
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 967,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 332,
+    "output_tokens_details": {
+      "reasoning_tokens": 173
+    },
+    "total_tokens": 1299
+  },
+  "user": null,
+  "access_programs": null,
+  "billing": {
+    "payer": "developer"
+  },
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": false,
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "type": "BadRequestError",
+  "status_code": 400,
+  "partial_text": "",
+  "time_to_first_step_seconds": null
+}

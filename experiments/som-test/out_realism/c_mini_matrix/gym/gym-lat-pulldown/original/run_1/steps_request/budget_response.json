@@ -1,0 +1,273 @@
+{
+  "id": "resp_09f38e4a49f906c7016ad35c6de94887d2b30930682f8a9783",
+  "created_at": 1792236653.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-5.4-mini-2026-03-17",
+  "object": "response",
+  "output": [
+    {
+      "id": "rs_09f38e4a49f906c7016ad35c6e552487d2b90efb6f9ac62f1f",
+      "summary": [],
+      "type": "reasoning",
+      "content": [],
+      "encrypted_content": "gAAAAABq01xv2KUJHnuVz2iOJy326EaMu1e1YK-ovnGJNVlYORYkcnKDVmXeG9kEiZeEZ1HHTMBiX9eyG0Ss5EmpsntKCvbPm4yUWOGRJdJv59QoLTn_Cn2-ug-RKxpAjesxYaqnmKsK3IM4ZHEenufzdo_HOPZ2sbwdzaMnEyzP1hmmIF89uawGyDVWIl_34BJ6NPKGCBNalSSYmHNVbKmpuxJfRVeAMSyS2VpAtIeFGoF79DYH1EEAfGtNirDbV9POHExCQnkhPuyzudyNjTJCElt71LOU8MFmRMIYLaUO89Rjz3rO1JNhdFJ9uLpJ6oz3JpOW_GtE_r7omti1Rh5IzytYDm6Eu4omP_50FbVfwMJi8jSgfhlxIwAFhJZEH1LAxgZP3TBWBy-G0rrbZZF9scOpcG_5nWusuh_hMA0AA43DVoPDoqNkQGpFt7IkuNAsgiE1Iy5Dti4cQcSVIvTSEedpyiI71sahOTm4AxSMIMBtElGtO-xyZg_6gdtsxQGf9CC4xfjD3MG6URscvxxNIs4nvaYt_owCs33iSvI5ah8flCE0Jl84uNvlIYC3lG-pZHkvNEyxmkIJJ1hcdQ9asamkboqbsaU8188IpCGetQDnQhtZZYikMNd4JaEWrHoeLO1PUqBiDdzRCPRtYqsoTV6230-QU6CH8Z7PO8mXwCdx8BOHTDE8ccf0DCy04XJMp6H6fzd5BFeaquXzaOggzXw-BEU0Mf9ZtAo1g2zojDRwimPWRB7U2abG2ahd69bXZONoRPDqViBMhFSfbffgE629NTEGPPyMzq1XEYOPP-k8gxb1TgwCkIJYoQq1QSpDCoHzQ3crSM3y-uYDby-XcPHoN9v8rn-s9NuNue7Kbqk8XsC56d9VDYWOLmFUMkgBHPHAEkdxVfJsk4S5z35IU5H3JRRq-yqBP7p1hzYXWgYRQGZHm6525n3ERU9JFPTv47KyV9UpbCHKRnXUzyQntxAgz_4wP_ZMc_PL-ZRRThQ87mGXvQPa31DLxvvxJVk1iYDQxUqdtBGbcRH9mW_yUr8mHkdBEFzqtJmStWivArJW38Cf-VW3o04A20NEgcJemc3t3V3UTNeyXt5ZUpjcNFKBX6dtldkF5LqsDvM6NY3v4aBEpqIbuuEmXXb3V8oTn5dK22vDA7adDt52ql7E4uSUWFMuUIfuCy_iqGeJdrBkMSiOjsK_BHxinrfvY8XoBPGiIvNBsSmTanZc5269X1aOgFZzZyS73-EELH5tSG3i0sXbbqi55GLrMWLwGZ3Mn-ssbz8owsft7_sdBfphcZPj38IZ54R51N6LOGYoZZ0b4xyHppCDGE_Lg4dDxQTAsgMb_dRo-6GvmJaV-PUTrw4ZzFhiXClaOu1RPaTVJtotSoQJufsdoDT7noz8MEq3PfJmId3h_Txc5kI0ZOygHppbwF7Na8CG7_jjIViEYBs1TYSWxsVudpc4OZ0PUrsoXizb5wActrEVi8MbUIV9Uz5ZvEWEOGF7Elqs9jsKhmIAvS2Q-UdHEElZY6R8JqMMeQPVekky_6D6pzRH7lOl_a9MKxJsCwhQnztQhm6I5NQaAz2qIMMxiaEeZbPfIDAQInwzJ7LhcOrMYWe7LIxqsKUgXhO7asFme_dUd9C5Rua3T4p7KArS3BwZ_BIzJU4whJsqNK7NomDNVv_fO7RhTWz9V_nZd-MsVm8rBFbJi0MjEdZ_j9an40g0byIOL0hnzG2f09e6eb5VKrVyLhTiPDyCe67We1cE5r4Wlijdgdx3AzQ_7Tsb95TPEKuPMtuunQ2TEKav32rMuWKDgSy20d3RCxxcudYtZ27vOh-QRee2OdVNXsHU8ej43L1ZikOivfvDbV55MrRTsNSA2VevuhoGWORKKb1hFToYBP1tzdi-OJz9yxieoTN_6fqz4J97MiNRrNZYqSLHhBggLYVnGCxtpos7MQv6V3PFnN58jRXWc5ACmt5WneYoP_4aczWV2hdcTtK49YO_hrwWw2xrFaKTpQjvxOvy_eyE8cM6E0q5RahFXgWDIGEttmvXmh8hepgVznWkBJaaIWwvMBtf50rg7kSWYMgxZecyHLwV1hn9kf7eAkgVuXAo6LAu4g0guD4LCcrGczM2Et4QZmbxPI3RKQkM6dCo8H84GrUKEUv7AfDQQthv0ZbYIGAvYC7ERrAmcbysf--HWMVlOn1X1s9-mxPwfXrBxXQJvkS8X_tvQemFqoWSHbWJ8i67UivnN2h21Z3t-Go3c62pE-yiHfnKcp3qDAgc9JlN6CyrEIeBt_tRSWfQ_O9AbIjBcQbulixHZHI0_4HFz-zBYovLdjy4GumQ4mwEWiYap8oA_MeMrzijHZ9viawDL51X42KUlZELCfALgDwV6DyyV0nf0Qh5nAXXK_ws2XU_G3DzlCM5QzEpda1IHk6IthL7iAcufmCrmzgPVn6g_nh2SSdKkfdTRcpNlzK-XtNCHPQziai1tNnFTZnaQIt8PyGCNjDH0oBMwNBksq7jaDoA2CjnYk9DCFOR2NVRrfFQfHNq0O31r86gOMsrwWK_pChmmynVlWnGowz2yNOsaGsj18fwQeE4UuFoR48YB9iG2j_Pz5B1R-g1NMJvvyiPXLz88eZ2CvNFnoiBNAf6QW5zz4gVaYMSyLgvsDhsacm1Zno53J-GZfJc-DPsFyNk_yYnI2ru0UKouJIjWG6sr6BVja2YHZzDju1JDj_59VMtur1v1AEgkJVa_Z5Mn82bBKAKZrWYYDcRwuKsXfz3v8qoSRdZ2TufLDpVgw-_qyNo267O2Rugco4dN2t5ivakejNz5ZVVz9T81CyyXkSM0rPieEwwqk_uS7zRbFOMbdtpfhbuS9RxxVhtOI1iVVl2QBAo-WM75XPm2qoLdv5Z24Mb7Aibz7bQ8ZNBvLKFkglbL_ApljAw4QPsuWvCOLn0NC1K_iyZlzD62FKK1O1VziEJJAHM1vkQ19bonMQh4mxRkVqlDhYcDkTczrd5gAqWN4BUibmkDNjKhUcTkLN7epXEK5ev18-VJREFbj_SF6v9lbTGGeUTZaedrA417WmIWdcsCsav1PcEo3tD641_RskCn15jk15Yhj3iDNFafz_DOd3AdWGr16Q4UCda4Jl8Z2HbMtjeyLfK4bbhiU8kZCBHxm9ayDpwuMcTJqO7jTfOgOg4mnF2zUqcjT3GKx-r6KGwur6OFI2E2ZakMLTJEJ4eQ9xLyvVOFa9NTbSiCGs5ehByypxQvPUk71pCLHQi5BCdyc9MQxl3-kSjJUP4yYcMJy26uFzBPR0rgMSDTQvb8YviAfWnU0gVJZKyw2oO6wv6JA9aaxkhTItl9injqMI9g_5GN8PGitV2dA==",
+      "status": null
+    },
+    {
+      "id": "msg_09f38e4a49f906c7016ad35c6efdcc87d294d1f77a1442ea77",
+      "content": [
+        {
+          "annotations": [],
+          "text": "{\"steps\":[{\"title\":\"დაარეგულირე სიმაღლე\",\"text\":\"გამოსწიე ყვითელი ღილაკი სავარძლის ქვეშ და ისე დააყენე, რომ ჯდომისას მუხლები ბალიშების ქვეშ მჭიდროდ მოექცეს.\",\"focus\":[\"p6\"],\"avoid\":[],\"markers\":[],\"arrows\":[],\"tools\":[],\"warn\":null},{\"title\":\"აირჩიე წონა\",\"text\":\"ყვითელი ქინძისთავი გადაიტანე სასურველ ფილაში და ბოლომდე ჩაარჭე.\",\"focus\":[\"p2\"],\"avoid\":[],\"markers\":[],\"arrows\":[],\"tools\":[],\"warn\":null},{\"title\":\"მოკიდე სახელურს\",\"text\":\"ფეხზე მდგომმა მოკიდე ხელი მოხრილ ბოლოებთან, მხრებზე ოდნავ ფართოდ, ხელისგულები წინ.\",\"focus\":[\"p1\"],\"avoid\":[],\"markers\":[],\"arrows\":[],\"tools\":[],\"warn\":null},{\"title\":\"დაჯექი და დაფიქსირდი\",\"text\":\"სახელურით ხელში დაჯექი, ფეხები იატაკზე, მუხლები ბალიშების ქვეშ. მკერდი წინ, ზურგი სწორი.\",\"focus\":[\"p5\",\"p4\"],\"avoid\":[],\"markers\":[],\"arrows\":[],\"tools\":[],\"warn\":null},{\"title\":\"ჩამოწიე მკერდამდე\",\"text\":\"იდაყვები ქვემოთ და უკან, სახელური მკერდის ზედა ნაწილამდე. ზემოთ ნელა აუშვი, 2 წამში.\",\"focus\":[\"p1\"],\"avoid\":[],\"markers\":[],\"arrows\":[],\"tools\":[],\"warn\":null}],\"unknown_parts\":[]}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message",
+      "phase": "final_answer"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1792236655.0,
+  "conversation": null,
+  "max_output_tokens": 2200,
+  "max_tool_calls": null,
+  "moderation": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_options": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "current_turn",
+    "effort": "low",
+    "generate_summary": null,
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "name": "variant_c_steps",
+      "schema_": {
+        "type": "object",
+        "properties": {
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "focus": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "p1",
+                      "p2",
+                      "p3",
+                      "p4",
+                      "p5",
+                      "p6"
+                    ]
+                  },
+                  "description": "მოქმედების სამიზნე ხილული ნაწილების ID-ები (p1..pN). როდესაც მოქმედების სამიზნის რამდენიმე plausible კანდიდატია, აირჩიე ყველაზე სავარაუდო ID მდებარეობის/ინსტრუქციის მიხედვით და warn-ში ჩაწერე გაურკვევლობა. empty focus დასაშვებია მხოლოდ მაშინ, როცა სამიზნე ნაწილი სიაში/ფოტოზე საერთოდ არ ჩანს (უხილავია). არ გამოიგონო ID."
+                },
+                "avoid": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "p1",
+                      "p2",
+                      "p3",
+                      "p4",
+                      "p5",
+                      "p6"
+                    ]
+                  }
+                },
+                "markers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "part": {
+                        "type": "string",
+                        "enum": [
+                          "p1",
+                          "p2",
+                          "p3",
+                          "p4",
+                          "p5",
+                          "p6"
+                        ]
+                      },
+                      "label": {
+                        "type": "string"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": [
+                          "brand",
+                          "danger",
+                          "neutral"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "part",
+                      "label",
+                      "tone"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "arrows": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "part": {
+                        "type": "string",
+                        "enum": [
+                          "p1",
+                          "p2",
+                          "p3",
+                          "p4",
+                          "p5",
+                          "p6"
+                        ]
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "rotate",
+                          "move"
+                        ]
+                      },
+                      "dir": {
+                        "type": "string",
+                        "enum": [
+                          "cw",
+                          "ccw",
+                          "up",
+                          "down",
+                          "left",
+                          "right",
+                          "toward",
+                          "away"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "part",
+                      "type",
+                      "dir"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "tools": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "warn": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "გაფრთხილება, უსაფრთხოების რჩევა ან გაურკვევლობის (uncertainty) ახსნა, მათ შორის თუ სამიზნე უხილავია ან რამდენიმე კანდიდატს შორის შეირჩა ყველაზე სავარაუდო."
+                }
+              },
+              "required": [
+                "title",
+                "text",
+                "focus",
+                "avoid",
+                "markers",
+                "arrows",
+                "tools",
+                "warn"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 5,
+            "maxItems": 5
+          },
+          "unknown_parts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "steps",
+          "unknown_parts"
+        ],
+        "additionalProperties": false
+      },
+      "type": "json_schema",
+      "description": null,
+      "strict": true
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 3029,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 537,
+    "output_tokens_details": {
+      "reasoning_tokens": 154
+    },
+    "total_tokens": 3566
+  },
+  "user": null,
+  "access_programs": null,
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": false,
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  }
+}

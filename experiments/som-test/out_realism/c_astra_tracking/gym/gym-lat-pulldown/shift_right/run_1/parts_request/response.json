@@ -1,0 +1,144 @@
+{
+  "id": "resp_0685a31cd7ef8aa9016ad35d06563c87d29d98f60b717a694f",
+  "created_at": 1792236806.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-6-astra",
+  "object": "response",
+  "output": [
+    {
+      "id": "msg_0685a31cd7ef8aa9016ad35d0794d487d2abd2711c1d2cb18d",
+      "content": [
+        {
+          "annotations": [],
+          "text": "{\"object\":\"ზედა ბლოკის ტრენაჟორი\",\"parts\":[{\"label\":\"ზედა სახელური, ორივე ბოლოში ქვემოთ მოხრილი\",\"box\":[139,85,936,133]},{\"label\":\"მარცხენა მუხლის დასაფიქსირებელი შავი ბალიში\",\"box\":[356,402,519,460]},{\"label\":\"მარჯვენა მუხლის დასაფიქსირებელი შავი ბალიში\",\"box\":[556,402,721,460]},{\"label\":\"ქვედა შავი სავარძელი\",\"box\":[413,486,667,547]},{\"label\":\"სავარძლის ქვეშ მდებარე სიმაღლის რეგულირების ყვითელი ღილაკი\",\"box\":[526,574,552,590]},{\"label\":\"ცენტრში განლაგებული წონის შავი ფილების დასტა\",\"box\":[475,303,614,476]},{\"label\":\"წონის ფილების დასტის მარჯვენა მხარეს ჩასმული ყვითელი ქინძისთავი\",\"box\":[576,342,600,358]}]}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message",
+      "phase": "final_answer"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1792236812.0,
+  "conversation": null,
+  "max_output_tokens": 1200,
+  "max_tool_calls": null,
+  "moderation": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_options": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "low",
+    "generate_summary": null,
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "name": "variant_c_parts",
+      "schema_": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "box": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "minItems": 4,
+                  "maxItems": 4
+                }
+              },
+              "required": [
+                "label",
+                "box"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 24
+          }
+        },
+        "required": [
+          "object",
+          "parts"
+        ],
+        "additionalProperties": false
+      },
+      "type": "json_schema",
+      "description": null,
+      "strict": true
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 967,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 249,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 1216
+  },
+  "user": null,
+  "access_programs": null,
+  "billing": {
+    "payer": "developer"
+  },
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": false,
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  }
+}

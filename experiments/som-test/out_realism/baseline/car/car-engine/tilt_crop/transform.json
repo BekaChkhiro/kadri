@@ -1,0 +1,36 @@
+{
+  "protocol": 1,
+  "kind": "tilt_crop",
+  "seed": 20261017,
+  "source_to_frame": [
+    [
+      1.1414280743875203,
+      0.14014974491591958,
+      -183.70709574903705
+    ],
+    [
+      -0.14014974491591958,
+      1.1414280743875203,
+      -52.29341520502677
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "size": [
+    941,
+    1672
+  ],
+  "parameters": {
+    "angle_degrees": 7,
+    "zoom": 1.15
+  },
+  "border": "constant black",
+  "mask_interpolation": "nearest",
+  "source_sha256": "7e38dec72c2693ae61c6e94049d1bf59b8e5c1f1a19cbdcec7475082cfee048d",
+  "truth_sha256": "512737223c2adfe6a95fea4d8c1afd61ae14d71008b2ced5bc85c5ee5ae147e3",
+  "real_photo": false,
+  "proxy_available": true
+}

@@ -1,0 +1,152 @@
+{
+  "id": "resp_09b0f9d5c310a000016ad35de09e1c87d2ae76d2ecc2f128b8",
+  "created_at": 1792237024.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-6-astra",
+  "object": "response",
+  "output": [
+    {
+      "id": "rs_09b0f9d5c310a000016ad35de184b087d28b6e0de911252235",
+      "summary": [],
+      "type": "reasoning",
+      "content": [],
+      "encrypted_content": "gAAAAABq013lt7DFWFTsBoZ6h4BDDKvpGvdAyc3R2u-F9FnUj71s3BJcL88uLKX_zBzP0YUrXiyErK_LGZd7-jDlR3lm_9VforcDCzPO-QpgXQy-PbQLrQ8FSWqb7w53D1XrQYmyrDsaON13tiFcnzulUhnKeMyOBAn1ZtW2Vju9woeA4322bnmD5qMY38roNNn50Y0MP71NkmWGs_SwRs6JJKJ8FmbbO4QSrBEnuf35Rt6SneN2bUbW-8RV8aLStPUn7xn2qSZ_BaqUOVKfbDwlgBQpSHmp3co54nejdFHk1ITpG6asJ7AoStpRYaHfsM40YfB_fGbKGrbYRxpaPzgPha7MswGQmRhNzK0yCZ13ipzCsWlWlsNmKpWZVygTOcNsqf2uqWKF-o8PfpD3B925oaccjx2tpSHqEGW2QM2sfpDHxAKExv0qftfHML9nSboeCnmFZxaKieEmjESqH3hdlRa11zIkmx91Ten_1l7F3AkSf1w6t6SWyMjSjJts_C2BlnCKDTLwWVHJyc_00BMA2CiiqS7u3M6SVCVlm05C_5LFthRAXgFrBUnhkKYaQnRw_yoTg-wB-c0DOYPJ68JQ4qsRNXqzfgSE45xwLTns5aQUmS3DJ6gRdzgVqY9X0vp7uen436x95yYzr6KpiuQfvCVqLLVh7QJbNm35q0JKIys4JYA7qSYcR063sNbkfiouixTkZJrxqbgsg3aBBvM1RHPHFr7jBpFU7ofOMQVH3bXDuP_jningYbSEFgsaGtTUWMmZ4gM7jPQuFFINjDRiGNx_xMM7UoU8mo-xTuhc0GiggtpvlHSot5Q8Kj423mtqOmVGhynuJkZEvYraQDyPwGiaASnoyibkmpda1VQsrUiX5DrVRRI0gVB7AYLcN9HEOpXq-HVRGAV__6Q0B2TPiHvjDXVS-15KpzhX4iFVOZHLzLqVZGCvhgU32LBhnRR4YuJEWf2QHtIUzR-oVO10iA-ciJMKJ2iGFIGFHpt3FpumA4ibXlXJepXSjzTTJByLPocERYmWzNqrhD1GawCk_Q7nBK9vOhgqNNNkBjac3vyzHJWI5VKK_jcgNzlv0BZq0aJF5XAqXwgKs49fd2ZCqZf9tODL2ngUHDP07Lb7LpNpuTB3XsFgADgbXk9llRzPMsXj8aapTD8YDZ3escGQr-X_yaja2NnRbsLotp6UgHCkM5QFf9bzAcrvdZq-E1apAZfN5tmmQjWm1GEQjTBGGs_qH08gYdwsRcjPiHLwsIdvexWQ-S4OgxkAXLPjknFSTp4hfGQvg0GPtvOOCZMoJMW8g6sl4LgJbtsRO2SXvszQRjYFLe7sgO3Sfp6B99SQu_ZL87oI-S7Ch6E_ixHUqq1I2SUcwRq647rQr-PTV6lMYLK-swlmdkRVEUqSiL7XbADGmwLj_2fcjmQIneZe4EzVkVzhAstNMGlyR-uaVTl1QSmPa_4E0TO-59BwId15FS0Wq-LfOEcM1IdiNNkVK6EnvrJL5BCei5KZWLumroCzhQ1xVxmL3QqCfHdJ6Icqr2AJZuC4RKD_ZVP4dpmUnpZKnuDNzNom6vqQdqaaechRg-pBGL3BUauFeR8H8u1Bs9edYfZ7XRLD6MU8YBWSagz93oOsxvNOSLHqBnCXu-m9qDQfRqpHDQb8GJG6OTkeUsnrzKLnPtxEtL_0YO8537wf9wihP_CUoxvEvnzoaKSkS8WpCoXlClfelt5KHxxd0ID3PLnMk328rcz8dUydHyWn3KTibdCMwPquB-P8eRy1JWavfcIBbbe94AWR8DvIdRJdWvjLBjBMzXJu6ZfYQ_ur4zt0HbqpjN2cyknI-vn9Kl5M5aecx8gOTZAE9JZ4tO1YvcIg",
+      "status": null
+    },
+    {
+      "id": "msg_09b0f9d5c310a000016ad35de2cbfc87d2b9351348ec4a30d9",
+      "content": [
+        {
+          "annotations": [],
+          "text": "{\"object\":\"ძრავის ზეთის დონის შემოწმებისა და შევსების კომპონენტები\",\"parts\":[{\"label\":\"ზეთის საზომი ღეროს ყვითელი რგოლი — ძრავის საფარის ქვედა მარჯვენა მხარეს\",\"box\":[583,364,635,415]},{\"label\":\"ზეთის ჩასასხმელი ხუფი — ძრავის საფარზე, ყვითელი რგოლის ზემოთ მარცხნივ; ნაწილობრივ დაფარულია ნაცრისფერი გრაფიკით\",\"box\":[484,283,602,331]}]}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message",
+      "phase": "final_answer"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1792237029.0,
+  "conversation": null,
+  "max_output_tokens": 1200,
+  "max_tool_calls": null,
+  "moderation": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_options": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "low",
+    "generate_summary": null,
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "name": "variant_c_parts",
+      "schema_": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "box": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "minItems": 4,
+                  "maxItems": 4
+                }
+              },
+              "required": [
+                "label",
+                "box"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 24
+          }
+        },
+        "required": [
+          "object",
+          "parts"
+        ],
+        "additionalProperties": false
+      },
+      "type": "json_schema",
+      "description": null,
+      "strict": true
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 944,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 176,
+    "output_tokens_details": {
+      "reasoning_tokens": 39
+    },
+    "total_tokens": 1120
+  },
+  "user": null,
+  "access_programs": null,
+  "billing": {
+    "payer": "developer"
+  },
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": false,
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  }
+}

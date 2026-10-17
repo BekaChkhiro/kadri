@@ -1,0 +1,144 @@
+{
+  "id": "resp_01826016d3454d1c016ad35d69cf0887d29b481f38b9be49ae",
+  "created_at": 1792236905.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-6-astra",
+  "object": "response",
+  "output": [
+    {
+      "id": "msg_01826016d3454d1c016ad35d6c69ec87d2879d65b601e5c1d7",
+      "content": [
+        {
+          "annotations": [],
+          "text": "{\"object\":\"ტიტრაციის მოწყობილობა\",\"parts\":[{\"label\":\"ზედა ძაბრი — ღერო ბიურეტის პირშია ჩასმული\",\"box\":[424,1,568,129]},{\"label\":\"ვერტიკალური მინის ბიურეტი\",\"box\":[472,78,516,383]},{\"label\":\"ბიურეტის ქვედა ონკანი — მარჯვნივ ლურჯი სახელურით\",\"box\":[440,367,556,415]},{\"label\":\"ონკანის ქვემოთ მინის წვრილი წვერი\",\"box\":[481,408,506,456]},{\"label\":\"ქვედა ცენტრალური კონუსური კოლბა — შიგნით გამჭვირვალე სითხე ჩანს\",\"box\":[399,446,580,608]},{\"label\":\"მარცხენა პატარა საწვეთური ბოთლი — ლურჯი წვეტიანი თავსახურით\",\"box\":[278,472,365,610]},{\"label\":\"კოლბის ქვეშ თეთრი ფილა\",\"box\":[312,578,637,630]},{\"label\":\"ზედა დამჭერი — ბიურეტს მარჯვენა შტატივთან აერთებს\",\"box\":[463,122,778,163]},{\"label\":\"მარჯვენა მეტალის შტატივი — ვერტიკალური ღერო და მართკუთხა ძირი\",\"box\":[630,0,957,617]}]}",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message",
+      "phase": "final_answer"
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1792236916.0,
+  "conversation": null,
+  "max_output_tokens": 1200,
+  "max_tool_calls": null,
+  "moderation": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_options": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "all_turns",
+    "effort": "low",
+    "generate_summary": null,
+    "mode": "standard",
+    "summary": null
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "name": "variant_c_parts",
+      "schema_": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "box": {
+                  "type": "array",
+                  "items": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1000
+                  },
+                  "minItems": 4,
+                  "maxItems": 4
+                }
+              },
+              "required": [
+                "label",
+                "box"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 24
+          }
+        },
+        "required": [
+          "object",
+          "parts"
+        ],
+        "additionalProperties": false
+      },
+      "type": "json_schema",
+      "description": null,
+      "strict": true
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 959,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 318,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 1277
+  },
+  "user": null,
+  "access_programs": null,
+  "billing": {
+    "payer": "developer"
+  },
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": false,
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  }
+}

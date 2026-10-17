@@ -1,0 +1,103 @@
+{
+  "seconds": 4.142572875000042,
+  "device": "mps",
+  "model": "sam2.1_b.pt",
+  "quality": [
+    {
+      "id": "funnel",
+      "box_pixels": [
+        399,
+        3,
+        535,
+        209
+      ],
+      "mask_pixels": 11085,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.3956667618503712,
+      "mask_to_box_area": 0.3956667618503712,
+      "image_fraction": 0.0070454672571681354,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "burette_tube",
+      "box_pixels": [
+        446,
+        128,
+        484,
+        636
+      ],
+      "mask_pixels": 13689,
+      "mask_fraction_inside_box": 0.996785740375484,
+      "box_occupancy": 0.70684832159138,
+      "mask_to_box_area": 0.7091276419394944,
+      "image_fraction": 0.008700532366565143,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "burette_stopcock",
+      "box_pixels": [
+        415,
+        615,
+        523,
+        694
+      ],
+      "mask_pixels": 3823,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.44807782466010315,
+      "mask_to_box_area": 0.44807782466010315,
+      "image_fraction": 0.00242984405269768,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "conical_flask",
+      "box_pixels": [
+        376,
+        747,
+        545,
+        1014
+      ],
+      "mask_pixels": 29626,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.656560955610221,
+      "mask_to_box_area": 0.656560955610221,
+      "image_fraction": 0.01882986134062816,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "dropper_bottle",
+      "box_pixels": [
+        266,
+        790,
+        339,
+        1014
+      ],
+      "mask_pixels": 11495,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.7029721135029354,
+      "mask_to_box_area": 0.7029721135029354,
+      "image_fraction": 0.00730605738575983,
+      "empty": false,
+      "too_large": false
+    },
+    {
+      "id": "white_tile",
+      "box_pixels": [
+        295,
+        964,
+        600,
+        1052
+      ],
+      "mask_pixels": 16770,
+      "mask_fraction_inside_box": 1.0,
+      "box_occupancy": 0.6248137108792846,
+      "mask_to_box_area": 0.6248137108792846,
+      "image_fraction": 0.010658771845079804,
+      "empty": false,
+      "too_large": false
+    }
+  ]
+}

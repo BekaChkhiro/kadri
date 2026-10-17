@@ -1,0 +1,23 @@
+{
+  "seconds": 5.18455858300149,
+  "time_to_first_step_seconds": 3.8478909580007894,
+  "usage": {
+    "input_tokens": 3018,
+    "input_tokens_details": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0
+    },
+    "output_tokens": 1145,
+    "output_tokens_details": {
+      "reasoning_tokens": 435
+    },
+    "total_tokens": 4163
+  },
+  "estimated_usd": 0.007416,
+  "reserved_usd": 0.0230505,
+  "price_source": "manual --price",
+  "price_checked": "manual",
+  "model": "gpt-5.4-mini",
+  "returned_model": "gpt-5.4-mini-2026-03-17",
+  "status": "completed"
+}

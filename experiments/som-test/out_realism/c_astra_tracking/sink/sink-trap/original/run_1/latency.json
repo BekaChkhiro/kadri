@@ -1,0 +1,20 @@
+{
+  "preflight_seconds": 1.3704823340012808,
+  "parts_preflight_seconds": 0.7961861670009966,
+  "steps_preflight_seconds": 0.5742961670002842,
+  "real_wall_time_to_first_box_seconds": 7.491504999999961,
+  "first_box_full_response_seconds": 7.491504999999961,
+  "first_box_model_only_seconds": 6.695318832998964,
+  "time_to_parts_response_seconds": 7.491504999999961,
+  "time_to_first_outline_seconds": 13.577731291999953,
+  "time_to_first_step_seconds": 6.923170125000979,
+  "time_to_first_step_from_start_seconds": 20.50725041700025,
+  "sam_seconds": 5.900890332999552,
+  "steps_seconds": 25.240574542000104,
+  "total_seconds": 38.97181629199986,
+  "adapter_wall_seconds": 38.97322516700115,
+  "first_box_definition": "C parts response; streaming steps; outline after SAM",
+  "partial_recovery": false,
+  "is_replay": false,
+  "original_wall_total_available": true
+}
