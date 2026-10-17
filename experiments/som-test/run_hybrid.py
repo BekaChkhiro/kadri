@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from segmentation import HERE
 from prepare_gemini import load, prepare, sha
-from hybrid import process
+from hybrid import process, run_destination
 
 
 def main():
@@ -26,7 +26,7 @@ def main():
     if args.mode == 'pilot':
         frames = [f for f in frames if f['scene'] == 'sink' and f['kind'] == 'original']
     for frame in frames:
-        dest = out / 'runs' / frame['key']
+        dest = run_destination(out, frame)
         if (dest / 'latency.json').exists():
             continue
         source = HERE / frame['input']

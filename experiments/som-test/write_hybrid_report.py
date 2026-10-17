@@ -55,7 +55,7 @@ def main():
         f'დაუხურავი რეზერვაციები: {data["unsettled"]}. Ledger-ის თანხა მთელ კამპანიას მოიცავს, მათ შორის დაწყებულ კადრებს; ეს usage-ით დათვლილი შეფასებაა, არა ინვოისი.',
         f'დასრულებული {n} კადრის generation ჯამი: Hybrid ${data["paired_cost"]["hybrid"]:.6f}; ისტორიული Astra C ${data["paired_cost"]["astra"]:.6f}. '+
         'ისტორიული ფასები არსებული metrics-იდანაა, დათვლის preflight-ის სავარაუდო ხარჯის გარეშე.', '',
-        'ერთ ledger-ში დაცულია Gemini ≤$0.50, OpenAI ≤$2 და ჯამი ≤$2.50. ფასები არსებული `gemini_stage1.py`/`vision.py`-დანაა; უცნობი ფასი იბლოკება. '+
+        'ერთ ledger-ში დაცულია Gemini ≤$0.50, OpenAI ≤$2.40 და ჯამი ≤$2.50. ფასები არსებული `gemini_stage1.py`/`vision.py`-დანაა; უცნობი ფასი იბლოკება. '+
         'Gemini რეზერვირდება ზუსტად იმავე request-ის countTokens input-ით და 2048 output ტოკენით, settlement მოიცავს thinking-საც. '+
         'countTokens უფასოდაა მიჩნეული მომხმარებლის მითითებით. OpenAI იყენებს არსებული `request_stage`-ის კონსერვატიულ input შეფასებას და 2200 output ტოკენს. '+
         'წარუმატებელი ფასიანი მოთხოვნის რეზერვაცია რჩება; SDK retries=0.', '',
@@ -74,8 +74,8 @@ def main():
         'დასრულებული კადრები გამოტოვებულია, დაწყებული დაუმთავრებელი კადრი ჩერდება. '+
         'Offline ანგარიში: `report_hybrid.py`, შემდეგ `write_hybrid_report.py`. '+
         'სურათები input.png და step_*.png commit-ში არ შედის; შერჩეული review JPG-ები ინახება.', '',
-        'Offline: 110 ტესტი გაიარა, მათ შორის 5 ახალი hybrid ტესტი და report-ის 2 ტესტი. ეს უკანასკნელი ამოწმებს mask resize-ს, ცარიელ union-ს და ნაბიჯების რაოდენობის აცდენის უარყოფას.']
-    if (root/'blocked.json').exists():
+        'Offline: 111 ტესტი გაიარა, მათ შორის 6 ახალი hybrid ტესტი და report-ის 2 ტესტი. ეს უკანასკნელი ამოწმებს mask resize-ს, ცარიელ union-ს და ნაბიჯების რაოდენობის აცდენის უარყოფას.']
+    if n < 22 and (root/'blocked.json').exists():
         block=load(root/'blocked.json')
         lines += ['', '## დარჩენილი ბლოკერი', '',
             f'OpenAI-ზე დახარჯულია ${block["openai_settled_usd"]:.6f}; დარჩენილია ${block["openai_remaining_usd"]:.6f}, '+
@@ -83,6 +83,15 @@ def main():
             'API მოთხოვნა არ გაგზავნილა. ამ კადრის Gemini/SAM დასრულებულია; sink/occlusion არ დაწყებულა. '+
             'ორი დარჩენილი კადრი შედარებაში არ შედის. ახალი მცდელობა და ბიუჯეტის ცვლილება მომხმარებლის თანხმობას ელოდება. '+
             '[ზუსტი ბლოკერი](out_hybrid/blocked.json).']
+    if n == 22:
+        lines += ['', '## ბიუჯეტის ავტორიზებული დასრულება', '',
+            'საწყისი OpenAI $2 ზღვარი 20 კადრის შემდეგ რეზერვაციამ დაბლოკა: დახარჯული იყო $1.733563, '+
+            'დარჩენილი $0.266437 ვერ ფარავდა შემდეგ $0.288640 რეზერვს. მომხმარებელმა OpenAI ზღვარი $2.40-მდე გაზარდა, '+
+            'საერთო $2.50 და Gemini $0.50 უცვლელად. sink/motion_blur სრულად ხელახლა გაიშვა ცალკე attempt2-ში; '+
+            'პირველი ცდის ფასიანი Gemini შედეგიც ledger-ში დარჩა. sink/occlusion ახალი სრული timeline-ით დასრულდა. '+
+            'არც ძველი ეტაპები შეკერილა ახალ latency-ში და არც ავტომატური retry შესრულებულა. '+
+            '[ავტორიზაციის ჩანაწერი](out_hybrid/budget_authorization.json), '+
+            '[შერჩეული ახალი მცდელობა](out_hybrid/run_selection.json), [წინა ბლოკერი](out_hybrid/blocked.json).']
     (HERE/'HYBRID.md').write_text('\n'.join(lines)+'\n')
 
 if __name__=='__main__': main()

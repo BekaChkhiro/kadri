@@ -1,0 +1,12 @@
+{
+  "authorized_by": "user",
+  "openai_limit_usd": 2.4,
+  "gemini_limit_usd": 0.5,
+  "combined_limit_usd": 2.5,
+  "fresh_attempt_frames": [
+    "c_astra_stress/sink/motion_blur",
+    "c_astra_stress/sink/occlusion"
+  ],
+  "automatic_retry": false,
+  "previous_attempt_preserved": true
+}

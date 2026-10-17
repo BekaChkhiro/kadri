@@ -22,11 +22,23 @@ ASTRA = 'gpt-6-astra'
 MAX_OUTPUT = 2048
 
 
+def run_destination(out, frame):
+    """Explicit user-authorized fresh attempts; never infer retries from failure."""
+    out = Path(out)
+    selection = out / 'run_selection.json'
+    selected = json.loads(selection.read_text()) if selection.exists() else {}
+    key = selected.get(frame['key'], frame['key'])
+    relative = Path(key)
+    if relative.is_absolute() or '..' in relative.parts:
+        raise ValueError('Invalid run selection')
+    return out / 'runs' / relative
+
+
 class ProviderBudget:
     """Provider caps and shared cap checked under one lock; failures keep reservations."""
     def __init__(self, path, provider):
         self.path, self.provider = Path(path), provider
-        self.limit = {'gemini': .5, 'openai': 2.}[provider]
+        self.limit = {'gemini': .5, 'openai': 2.4}[provider]
         self.shared = Budget(self.path, limit=2.5)
 
     def change(self, key, amount, settle=False):

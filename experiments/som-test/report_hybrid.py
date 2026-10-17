@@ -6,6 +6,7 @@ from evaluation import iou
 from prepare_gemini import load
 from realism import atomic_json, percentiles, match_frames
 from segmentation import HERE
+from hybrid import run_destination
 
 FIELDS = {'first_box': 'real_wall_time_to_first_box_seconds', 'outline': 'time_to_first_outline_seconds',
           'first_step': 'time_to_first_step_from_start_seconds', 'total': 'total_seconds'}
@@ -39,7 +40,7 @@ def main():
     out = HERE / 'out_hybrid'
     rows = []
     for frame in load(out/'frames.json'):
-        run = out/'runs'/frame['key']
+        run = run_destination(out, frame)
         if not (run/'latency.json').exists(): continue
         baseline = HERE/frame['baseline']
         transform = load(baseline.parent/'transform.json')

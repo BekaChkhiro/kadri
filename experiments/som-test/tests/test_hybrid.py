@@ -26,10 +26,22 @@ class HybridTests(unittest.TestCase):
         gem.change('a', .49)
         with self.assertRaises(RuntimeError): gem.change('b', .02)
         astra.change('a', 1.99)
-        with self.assertRaises(RuntimeError): astra.change('b', .02)
+        with self.assertRaises(RuntimeError): astra.change('b', .03)  # shared $2.50 cap
+        with self.assertRaises(RuntimeError): astra.change('c', .42)  # provider $2.40 cap
         gem.change('a', .01, settle=True)
         with self.assertRaises(RuntimeError): gem.change('a', .01)
         self.assertAlmostEqual(sum(x['usd'] for x in json.loads(path.read_text())['requests'].values()), 2.)
+
+    def test_explicit_fresh_attempt_selection(self):
+        frame = {'key': 'campaign/sink/motion_blur'}
+        original = self.root / 'runs' / frame['key']
+        original.mkdir(parents=True)
+        (original / 'attempt.json').write_text('{}')
+        self.assertEqual(hybrid.run_destination(self.root, frame), original)
+        selected = frame['key'] + '_attempt2'
+        (self.root / 'run_selection.json').write_text(json.dumps({frame['key']: selected}))
+        self.assertEqual(hybrid.run_destination(self.root, frame), self.root / 'runs' / selected)
+        self.assertTrue((original / 'attempt.json').exists())
 
     @patch.dict(os.environ, {'GEMINI_API_KEY': 'fake'})
     def test_count_settle_and_no_retry(self):
