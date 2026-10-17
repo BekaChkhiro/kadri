@@ -1,6 +1,25 @@
 import SwiftUI
 import KadriCore
 
+enum PhotoStepPresentation: Equatable {
+    case next, preparing, finish
+
+    static func state(index: Int, count: Int, streaming: Bool) -> Self {
+        guard count > 0 else { return .preparing }
+        if index < count - 1 { return .next }
+        return streaming ? .preparing : .finish
+    }
+
+    var disabled: Bool { self == .preparing }
+    var title: String {
+        switch self {
+        case .next: "შემდეგი"
+        case .preparing: "მზადდება…"
+        case .finish: "დასრულება"
+        }
+    }
+}
+
 struct PhotoStepCard: View {
     let step: Step?
     let index: Int
@@ -12,8 +31,9 @@ struct PhotoStepCard: View {
     var finish: () -> Void
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    private var last: Bool { count > 0 && index == count - 1 }
-    private var finished: Bool { last && !streaming }
+    private var presentation: PhotoStepPresentation {
+        .state(index: index, count: count, streaming: streaming)
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -48,24 +68,23 @@ struct PhotoStepCard: View {
                     .disabled(index == 0 || count == 0)
                     .accessibilityLabel("უკან").accessibilityHint("წინა ნაბიჯს აჩვენებს")
                 Button {
-                    if finished { finish() } else { next() }
+                    if presentation == .finish { finish() } else { next() }
                 } label: {
                     HStack(spacing: 8) {
-                        Text(finished ? "დასრულება" : "შემდეგი")
-                        if !finished { Image(systemName: "arrow.right").font(.system(size: 16)) }
+                        if presentation == .preparing {
+                            ProgressView().controlSize(.small).tint(.white)
+                        }
+                        Text(presentation.title)
+                        if presentation == .next { Image(systemName: "arrow.right").font(.system(size: 16)) }
                     }
                 }
                 .buttonStyle(SessionButtonStyle(primary: true))
                 .shadow(Theme.Shadow.pop)
-                .disabled(count == 0 || (last && streaming))
-                .accessibilityLabel(finished ? "დასრულება" : "შემდეგი")
-                .accessibilityHint(finished ? "დაასრულებს სესიას" : "შემდეგ ნაბიჯს აჩვენებს")
+                .disabled(presentation.disabled)
+                .accessibilityLabel(presentation.title)
+                .accessibilityHint(presentation == .finish ? "დაასრულებს სესიას" : "შემდეგ ნაბიჯს აჩვენებს")
             }.padding(.top, 16)
-            if step == nil || (last && streaming) {
-                Text(step == nil ? "პირველი ნაბიჯი იწერება…" : "შემდეგი ნაბიჯი იწერება…")
-                    .font(.kadri(12.5)).foregroundStyle(Theme.Colors.ink[500]!)
-                    .padding(.top, 8)
-            }
+
         }
         .foregroundStyle(Theme.Colors.ink[900]!)
         .padding(16).glass()

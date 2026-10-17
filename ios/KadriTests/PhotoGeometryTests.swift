@@ -30,3 +30,26 @@ final class PhotoGeometryTests: XCTestCase {
         XCTAssertTrue(PhotoGeometry.boxes(parts: [part], viewport: CGSize(width: 390, height: 844), imageSize: CGSize(width: 1024, height: 1536)).isEmpty)
     }
 }
+
+final class PhotoStepPresentationTests: XCTestCase {
+    func testWaitsUntilAnotherStepArrives() {
+        XCTAssertEqual(PhotoStepPresentation.state(index: 0, count: 1, streaming: true), .preparing)
+        XCTAssertTrue(PhotoStepPresentation.state(index: 0, count: 1, streaming: true).disabled)
+        XCTAssertEqual(PhotoStepPresentation.state(index: 0, count: 2, streaming: true), .next)
+        XCTAssertFalse(PhotoStepPresentation.state(index: 0, count: 2, streaming: true).disabled)
+    }
+
+    func testFinishesOnlyAfterStreamCompletes() {
+        XCTAssertEqual(PhotoStepPresentation.state(index: 4, count: 5, streaming: true), .preparing)
+        XCTAssertEqual(PhotoStepPresentation.state(index: 4, count: 5, streaming: false), .finish)
+        XCTAssertEqual(PhotoStepPresentation.state(index: 0, count: 5, streaming: false), .next)
+    }
+
+    func testNoStepsAlwaysDisablesButton() {
+        for streaming in [true, false] {
+            let state = PhotoStepPresentation.state(index: 0, count: 0, streaming: streaming)
+            XCTAssertEqual(state, .preparing)
+            XCTAssertTrue(state.disabled)
+        }
+    }
+}
