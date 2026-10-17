@@ -11,13 +11,15 @@ struct PhotoScreenLayout<Photo: View, Panel: View>: View {
     @ViewBuilder var photo: () -> Photo
     @ViewBuilder var panel: () -> Panel
     static var minimumPanelHeight: CGFloat { 210 }
+    /// The photo keeps the same side inset as the panel's content.
+    static var horizontalInset: CGFloat { 16 }
 
     var body: some View {
         VStack(spacing: 0) {
             PhotoHeader(title: title, subtitle: subtitle, close: close, newPhoto: newPhoto)
                 .padding(.horizontal, 16).padding(.top, 8).padding(.bottom, 10)
             GeometryReader { proxy in
-                let side = max(0, min(proxy.size.width, proxy.size.height - Self.minimumPanelHeight))
+                let side = max(0, min(proxy.size.width - 2 * Self.horizontalInset, proxy.size.height - Self.minimumPanelHeight))
                 VStack(spacing: 0) {
                     photo()
                         .allowsHitTesting(false)
