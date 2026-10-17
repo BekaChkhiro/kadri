@@ -1,0 +1,83 @@
+{
+  "b_astra_valid": {
+    "scenes": [
+      "chemistry",
+      "microscope",
+      "psychology",
+      "laundry"
+    ],
+    "kinds": [
+      "original"
+    ],
+    "runs": 1
+  },
+  "b_astra_low": {
+    "scenes": [
+      "chemistry",
+      "microscope",
+      "psychology",
+      "laundry"
+    ],
+    "kinds": [
+      "original"
+    ],
+    "runs": 1
+  },
+  "c_astra_tracking": {
+    "scenes": [
+      "sink",
+      "gym",
+      "car",
+      "chemistry",
+      "microscope",
+      "psychology",
+      "laundry"
+    ],
+    "kinds": [
+      "original",
+      "shift_left",
+      "shift_right"
+    ],
+    "runs": 1
+  },
+  "c_astra_stress": {
+    "scenes": [
+      "sink",
+      "gym",
+      "car",
+      "chemistry",
+      "microscope",
+      "psychology",
+      "laundry"
+    ],
+    "kinds": [
+      "dark_noise",
+      "motion_blur",
+      "occlusion"
+    ],
+    "runs": 1
+  },
+  "c_mini_matrix": {
+    "scenes": [
+      "sink",
+      "gym",
+      "car",
+      "chemistry",
+      "microscope",
+      "psychology",
+      "laundry"
+    ],
+    "kinds": [
+      "original",
+      "dark_noise",
+      "motion_blur",
+      "tilt_crop",
+      "lowres",
+      "jpeg",
+      "occlusion",
+      "shift_left",
+      "shift_right"
+    ],
+    "runs": 1
+  }
+}
