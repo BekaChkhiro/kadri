@@ -1,15 +1,22 @@
+import { googleSignIn, me, refreshSession } from "./auth";
 import type { Env } from "./env";
 import { json } from "./errors";
 import { Router } from "./router";
 
-export const router = new Router().get("/health", ({ env }) =>
-  json({
-    ok: true,
-    env: env.ENVIRONMENT,
-    provider: env.AI_PROVIDER,
-    version: env.VERSION ?? "dev",
-  }),
-);
+export { requireSession } from "./session";
+
+export const router = new Router()
+  .get("/health", ({ env }) =>
+    json({
+      ok: true,
+      env: env.ENVIRONMENT,
+      provider: env.AI_PROVIDER,
+      version: env.VERSION ?? "dev",
+    }),
+  )
+  .post("/auth/google", googleSignIn)
+  .post("/auth/refresh", refreshSession)
+  .get("/me", me);
 
 export default {
   fetch(request, env, ctx) {

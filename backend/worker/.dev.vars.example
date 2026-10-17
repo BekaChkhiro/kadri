@@ -1,5 +1,7 @@
 # Copy to .dev.vars (gitignored) for `wrangler dev`. Never commit real values.
 OPENAI_API_KEY=
 GEMINI_API_KEY=
+# HS256 key for our own session JWTs. Generate: openssl rand -base64 48
 SESSION_SECRET=
+# Comma-separated Google OAuth client IDs accepted as ID-token `aud` (iOS client, Web client).
 GOOGLE_CLIENT_IDS=
