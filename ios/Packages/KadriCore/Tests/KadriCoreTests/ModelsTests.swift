@@ -31,4 +31,22 @@ final class ModelsTests: XCTestCase {
         XCTAssertTrue(legacy.tools.isEmpty)
         XCTAssertNil(legacy.warn)
     }
+    func testStepIconsDecodeAlongsideLegacyTools() throws {
+        let old = #"{"index":1,"title":"x","text":"y","tools":["ტილო"]}"#
+        let legacy = try JSONDecoder().decode(Step.self, from: Data(old.utf8))
+        XCTAssertEqual(legacy.tools, ["ტილო"])
+        XCTAssertNil(legacy.icon)
+        XCTAssertNil(legacy.toolItems)
+
+        let payload = #"{"index":1,"title":"x","text":"y","tools":["ტილო","ვედრო"],"icon":"clean","toolItems":[{"label":"ტილო","icon":"cloth"},{"label":"ვედრო","icon":null}]}"#
+        let step = try JSONDecoder().decode(Step.self, from: Data(payload.utf8))
+        XCTAssertEqual(step.icon, "clean")
+        XCTAssertEqual(step.tools, ["ტილო", "ვედრო"])
+        XCTAssertEqual(step.toolItems, [StepTool(label: "ტილო", icon: "cloth"), StepTool(label: "ვედრო")])
+        XCTAssertEqual(try JSONDecoder().decode(Step.self, from: JSONEncoder().encode(step)), step)
+        let nulls = #"{"index":1,"title":"x","text":"y","icon":null,"toolItems":null}"#
+        let empty = try JSONDecoder().decode(Step.self, from: Data(nulls.utf8))
+        XCTAssertNil(empty.icon)
+        XCTAssertNil(empty.toolItems)
+    }
 }

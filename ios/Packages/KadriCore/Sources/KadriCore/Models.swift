@@ -40,17 +40,20 @@ public struct Step: Hashable, Codable, Sendable {
     public let tools: [String]
     public let warn: String?
     public let tip: String?
+    public let icon: String?
+    public let toolItems: [StepTool]?
 
     public init(index: Int, title: String, text: String, focus: [String] = [], avoid: [String] = [],
                 markers: [StepMarker] = [], arrows: [StepArrow] = [], tools: [String] = [],
-                warn: String? = nil, tip: String? = nil) {
+                warn: String? = nil, tip: String? = nil, icon: String? = nil, toolItems: [StepTool]? = nil) {
         self.index = index; self.title = title; self.text = text
         self.focus = focus; self.avoid = avoid; self.markers = markers; self.arrows = arrows
         self.tools = tools; self.warn = warn; self.tip = tip
+        self.icon = icon; self.toolItems = toolItems
     }
 
     private enum CodingKeys: String, CodingKey {
-        case index, title, text, focus, avoid, markers, arrows, tools, warn, tip
+        case index, title, text, focus, avoid, markers, arrows, tools, warn, tip, icon, toolItems
     }
 
     public init(from decoder: any Decoder) throws {
@@ -65,6 +68,18 @@ public struct Step: Hashable, Codable, Sendable {
         tools = try c.decodeIfPresent([String].self, forKey: .tools) ?? []
         warn = try c.decodeIfPresent(String.self, forKey: .warn)
         tip = try c.decodeIfPresent(String.self, forKey: .tip)
+        icon = try c.decodeIfPresent(String.self, forKey: .icon)
+        toolItems = try c.decodeIfPresent([StepTool].self, forKey: .toolItems)
+    }
+}
+
+public struct StepTool: Hashable, Codable, Sendable {
+    public let label: String
+    public let icon: String?
+
+    public init(label: String, icon: String? = nil) {
+        self.label = label
+        self.icon = icon
     }
 }
 
