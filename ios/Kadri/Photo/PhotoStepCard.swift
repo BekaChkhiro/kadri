@@ -29,7 +29,6 @@ struct PhotoStepCard: View {
     var previous: () -> Void
     var next: () -> Void
     var finish: () -> Void
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var presentation: PhotoStepPresentation {
         .state(index: index, count: count, streaming: streaming)
@@ -55,8 +54,6 @@ struct PhotoStepCard: View {
             }.accessibilityHidden(true).padding(.top, 10)
             content.padding(.top, 14)
                 .frame(maxWidth: .infinity, minHeight: 150, alignment: .topLeading)
-                .id(step?.index)
-                .transition(reduceMotion ? .identity : .opacity.combined(with: .offset(y: 8)))
             HStack(spacing: 8) {
                 Button {} label: {
                     Image(systemName: "mic").font(.system(size: 20))
@@ -88,7 +85,7 @@ struct PhotoStepCard: View {
         }
         .foregroundStyle(Theme.Colors.ink[900]!)
         .padding(16).glass()
-        .animation(reduceMotion ? nil : .easeOut(duration: 0.2), value: step?.index)
+        .transaction { $0.animation = nil }
     }
 
     static func displayTitle(_ title: String) -> String {
