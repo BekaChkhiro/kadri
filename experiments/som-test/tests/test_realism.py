@@ -93,6 +93,102 @@ class RealismTests(unittest.TestCase):
             self.assertEqual(result, {'parts': []})
             self.assertEqual(client.responses.create.call_count, 1)
 
+    def test_sdk_errors_sanitized_for_b_and_c_without_retry(self):
+        import httpx
+        from openai import BadRequestError
+        from realism import CResumeClientWrapper
+        secret = 'private-environment-value-12345'
+        for variant in ('b', 'c_parts', 'c_steps'):
+            for stage in ('count', 'generation'):
+                with self.subTest(variant=variant, stage=stage), tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    body = {'code': 'unsupported_value', 'type': 'invalid_request_error',
+                            'param': 'reasoning.effort',
+                            'message': 'Unsupported minimal ' + secret + ' sk-test-abcdef ' + 'x ' * 600,
+                            'request': {'input': 'DO_NOT_SAVE_FULL_REQUEST'}}
+                    error = BadRequestError('DO_NOT_SAVE_EXCEPTION_STRING', body=body,
+                        response=httpx.Response(400, headers={'x-secret': secret},
+                            request=httpx.Request('POST', 'https://example.test', headers={'Authorization': secret})))
+                    count = Mock(return_value=SimpleNamespace(input_tokens=100))
+                    create = Mock()
+                    (count if stage == 'count' else create).side_effect = error
+                    client = SimpleNamespace(responses=SimpleNamespace(create=create,
+                        input_tokens=SimpleNamespace(count=count)))
+                    budget = Budget(root / 'ledger')
+                    kwargs = dict(model='gpt-6-astra', input='hello', max_output_tokens=100,
+                                  stream=variant == 'c_steps')
+                    if variant == 'b':
+                        def run():
+                            return run_b_adapter(client, 'gpt-6-astra', root / 'img', {}, root / 'run',
+                                'cpu', budget, (10, 50), lambda c, *args: c.responses.create(**kwargs))
+                        artifact = root / 'run/request_error.json'
+                    else:
+                        wrapped = CResumeClientWrapper(client, root / 'run', budget, (10, 50))
+                        def run():
+                            return wrapped.responses.create(**kwargs)
+                        artifact = root / ('run/steps_request/request_error.json' if variant == 'c_steps'
+                                           else 'run/parts_request/request_error.json')
+                    with patch.dict('os.environ', {'TEST_SECRET': secret}):
+                        with self.assertRaises(BadRequestError) as caught:
+                            run()
+                        self.assertIs(caught.exception, error)
+                        before = artifact.read_bytes()
+                        with self.assertRaises(RuntimeError):
+                            run()
+                    self.assertEqual(before, artifact.read_bytes())
+                    self.assertEqual(count.call_count, 1)
+                    self.assertEqual(create.call_count, int(stage == 'generation'))
+                    saved = json.loads(before)
+                    self.assertEqual(set(saved), {'stage', 'http_status', 'code', 'type', 'param', 'message'})
+                    self.assertEqual(saved['stage'], stage)
+                    self.assertEqual(saved['http_status'], 400)
+                    self.assertEqual(saved['param'], 'reasoning.effort')
+                    self.assertEqual(saved['code'], 'unsupported_value')
+                    self.assertLessEqual(len(saved['message']), 500)
+                    for forbidden in (secret, 'sk-test-abcdef', 'DO_NOT_SAVE', 'Authorization', 'x-secret'):
+                        self.assertNotIn(forbidden, before.decode())
+                    rows = json.loads((root / 'ledger').read_text())['requests']
+                    pending = [row for key, row in rows.items() if key.endswith(':count' if stage == 'count' else ':gen')]
+                    self.assertEqual(pending, [{'state': 'reserved', 'usd': 1.0 if stage == 'count' else 1.005}])
+
+    def test_error_echo_and_non_string_fields_are_not_persisted(self):
+        from realism import request_errors
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for message in ('request: hello private prompt', '{"input": "private prompt"}',
+                            'data:image/png;base64,QUJD', 'Authorization: secret', 'A' * 1000):
+                exc = RuntimeError('DO_NOT_SAVE_EXCEPTION_STRING')
+                exc.body = {'error': {'message': message, 'code': {'private': 'payload'},
+                                     'param': ['private'], 'type': None}}
+                with self.assertRaises(RuntimeError):
+                    with request_errors(root, 'count'):
+                        raise exc
+                saved = json.loads((root / 'request_error.json').read_text())
+                self.assertIsNone(saved['code'])
+                self.assertIsNone(saved['param'])
+                self.assertIsNone(saved['http_status'])
+                self.assertNotIn(message, saved['message'])
+
+    def test_c_stream_network_error_keeps_reservation_and_logs_generation(self):
+        from realism import CResumeClientWrapper
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            def events():
+                raise TimeoutError('private network details')
+                yield
+            client = SimpleNamespace(responses=SimpleNamespace(create=Mock(return_value=events()),
+                input_tokens=SimpleNamespace(count=Mock(return_value=SimpleNamespace(input_tokens=100)))))
+            wrapped = CResumeClientWrapper(client, root / 'run', Budget(root / 'ledger'), (10, 50))
+            stream = wrapped.responses.create(model='gpt-6-astra', input='hi', stream=True, max_output_tokens=100)
+            with self.assertRaises(TimeoutError):
+                list(stream)
+            saved = json.loads((root / 'run/steps_request/request_error.json').read_text())
+            self.assertEqual(saved['stage'], 'generation')
+            self.assertIsNone(saved['message'])
+            rows = json.loads((root / 'ledger').read_text())['requests']
+            self.assertEqual([r['state'] for k, r in rows.items() if k.endswith(':gen')], ['reserved'])
+            self.assertEqual(client.responses.create.call_count, 1)
+
     def test_adapter_settles_and_unknown_price_blocks(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

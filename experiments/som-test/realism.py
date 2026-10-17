@@ -6,6 +6,8 @@ import io
 import json
 import math
 import os
+import re
+from contextlib import contextmanager
 from pathlib import Path
 import time
 
@@ -30,6 +32,45 @@ def atomic_json(path, value):
         os.fsync(fd)
     finally:
         os.close(fd)
+
+
+def sanitized_error_field(value, limit=160):
+    """Never stringify exception/request objects; redact before truncating."""
+    if not isinstance(value, str):
+        return None
+    for name, secret in sorted(os.environ.items(), key=lambda item: len(item[1]), reverse=True):
+        if secret and (len(secret) >= 8 or re.search(r'key|token|secret|password|credential|auth', name, re.I)):
+            value = value.replace(secret, '[REDACTED]')
+    value = re.sub(r'(?i)sk-[a-z0-9_-]+|bearer\s+[^\s\"\',;]+', '[REDACTED]', value)
+    # Provider messages can echo arbitrary request JSON, headers or image bytes.
+    # Drop such messages entirely instead of trying to parse an untrusted dump.
+    if re.search(r'[{}]|data:|base64|authorization|api.key|input_image|image_url|headers|request\s*[:=]', value, re.I):
+        return '[omitted: possible request echo]'
+    value = re.sub(r'[A-Za-z0-9+/=_-]{64,}', '[REDACTED]', value)
+    return ' '.join(value.split())[:limit]
+
+
+@contextmanager
+def request_errors(destination, stage):
+    """Persist only allowlisted diagnostics and re-raise without retry/settlement."""
+    try:
+        yield
+    except Exception as exc:
+        body = getattr(exc, 'body', None)
+        body = body if isinstance(body, dict) else {}
+        if isinstance(body.get('error'), dict):
+            body = body['error']
+        status = getattr(exc, 'status_code', None)
+        atomic_json(Path(destination) / 'request_error.json', {
+            'stage': stage,
+            'http_status': status if type(status) is int else None,
+            'code': sanitized_error_field(body.get('code')),
+            'type': sanitized_error_field(body.get('type')),
+            'param': sanitized_error_field(body.get('param')),
+            # str(exc) often contains the full response: never use it as fallback.
+            'message': sanitized_error_field(body.get('message'), 500),
+        })
+        raise
 
 
 def degrade(image, masks, kind, seed=0):
@@ -263,7 +304,8 @@ def run_b_adapter(client, model, source, truth, destination, device, budget, rat
             budget.change(count_key, count_reserve, settle=False)
 
             t_count_0 = time.perf_counter()
-            count_res = client.responses.input_tokens.count(**copy.deepcopy(count_payload))
+            with request_errors(destination, 'count'):
+                count_res = client.responses.input_tokens.count(**copy.deepcopy(count_payload))
             preflight_latency = time.perf_counter() - t_count_0
             preflight_info['latency'] = preflight_latency
 
@@ -306,7 +348,8 @@ def run_b_adapter(client, model, source, truth, destination, device, budget, rat
             gen_reserve = (ceiling * rates[0] + max_out * rates[1]) / 1_000_000
             budget.change(gen_key, gen_reserve, settle=False)
 
-            response = client.responses.create(**kwargs)
+            with request_errors(destination, 'generation'):
+                response = client.responses.create(**kwargs)
             raw = response.model_dump(mode='json')
             usage = raw.get('usage') or {}
             inputs, outputs = usage.get('input_tokens'), usage.get('output_tokens')
@@ -454,7 +497,8 @@ class CResumeResponsesWrapper:
         self.realism_budget.change(count_key, count_reserve, settle=False)
 
         t_count_0 = time.perf_counter()
-        count_res = self.underlying_client.responses.input_tokens.count(**copy.deepcopy(req_signature))
+        with request_errors(stage_dir, 'count'):
+            count_res = self.underlying_client.responses.input_tokens.count(**copy.deepcopy(req_signature))
         preflight_latency = time.perf_counter() - t_count_0
 
         if hasattr(count_res, 'input_tokens'):
@@ -486,7 +530,8 @@ class CResumeResponsesWrapper:
 
         if payload_sha256({k: kwargs[k] for k in req_signature}) != req_hash:
             raise ValueError('Create payload does not match preflight')
-        response = self.underlying_responses.create(**kwargs)
+        with request_errors(stage_dir, 'generation'):
+            response = self.underlying_responses.create(**kwargs)
 
         def settle(response):
             raw = response.model_dump(mode='json')
@@ -505,12 +550,13 @@ class CResumeResponsesWrapper:
         class SettlingStream:
             def __iter__(self):
                 terminal_seen = False
-                for event in response:
-                    if event.type in ('response.completed', 'response.incomplete', 'response.failed'):
-                        if not terminal_seen:
-                            settle(event.response)
-                            terminal_seen = True
-                    yield event
+                with request_errors(stage_dir, 'generation'):
+                    for event in response:
+                        if event.type in ('response.completed', 'response.incomplete', 'response.failed'):
+                            if not terminal_seen:
+                                settle(event.response)
+                                terminal_seen = True
+                        yield event
 
             def close(self):
                 response.close()
