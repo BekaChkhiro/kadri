@@ -112,8 +112,12 @@ struct PhotoFlowView: View {
                           close: session.retake, newPhoto: session.retake)
         case .scanning(let startedAt):
             TimelineView(.periodic(from: startedAt, by: 1)) { context in
-                photoScreen(image, title: SessionPresentation.scanStatus(elapsed: context.date.timeIntervalSince(startedAt)),
-                            subtitle: session.model.instructions.isEmpty ? nil : session.model.instructions, scanning: true) {
+                let status = SessionPresentation.scanStatus(elapsed: context.date.timeIntervalSince(startedAt))
+                let round = session.model.round
+                // From round 2 on the header keeps naming the photo; the scan status moves to the subtitle.
+                photoScreen(image, title: round > 1 ? "ფოტო \(round)" : status,
+                            subtitle: round > 1 ? status : (session.model.instructions.isEmpty ? nil : session.model.instructions),
+                            scanning: true) {
                     PhotoScanPanel(startedAt: startedAt, cancel: session.model.cancel)
                 }
             }
