@@ -124,3 +124,35 @@ production-ისთვის იგივე `--env production`-ით (`kadri-
 4. `npm run deploy:staging` / `npm run deploy:prod`.
 
 Key-ები არასდროს git-ში — მხოლოდ `.dev.vars` (ლოკალურად) ან `wrangler secret`.
+
+## AI ეტაპები (Astra C)
+
+`src/routes/ai.ts` → `aiRoutes()` / `mountAiRoutes(router)`; ლოგიკა `src/ai/`-შია. პრომპტები და strict
+სქემები `experiments/som-test/variant_c.py`-დან სიტყვასიტყვითაა გადმოტანილი (ჩაწერილ Python მოთხოვნებს
+ბაიტ-ბაიტ ემთხვევა) — ტექსტი ახალი ექსპერიმენტის გარეშე არ შეცვალო. მოდელი `AI_MODEL` (default
+`gpt-6-astra`), effort `AI_EFFORT` (default `low`; `minimal` არ მუშაობს). ფასიან მოთხოვნაზე retry არ ხდება.
+`AI_PROVIDER=hybrid` ჯერ მხოლოდ ინტერფეისია და 501-ს აბრუნებს.
+
+- `POST /ai/parts` — multipart (`image` JPEG ფაილი + `instructions`) ან JSON `{image: base64, instructions}`;
+  JPEG, დიდი გვერდი ≤768px, ≤2 MB. `instructions` — ტექსტი ან `[{title, text}]`. პასუხი:
+  `{object, parts:[{id, name, box}], model, usage, costUsd, latencyMs}`; box 0–1000 XYXY, ID-ები სერვერზე
+  `p1..pN` ცენტრის y-ით, შემდეგ x-ით; ≤12 ნაწილი. ცუდი box/სქემა → 502 `ai_invalid_response`.
+- `POST /ai/steps` — JSON `{object, parts:[{id, name, box}], instructions, count?, image?}` → `text/event-stream`:
+  `event: step` (`{index, title, text, focus, avoid, markers, arrows, tools, warn}`) თითო დასრულებულ ნაბიჯზე,
+  მოდელი ჯერ კიდევ წერს; ბოლოს `event: done` (`{unknownParts, usage, costUsd, latencyMs, firstStepMs, model}`)
+  ან `event: error` (`{code, message}`, ქართულად). ID-ები სქემაში მხოლოდ გადმოცემული `parts`-ის enum-ია.
+  timeout 60 წმ. `image` არასავალდებულოა, მაგრამ ექსპერიმენტი ფოტოს მეორე ეტაპზეც აგზავნიდა.
+
+ფასი: `src/ai/pricing.ts` (`vision.py` PRICES, 2026-10-17) — შეფასებაა, არა ინვოისი.
+
+### ლაივ შემოწმება (ფასიანი)
+
+```sh
+rsync … # experiments/som-test/out_realism/c_astra_tracking/{sink,car,gym}/*/original/run_1/ მთავარი checkout-იდან
+set -a; source ../../experiments/som-test/.env; set +a      # key-ს არ ბეჭდავს
+node scripts/live_check.mjs --runs 3 --cap 3 --port 8797
+```
+
+სკრიპტი key-ს `.dev.vars`-ში წერს, უშვებს `wrangler dev --local scripts/live_entry.ts`-ს, ყოველ გამოძახებას
+წინასწარ აჯავშნის `scripts/ledger.json`-ში და cap-ზე ჩერდება. შედეგები: `scripts/out/live_check.json`
+(gitignored), ანგარიში — `docs/AI_LIVE_CHECK.md`.
