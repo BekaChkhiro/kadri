@@ -150,6 +150,9 @@ final class PartAnchors: ObservableObject {
             }
             var fallback = depths.isEmpty ? featureDepths(inside: box) : []
             if depths.isEmpty, fallback.count < 3 { fallback = featureDepths(inside: nil) }
+            // Right after (re)initialization there may be no feature points yet; assume arm's length so the
+            // part still gets a world anchor (rotation stays correct, translation parallax is approximate).
+            if depths.isEmpty, fallback.isEmpty { fallback = [0.6] }
             guard let depth = FrameGeometry.medianDepth(depths.isEmpty ? fallback : depths) else { unanchored.append(part.id); continue }
             func world(_ point: CGPoint) -> SIMD3<Float> {
                 FrameGeometry.unproject(SIMD2(Float(point.x), Float(point.y)), depth: depth, intrinsics: keyframe.intrinsics, camera: keyframe.cameraTransform)
