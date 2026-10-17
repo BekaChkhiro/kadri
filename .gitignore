@@ -1,0 +1,6 @@
+.DS_Store
+Camera/sessions/
+Camera/.shots/
+.env
+.venv/
+__pycache__/
