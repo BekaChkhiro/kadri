@@ -23,6 +23,7 @@
 		39CD30AE8466CBDF141C4E82 /* sink in Resources */ = {isa = PBXBuildFile; fileRef = 0BC5406AFC56533421633751 /* sink */; };
 		3A22A9DB0A7B1979BC715269 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6F8715683CDD1468FCCEA2 /* Theme.swift */; };
 		3B5D76707165FAFED8C89035 /* ARControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0248C421A7F6709755E1292 /* ARControllerTests.swift */; };
+		40A5DA33CD651B2FC3F1EB6A /* MeshWrapGeometryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6CB6CB0B0F28CA4F0F79D82 /* MeshWrapGeometryTests.swift */; };
 		4209CE751639036987E4CB8A /* OFL-NotoSansGeorgian.txt in Resources */ = {isa = PBXBuildFile; fileRef = 317A97DEC8B919E1D5640FD6 /* OFL-NotoSansGeorgian.txt */; };
 		54F0522C6E62571ABF309D4D /* PartsRevealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5A4C245D4AD9B3997F740D /* PartsRevealView.swift */; };
 		5BE739AD9DDDF79EFA649F4E /* StepCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57C76ED6947A710AECBC58E /* StepCard.swift */; };
@@ -31,6 +32,7 @@
 		6D41E78BA702EF418494A06F /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAC9836272FB003780B518D6 /* Vision.framework */; };
 		729038930CAADDEFED6F3F3A /* SessionPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D624A7ABF50F3C99DA5D0ADF /* SessionPresentationTests.swift */; };
 		72B54F42CA10F4754BFF0864 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84CAC115ECF63FDB03CC26B8 /* Inter-SemiBold.ttf */; };
+		79DE86C4B2CA86AA5224E15B /* MeshWrapGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE74887511C25C4481B6F46 /* MeshWrapGeometry.swift */; };
 		7E63B1D4CFDD42BE7DF2BD56 /* Glass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5147D5C2BA088C9E501729 /* Glass.swift */; };
 		89EF43D89D35C3880A687D29 /* SessionPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6881E6C4A4099231DB05929E /* SessionPresentation.swift */; };
 		9182092E4B5E128F09C0A614 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00B16E38C3E8EC7B01B52E4 /* Inter-Bold.ttf */; };
@@ -42,8 +44,10 @@
 		AA688D92A9EC9C0E84545F71 /* SessionPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73919932F619884CCB894798 /* SessionPreviews.swift */; };
 		AB7754BA7224CE2D04DD9517 /* MockKadriAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67531DAC3A9852818926C8F /* MockKadriAPI.swift */; };
 		ADE3F74A26977B000BF655B1 /* KadriTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4910DAFAB764B1ABC03FDC1 /* KadriTests.swift */; };
+		B0354A00A763F67E86E883FB /* MeshWrapSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9BCE391233E0A986DDEBC3 /* MeshWrapSnapshotTests.swift */; };
 		B0C7B9CD0B78ADD51ED872B9 /* RealityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 929743E4A7FCA4EBC2F888D7 /* RealityKit.framework */; };
 		B71D30C9823A5FF91D0A3DBC /* CoreML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45B6800C7C6BC6DFD3FD195E /* CoreML.framework */; };
+		BB29B85D82A8D591764DA7CF /* MeshWrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD4C0E74341F15D5E0088D8 /* MeshWrap.swift */; };
 		BB51ED262643A1C54A8DAEA2 /* SessionFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFA803FB41D7E1F58FD4454 /* SessionFlowView.swift */; };
 		BD67D4209D70CC5DD7C4D768 /* ARSessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0284BC4ED2FA5475C1184EE9 /* ARSessionController.swift */; };
 		C2FCE5E1F6B2224395E6B37C /* GoogleAuthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20D3D496D409FAC6A6683F /* GoogleAuthController.swift */; };
@@ -53,6 +57,7 @@
 		D87E546E4D732C3263D4271F /* ContourOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D28A03C9FD37FA0817DC5B /* ContourOverlay.swift */; };
 		D99995671C2CD82936EFFE51 /* KeyframePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889B405E7EAD71436F553E6 /* KeyframePicker.swift */; };
 		DD8E70609914641BAA315643 /* GIDTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6AA45E02280C63D8D7D074 /* GIDTokenProvider.swift */; };
+		E0038D0B516C9DAFE18CFBFC /* MeshWrapPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF12F4D98C708EE32218BCF /* MeshWrapPreview.swift */; };
 		E130A68F5F393B8FEE871CA4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543FF004E3F31262D70B1ECA /* ContentView.swift */; };
 		EA71BC0ADF6AB6242FFAB163 /* ARDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3F9A3ED45BED82339BC58F /* ARDebugView.swift */; };
 		EAC14CB5A08766FB56D8EF39 /* Segmenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98849AE08F82095210AB2C08 /* Segmenter.swift */; };
@@ -94,6 +99,7 @@
 		317A97DEC8B919E1D5640FD6 /* OFL-NotoSansGeorgian.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OFL-NotoSansGeorgian.txt"; sourceTree = "<group>"; };
 		323ABB0C7AC98B5137031173 /* Kadri.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Kadri.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		340983717E658514DD60A10B /* Inter-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Medium.ttf"; sourceTree = "<group>"; };
+		3DE74887511C25C4481B6F46 /* MeshWrapGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrapGeometry.swift; sourceTree = "<group>"; };
 		45B6800C7C6BC6DFD3FD195E /* CoreML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreML.framework; path = System/Library/Frameworks/CoreML.framework; sourceTree = SDKROOT; };
 		4AF5D91DF61E491034224AFC /* PartAnchors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartAnchors.swift; sourceTree = "<group>"; };
 		4B6AA45E02280C63D8D7D074 /* GIDTokenProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIDTokenProvider.swift; sourceTree = "<group>"; };
@@ -101,7 +107,9 @@
 		543FF004E3F31262D70B1ECA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		5BC9A3615F9651942AE4DF2B /* KadriCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = KadriCore; path = Packages/KadriCore; sourceTree = SOURCE_ROOT; };
 		5BF721974DE7AA9474A9A606 /* NotoSansGeorgian-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansGeorgian-SemiBold.ttf"; sourceTree = "<group>"; };
+		5FF12F4D98C708EE32218BCF /* MeshWrapPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrapPreview.swift; sourceTree = "<group>"; };
 		6881E6C4A4099231DB05929E /* SessionPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPresentation.swift; sourceTree = "<group>"; };
+		6A9BCE391233E0A986DDEBC3 /* MeshWrapSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrapSnapshotTests.swift; sourceTree = "<group>"; };
 		6C871271F759749DF134EF13 /* Fixtures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fixtures; path = KadriTests/Fixtures; sourceTree = SOURCE_ROOT; };
 		73919932F619884CCB894798 /* SessionPreviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPreviews.swift; sourceTree = "<group>"; };
 		7827EF5714A095173AA7C615 /* SegmentationBenchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentationBenchView.swift; sourceTree = "<group>"; };
@@ -126,6 +134,7 @@
 		B46F495E5E37069B8DAB0CB7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B50FB119A97C98B1472B896A /* ThemePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreview.swift; sourceTree = "<group>"; };
 		BDFA803FB41D7E1F58FD4454 /* SessionFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionFlowView.swift; sourceTree = "<group>"; };
+		C6CB6CB0B0F28CA4F0F79D82 /* MeshWrapGeometryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrapGeometryTests.swift; sourceTree = "<group>"; };
 		C715792D0B8C0680D720655E /* FlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowTests.swift; sourceTree = "<group>"; };
 		CA5147D5C2BA088C9E501729 /* Glass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Glass.swift; sourceTree = "<group>"; };
 		CAC9836272FB003780B518D6 /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
@@ -135,6 +144,7 @@
 		D624A7ABF50F3C99DA5D0ADF /* SessionPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPresentationTests.swift; sourceTree = "<group>"; };
 		D7CC50C123CF7B32458FEBD3 /* SegmentationBench.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentationBench.swift; sourceTree = "<group>"; };
 		DC6545EC000C213F047CC832 /* SAMGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SAMGeometry.swift; sourceTree = "<group>"; };
+		DDD4C0E74341F15D5E0088D8 /* MeshWrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrap.swift; sourceTree = "<group>"; };
 		DFCF1D2047DA0A9AE64024B8 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		EC47E7F74A9863587D696784 /* OFL-Inter.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OFL-Inter.txt"; sourceTree = "<group>"; };
 		EC6F8715683CDD1468FCCEA2 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -208,6 +218,7 @@
 				7889B405E7EAD71436F553E6 /* KeyframePicker.swift */,
 				4AF5D91DF61E491034224AFC /* PartAnchors.swift */,
 				9523C8816C1C34AB888CF149 /* PartTracker.swift */,
+				648EBA9760727415058E98B8 /* Overlays */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -235,6 +246,8 @@
 				6C871271F759749DF134EF13 /* Fixtures */,
 				C715792D0B8C0680D720655E /* FlowTests.swift */,
 				F4910DAFAB764B1ABC03FDC1 /* KadriTests.swift */,
+				C6CB6CB0B0F28CA4F0F79D82 /* MeshWrapGeometryTests.swift */,
+				6A9BCE391233E0A986DDEBC3 /* MeshWrapSnapshotTests.swift */,
 				79684495C6B552237CE68F89 /* SegmentationTests.swift */,
 				D624A7ABF50F3C99DA5D0ADF /* SessionPresentationTests.swift */,
 				00BF5F143404E75DF39FED04 /* SessionSnapshotTests.swift */,
@@ -260,6 +273,16 @@
 				BDFA803FB41D7E1F58FD4454 /* SessionFlowView.swift */,
 			);
 			path = Flow;
+			sourceTree = "<group>";
+		};
+		648EBA9760727415058E98B8 /* Overlays */ = {
+			isa = PBXGroup;
+			children = (
+				DDD4C0E74341F15D5E0088D8 /* MeshWrap.swift */,
+				3DE74887511C25C4481B6F46 /* MeshWrapGeometry.swift */,
+				5FF12F4D98C708EE32218BCF /* MeshWrapPreview.swift */,
+			);
+			path = Overlays;
 			sourceTree = "<group>";
 		};
 		7FD44CA17D482AAAEE96ED16 /* Preview */ = {
@@ -490,6 +513,8 @@
 				EB68B7068C55D089DA53BC10 /* ContourTests.swift in Sources */,
 				34479821C4275CDA91184BF8 /* FlowTests.swift in Sources */,
 				ADE3F74A26977B000BF655B1 /* KadriTests.swift in Sources */,
+				40A5DA33CD651B2FC3F1EB6A /* MeshWrapGeometryTests.swift in Sources */,
+				B0354A00A763F67E86E883FB /* MeshWrapSnapshotTests.swift in Sources */,
 				C480FA751DE36F8B229476CC /* SegmentationTests.swift in Sources */,
 				729038930CAADDEFED6F3F3A /* SessionPresentationTests.swift in Sources */,
 				37789446591D4FB3C98C7948 /* SessionSnapshotTests.swift in Sources */,
@@ -514,6 +539,9 @@
 				D6C97E8C50507362CE0C7B9F /* KadriApp.swift in Sources */,
 				D99995671C2CD82936EFFE51 /* KeyframePicker.swift in Sources */,
 				ECA9DFF62560910E89F7276B /* LiveSessionDependencies.swift in Sources */,
+				BB29B85D82A8D591764DA7CF /* MeshWrap.swift in Sources */,
+				79DE86C4B2CA86AA5224E15B /* MeshWrapGeometry.swift in Sources */,
+				E0038D0B516C9DAFE18CFBFC /* MeshWrapPreview.swift in Sources */,
 				AB7754BA7224CE2D04DD9517 /* MockKadriAPI.swift in Sources */,
 				A021D80B098F055B3EF12B0B /* PartAnchors.swift in Sources */,
 				084494FD3093DD288DA33FE8 /* PartTracker.swift in Sources */,
