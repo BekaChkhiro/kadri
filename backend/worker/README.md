@@ -146,8 +146,8 @@ Key-ები არასდროს git-ში — მხოლოდ `.dev.v
 ## AI ეტაპები (Astra C)
 
 `src/routes/ai.ts` → `aiRoutes()` / `mountAiRoutes(router)`; ლოგიკა `src/ai/`-შია. პრომპტები და strict
-სქემები `experiments/som-test/variant_c.py`-დან სიტყვასიტყვითაა გადმოტანილი (ჩაწერილ Python მოთხოვნებს
-ბაიტ-ბაიტ ემთხვევა) — ტექსტი ახალი ექსპერიმენტის გარეშე არ შეცვალო. მოდელი `AI_MODEL` (default
+სქემები `experiments/som-test/variant_c.py`-ს ეფუძნება. Steps-ის დიაგნოსტიკური ციკლი მხოლოდ
+მოლაპარაკებული `capabilities`-ით ირთვება; ძველი steps prompt/schema და parts prompt/schema უცვლელია. მოდელი `AI_MODEL` (default
 `gpt-6-astra`), effort `AI_EFFORT` (default `low`; `minimal` არ მუშაობს). Guarded route-ებში არის ზემოთ აღწერილი ერთი retry მხოლოდ `ai_invalid_response`-სა და provider timeout-ზე.
 `AI_PROVIDER=hybrid` ჯერ მხოლოდ ინტერფეისია და 501-ს აბრუნებს.
 
@@ -166,11 +166,63 @@ retry/auth/usage არ აქვს და provider-ის ძველი 60-�
   JPEG, დიდი გვერდი ≤768px, ≤2 MB. `instructions` — ტექსტი ან `[{title, text}]`. პასუხი:
   `{object, parts:[{id, name, box}], model, usage, costUsd, latencyMs}`; box 0–1000 XYXY, ID-ები სერვერზე
   `p1..pN` ცენტრის y-ით, შემდეგ x-ით; ≤12 ნაწილი. ცუდი box/სქემა → 502 `ai_invalid_response`.
-- `POST /ai/steps` — JSON `{object, parts:[{id, name, box}], instructions, count?, image?}` → `text/event-stream`:
-  `event: step` (`{index, title, text, focus, avoid, markers, arrows, tools, warn}`) თითო დასრულებულ ნაბიჯზე,
-  მოდელი ჯერ კიდევ წერს; ბოლოს `event: done` (`{unknownParts, usage, costUsd, latencyMs, firstStepMs, model}`)
+- `POST /ai/steps` — JSON `{object, parts:[{id, name, box}], instructions, count?, image?, sessionId?, capabilities?, context?}` → `text/event-stream`:
+  `event: step` (`{index, title, text, focus, avoid, markers, arrows, icon, tools, toolItems, tip, warn}`) თითო დასრულებულ ნაბიჯზე,
+  მოდელი ჯერ კიდევ წერს; ბოლოს `event: done` (`{unknownParts, usage, costUsd, latencyMs, firstStepMs, model, continuation}`)
   ან `event: error` (`{code, message}`, ქართულად). ID-ები სქემაში მხოლოდ გადმოცემული `parts`-ის enum-ია.
-  timeout 60 წმ. `image` არასავალდებულოა, მაგრამ ექსპერიმენტი ფოტოს მეორე ეტაპზეც აგზავნიდა.
+  `image` არასავალდებულო JPEG base64-ია; answer follow-up იმავე `object/parts/image`-ს აგზავნის ახალი ფოტოს გარეშე.
+  თავისუფალი ტექსტის დიაგნოსტიკურ მოთხოვნაზე სქემა უშვებს 1–5 ნაბიჯს (`count` მაქსიმუმ 5-მდე იზღუდება),
+  prompt ითხოვს 2–4 ნაბიჯს შემდეგ შემოწმების წერტილამდე. ნაბიჯთა სია ინარჩუნებს ზუსტ რაოდენობას.
+
+`capabilities` არასავალდებულო ≤8 სტრიქონის სიაა: `"needs_answer"`, `"needs_measurement"`, `"summary"`.
+უცნობი სახელები უგულებელყოფილია. არარსებული, ცარიელი ან მხოლოდ უცნობი სია ინარჩუნებს ძველ
+prompt-ს, სქემას (`kind/prompt/reason`) და output budget-ს; ძველი build-ის განახლება აუცილებელი არ არის.
+ცუდი ტიპი ან 8-ზე მეტი ელემენტი → 400. ყოველი ახალი continuation kind მხოლოდ შესაბამისი capability-ით ირთვება.
+
+`context` არასავალდებულოა; აქვს `round: 1..5`, `doneSteps: string[]` (≤40 title, თითო ≤120),
+`previousObject?: string` (≤300), `photoPrompt?: string` და
+`answers?: [{question: string, answer: string, unit?: string}]`.
+`answers` შეიცავს სესიის **ყველა** პასუხს თანმიმდევრობით, ფოტო-round-ების მიუხედავად: ≤8 ელემენტი,
+არაცარიელი `question/answer` თითო ≤120 სიმბოლო, მითითებული `unit` არაცარიელი ≤12.
+`round: 1` context დასაშვებია მხოლოდ არაცარიელი answers-ით; photoPrompt არ სჭირდება.
+`round ≥2`-ზე photoPrompt სავალდებულოა (არაცარიელი, ≤200), როგორც ადრე.
+`doneSteps` ყველა ნაჩვენები ნაბიჯის title-ია, ყველა ფოტო-round/answer-turn-იდან.
+Answer follow-up-ზე `round` არ იზრდება: ის ფოტოების რაოდენობას აღნიშნავს.
+
+`done.continuation`-ის ფორმები:
+
+- `{kind:"complete"}` — ძველი კლიენტი. `"summary"` capability-ით:
+  `{kind:"complete", cause: string|null, summary: string|null}` (cause ≤80, summary ≤120).
+  მიზეზი ნაპოვნია, ჰიპოთეზები ამოიწურა ან შემდეგი შემოწმება სახიფათოა; ბოლო ორ შემთხვევაში
+  ბოლო ნაბიჯი სპეციალისტისთვის მოკლე ინფორმაციას იძლევა.
+- `{kind:"needs_photo", prompt: string, reason: string}` — prompt ≤60, reason ≤100.
+  ფოტოზე ჯერ უხილავი მდგომარეობა სჭირდება. `round == 5`-ზე აკრძალულია.
+- `{kind:"needs_answer", question: string, options: string[], allowOther: boolean, reason: string|null}` —
+  question ≤80, 2–4 უნიკალური option თითო ≤24, allowOther default true, reason ≤100.
+- `{kind:"needs_measurement", question: string, unit: string, min: number|null, max: number|null, how: string, reason: string|null}` —
+  question ≤80, არაცარიელი unit ≤12 (მაგ. V, mA, ბარი, °C, dBm), how ≤100, reason ≤100.
+
+მოდელის strict სქემაში ახალი კონტრაქტი ერთი ობიექტია: ყველა ველი required,
+`additionalProperties:false`, გამოუყენებელი ველები null, options ცარიელი სია.
+`"summary"`-ის გარეშე cause/summary მხოლოდ null-ია და wire პასუხიდან იშლება.
+Worker ვალიდურ ნაბიჯებს ინარჩუნებს, continuation-ს kind-ის მიხედვით ასუფთავებს;
+უცნობი/დაზიანებული continuation, <2 განსხვავებული option ან ცარიელი unit → complete.
+ტექსტების ზედმეტი სიგრძე იჭრება, ნაბიჯების/ID-ების სხვა ვალიდაცია უცვლელია.
+
+`ANSWER_TURN_LIMIT` (default `6`; `src/limits.ts`, dev/staging/production `[vars]`)
+კრძალავს needs_answer/needs_measurement-ს, როცა `context.answers.length >= limit`:
+ორივე სქემის enum-იდან ქრება, prompt აღარ ითხოვს კითხვას და tidy fallback-იც complete-ს აბრუნებს.
+მეხუთე ფოტოზე answer-kinds ჯერ კიდევ დაშვებულია, თუ პასუხების ლიმიტი არ ამოწურულა.
+Worker სესიის პასუხებს არ ინახავს; ზღვარი კლიენტის გამოგზავნილ სრულ ისტორიაზეა დამოკიდებული.
+**ლიმიტის პოლიტიკა — ადამიანის დასადასტურებელი:** დღიური ლიმიტი ისევ მხოლოდ `parts` usage row-ებს ითვლის;
+answer follow-up-ები მას არ ზრდის, თუმცა ყოველი steps ცდა ჩვეულებრივ იწერება usage-ში და ფასიანია.
+
+დიაგნოსტიკური steps-ის `OUTPUT_LIMITS.steps = 4000` (ძველი კლიენტი კვლავ 2200; parts 1200).
+[OpenAI-ის ოფიციალური დოკუმენტაციით](https://developers.openai.com/api/docs/guides/reasoning#controlling-costs),
+`max_output_tokens` მოიცავს reasoning, ხილულ და უხილავ formatting ტოკენებსაც; reasoning output-ის ფასით ითვლება.
+4000 ზრდის ერთი ცდის შესაძლო output ხარჯის ჭერს დაახლოებით 82%-ით (4000/2200), არა ავტომატურად ფაქტობრივ ფასს.
+რეალური ფასი usage-ზეა დამოკიდებული; მეტმა reasoning-მა და answer follow-up-ებმა შეიძლება სესიის ხარჯი გაზარდოს.
+ეს ბიუჯეტი live ხარისხის გარანტია არ არის; ამ ცვლილების შემოწმება mocked SSE-ითაა, ფასიანი გამოძახების გარეშე.
 
 ფასი: `src/ai/pricing.ts` (`vision.py` PRICES, 2026-10-17) — შეფასებაა, არა ინვოისი.
 
