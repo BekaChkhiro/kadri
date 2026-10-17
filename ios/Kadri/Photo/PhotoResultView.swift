@@ -27,18 +27,17 @@ struct PhotoResultView: View {
             VStack(spacing: 0) {
                 header.padding(.horizontal, 16).padding(.top, 8).padding(.bottom, 10)
                 GeometryReader { proxy in
-                    let boxes = PhotoGeometry.boxes(parts: parts, viewport: proxy.size, imageSize: image.size)
+                    let visible = PhotoGeometry.visibleRect(viewport: proxy.size, cardHeight: cardHeight,
+                                                            bottomInset: screen.safeAreaInsets.bottom)
+                    let sourceBoxes = PhotoGeometry.boxes(parts: parts, imageSize: image.size, transform: .identity)
+                    let transform = PhotoGeometry.focusTransform(imageSize: image.size, viewport: proxy.size,
+                        visibleRect: visible, focusBoxes: (step?.focus ?? []).compactMap { sourceBoxes[$0] })
                     ZStack(alignment: .topLeading) {
                         Theme.Colors.ink[800]!
-                        Image(uiImage: image).resizable().scaledToFill()
-                            .frame(width: proxy.size.width, height: proxy.size.height).clipped()
-                            .accessibilityHidden(true)
-                        TrackedMeshOverlay(meshes: meshes, boxes: boxes, step: step)
-                            .environment(\.meshWrapFocusOutlineOnly, true)
-                            .accessibilityHidden(true)
-                        PhotoAnnotationsView(step: step, parts: parts, boxes: boxes,
-                                             meshReady: Set(meshes.filter { $0.mesh.triangleCount > 0 }.map(\.id)),
-                                             visibleHeight: max(80, proxy.size.height - cardHeight - screen.safeAreaInsets.bottom - 16))
+                        PhotoFocusedImageLayer(image: image, parts: parts, meshes: meshes, step: step,
+                            viewport: proxy.size, visibleHeight: visible.height,
+                            scale: transform.a, translationX: transform.tx, translationY: transform.ty)
+                            .animation(reduceMotion ? nil : .spring(duration: 0.55), value: transform)
                         Label(segmentationStatus ?? "\(parts.count) ნაწილი", systemImage: "viewfinder")
                             .font(.kadri(12, weight: .semibold)).foregroundStyle(.white)
                             .padding(.horizontal, 10).padding(.vertical, 6)
@@ -103,6 +102,48 @@ struct PhotoResultView: View {
         .onAppear { pulse = !reduceMotion }
     }
 
+}
+
+/// Interpolate the mapping once, then derive every photo/mesh/annotation position from that frame.
+/// Applying scaleEffect to the whole stack would also enlarge marker glyphs and line widths.
+private struct PhotoFocusedImageLayer: View, Animatable {
+    let image: UIImage
+    let parts: [Part]
+    let meshes: [TrackedMesh]
+    let step: Step?
+    let viewport: CGSize
+    let visibleHeight: CGFloat
+    nonisolated var scale: CGFloat
+    nonisolated var translationX: CGFloat
+    nonisolated var translationY: CGFloat
+
+    nonisolated var animatableData: AnimatablePair<CGFloat, AnimatablePair<CGFloat, CGFloat>> {
+        get { .init(scale, .init(translationX, translationY)) }
+        set {
+            scale = newValue.first
+            translationX = newValue.second.first
+            translationY = newValue.second.second
+        }
+    }
+
+    var body: some View {
+        let transform = CGAffineTransform(a: scale, b: 0, c: 0, d: scale, tx: translationX, ty: translationY)
+        let boxes = PhotoGeometry.boxes(parts: parts, imageSize: image.size, transform: transform)
+        let baseBoxes = PhotoGeometry.boxes(parts: parts, viewport: viewport, imageSize: image.size)
+        ZStack(alignment: .topLeading) {
+            Image(uiImage: image).resizable()
+                .frame(width: image.size.width * scale, height: image.size.height * scale)
+                .position(x: translationX + image.size.width * scale / 2,
+                          y: translationY + image.size.height * scale / 2)
+            TrackedMeshOverlay(meshes: meshes, boxes: boxes, step: step)
+                .environment(\.meshWrapFocusOutlineOnly, true)
+            PhotoAnnotationsView(step: step, parts: parts, boxes: boxes,
+                meshReady: Set(meshes.filter { $0.mesh.triangleCount > 0 }.map(\.id)),
+                visibleHeight: visibleHeight, arrowSizeBoxes: baseBoxes)
+        }
+        .frame(width: viewport.width, height: viewport.height)
+        .clipped().accessibilityHidden(true)
+    }
 }
 
 #if DEBUG

@@ -170,6 +170,7 @@ struct PhotoAnnotationsView: View {
     let boxes: [String: CGRect]
     let meshReady: Set<String>
     var visibleHeight: CGFloat? = nil
+    var arrowSizeBoxes: [String: CGRect]? = nil
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -201,21 +202,20 @@ struct PhotoAnnotationsView: View {
                 }
             }
             .frame(width: proxy.size.width, height: proxy.size.height)
-            .id(step?.index)
-            .transition(reduceMotion ? .identity : .opacity.combined(with: .scale(scale: 0.94)))
-            .animation(reduceMotion ? nil : .interpolatingSpring(stiffness: 380, damping: 30), value: step?.index)
+
         }
         .allowsHitTesting(false).accessibilityHidden(true)
     }
 
     @ViewBuilder private func arrowView(_ arrow: StepArrow, box: CGRect) -> some View {
+        let sizeBox = arrowSizeBoxes?[arrow.part] ?? box
         if arrow.type == "rotate" {
-            let size = min(160, max(72, max(box.width, box.height) * 1.25))
+            let size = min(160, max(72, max(sizeBox.width, sizeBox.height) * 1.25))
             TurnArrowView(clockwise: arrow.dir == "cw").frame(width: size, height: size)
                 .position(x: box.midX, y: box.midY)
         } else if arrow.type == "move", let direction = direction(arrow.dir) {
             let vertical = arrow.dir == "up" || arrow.dir == "down"
-            let length = max(60, (vertical ? box.height : box.width) * 0.6)
+            let length = max(60, (vertical ? sizeBox.height : sizeBox.width) * 0.6)
             let dx: CGFloat = arrow.dir == "left" ? -1 : arrow.dir == "right" ? 1 : 0
             let dy: CGFloat = arrow.dir == "up" ? -1 : arrow.dir == "down" ? 1 : 0
             MoveArrowView(direction: direction)
