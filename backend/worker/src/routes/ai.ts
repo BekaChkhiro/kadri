@@ -1,11 +1,12 @@
 import { partsHandler, partsResponse, readPartsRequest } from "../ai/parts";
+import { aiErrors } from "../ai/errors";
 import { DEFAULT_MODEL } from "../ai/openai";
 import type { Usage } from "../ai/pricing";
-import { deadline, partsProvider, stepsProvider } from "../ai/provider";
+import { deadline, partsProvider, stepsProvider, type StepsProvider } from "../ai/provider";
 import { readStepsRequest, stepsHandler, stepsStream } from "../ai/steps";
 import type { Env } from "../env";
 import { ApiError } from "../errors";
-import { aiTimeoutMs, assertDailyLimit, recordUsage, withTimeout, type UsageRow, type UsageStatus } from "../limits";
+import { aiAttemptTimeoutMs, aiFirstStepTimeoutMs, aiTimeoutMs, assertDailyLimit, recordUsage, type UsageRow, type UsageStatus } from "../limits";
 import type { Handler, Router } from "../router";
 import { requireSession } from "../session";
 
@@ -37,71 +38,88 @@ async function record(env: Env, row: UsageRow): Promise<void> {
   }
 }
 
-/**
- * POST /ai/parts for the app: session → daily limit → AI call under AI_TIMEOUT_MS → usage row
- * (ok, error or timeout; failed calls count towards the limit too). Never retried.
- */
+/** Only model validation and provider deadlines qualify; cancellation never does. */
+function retryable(err: unknown, signal: AbortSignal): err is ApiError {
+  return !signal.aborted && err instanceof ApiError &&
+    (err.code === "ai_invalid_response" || err.code === "ai_timeout");
+}
+
+/** Authenticated parts: one retry, with a separate usage row for each paid attempt. */
 export const guardedPartsHandler: Handler = async ({ request, env }) => {
   const { sub } = await requireSession(request, env);
   await assertDailyLimit(env, sub);
-  const provider = partsProvider(env);
+  const provider = partsProvider(env, aiAttemptTimeoutMs(env));
   const { input, sessionId } = await readPartsRequest(request);
   const base = { userId: sub, sessionId, stage: "parts", provider: provider.name, model: env.AI_MODEL || DEFAULT_MODEL } as const;
-  const start = Date.now();
+  const limit = deadline(aiTimeoutMs(env), request.signal);
   try {
-    const result = await withTimeout(aiTimeoutMs(env), (signal) =>
-      provider.parts(input, AbortSignal.any([signal, request.signal])),
-    );
-    await record(env, {
-      ...base,
-      model: result.model,
-      ...tokens(result.usage),
-      costUsd: result.costUsd ?? 0,
-      latencyMs: result.latencyMs,
-      status: "ok",
-    });
-    return partsResponse(result);
-  } catch (err) {
-    await record(env, { ...base, ...tokens(null), costUsd: 0, latencyMs: Date.now() - start, status: statusOf(err) });
-    throw err;
+    for (let attempt = 0; ; attempt++) {
+      limit.signal.throwIfAborted();
+      const start = Date.now();
+      try {
+        const result = await provider.parts(input, limit.signal);
+        await record(env, {
+          ...base, model: result.model, ...tokens(result.usage),
+          costUsd: result.costUsd ?? 0, latencyMs: result.latencyMs, status: "ok",
+        });
+        return partsResponse(result);
+      } catch (err) {
+        const error = limit.timedOut() ? aiErrors.timeout() : err;
+        await record(env, { ...base, ...tokens(null), costUsd: 0, latencyMs: Date.now() - start, status: statusOf(error) });
+        if (attempt !== 0 || !retryable(error, limit.signal)) throw error;
+        console.log(`ai/parts retry after ${error.code}`);
+      }
+    }
+  } finally {
+    limit.clear();
   }
 };
 
-/**
- * POST /ai/steps for the app: session (no limit — the session was counted at /ai/parts) →
- * SSE under AI_TIMEOUT_MS for the whole stream → usage row via waitUntil once it ends.
- */
+/** Authenticated steps: retry before the first step only, within one total stream deadline. */
 export const guardedStepsHandler: Handler = async ({ request, env, ctx }) => {
   const { sub } = await requireSession(request, env);
-  const provider = stepsProvider(env);
+  const provider = stepsProvider(env, aiTimeoutMs(env), aiFirstStepTimeoutMs(env));
   const { input, sessionId } = await readStepsRequest(request);
   const base = { userId: sub, sessionId, stage: "steps", provider: provider.name, model: env.AI_MODEL || DEFAULT_MODEL } as const;
   const limit = deadline(aiTimeoutMs(env), request.signal);
-  const start = Date.now();
-  return stepsStream(provider, input, {
+  const retried: StepsProvider = {
+    name: provider.name,
+    async *steps(input, signal) {
+      for (let attempt = 0; ; attempt++) {
+        limit.signal.throwIfAborted();
+        const start = Date.now();
+        let emitted = false;
+        let row: UsageRow = { ...base, ...tokens(null), costUsd: 0, latencyMs: 0, status: "error" };
+        try {
+          for await (const event of provider.steps(input, signal)) {
+            if (event.type === "step") emitted = true;
+            else row = {
+              ...base, model: event.model, ...tokens(event.usage),
+              costUsd: event.costUsd ?? 0, latencyMs: event.latencyMs, status: "ok",
+            };
+            yield event;
+          }
+          return;
+        } catch (err) {
+          const error = limit.timedOut() ? aiErrors.timeout() : err;
+          row.status = statusOf(error);
+          if (attempt !== 0 || emitted || !retryable(error, limit.signal)) throw error;
+          console.log(`ai/steps retry after ${error.code}`);
+        } finally {
+          if (row.status !== "ok") row.latencyMs = Date.now() - start;
+          // Await insertion to keep attempts ordered; the stream's lifetime is
+          // retained by waitUntil, including client disconnects.
+          const recording = record(env, row);
+          ctx.waitUntil(recording);
+          await recording;
+        }
+      }
+    },
+  };
+  return stepsStream(retried, input, {
     signal: limit.signal,
     timedOut: limit.timedOut,
-    onEnd: (outcome) => {
-      limit.clear();
-      const row: UsageRow =
-        outcome.kind === "done"
-          ? {
-              ...base,
-              model: outcome.done.model,
-              ...tokens(outcome.done.usage),
-              costUsd: outcome.done.costUsd ?? 0,
-              latencyMs: outcome.done.latencyMs,
-              status: "ok",
-            }
-          : {
-              ...base,
-              ...tokens(null),
-              costUsd: 0,
-              latencyMs: Date.now() - start,
-              status: outcome.kind === "error" ? statusOf(outcome.error) : "error",
-            };
-      ctx.waitUntil(record(env, row));
-    },
+    onEnd: () => limit.clear(),
   });
 };
 

@@ -3,6 +3,8 @@ import { ApiError } from "./errors";
 
 export const DEFAULT_DAILY_SESSION_LIMIT = 20;
 export const DEFAULT_AI_TIMEOUT_MS = 60_000;
+export const DEFAULT_AI_ATTEMPT_TIMEOUT_MS = 20_000;
+export const DEFAULT_AI_FIRST_STEP_TIMEOUT_MS = 25_000;
 
 export type UsageStage = "parts" | "steps";
 export type UsageStatus = "ok" | "error" | "timeout";
@@ -54,6 +56,14 @@ export function dailySessionLimit(env: Env): number {
 
 export function aiTimeoutMs(env: Env): number {
   return positiveInt(env.AI_TIMEOUT_MS, DEFAULT_AI_TIMEOUT_MS);
+}
+
+export function aiAttemptTimeoutMs(env: Env): number {
+  return positiveInt(env.AI_ATTEMPT_TIMEOUT_MS, DEFAULT_AI_ATTEMPT_TIMEOUT_MS);
+}
+
+export function aiFirstStepTimeoutMs(env: Env): number {
+  return positiveInt(env.AI_FIRST_STEP_TIMEOUT_MS, DEFAULT_AI_FIRST_STEP_TIMEOUT_MS);
 }
 
 function utcMidnight(now: Date): Date {

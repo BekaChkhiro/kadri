@@ -244,3 +244,165 @@ describe("AI routes in the app router", () => {
     expect(await usageOf(sub)).toMatchObject([{ stage: "steps", status: "error" }]);
   });
 });
+
+function stepsResponse(result: unknown, delta?: unknown): Response {
+  return new Response(new ReadableStream({
+    start(c) {
+      if (delta !== undefined) c.enqueue(frame({ type: "response.output_text.delta", delta: JSON.stringify(delta) } as any));
+      c.enqueue(frame({ type: "response.completed", response: responseBody(result) } as any));
+      c.close();
+    },
+  }));
+}
+
+function abortingFetch(init: RequestInit): Promise<Response> {
+  return new Promise((_resolve, reject) => {
+    const abort = () => reject(new DOMException("aborted", "AbortError"));
+    if (init.signal?.aborted) abort();
+    else init.signal?.addEventListener("abort", abort, { once: true });
+  });
+}
+
+describe("one paid retry", () => {
+  it.each([false, true])("parts: invalid JSON then success (bothInvalid=%s)", async (bothInvalid) => {
+    const sub = `retry-parts-invalid-${bothInvalid}`;
+    const invalid = responseBody(partsResult);
+    invalid.output[1]!.content![0]!.text = "{bad json";
+    let calls = 0;
+    const spy = mockFetch(() => Response.json(++calls === 1 || bothInvalid ? invalid : responseBody(partsResult)));
+    const res = await post("/ai/parts", { image: b64(fakeJpeg(64, 64)), instructions }, await token(sub));
+    expect(res.status).toBe(bothInvalid ? 502 : 200);
+    if (bothInvalid) expect((await res.json<any>()).error.code).toBe("ai_invalid_response");
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect((await usageOf(sub)).map(r => r.status)).toEqual(["error", bothInvalid ? "error" : "ok"]);
+  });
+
+  it("parts: provider timeout then success", async () => {
+    const sub = "retry-parts-timeout";
+    let calls = 0;
+    const spy = mockFetch((_url, init) => ++calls === 1 ? abortingFetch(init) : Response.json(responseBody(partsResult)));
+    const res = await post("/ai/parts", { image: b64(fakeJpeg(64, 64)), instructions }, await token(sub), { AI_ATTEMPT_TIMEOUT_MS: "20" });
+    expect(res.status).toBe(200);
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect((await usageOf(sub)).map(r => r.status)).toEqual(["timeout", "ok"]);
+  });
+
+  it.each([400, 500])("parts: upstream %s is not retried", async (status) => {
+    const sub = `retry-upstream-${status}`;
+    const spy = mockFetch(() => new Response("failed", { status }));
+    const res = await post("/ai/parts", { image: b64(fakeJpeg(64, 64)), instructions }, await token(sub));
+    expect(res.status).toBe(502);
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect((await usageOf(sub)).map(r => r.status)).toEqual(["error"]);
+  });
+
+  it("parts: incomplete is not retried", async () => {
+    const sub = "retry-incomplete";
+    const spy = mockFetch(() => Response.json(responseBody(partsResult, "incomplete")));
+    const res = await post("/ai/parts", { image: b64(fakeJpeg(64, 64)), instructions }, await token(sub));
+    expect((await res.json<any>()).error.code).toBe("ai_incomplete");
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect((await usageOf(sub)).map(r => r.status)).toEqual(["error"]);
+  });
+
+  it.each([false, true])("steps: invalid response (step already sent=%s)", async (emitted) => {
+    const sub = `retry-steps-invalid-${emitted}`;
+    let calls = 0;
+    const spy = mockFetch(() => ++calls === 1
+      ? stepsResponse({}, emitted ? stepsResult : undefined)
+      : stepsResponse(stepsResult, stepsResult));
+    const res = await post("/ai/steps", { object: "ძრავი", parts, instructions }, await token(sub));
+    const evs = await events(res);
+    expect(evs.map(e => e.event)).toEqual(emitted ? ["step", "error"] : ["step", "done"]);
+    if (emitted) expect(evs[1]!.data.code).toBe("ai_invalid_response");
+    expect(spy).toHaveBeenCalledTimes(emitted ? 1 : 2);
+    expect((await usageOf(sub)).map(r => r.status)).toEqual(emitted ? ["error"] : ["error", "ok"]);
+  });
+
+  it("steps: first-step timeout then success", async () => {
+    const sub = "retry-steps-timeout";
+    let calls = 0;
+    const spy = mockFetch((_url, init) => ++calls === 1 ? abortingFetch(init) : stepsResponse(stepsResult, stepsResult));
+    const res = await post("/ai/steps", { object: "ძრავი", parts, instructions }, await token(sub), { AI_FIRST_STEP_TIMEOUT_MS: "20" });
+    expect((await events(res)).map(e => e.event)).toEqual(["step", "done"]);
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect((await usageOf(sub)).map(r => r.status)).toEqual(["timeout", "ok"]);
+  });
+
+  it.each(["parts", "steps"])("%s: two provider timeouts stop after two rows", async stage => {
+    const sub = `retry-both-timeout-${stage}`;
+    const spy = mockFetch((_url, init) => abortingFetch(init));
+    const res = await post(`/ai/${stage}`,
+      stage === "parts" ? { image: b64(fakeJpeg(64, 64)), instructions } : { object: "ძრავი", parts, instructions },
+      await token(sub), { AI_ATTEMPT_TIMEOUT_MS: "20", AI_FIRST_STEP_TIMEOUT_MS: "20" });
+    if (stage === "parts") expect((await res.json<any>()).error.code).toBe("ai_timeout");
+    else expect(await events(res)).toMatchObject([{ event: "error", data: { code: "ai_timeout" } }]);
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect((await usageOf(sub)).map(r => r.status)).toEqual(["timeout", "timeout"]);
+  });
+
+  it("steps: completion after the first-step deadline still succeeds", async () => {
+    const sub = "retry-steps-delayed-done";
+    const spy = mockFetch((_url, init) => new Response(new ReadableStream({
+      start(c) {
+        c.enqueue(frame({ type: "response.output_text.delta", delta: JSON.stringify(stepsResult) } as any));
+        const timer = setTimeout(() => {
+          c.enqueue(frame({ type: "response.completed", response: responseBody(stepsResult) } as any));
+          c.close();
+        }, 60);
+        init.signal?.addEventListener("abort", () => {
+          clearTimeout(timer);
+          c.error(new DOMException("aborted", "AbortError"));
+        });
+      },
+    })));
+    const res = await post("/ai/steps", { object: "ძრავი", parts, instructions }, await token(sub), {
+      AI_FIRST_STEP_TIMEOUT_MS: "20", AI_TIMEOUT_MS: "500",
+    });
+    expect((await events(res)).map(e => e.event)).toEqual(["step", "done"]);
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect((await usageOf(sub)).map(r => r.status)).toEqual(["ok"]);
+  });
+
+  it("steps: first-step timer stops but the total stream deadline remains", async () => {
+    const sub = "retry-steps-after-first";
+    let aborted = false;
+    const spy = mockFetch((_url, init) => new Response(new ReadableStream({
+      start(c) {
+        c.enqueue(frame({ type: "response.output_text.delta", delta: JSON.stringify(stepsResult) } as any));
+        init.signal?.addEventListener("abort", () => {
+          aborted = true;
+          c.error(new DOMException("aborted", "AbortError"));
+        });
+      },
+    })));
+    const res = await post("/ai/steps", { object: "ძრავი", parts, instructions }, await token(sub), {
+      AI_FIRST_STEP_TIMEOUT_MS: "20", AI_TIMEOUT_MS: "80",
+    });
+    const evs = await events(res);
+    expect(evs.map(e => e.event)).toEqual(["step", "error"]);
+    expect(evs[1]!.data.code).toBe("ai_timeout");
+    expect(aborted).toBe(true);
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect((await usageOf(sub)).map(r => r.status)).toEqual(["timeout"]);
+  });
+
+  it.each(["parts", "steps"])("%s: client abort never retries", async (stage) => {
+    const sub = `retry-abort-${stage}`;
+    const auth = await token(sub);
+    const controller = new AbortController();
+    const spy = mockFetch((_url, init) => {
+      const pending = abortingFetch(init);
+      controller.abort();
+      return pending;
+    });
+    await send(`/ai/${stage}`, {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${auth}` },
+      body: JSON.stringify(stage === "parts" ? { image: b64(fakeJpeg(64, 64)), instructions } : { object: "ძრავი", parts, instructions }),
+      signal: controller.signal,
+    });
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect((await usageOf(sub)).map(r => r.status)).toEqual(["error"]);
+  });
+});

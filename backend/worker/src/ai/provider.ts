@@ -84,6 +84,7 @@ export interface AstraConfig {
   model: string;
   effort: string;
   timeoutMs?: number;
+  firstStepTimeoutMs?: number;
 }
 
 /** Aborts after `ms` or when `outer` aborts; `timedOut()` tells the two apart. */
@@ -96,10 +97,12 @@ export function deadline(ms: number, outer?: AbortSignal) {
   }, ms);
   const onAbort = () => controller.abort();
   outer?.addEventListener("abort", onAbort);
+  if (outer?.aborted) onAbort();
   return {
     signal: controller.signal,
     timedOut: () => timedOut,
     abort: () => controller.abort(),
+    stopTimer: () => clearTimeout(timer),
     clear: () => {
       clearTimeout(timer);
       outer?.removeEventListener("abort", onAbort);
@@ -188,10 +191,14 @@ export class AstraProvider implements PartsProvider, StepsProvider {
     };
 
     const limit = deadline(this.config.timeoutMs ?? AI_TIMEOUT_MS, signal);
+    const firstStepLimit = this.config.firstStepTimeoutMs === undefined
+      ? undefined
+      : deadline(this.config.firstStepTimeoutMs, limit.signal);
+    const upstreamSignal = firstStepLimit?.signal ?? limit.signal;
     const start = Date.now();
     let firstStepMs: number | null = null;
     try {
-      const res = await postResponses(apiKey, payload, limit.signal);
+      const res = await postResponses(apiKey, payload, upstreamSignal);
       if (!res.ok || !res.body) {
         console.error("ai/steps upstream status", res.status, (await res.text()).slice(0, 500));
         throw aiErrors.upstream();
@@ -213,6 +220,7 @@ export class AstraProvider implements PartsProvider, StepsProvider {
           for (const raw of parser.push(ev.delta)) {
             if (emitted >= input.count) throw aiErrors.invalid();
             const step = checkStep(raw);
+            firstStepLimit?.stopTimer();
             firstStepMs ??= Date.now() - start;
             yield { type: "step", index: emitted++, step };
           }
@@ -253,6 +261,7 @@ export class AstraProvider implements PartsProvider, StepsProvider {
       // Normally every step was already streamed; this covers a stream the
       // incremental parser could not follow.
       for (; emitted < result.steps.length; emitted++) {
+        firstStepLimit?.stopTimer();
         firstStepMs ??= Date.now() - start;
         yield { type: "step", index: emitted, step: checkStep(result.steps[emitted]) };
       }
@@ -268,10 +277,12 @@ export class AstraProvider implements PartsProvider, StepsProvider {
       };
     } catch (err) {
       if (err instanceof ApiError) throw err;
-      if (limit.timedOut()) throw aiErrors.timeout();
+      if (limit.timedOut() || firstStepLimit?.timedOut()) throw aiErrors.timeout();
       console.error("ai/steps failed", err);
       throw aiErrors.upstream();
     } finally {
+      firstStepLimit?.clear();
+      firstStepLimit?.abort();
       limit.clear();
       // Also stops the upstream request when the consumer quits early.
       limit.abort();
@@ -279,10 +290,10 @@ export class AstraProvider implements PartsProvider, StepsProvider {
   }
 }
 
-function astraFor(env: Env): AstraProvider {
+function astraFor(env: Env, timing: Pick<AstraConfig, "timeoutMs" | "firstStepTimeoutMs"> = {}): AstraProvider {
   switch (env.AI_PROVIDER ?? "astra") {
     case "astra":
-      return new AstraProvider(astraConfig(env));
+      return new AstraProvider({ ...astraConfig(env), ...timing });
     case "hybrid":
       // TODO(hybrid): Gemini stage 1 (parts) behind GEMINI_API_KEY, Astra stage 2.
       // Experimental and not yet quality-confirmed (see experiments/som-test/HYBRID.md).
@@ -292,12 +303,12 @@ function astraFor(env: Env): AstraProvider {
   }
 }
 
-export function partsProvider(env: Env): PartsProvider {
-  return astraFor(env);
+export function partsProvider(env: Env, timeoutMs?: number): PartsProvider {
+  return astraFor(env, { timeoutMs });
 }
 
-export function stepsProvider(env: Env): StepsProvider {
-  return astraFor(env);
+export function stepsProvider(env: Env, timeoutMs?: number, firstStepTimeoutMs?: number): StepsProvider {
+  return astraFor(env, { timeoutMs, firstStepTimeoutMs });
 }
 
 export function astraConfig(env: Env): AstraConfig {

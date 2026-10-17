@@ -19,4 +19,8 @@ export interface Env {
   DAILY_SESSION_LIMIT?: string;
   /** Per AI request timeout in ms; default 60000 (src/limits.ts). */
   AI_TIMEOUT_MS?: string;
+  /** Parts deadline per attempt; default 20000. */
+  AI_ATTEMPT_TIMEOUT_MS?: string;
+  /** Steps deadline per attempt until its first step; default 25000. */
+  AI_FIRST_STEP_TIMEOUT_MS?: string;
 }

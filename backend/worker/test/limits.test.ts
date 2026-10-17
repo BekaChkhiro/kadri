@@ -5,6 +5,9 @@ import type { Env } from "../src/env";
 import { ApiError } from "../src/errors";
 import {
   assertDailyLimit,
+  aiAttemptTimeoutMs,
+  aiFirstStepTimeoutMs,
+  aiTimeoutMs,
   LimitError,
   recordUsage,
   secondsUntilUtcMidnight,
@@ -129,5 +132,21 @@ describe("withTimeout", () => {
 
   it("passes through errors from the work itself", async () => {
     await expect(withTimeout(1000, async () => Promise.reject(new Error("boom")))).rejects.toThrow("boom");
+  });
+});
+
+describe("AI deadline configuration", () => {
+  it.each([undefined, "", "invalid", "0", "-1"])("uses defaults for %s", raw => {
+    const config = { ...env, AI_ATTEMPT_TIMEOUT_MS: raw, AI_FIRST_STEP_TIMEOUT_MS: raw, AI_TIMEOUT_MS: raw };
+    expect(aiAttemptTimeoutMs(config)).toBe(20_000);
+    expect(aiFirstStepTimeoutMs(config)).toBe(25_000);
+    expect(aiTimeoutMs(config)).toBe(60_000);
+  });
+
+  it("accepts independent overrides", () => {
+    const config = { ...env, AI_ATTEMPT_TIMEOUT_MS: "12", AI_FIRST_STEP_TIMEOUT_MS: "34", AI_TIMEOUT_MS: "56" };
+    expect(aiAttemptTimeoutMs(config)).toBe(12);
+    expect(aiFirstStepTimeoutMs(config)).toBe(34);
+    expect(aiTimeoutMs(config)).toBe(56);
   });
 });
