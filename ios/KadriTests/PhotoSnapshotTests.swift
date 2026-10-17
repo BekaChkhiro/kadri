@@ -70,6 +70,88 @@ final class PhotoSnapshotTests: XCTestCase {
             previousWindow?.makeKeyAndVisible()
         }
     }
+
+    /// A step with every optional field: the warning must render on the first screen, not below the fold.
+    func testLongStepKeepsWarningVisible() async throws {
+        let warn = "ძალას ნუ დაატან: პლასტმასის ქანჩი ადვილად სკდება, დაზიანებული ხრახნი კი მერე გაჟონვას გამოიწვევს."
+        let step = Step(index: 3, title: "მოხსენი სიფონის ქანჩი",
+                        text: "გამორთე წყლის მიწოდება ონკანის ქვეშ, მერე ქანჩი საათის ისრის საწინააღმდეგოდ ნელა მოატრიალე, სანამ მილი თავისუფლად არ გამოვა.",
+                        warn: warn,
+                        tip: "ქანჩის ქვეშ პატარა ვედრო ან ტილო დადე — მილში დარჩენილი წყალი აუცილებლად დაიღვრება კარადის ძირზე.",
+                        icon: "unscrew",
+                        toolItems: [StepTool(label: "გასაღები", icon: "wrench"), StepTool(label: "ვედრო", icon: "bucket"),
+                                    StepTool(label: "ტილო", icon: "towel")])
+        let image = try await render(screen(step: step, index: 3, count: 5), name: "step-long-warn")
+        // The warning box fill (#fef2f2) must cover at least two lines of text, not a clipped sliver above the buttons.
+        let rows = Self.rows(in: image, matching: (254, 242, 242))
+        XCTAssertGreaterThanOrEqual(CGFloat(rows) / image.scale, 40, "warning box is clipped or hidden")
+    }
+
+    private func screen(step: Step, index: Int, count: Int, continuation: StepsContinuation? = nil) -> some View {
+        let result = MockKadriAPI.result
+        let url = Bundle.main.url(forResource: "PhotoDemo", withExtension: "png")!
+        let photo = PhotoSession.squareJPEG(UIImage(contentsOfFile: url.path)!, maxSide: 1536).flatMap(UIImage.init(data:))!
+        return PhotoResultView(image: photo, parts: result.parts, meshes: [], step: step, index: index, count: count,
+                               streaming: false, object: result.object, segmentationStatus: nil,
+                               close: {}, previous: {}, next: {}, finish: {},
+                               continuation: continuation, initiallyShowingPhotoRequest: continuation != nil)
+            .environment(\.meshWrapReduceMotion, true)
+    }
+
+    /// Renders a full-screen window like the step snapshots above and writes it beside them.
+    private func render(_ view: some View, name: String) async throws -> UIImage {
+        let directory = URL(fileURLWithPath: "/tmp/kadri-photo-shots-square/result")
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let host = UIHostingController(rootView: view)
+        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
+        let previousWindow = scene.windows.first(where: \.isKeyWindow)
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        window.rootViewController = host
+        window.makeKeyAndVisible()
+        host.view.frame = window.bounds
+        host.view.layoutIfNeeded()
+        try await Task.sleep(for: .milliseconds(1500))
+        var rendered = false
+        let image = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in
+            rendered = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
+        }
+        XCTAssertTrue(rendered)
+        let data = try XCTUnwrap(image.pngData())
+        try data.write(to: directory.appendingPathComponent("\(name).png"))
+        let attachment = XCTAttachment(image: image)
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        window.isHidden = true
+        previousWindow?.makeKeyAndVisible()
+        return image
+    }
+
+    /// Pixel rows in which a wide run (≥ 100 px) has the given colour.
+    private static func rows(in image: UIImage, matching rgb: (Int, Int, Int)) -> Int {
+        guard let cg = image.cgImage else { return 0 }
+        let width = cg.width, height = cg.height
+        var pixels = [UInt8](repeating: 0, count: width * height * 4)
+        let drawn = pixels.withUnsafeMutableBytes { buffer -> Bool in
+            guard let context = CGContext(data: buffer.baseAddress, width: width, height: height, bitsPerComponent: 8,
+                                          bytesPerRow: width * 4, space: CGColorSpaceCreateDeviceRGB(),
+                                          bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return false }
+            context.draw(cg, in: CGRect(x: 0, y: 0, width: width, height: height))
+            return true
+        }
+        guard drawn else { return 0 }
+        var count = 0
+        for y in 0..<height {
+            var run = 0
+            for x in 0..<width {
+                let i = (y * width + x) * 4
+                if abs(Int(pixels[i]) - rgb.0) <= 3 && abs(Int(pixels[i + 1]) - rgb.1) <= 3 && abs(Int(pixels[i + 2]) - rgb.2) <= 3 { run += 1 } else { run = 0 }
+                if run >= 100 { count += 1; break }
+            }
+        }
+        return count
+    }
 }
 
 

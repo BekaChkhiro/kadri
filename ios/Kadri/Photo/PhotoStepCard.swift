@@ -142,6 +142,31 @@ struct PhotoStepCard: View {
                 }
                 Text(step.text).font(.kadri(14.5)).lineSpacing(4)
                     .foregroundStyle(Theme.Colors.ink[600]!).fixedSize(horizontal: false, vertical: true).padding(.top, 10)
+                // Warning first: below the text it stays above the fold on short panels.
+                if let warn = step.warn {
+                    HStack(alignment: .top, spacing: 8) {
+                        Image(systemName: "exclamationmark.triangle").font(.system(size: 16)).accessibilityHidden(true)
+                        Text(warn).font(.kadri(12.5)).lineSpacing(2).fixedSize(horizontal: false, vertical: true)
+                    }
+                    .foregroundStyle(Color(hex: "#b91c1c"))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 12).padding(.vertical, 8)
+                    .background(Color(hex: "#fef2f2"), in: RoundedRectangle(cornerRadius: 12))
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel("გაფრთხილება: \(warn)").padding(.top, 12)
+                }
+                if let tip = step.tip {
+                    HStack(alignment: .top, spacing: 8) {
+                        Image(systemName: "lightbulb").font(.system(size: 16)).accessibilityHidden(true)
+                        Text(tip).font(.kadri(12.5)).lineSpacing(2).fixedSize(horizontal: false, vertical: true)
+                    }
+                    .foregroundStyle(Theme.Colors.brand[800]!)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 12).padding(.vertical, 8)
+                    .background(Theme.Colors.brand[50]!, in: RoundedRectangle(cornerRadius: 12))
+                    .accessibilityElement(children: .combine)
+                    .padding(.top, 12)
+                }
                 let tools = step.toolItems ?? step.tools.map { StepTool(label: $0) }
                 if !tools.isEmpty {
                     PhotoToolsLayout {
@@ -161,26 +186,6 @@ struct PhotoStepCard: View {
                             }
                     }.padding(.top, 12)
                 }
-                if let tip = step.tip {
-                    HStack(alignment: .top, spacing: 8) {
-                        Image(systemName: "lightbulb").font(.system(size: 16)).accessibilityHidden(true)
-                        Text(tip).font(.kadri(12.5)).lineSpacing(2).fixedSize(horizontal: false, vertical: true)
-                    }
-                    .foregroundStyle(Theme.Colors.brand[800]!)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal, 12).padding(.vertical, 8)
-                    .background(Theme.Colors.brand[50]!, in: RoundedRectangle(cornerRadius: 12))
-                    .accessibilityElement(children: .combine)
-                    .padding(.top, 12)
-                }
-                if let warn = step.warn {
-                    Text(warn)
-                        .font(.kadri(12.5)).foregroundStyle(Color(hex: "#b91c1c"))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 12).padding(.vertical, 8)
-                        .background(Color(hex: "#fef2f2"), in: RoundedRectangle(cornerRadius: 12))
-                        .accessibilityLabel("გაფრთხილება: \(warn)").padding(.top, 12)
-                }
             }
         } else {
             VStack(alignment: .leading, spacing: 12) {
@@ -195,7 +200,7 @@ struct PhotoStepCard: View {
 }
 
 /// Chips wrap using their measured widths, including at larger accessibility sizes.
-private struct PhotoToolsLayout: Layout {
+struct PhotoToolsLayout: Layout {
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
         arrange(width: proposal.width ?? 320, subviews: subviews).size
     }
