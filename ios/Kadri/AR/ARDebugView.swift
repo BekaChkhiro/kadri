@@ -9,6 +9,10 @@ private let arLog = Logger(subsystem: "ge.kadri", category: "ar")
 struct ARDebugView: View {
     @StateObject private var controller = ARSessionController()
     @StateObject private var anchors = PartAnchors()
+    @StateObject private var tracker = PartTracker()
+    @StateObject private var displayRate = ContourDisplayRate()
+    @State private var showContours = false
+    @State private var contourKeyframe: Keyframe?
     @Environment(\.displayScale) private var displayScale
     @State private var fps: Double = 0
     @State private var lastTimestamp: TimeInterval?
@@ -25,6 +29,12 @@ struct ARDebugView: View {
                             .background(.orange).foregroundStyle(.black).position(item.point)
                     }
                     if let snapshot = controller.latest {
+                        if showContours {
+                            ContourOverlay(contours: tracker.contours,
+                                           boxes: PartTracker.boxes(anchors.projections(frame: snapshot.frame, viewport: geometry.size, scale: displayScale)),
+                                           focus: ["p1"], avoid: ["p2"])
+                                .allowsHitTesting(false)
+                        }
                         ForEach(anchors.projections(frame: snapshot.frame, viewport: geometry.size, scale: displayScale)) { projection in
                             Path { path in
                                 guard let first = projection.corners.first else { return }
@@ -56,6 +66,17 @@ struct ARDebugView: View {
                     if !anchors.unanchored.isEmpty {
                         Text("მიბმის გარეშე (2D): " + anchors.unanchored.joined(separator: ", ")).font(.caption)
                     }
+                    Toggle("კონტურები", isOn: $showContours)
+                        .disabled(contourKeyframe == nil || anchors.placements.isEmpty)
+                    if showContours {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(String(format: "UI %.0f fps · embed %.1f ms · N %d", displayRate.fps, tracker.embedMs, tracker.interval))
+                            ForEach(tracker.contours) { item in
+                                Text(String(format: "%@ mask %.1f ms", item.id, item.maskMs))
+                            }
+                            if !tracker.status.isEmpty { Text(tracker.status) }
+                        }.font(.caption.monospacedDigit())
+                    }
                     Spacer()
                     Text("±30° მოაბრუნეთ და დაუბრუნდით საწყის ხედს. Δ ეკრანის ფიზიკურ პიქსელებშია; ეს დაბრუნების დიაგნოსტიკაა.")
                         .font(.caption)
@@ -73,11 +94,22 @@ struct ARDebugView: View {
                                 ("p1", [250, 350, 450, 600]),
                                 ("p2", [550, 350, 750, 600])
                             ], session: controller.session)
+                            contourKeyframe = keyframe
+                            if showContours { tracker.start(keyframe: keyframe, placements: anchors.placements) }
                             arLog.notice("ge.kadri placed unanchored=\(anchors.unanchored.joined(separator: ","), privacy: .public)")
                         }.disabled(controller.keyframe == nil)
                     }.buttonStyle(.borderedProminent)
                 }.padding().foregroundStyle(.white)
             }
+            .onChange(of: controller.latest?.timestamp) { _, _ in
+                if let snapshot = controller.latest, showContours { tracker.update(snapshot: snapshot, anchors: anchors) }
+                if controller.latest == nil { tracker.stop(); showContours = false; contourKeyframe = nil }
+            }
+        }
+        .onChange(of: showContours) { _, enabled in
+            if enabled, let keyframe = contourKeyframe {
+                tracker.start(keyframe: keyframe, placements: anchors.placements)
+            } else { tracker.stop() }
         }
         .preferredColorScheme(.dark)
         .navigationTitle("AR დებაგი")
@@ -101,8 +133,8 @@ struct ARDebugView: View {
         }
         .onChange(of: controller.status) { _, status in arLog.notice("ge.kadri status=\(status, privacy: .public)") }
         .onChange(of: controller.captureStatus) { _, status in arLog.notice("ge.kadri capture=\(status, privacy: .public)") }
-        .onAppear { arLog.notice("ge.kadri ar-debug appear supported=\(controller.supported)"); controller.start() }
-        .onDisappear { arLog.notice("ge.kadri ar-debug disappear"); anchors.clear(session: controller.session); controller.pause() }
+        .onAppear { arLog.notice("ge.kadri ar-debug appear supported=\(controller.supported)"); controller.start(); displayRate.start() }
+        .onDisappear { arLog.notice("ge.kadri ar-debug disappear"); tracker.stop(); showContours = false; contourKeyframe = nil; displayRate.stop(); anchors.clear(session: controller.session); controller.pause() }
     }
 }
 

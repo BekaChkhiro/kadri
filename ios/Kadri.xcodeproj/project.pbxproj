@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		07DA81569ACB3C3CEF357B7A /* SegmentationBenchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7827EF5714A095173AA7C615 /* SegmentationBenchView.swift */; };
+		084494FD3093DD288DA33FE8 /* PartTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9523C8816C1C34AB888CF149 /* PartTracker.swift */; };
 		192F30E2CBC4A5B72BDAC499 /* NotoSansGeorgian-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A7232F6CADE38F5998CDD86B /* NotoSansGeorgian-Regular.ttf */; };
 		1BAD10810ED8DBAD455C6695 /* ARKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A050936A9DE4965679EB720 /* ARKit.framework */; };
 		207F06A72FB17D6F63A804D3 /* SAMEncoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8241E2AC9AA8786BAEE982AB /* SAMEncoder.mlpackage */; };
@@ -41,11 +42,13 @@
 		C480FA751DE36F8B229476CC /* SegmentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79684495C6B552237CE68F89 /* SegmentationTests.swift */; };
 		CAC92803A5B7FCAF050E82EB /* SegmentationBench.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CC50C123CF7B32458FEBD3 /* SegmentationBench.swift */; };
 		D6C97E8C50507362CE0C7B9F /* KadriApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD5A9F0403797194A257F7D /* KadriApp.swift */; };
+		D87E546E4D732C3263D4271F /* ContourOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D28A03C9FD37FA0817DC5B /* ContourOverlay.swift */; };
 		D99995671C2CD82936EFFE51 /* KeyframePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889B405E7EAD71436F553E6 /* KeyframePicker.swift */; };
 		E130A68F5F393B8FEE871CA4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543FF004E3F31262D70B1ECA /* ContentView.swift */; };
 		EA71BC0ADF6AB6242FFAB163 /* ARDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3F9A3ED45BED82339BC58F /* ARDebugView.swift */; };
 		EAC14CB5A08766FB56D8EF39 /* Segmenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98849AE08F82095210AB2C08 /* Segmenter.swift */; };
 		EAF7180A4D2ECF039B84CD03 /* KadriCore in Frameworks */ = {isa = PBXBuildFile; productRef = 3B8FE85B572B4ACA38714736 /* KadriCore */; };
+		EB68B7068C55D089DA53BC10 /* ContourTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07408C7B0A57FE1130BF5537 /* ContourTests.swift */; };
 		EBD6116765DBDD0A5D03DE9A /* Fixtures in Resources */ = {isa = PBXBuildFile; fileRef = 6C871271F759749DF134EF13 /* Fixtures */; };
 		EC3A8417B62ECE05AFDFE721 /* ScanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F55593458662C90DBD1A8F7 /* ScanningView.swift */; };
 		F3A6721520CD41B44AAC06CB /* OFL-Inter.txt in Resources */ = {isa = PBXBuildFile; fileRef = EC47E7F74A9863587D696784 /* OFL-Inter.txt */; };
@@ -67,6 +70,8 @@
 /* Begin PBXFileReference section */
 		00BF5F143404E75DF39FED04 /* SessionSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSnapshotTests.swift; sourceTree = "<group>"; };
 		0284BC4ED2FA5475C1184EE9 /* ARSessionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSessionController.swift; sourceTree = "<group>"; };
+		07408C7B0A57FE1130BF5537 /* ContourTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContourTests.swift; sourceTree = "<group>"; };
+		09D28A03C9FD37FA0817DC5B /* ContourOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContourOverlay.swift; sourceTree = "<group>"; };
 		0B3F9A3ED45BED82339BC58F /* ARDebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARDebugView.swift; sourceTree = "<group>"; };
 		0BC5406AFC56533421633751 /* sink */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sink; path = KadriTests/Fixtures/sink; sourceTree = SOURCE_ROOT; };
 		0F55593458662C90DBD1A8F7 /* ScanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanningView.swift; sourceTree = "<group>"; };
@@ -91,6 +96,7 @@
 		8241E2AC9AA8786BAEE982AB /* SAMEncoder.mlpackage */ = {isa = PBXFileReference; path = SAMEncoder.mlpackage; sourceTree = "<group>"; };
 		84CAC115ECF63FDB03CC26B8 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
 		929743E4A7FCA4EBC2F888D7 /* RealityKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealityKit.framework; path = System/Library/Frameworks/RealityKit.framework; sourceTree = SDKROOT; };
+		9523C8816C1C34AB888CF149 /* PartTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartTracker.swift; sourceTree = "<group>"; };
 		98849AE08F82095210AB2C08 /* Segmenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Segmenter.swift; sourceTree = "<group>"; };
 		9A050936A9DE4965679EB720 /* ARKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARKit.framework; path = System/Library/Frameworks/ARKit.framework; sourceTree = SDKROOT; };
 		A00B16E38C3E8EC7B01B52E4 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
@@ -171,8 +177,10 @@
 			children = (
 				0B3F9A3ED45BED82339BC58F /* ARDebugView.swift */,
 				0284BC4ED2FA5475C1184EE9 /* ARSessionController.swift */,
+				09D28A03C9FD37FA0817DC5B /* ContourOverlay.swift */,
 				7889B405E7EAD71436F553E6 /* KeyframePicker.swift */,
 				4AF5D91DF61E491034224AFC /* PartAnchors.swift */,
+				9523C8816C1C34AB888CF149 /* PartTracker.swift */,
 			);
 			path = AR;
 			sourceTree = "<group>";
@@ -195,6 +203,7 @@
 			isa = PBXGroup;
 			children = (
 				F0248C421A7F6709755E1292 /* ARControllerTests.swift */,
+				07408C7B0A57FE1130BF5537 /* ContourTests.swift */,
 				6C871271F759749DF134EF13 /* Fixtures */,
 				F4910DAFAB764B1ABC03FDC1 /* KadriTests.swift */,
 				79684495C6B552237CE68F89 /* SegmentationTests.swift */,
@@ -416,6 +425,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B5D76707165FAFED8C89035 /* ARControllerTests.swift in Sources */,
+				EB68B7068C55D089DA53BC10 /* ContourTests.swift in Sources */,
 				ADE3F74A26977B000BF655B1 /* KadriTests.swift in Sources */,
 				C480FA751DE36F8B229476CC /* SegmentationTests.swift in Sources */,
 				729038930CAADDEFED6F3F3A /* SessionPresentationTests.swift in Sources */,
@@ -430,12 +440,14 @@
 				EA71BC0ADF6AB6242FFAB163 /* ARDebugView.swift in Sources */,
 				BD67D4209D70CC5DD7C4D768 /* ARSessionController.swift in Sources */,
 				E130A68F5F393B8FEE871CA4 /* ContentView.swift in Sources */,
+				D87E546E4D732C3263D4271F /* ContourOverlay.swift in Sources */,
 				A03AEF2EEC043EE877C1A3BA /* DescribeBar.swift in Sources */,
 				7E63B1D4CFDD42BE7DF2BD56 /* Glass.swift in Sources */,
 				D6C97E8C50507362CE0C7B9F /* KadriApp.swift in Sources */,
 				D99995671C2CD82936EFFE51 /* KeyframePicker.swift in Sources */,
 				AB7754BA7224CE2D04DD9517 /* MockKadriAPI.swift in Sources */,
 				A021D80B098F055B3EF12B0B /* PartAnchors.swift in Sources */,
+				084494FD3093DD288DA33FE8 /* PartTracker.swift in Sources */,
 				54F0522C6E62571ABF309D4D /* PartsRevealView.swift in Sources */,
 				247480935EFF895F6D00FED6 /* SAMDecoder.mlpackage in Sources */,
 				207F06A72FB17D6F63A804D3 /* SAMEncoder.mlpackage in Sources */,
