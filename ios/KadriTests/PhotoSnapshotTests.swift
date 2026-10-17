@@ -87,6 +87,15 @@ final class PhotoSnapshotTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(CGFloat(rows) / image.scale, 40, "warning box is clipped or hidden")
     }
 
+    func testLongPhotoRequestChecklist() async throws {
+        let prompt = "გადაუღე სიფონის ქვედა შეერთებას ახლოდან, ქანჩი რომ ჩანდეს"
+        let reason = "ამ ფოტოზე შუასადების მდგომარეობა არ ჩანს, ამიტომ ვერ ვიტყვი, გამოსაცვლელია თუ საკმარისია მხოლოდ მოჭერა."
+        let screen = screen(step: MockKadriAPI.sampleSteps[2], index: 2, count: 3,
+                            continuation: .needsPhoto(prompt: prompt, reason: reason))
+        let image = try await render(screen, name: "photo-request-long")
+        XCTAssertGreaterThan(image.size.height, 0)
+    }
+
     private func screen(step: Step, index: Int, count: Int, continuation: StepsContinuation? = nil) -> some View {
         let result = MockKadriAPI.result
         let url = Bundle.main.url(forResource: "PhotoDemo", withExtension: "png")!

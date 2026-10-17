@@ -16,7 +16,7 @@ struct PhotoRequestCard: View {
     @State private var appeared = false
 
     /// General framing advice: the request names the part, but nothing on the wire says how to frame it.
-    private static let checklist = [("ნაწილი ცენტრში", "scope"), ("20–30 სმ-დან", "ruler"), ("კარგი განათება", "sun.max")]
+    private static let checklist = [("ცენტრში", "scope"), ("20–30 სმ", "ruler"), ("კარგი შუქი", "sun.max")]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -43,18 +43,21 @@ struct PhotoRequestCard: View {
                             .foregroundStyle(Theme.Colors.ink[600]!)
                             .fixedSize(horizontal: false, vertical: true).padding(.top, 12)
                     }
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 3), spacing: 6) {
+                    // Short chips on one wrapping row keep the checklist readable and close to the reason.
+                    PhotoToolsLayout {
                         ForEach(Self.checklist, id: \.0) { text, symbol in
-                            VStack(spacing: 4) {
-                                Image(systemName: symbol).font(.system(size: 18))
+                            Label {
+                                Text(text).font(.kadri(12, weight: .semibold)).lineLimit(1)
+                                    .fixedSize(horizontal: true, vertical: false)
+                            } icon: {
+                                Image(systemName: symbol).font(.system(size: 14))
                                     .foregroundStyle(Theme.Colors.brand[600]!).accessibilityHidden(true)
-                                Text(text).font(.kadri(12, weight: .semibold)).foregroundStyle(Theme.Colors.ink[700]!)
-                                    .multilineTextAlignment(.center).fixedSize(horizontal: false, vertical: true)
                             }
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .padding(.horizontal, 4).padding(.vertical, 10)
-                            .background(.white, in: RoundedRectangle(cornerRadius: Theme.Radius.card))
-                            .shadow(Theme.Shadow.card)
+                            .labelStyle(PhotoChipLabelStyle())
+                            .foregroundStyle(Theme.Colors.ink[700]!)
+                            .padding(.horizontal, 10).padding(.vertical, 4)
+                            .background(.white, in: Capsule())
+                            .overlay(Capsule().strokeBorder(Theme.Colors.ink[200]!, lineWidth: 1))
                             .accessibilityElement(children: .combine)
                         }
                     }
@@ -114,5 +117,12 @@ struct PhotoRequestCard: View {
                 .scaleEffect(appeared || reduceMotion ? 1 : 0.9)
                 .accessibilityHidden(true)
         }
+    }
+}
+
+/// Icon and title side by side with the tool chips' spacing.
+private struct PhotoChipLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: 6) { configuration.icon; configuration.title }
     }
 }
