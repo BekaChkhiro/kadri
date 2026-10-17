@@ -2,13 +2,19 @@
  * POST /ai/steps — stage 2 of Astra C: object + the phone's parts (p1..pN)
  * + instructions → steps, streamed as SSE while the model is still writing.
  *
- * Body (JSON): { object, parts: [{id, name, box}], instructions, count?, image?, sessionId? }
+ * Body (JSON): { object, parts: [{id, name, box}], instructions, count?, image?, sessionId?, context? }
  * `image` (JPEG base64, optional) is attached like the experiment does.
+ * `context` {round 2..5, photoPrompt, doneSteps, previousObject?} marks a later
+ * photo of a multi-photo session; absent = round 1. With free-text
+ * instructions a round may return 1..count steps.
  *
  * Events: `step` {index, title, text, focus, avoid, markers, arrows, icon, tools,
  * toolItems, tip, warn}
  * per completed step, then `done` {unknownParts, usage, costUsd, latencyMs,
- * firstStepMs, model}, or `error` {code, message} in Georgian.
+ * firstStepMs, model, continuation}, or `error` {code, message} in Georgian.
+ * `continuation` is always there: {kind: "complete"} or
+ * {kind: "needs_photo", prompt, reason} — take that photo and call again with
+ * `context`. Round 5 is always complete.
  */
 import { ApiError } from "../errors";
 import type { Handler } from "../router";
@@ -17,7 +23,7 @@ import { aiErrors } from "./errors";
 import { checkedJpegBase64, fromBase64 } from "./image";
 import { parseSessionId } from "./parts";
 import { stepsProvider, type StepsEvent, type StepsInput, type StepsProvider } from "./provider";
-import { MAX_STEPS, parseInstructions, parseParts } from "./validate";
+import { MAX_STEPS, parseContext, parseInstructions, parseParts } from "./validate";
 
 export async function readStepsRequest(request: Request): Promise<{ input: StepsInput; sessionId: string | null }> {
   if (!(request.headers.get("content-type") ?? "").startsWith("application/json")) {
@@ -45,8 +51,9 @@ export async function readStepsRequest(request: Request): Promise<{ input: Steps
   if (body.image !== undefined && body.image !== null) {
     imageBase64 = checkedJpegBase64(typeof body.image === "string" ? fromBase64(body.image) : null);
   }
+  const context = parseContext(body.context);
   return {
-    input: { object: body.object, parts, instructions, count, imageBase64 },
+    input: { object: body.object, parts, instructions, count, imageBase64, ...(context && { context }) },
     sessionId: parseSessionId(body.sessionId),
   };
 }
@@ -84,6 +91,7 @@ export function stepsStream(provider: StepsProvider, input: StepsInput, opts: St
                 latencyMs: ev.latencyMs,
                 firstStepMs: ev.firstStepMs,
                 model: ev.model,
+                continuation: ev.continuation,
               });
         // Client went away: stop reading (the generator aborts the upstream call).
         if (!ok) return;

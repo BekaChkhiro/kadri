@@ -100,7 +100,7 @@ describe("StepsStreamParser", () => {
 describe("schemaSteps", () => {
   it("limits every ID reference to the given parts and fixes the step count", () => {
     const schema = schemaSteps(["p1", "p2"], 3) as any;
-    expect(Object.keys(schema.properties)).toEqual(["steps", "unknown_parts"]);
+    expect(Object.keys(schema.properties)).toEqual(["steps", "unknown_parts", "continuation"]);
     expect(schema.properties.steps.minItems).toBe(3);
     expect(schema.properties.steps.maxItems).toBe(3);
     const step = schema.properties.steps.items.properties;
@@ -271,7 +271,7 @@ describe("POST /ai/steps", () => {
     expect(sent.input[0].content).toEqual([
       {
         type: "input_text",
-        text: promptSteps("სიფონი", parts.map((p) => ({ id: p.id, label: p.name, box: p.box })), instructions),
+        text: promptSteps("სიფონი", parts.map((p) => ({ id: p.id, label: p.name, box: p.box })), instructions, undefined, { count: 2 }),
       },
     ]);
   });

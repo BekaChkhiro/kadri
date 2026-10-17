@@ -8,10 +8,20 @@ import { ApiError } from "../errors";
 import { aiErrors } from "./errors";
 import { DEFAULT_EFFORT, DEFAULT_MODEL, outputText, postResponses, responsesPayload, type ResponseObject } from "./openai";
 import { estimateCost, type Usage } from "./pricing";
-import { promptParts, promptSteps, type Instructions } from "./prompts";
+import { promptParts, promptSteps, type Context, type Instructions } from "./prompts";
 import { schemaParts, schemaSteps, softened, stepItemSchema, validateSchema } from "./schema";
 import { StepsStreamParser } from "./stepsParser";
-import { partsFromModel, stepRuleError, tidyStep, type ModelStep, type Part, type Step } from "./validate";
+import {
+  MAX_ROUNDS,
+  partsFromModel,
+  stepRuleError,
+  tidyContinuation,
+  tidyStep,
+  type Continuation,
+  type ModelStep,
+  type Part,
+  type Step,
+} from "./validate";
 import { readSse } from "../sse";
 
 export const AI_TIMEOUT_MS = 60_000;
@@ -20,6 +30,8 @@ export interface PartsInput {
   /** JPEG (longest side ≤768px) as base64. */
   imageBase64: string;
   instructions: Instructions;
+  /** A later photo of a multi-photo session; absent on round 1. */
+  context?: Context;
 }
 
 export interface PartsResult {
@@ -44,6 +56,8 @@ export interface StepsInput {
   count: number;
   /** Optional JPEG as base64; the experiment attaches the photo to stage 2 too. */
   imageBase64?: string;
+  /** A later photo of a multi-photo session; absent on round 1. */
+  context?: Context;
 }
 
 export type StepsEvent =
@@ -56,6 +70,7 @@ export type StepsEvent =
       costUsd: number | null;
       latencyMs: number;
       firstStepMs: number | null;
+      continuation: Continuation;
     };
 
 export interface StepsProvider {
@@ -102,7 +117,7 @@ export class AstraProvider implements PartsProvider, StepsProvider {
       model,
       effort,
       stage: "parts",
-      prompt: promptParts(input.instructions),
+      prompt: promptParts(input.instructions, input.context),
       schema: schemaParts(),
       imageBase64: input.imageBase64,
     });
@@ -145,7 +160,8 @@ export class AstraProvider implements PartsProvider, StepsProvider {
     const { model, effort, apiKey } = this.config;
     const ids = input.parts.map((p) => p.id);
     const labels = new Map(input.parts.map((p) => [p.id, p.name]));
-    const schema = schemaSteps(ids, input.count);
+    const lastRound = (input.context?.round ?? 1) >= MAX_ROUNDS;
+    const schema = schemaSteps(ids, input.count, { freeText: typeof input.instructions === "string", lastRound });
     // Length caps are guidance for the model; tidyStep clamps instead of a 502.
     const itemSchema = softened(stepItemSchema(ids));
     const promptParts = input.parts.map((p) => ({ id: p.id, label: p.name, box: p.box }));
@@ -153,7 +169,10 @@ export class AstraProvider implements PartsProvider, StepsProvider {
       model,
       effort,
       stage: "steps",
-      prompt: promptSteps(input.object, promptParts, input.instructions),
+      prompt: promptSteps(input.object, promptParts, input.instructions, input.context, {
+        maxRound: MAX_ROUNDS,
+        count: input.count,
+      }),
       schema,
       imageBase64: input.imageBase64,
     });
@@ -216,11 +235,15 @@ export class AstraProvider implements PartsProvider, StepsProvider {
         console.error("ai/steps incomplete", final.status);
         throw aiErrors.incomplete();
       }
-      let result: { steps: ModelStep[]; unknown_parts: string[] };
+      let result: { steps: ModelStep[]; unknown_parts: string[]; continuation?: unknown };
       try {
         result = JSON.parse(full);
       } catch {
         throw aiErrors.invalid();
+      }
+      // Older fixtures (and a model that skips it) mean complete, not a 502.
+      if (typeof result === "object" && result !== null) {
+        result.continuation ??= { kind: "complete", prompt: null, reason: null };
       }
       const err = validateSchema(softened(schema), result);
       if (err) {
@@ -241,6 +264,7 @@ export class AstraProvider implements PartsProvider, StepsProvider {
         costUsd: estimateCost(usage, model),
         latencyMs,
         firstStepMs,
+        continuation: lastRound ? { kind: "complete" } : tidyContinuation(result.continuation),
       };
     } catch (err) {
       if (err instanceof ApiError) throw err;

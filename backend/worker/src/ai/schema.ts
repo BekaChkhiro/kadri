@@ -37,6 +37,8 @@ export const LIMITS = {
   tool: 24,
   markers: 3,
   markerLabel: 24,
+  photoPrompt: 60,
+  photoReason: 100,
 } as const;
 
 /** The phone's icon set for a step's main action (2026-10-17). */
@@ -129,10 +131,26 @@ export function schemaFor(ids: string[], count = 5): JsonSchema {
 
 type Props = Record<string, JsonSchema>;
 
-/** variant_c.schema_steps */
-export function schemaSteps(ids: string[], count: number): JsonSchema {
+export interface StepsSchemaOptions {
+  /** Free-text instructions: 1..count steps, so a round can stop before a new photo. */
+  freeText?: boolean;
+  /** The last allowed round (MAX_ROUNDS): continuation can only be complete. */
+  lastRound?: boolean;
+}
+
+/**
+ * variant_c.schema_steps, plus `continuation` (multi-photo session,
+ * 2026-10-17). It comes after `steps`: StepsStreamParser needs steps first.
+ */
+export function schemaSteps(ids: string[], count: number, opts: StepsSchemaOptions = {}): JsonSchema {
   const base = schemaFor(ids, count).properties as Props;
-  const result = obj({ steps: base.steps!, unknown_parts: base.unknown_parts! });
+  const continuation = obj({
+    kind: { type: "string", enum: opts.lastRound ? ["complete"] : ["complete", "needs_photo"] },
+    prompt: { type: ["string", "null"], maxLength: LIMITS.photoPrompt },
+    reason: { type: ["string", "null"], maxLength: LIMITS.photoReason },
+  });
+  const steps = opts.freeText ? { ...base.steps!, minItems: 1, maxItems: count } : base.steps!;
+  const result = obj({ steps, unknown_parts: base.unknown_parts!, continuation });
   const stepsSchema = (result.properties as Props).steps!;
   const step = ((stepsSchema.items as JsonSchema).properties as Props);
   if (ids.length === 0) {

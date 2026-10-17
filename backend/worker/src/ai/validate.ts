@@ -5,7 +5,7 @@
  * reason for logs and mapped to a Georgian 502 by the caller.
  */
 import { aiErrors } from "./errors";
-import type { Instructions } from "./prompts";
+import type { Context, Instructions } from "./prompts";
 import { LIMITS, schemaParts, softened, STEP_ICONS, TOOL_ICONS, validateSchema } from "./schema";
 
 export type Box = [number, number, number, number];
@@ -18,6 +18,8 @@ export interface Part {
 
 export const MAX_PARTS = 12;
 export const MAX_STEPS = 12;
+/** Photos in one multi-photo session; the last round can only complete. */
+export const MAX_ROUNDS = 5;
 
 /** variant_b.box_pixels' checks: finite numbers in 0..1000, positive width/height. */
 export function boxError(box: unknown): string | null {
@@ -224,4 +226,62 @@ export function parseParts(value: unknown): Part[] {
     seen.add(id);
     return { id, name, box: [...(box as number[])] as Box };
   });
+}
+
+/**
+ * Optional request `context` of a later photo: an object, or (multipart) the
+ * same object as a JSON string. Absent means round 1.
+ */
+export function parseContext(raw: unknown): Context | undefined {
+  if (raw === undefined || raw === null || raw === "") return undefined;
+  let value = raw;
+  if (typeof raw === "string") {
+    try {
+      value = JSON.parse(raw);
+    } catch {
+      throw aiErrors.badRequest("context JSON ვერ წავიკითხე");
+    }
+  }
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    throw aiErrors.badRequest("context ობიექტი უნდა იყოს");
+  }
+  const { round, photoPrompt, doneSteps, previousObject } = value as Record<string, unknown>;
+  if (typeof round !== "number" || !Number.isInteger(round) || round < 2 || round > MAX_ROUNDS) {
+    throw aiErrors.badRequest(`context.round უნდა იყოს 2–${MAX_ROUNDS}`);
+  }
+  if (typeof photoPrompt !== "string" || !photoPrompt.trim() || photoPrompt.length > 200) {
+    throw aiErrors.badRequest("context.photoPrompt არასწორია");
+  }
+  if (!Array.isArray(doneSteps) || doneSteps.length > 40) {
+    throw aiErrors.badRequest("context.doneSteps უნდა იყოს ≤40 ნაბიჯის სია");
+  }
+  if (doneSteps.some((t) => typeof t !== "string" || t.length > 120)) {
+    throw aiErrors.badRequest("context.doneSteps-ის ელემენტი არასწორია");
+  }
+  if (previousObject !== undefined && previousObject !== null && (typeof previousObject !== "string" || previousObject.length > 300)) {
+    throw aiErrors.badRequest("context.previousObject არასწორია");
+  }
+  return {
+    round,
+    photoPrompt: photoPrompt.trim(),
+    doneSteps: doneSteps as string[],
+    ...(typeof previousObject === "string" && previousObject ? { previousObject } : {}),
+  };
+}
+
+/** How a steps round ends: done, or a new photo is needed to go on. */
+export type Continuation = { kind: "complete" } | { kind: "needs_photo"; prompt: string; reason: string };
+
+/**
+ * The model's `continuation` in the phone's shape. Missing, unknown or a
+ * needs_photo without a prompt becomes complete — the call is already paid
+ * for, so no 502; texts are clamped to LIMITS.
+ */
+export function tidyContinuation(raw: unknown): Continuation {
+  if (typeof raw !== "object" || raw === null) return { kind: "complete" };
+  const { kind, prompt, reason } = raw as Record<string, unknown>;
+  if (kind !== "needs_photo" || typeof prompt !== "string") return { kind: "complete" };
+  const text = clampText(prompt, LIMITS.photoPrompt);
+  if (!text) return { kind: "complete" };
+  return { kind: "needs_photo", prompt: text, reason: typeof reason === "string" ? clampText(reason, LIMITS.photoReason) : "" };
 }

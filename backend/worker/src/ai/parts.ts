@@ -3,19 +3,23 @@
  * with boxes (0–1000 XYXY) and server-assigned IDs p1..pN.
  *
  * Body: multipart/form-data (`image` JPEG file, `instructions` text or JSON
- * list, optional `sessionId`) or JSON `{ image: base64 | data URL, instructions, sessionId? }`.
+ * list, optional `sessionId`, optional `context` as a JSON string) or JSON
+ * `{ image: base64 | data URL, instructions, sessionId?, context? }`.
+ * `context` {round 2..5, photoPrompt, doneSteps, previousObject?} marks a later
+ * photo of a multi-photo session (see docs/AI_LIVE_CHECK.md); absent = round 1.
  */
 import { json } from "../errors";
 import type { Handler } from "../router";
 import { aiErrors } from "./errors";
 import { checkedJpegBase64, fromBase64 } from "./image";
 import { partsProvider, type PartsInput, type PartsResult } from "./provider";
-import { parseInstructions } from "./validate";
+import { parseContext, parseInstructions } from "./validate";
 
 interface PartsBody {
   image: Uint8Array | null;
   instructions: unknown;
   sessionId: unknown;
+  context: unknown;
 }
 
 async function readBody(request: Request): Promise<PartsBody> {
@@ -29,7 +33,12 @@ async function readBody(request: Request): Promise<PartsBody> {
     }
     const file = form.get("image");
     const image = typeof file === "object" && file !== null ? new Uint8Array(await (file as Blob).arrayBuffer()) : null;
-    return { image, instructions: form.get("instructions"), sessionId: form.get("sessionId") };
+    return {
+      image,
+      instructions: form.get("instructions"),
+      sessionId: form.get("sessionId"),
+      context: form.get("context"),
+    };
   }
   if (type.startsWith("application/json")) {
     let body: Record<string, unknown>;
@@ -39,7 +48,7 @@ async function readBody(request: Request): Promise<PartsBody> {
       throw aiErrors.badRequest("JSON ვერ წავიკითხე");
     }
     const image = typeof body?.image === "string" ? fromBase64(body.image) : null;
-    return { image, instructions: body?.instructions, sessionId: body?.sessionId };
+    return { image, instructions: body?.instructions, sessionId: body?.sessionId, context: body?.context };
   }
   throw aiErrors.badRequest("საჭიროა multipart/form-data ან application/json");
 }
@@ -52,10 +61,13 @@ export function parseSessionId(raw: unknown): string | null {
 }
 
 export async function readPartsRequest(request: Request): Promise<{ input: PartsInput; sessionId: string | null }> {
-  const { image, instructions, sessionId } = await readBody(request);
+  const body = await readBody(request);
+  const imageBase64 = checkedJpegBase64(body.image);
+  const instructions = parseInstructions(body.instructions);
+  const context = parseContext(body.context);
   return {
-    input: { imageBase64: checkedJpegBase64(image), instructions: parseInstructions(instructions) },
-    sessionId: parseSessionId(sessionId),
+    input: { imageBase64, instructions, ...(context && { context }) },
+    sessionId: parseSessionId(body.sessionId),
   };
 }
 
