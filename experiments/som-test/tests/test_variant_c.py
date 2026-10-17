@@ -11,8 +11,9 @@ from PIL import Image
 
 import run_c
 from variant_c import (Budget, BudgetExceeded, MODES, assign_ids, consistency_c, cost_for,
-                       degrade, first_step, forecast, match_parts, process_c, rates_for,
-                       request_stage, schema_parts, schema_steps, transform_parts, validate_steps)
+                       degrade, first_step, forecast, match_parts, process_c, prompt_parts,
+                       prompt_steps, rates_for, request_stage, schema_parts, schema_steps,
+                       transform_parts, validate_steps)
 from test_variant_b import plan as b_plan, truth, sam_for_boxes
 
 
@@ -243,6 +244,122 @@ class VariantCTests(unittest.TestCase):
                     patch("sys.argv", ["run_c.py", *args]), patch("openai.OpenAI") as client:
                 self.assertEqual(run_c.main(), 0 if args else 2)
                 client.assert_not_called()
+
+    def test_prompts_contract_ambiguity_uncertainty_and_empty_focus(self):
+        instructions = [{"title": "მოუშვი ქანჩი", "text": "ეს ქანჩი ჟონავს."}]
+        p_prompt = prompt_parts(instructions)
+        self.assertIn("მდებარეობა", p_prompt)
+        self.assertIn("მარჯვენა/მარცხენა/ზედა/ქვედა", p_prompt)
+        self.assertIn("უხილავი ნაწილი არ გამოიგონო", p_prompt)
+
+        s_prompt = prompt_steps("სიფონი", parts(), instructions)
+        self.assertIn("plausible კანდიდატია", s_prompt)
+        self.assertIn("ყველაზე სავარაუდო box", s_prompt)
+        self.assertIn("uncertainty", s_prompt)
+        self.assertIn("empty focus დასაშვებია მხოლოდ მაშინ, როცა სამიზნე ნაწილების სიაში ან ფოტოზე საერთოდ არ ჩანს", s_prompt)
+        self.assertIn("არ გამოიგონო ID", s_prompt)
+
+    def test_schema_descriptions_and_focus_optionality(self):
+        schema = schema_steps(parts(), 1)
+        Draft202012Validator.check_schema(schema)
+        step_props = schema["properties"]["steps"]["items"]["properties"]
+        self.assertNotIn("minItems", step_props["focus"])
+        self.assertIn("plausible", step_props["focus"]["description"])
+        self.assertIn("empty focus", step_props["focus"]["description"])
+        self.assertIn("uncertainty", step_props["warn"]["description"])
+
+    def test_sink_mocked_contract_plausible_resolution_and_invisible_empty_focus(self):
+        sink_parts = [
+            {"id": "p1", "label": "სიფონის ზედა პლასტმასის ქანჩი", "box": [268, 91, 488, 166]},
+            {"id": "p2", "label": "მარცხენა ჩამკეტი ონკანის სახელური", "box": [12, 257, 88, 320]},
+            {"id": "p3", "label": "მარჯვენა ჩამკეტი ონკანის სახელური", "box": [221, 261, 293, 326]},
+            {"id": "p4", "label": "სიფონის მარჯვენა პლასტმასის ქანჩი", "box": [628, 249, 752, 378]},
+            {"id": "p5", "label": "სიფონის მოხრილი მილი", "box": [307, 248, 650, 493]},
+        ]
+        plan_payload = {
+            "steps": [
+                {"title": "დაკეტე წყალი", "text": "დაკეტე ორივე ონკანი", "focus": ["p2", "p3"],
+                 "avoid": [], "markers": [], "arrows": [], "tools": [], "warn": None},
+                {"title": "ჩადგი ვედრო სიფონის ქვეშ", "text": "ვედრო დადგი", "focus": [],
+                 "avoid": [], "markers": [], "arrows": [], "tools": ["ვედრო"],
+                 "warn": "ვედრო სიაში არ არის და უხილავია"},
+                {"title": "მოუშვი ქანჩი", "text": "ეს ქანჩი ჟონავს", "focus": ["p4"],
+                 "avoid": [], "markers": [], "arrows": [{"part": "p4", "type": "rotate", "dir": "ccw"}],
+                 "tools": ["ხელთათმანი"],
+                 "warn": "სავარაუდოდ მარჯვენა ქანჩია p4, თუმცა შესაძლოა p1-ც იყოს (uncertainty)"},
+                {"title": "შეამოწმე შუასადები", "text": "ნახე რეზინის რგოლი", "focus": [],
+                 "avoid": [], "markers": [], "arrows": [], "tools": ["შუასადები 40 მმ"],
+                 "warn": "შუასადები უხილავია და სიაში არ არის"},
+                {"title": "მოუჭირე და შეამოწმე", "text": "მოუჭირე ხელით", "focus": ["p4"],
+                 "avoid": [], "markers": [], "arrows": [{"part": "p4", "type": "rotate", "dir": "cw"}],
+                 "tools": [], "warn": "დაშვება p4 ქანჩზე (uncertainty)"},
+            ],
+            "unknown_parts": ["ვედრო", "შუასადები 40 მმ"],
+        }
+        validated = validate_steps(plan_payload, sink_parts, 5)
+        focus_lens = [len(s["focus"]) for s in validated["steps"]]
+        self.assertEqual(focus_lens, [2, 0, 1, 0, 1])
+        s1_encoded = '{"steps":[' + json.dumps(plan_payload["steps"][1])
+        self.assertEqual(first_step(s1_encoded, sink_parts)["title"], "ჩადგი ვედრო სიფონის ქვეშ")
+        s2_encoded = '{"steps":[' + json.dumps(plan_payload["steps"][2])
+        self.assertEqual(first_step(s2_encoded, sink_parts)["title"], "მოუშვი ქანჩი")
+
+    def test_pipeline_sink_plausible_resolution_preserves_empty_invisible(self):
+        with tempfile.TemporaryDirectory() as d:
+            source, dest = Path(d) / "sink.png", Path(d) / "run"
+            Image.new("RGB", (100, 100), "white").save(source)
+            sink_raw_parts = [
+                {"label": "სიფონის ზედა პლასტმასის ქანჩი", "box": [268, 91, 488, 166]},
+                {"label": "მარცხენა ჩამკეტი ონკანის სახელური", "box": [12, 257, 88, 320]},
+                {"label": "მარჯვენა ჩამკეტი ონკანის სახელური", "box": [221, 261, 293, 326]},
+                {"label": "სიფონის მარჯვენა პლასტმასის ქანჩი", "box": [628, 249, 752, 378]},
+                {"label": "სიფონის მოხრილი მილი", "box": [307, 248, 650, 493]},
+            ]
+            parts_payload = {"object": "სიფონი", "parts": sink_raw_parts}
+            steps_payload = {
+                "steps": [
+                    {"title": "დაკეტე წყალი", "text": "დაკეტე ორივე ონკანი", "focus": ["p2", "p3"],
+                     "avoid": [], "markers": [], "arrows": [], "tools": [], "warn": None},
+                    {"title": "ჩადგი ვედრო სიფონის ქვეშ", "text": "ვედრო დადგი", "focus": [],
+                     "avoid": [], "markers": [], "arrows": [], "tools": ["ვედრო"],
+                     "warn": "ვედრო სიაში არ არის და უხილავია"},
+                    {"title": "მოუშვი ქანჩი", "text": "ეს ქანჩი ჟონავს", "focus": ["p4"],
+                     "avoid": [], "markers": [], "arrows": [{"part": "p4", "type": "rotate", "dir": "ccw"}],
+                     "tools": ["ხელთათმანი"],
+                     "warn": "სავარაუდოდ მარჯვენა ქანჩია p4, თუმცა შესაძლოა p1-ც იყოს (uncertainty)"},
+                    {"title": "შეამოწმე შუასადები", "text": "ნახე რეზინის რგოლი", "focus": [],
+                     "avoid": [], "markers": [], "arrows": [], "tools": ["შუასადები 40 მმ"],
+                     "warn": "შუასადები უხილავია და სიაში არ არის"},
+                    {"title": "მოუჭირე და შეამოწმე", "text": "მოუჭირე ხელით", "focus": ["p4"],
+                     "avoid": [], "markers": [], "arrows": [{"part": "p4", "type": "rotate", "dir": "cw"}],
+                     "tools": [], "warn": "დაშვება p4 ქანჩზე (uncertainty)"},
+                ],
+                "unknown_parts": ["ვედრო", "შუასადები 40 მმ"],
+            }
+            captured_prompts = {}
+            def create(**kw):
+                if kw.get("stream"):
+                    captured_prompts["steps"] = kw["input"][0]["content"][0]["text"]
+                    return stream_for(steps_payload)
+                captured_prompts["parts"] = kw["input"][0]["content"][0]["text"]
+                return response(parts_payload)
+            client = SimpleNamespace(responses=SimpleNamespace(create=Mock(side_effect=create)))
+            sink_truth = {
+                "design_size": [1000, 1000],
+                "parts": [{"name": p["label"], "path": "M0 0 Z"} for p in sink_raw_parts],
+                "steps": [{"title": s["title"], "text": s["text"]} for s in steps_payload["steps"]],
+            }
+            result = process_c(client, "gpt-6-astra", source, sink_truth, dest, "cpu", "minimal",
+                               768, "clean", 42, Budget(2), {}, Mock(side_effect=sam_for_boxes))
+            self.assertIn("plausible კანდიდატია", captured_prompts["steps"])
+            self.assertIn("uncertainty", captured_prompts["steps"])
+            plan = json.loads((dest / "plan.json").read_text())
+            self.assertEqual([len(s["focus"]) for s in plan["steps"]], [2, 0, 1, 0, 1])
+            self.assertEqual(plan["steps"][2]["focus"], ["p4"])
+            self.assertEqual(plan["steps"][1]["focus"], [])
+            self.assertTrue((dest / "step_1.png").exists())
+            self.assertTrue((dest / "step_2.png").exists())
+            self.assertTrue((dest / "step_3.png").exists())
 
 
 if __name__ == "__main__":

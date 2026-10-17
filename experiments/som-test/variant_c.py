@@ -43,14 +43,50 @@ def assign_ids(parts):
             for i, p in enumerate(ordered, 1)]
 
 
+def prompt_parts(instructions):
+    return ("ამ ფოტოზე გამოყავი მოქმედებებისთვის საჭირო მხოლოდ ხილული ნაწილები. "
+            "დააბრუნე object და parts: ქართული label და მჭიდრო box=[x0,y0,x1,y1], "
+            "ფოტოს სიგანის/სიმაღლის მიმართ 0..1000. ID-ები და ნაბიჯები არ შექმნა. "
+            "თუ რამდენიმე მსგავსი ან ერთგვაროვანი ნაწილია, label-ში აუცილებლად დააზუსტე "
+            "მდებარეობა (მაგ. მარჯვენა/მარცხენა/ზედა/ქვედა), რათა მოქმედების სამიზნე მკაფიოდ გაირჩეს. "
+            "უხილავი ნაწილი არ გამოიგონო.\n" + json.dumps(instructions, ensure_ascii=False))
+
+
+def prompt_steps(object_name, parts, instructions):
+    return ("დაწერე მოცემული ნაბიჯები ქართულად, იმავე რიგით და title/text-ით. "
+            "გამოიყენე მხოლოდ ტელეფონის მიერ მინიჭებული IDs. focus/avoid/markers/arrows "
+            "მიუთითებს მხოლოდ ამ ნაწილებზე. avoid არის ნაწილი, რომელსაც არ უნდა შეეხო. "
+            "როცა მოცემულ parts სიაში მოქმედების ხილული სამიზნის რამდენიმე plausible კანდიდატია, "
+            "აირჩიე ყველაზე სავარაუდო box მდებარეობის, label-ისა და ინსტრუქციის კონტექსტის მიხედვით, "
+            "focus-ში მიუთითე მისი ID და warn-ში ჩაწერე გაურკვევლობა/დაშვება (uncertainty). "
+            "არ დატოვო focus ცარიელი მხოლოდ იმიტომ, რომ რამდენიმე მსგავსი ხილული ნაწილია. "
+            "empty focus დასაშვებია მხოლოდ მაშინ, როცა სამიზნე ნაწილების სიაში ან ფოტოზე საერთოდ არ ჩანს (უხილავია); "
+            "ასეთ დროს არ გამოიგონო ID, არ აიძულო არარელევანტური ნაწილი, აღწერე unknown_parts-ში და warn-ში ახსენი. "
+            "rotate: cw/ccw; move: up/down/left/right/toward/away. "
+            "ზომები/დოზები ფოტოდან დადასტურებულად არ მიიჩნიო. ეს კვლევაა. "
+            "პირველი JSON გასაღები იყოს steps.\n" + json.dumps({"object": object_name,
+            "parts": parts, "instructions": instructions}, ensure_ascii=False))
+
+
 def schema_steps(parts, count):
     base = schema_for([p["id"] for p in parts], count)
     result = obj({k: base["properties"][k] for k in ("steps", "unknown_parts")})
+    step = result["properties"]["steps"]["items"]["properties"]
     if not parts:
         # Empty enum is invalid JSON Schema; no references are possible instead.
-        step = result["properties"]["steps"]["items"]["properties"]
         for field in ("focus", "avoid", "markers", "arrows"):
             step[field] = {"type": "array", "items": {"type": "string"}, "maxItems": 0}
+    else:
+        step["focus"]["description"] = (
+            "მოქმედების სამიზნე ხილული ნაწილების ID-ები (p1..pN). როდესაც მოქმედების სამიზნის "
+            "რამდენიმე plausible კანდიდატია, აირჩიე ყველაზე სავარაუდო ID მდებარეობის/ინსტრუქციის "
+            "მიხედვით და warn-ში ჩაწერე გაურკვევლობა. empty focus დასაშვებია მხოლოდ მაშინ, როცა "
+            "სამიზნე ნაწილი სიაში/ფოტოზე საერთოდ არ ჩანს (უხილავია). არ გამოიგონო ID."
+        )
+        step["warn"]["description"] = (
+            "გაფრთხილება, უსაფრთხოების რჩევა ან გაურკვევლობის (uncertainty) ახსნა, მათ შორის თუ "
+            "სამიზნე უხილავია ან რამდენიმე კანდიდატს შორის შეირჩა ყველაზე სავარაუდო."
+        )
     return result
 
 
@@ -319,10 +355,7 @@ def process_c(client, model, source, truth, destination, device, effort, max_sid
     image.save(prepared)
     save_json(destination / "degradation.json", degradation)
     instructions = [{"title": s["title"], "text": s["text"]} for s in truth["steps"]]
-    parts_prompt = ("ამ ფოტოზე გამოყავი მოქმედებებისთვის საჭირო მხოლოდ ხილული ნაწილები. "
-                    "დააბრუნე object და parts: ქართული label და მჭიდრო box=[x0,y0,x1,y1], "
-                    "ფოტოს სიგანის/სიმაღლის მიმართ 0..1000. ID-ები და ნაბიჯები არ შექმნა. "
-                    "უხილავი ნაწილი არ გამოიგონო.\n" + json.dumps(instructions, ensure_ascii=False))
+    parts_prompt = prompt_parts(instructions)
     result, parts_metrics = request_stage(client, model, "parts", parts_prompt, schema_parts(),
         prepared, destination / "parts_request", effort, budget, overrides)
     parts = assign_ids(result["parts"])
@@ -338,14 +371,7 @@ def process_c(client, model, source, truth, destination, device, effort, max_sid
     save_json(destination / "segmentation.json", {"seconds": sam_seconds, "device": device,
               "quality": mask_quality(parts, masks, image.size)})
     print(f"{model}/{mode}: outline={outline}, parts={len(parts)}", flush=True)
-    prompt = ("დაწერე მოცემული ნაბიჯები ქართულად, იმავე რიგით და title/text-ით. "
-              "გამოიყენე მხოლოდ ტელეფონის მიერ მინიჭებული IDs. focus/avoid/markers/arrows "
-              "მიუთითებს მხოლოდ ამ ნაწილებზე. avoid არის ნაწილი, რომელსაც არ უნდა შეეხო. "
-              "უხილავი ან სიაში არმყოფი ნაწილი აღწერე unknown_parts-ში, focus დატოვე ცარიელი "
-              "და warn-ში ახსენი. rotate: cw/ccw; move: up/down/left/right/toward/away. "
-              "ზომები/დოზები ფოტოდან დადასტურებულად არ მიიჩნიო. ეს კვლევაა. "
-              "პირველი JSON გასაღები იყოს steps.\n" + json.dumps({"object": result["object"],
-              "parts": parts, "instructions": instructions}, ensure_ascii=False))
+    prompt = prompt_steps(result["object"], parts, instructions)
     steps_start = time.perf_counter()
     steps, steps_metrics = request_stage(client, model, "steps", prompt, schema_steps(parts, len(instructions)),
         None, destination / "steps_request", effort, budget, overrides, parts)
