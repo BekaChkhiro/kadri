@@ -4,3 +4,9 @@ Camera/.shots/
 .env
 .venv/
 __pycache__/
+ios/Models/
+ios/Tools/.venv/
+ios/**/xcuserdata/
+ios/**/DerivedData/
+ios/**/.build/
+ios/**/.swiftpm/
