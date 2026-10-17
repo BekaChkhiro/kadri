@@ -49,6 +49,7 @@
 		791B50212249FB30EBBE196F /* illo-start.png in Resources */ = {isa = PBXBuildFile; fileRef = 2BE5B96621F0D03E2ED3D505 /* illo-start.png */; };
 		79DE86C4B2CA86AA5224E15B /* MeshWrapGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE74887511C25C4481B6F46 /* MeshWrapGeometry.swift */; };
 		7E63B1D4CFDD42BE7DF2BD56 /* Glass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5147D5C2BA088C9E501729 /* Glass.swift */; };
+		8263E4FF08D843EB2B3CF8D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6BFC1330F321F32C6012EEBF /* Assets.xcassets */; };
 		82D4EB97AFBD4777405B586E /* PhotoFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89FAEC6BDACE10C06F57842 /* PhotoFlowView.swift */; };
 		89EF43D89D35C3880A687D29 /* SessionPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6881E6C4A4099231DB05929E /* SessionPresentation.swift */; };
 		8AF92C18CC97F538606A9925 /* sink-trap.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CE0790A844E2730486BCBD6 /* sink-trap.jpg */; };
@@ -161,6 +162,7 @@
 		66787C94DC3D49CBEA588BB7 /* microscope.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = microscope.jpg; sourceTree = "<group>"; };
 		6881E6C4A4099231DB05929E /* SessionPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPresentation.swift; sourceTree = "<group>"; };
 		6A9BCE391233E0A986DDEBC3 /* MeshWrapSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrapSnapshotTests.swift; sourceTree = "<group>"; };
+		6BFC1330F321F32C6012EEBF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6C871271F759749DF134EF13 /* Fixtures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fixtures; path = KadriTests/Fixtures; sourceTree = SOURCE_ROOT; };
 		73919932F619884CCB894798 /* SessionPreviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPreviews.swift; sourceTree = "<group>"; };
 		7827EF5714A095173AA7C615 /* SegmentationBenchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentationBenchView.swift; sourceTree = "<group>"; };
@@ -261,6 +263,7 @@
 		1CBA3C9F10935232D776E968 /* Kadri */ = {
 			isa = PBXGroup;
 			children = (
+				6BFC1330F321F32C6012EEBF /* Assets.xcassets */,
 				543FF004E3F31262D70B1ECA /* ContentView.swift */,
 				B46F495E5E37069B8DAB0CB7 /* Info.plist */,
 				ABD5A9F0403797194A257F7D /* KadriApp.swift */,
@@ -618,6 +621,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8263E4FF08D843EB2B3CF8D8 /* Assets.xcassets in Resources */,
 				9182092E4B5E128F09C0A614 /* Inter-Bold.ttf in Resources */,
 				A00C7230F3B50860C993A69A /* Inter-Medium.ttf in Resources */,
 				387879FE5284A5F25A697DAF /* Inter-Regular.ttf in Resources */,
@@ -816,8 +820,8 @@
 				GID_SERVER_CLIENT_ID = "366519256518-17h7nfvfreh6c0nb8lt0mp74uskogfkl.apps.googleusercontent.com";
 				GID_URL_SCHEME = "com.googleusercontent.apps.366519256518-6oboqijftm0mbqct40tuogm36bnlt498";
 				INFOPLIST_FILE = Kadri/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "კადრი";
-				INFOPLIST_KEY_NSCameraUsageDescription = "კადრი კამერას იყენებს ობიექტის დასანახად და ინსტრუქციის საჩვენებლად";
+				INFOPLIST_KEY_CFBundleDisplayName = NETA;
+				INFOPLIST_KEY_NSCameraUsageDescription = "NETA კამერას იყენებს ობიექტის დასანახად და ინსტრუქციის საჩვენებლად";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -863,8 +867,8 @@
 				GID_SERVER_CLIENT_ID = "366519256518-17h7nfvfreh6c0nb8lt0mp74uskogfkl.apps.googleusercontent.com";
 				GID_URL_SCHEME = "com.googleusercontent.apps.366519256518-6oboqijftm0mbqct40tuogm36bnlt498";
 				INFOPLIST_FILE = Kadri/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "კადრი";
-				INFOPLIST_KEY_NSCameraUsageDescription = "კადრი კამერას იყენებს ობიექტის დასანახად და ინსტრუქციის საჩვენებლად";
+				INFOPLIST_KEY_CFBundleDisplayName = NETA;
+				INFOPLIST_KEY_NSCameraUsageDescription = "NETA კამერას იყენებს ობიექტის დასანახად და ინსტრუქციის საჩვენებლად";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;

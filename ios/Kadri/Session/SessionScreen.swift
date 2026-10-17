@@ -58,7 +58,7 @@ struct SessionScreen<Background: View>: View {
                     .background(Theme.Colors.brand[500]!, in: Circle())
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(model.instructions.isEmpty ? "კადრი" : model.instructions)
+                    Text(model.instructions.isEmpty ? "NETA" : model.instructions)
                         .font(.kadri(14, weight: .semibold)).lineLimit(1)
                     Text(model.partsResult?.object ?? "კამერით, ნაბიჯ-ნაბიჯ")
                         .font(.kadri(12)).foregroundStyle(Theme.Colors.ink[500]!).lineLimit(1)

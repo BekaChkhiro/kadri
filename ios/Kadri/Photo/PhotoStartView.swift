@@ -28,7 +28,7 @@ struct PhotoStartView: View {
                         .font(.kadri(28, weight: .semibold)).tracking(-0.5).lineSpacing(0)
                         .fixedSize(horizontal: false, vertical: true)
                         .photoEnter(0, appeared)
-                    Text("კადრი ფოტოზე საჭირო ნაწილებს იპოვის და ნაბიჯ-ნაბიჯ გაგიძღვება.")
+                    Text("NETA ფოტოზე საჭირო ნაწილებს იპოვის და ნაბიჯ-ნაბიჯ გაგიძღვება.")
                         .font(.kadri(15)).foregroundStyle(Theme.Colors.ink[600]!).lineSpacing(3)
                         .fixedSize(horizontal: false, vertical: true)
                         .padding(.top, 10)
@@ -48,14 +48,12 @@ struct PhotoStartView: View {
 
     private var header: some View {
         HStack(spacing: 8) {
-            Image(systemName: "scope").font(.system(size: 20)).foregroundStyle(.white)
-                .frame(width: 36, height: 36)
-                .background(Theme.Colors.brand[500]!, in: RoundedRectangle(cornerRadius: 12))
-                .shadow(Theme.Shadow.pop)
-                .accessibilityHidden(true)
-            Text("კადრი").font(.kadri(18, weight: .semibold)).tracking(-0.3)
+            Image("NetaLogo").resizable().scaledToFit()
+                .frame(height: 26)
+                .accessibilityLabel("NETA")
             Spacer()
         }
+        .frame(height: 36)
         .padding(.horizontal, 20)
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isHeader)

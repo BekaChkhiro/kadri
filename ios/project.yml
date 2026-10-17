@@ -41,13 +41,14 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: ge.kadri.app
         PRODUCT_NAME: Kadri
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         MARKETING_VERSION: "0.1.0"
         CURRENT_PROJECT_VERSION: "1"
         TARGETED_DEVICE_FAMILY: "1"
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_FILE: Kadri/Info.plist
-        INFOPLIST_KEY_CFBundleDisplayName: კადრი
-        INFOPLIST_KEY_NSCameraUsageDescription: კადრი კამერას იყენებს ობიექტის დასანახად და ინსტრუქციის საჩვენებლად
+        INFOPLIST_KEY_CFBundleDisplayName: NETA
+        INFOPLIST_KEY_NSCameraUsageDescription: NETA კამერას იყენებს ობიექტის დასანახად და ინსტრუქციის საჩვენებლად
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
