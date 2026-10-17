@@ -46,7 +46,9 @@ actor KeyframePicker {
 
     func pick(_ frames: [FrameSnapshot]) throws -> Keyframe {
         guard let latest = frames.last else { throw Failure.unstable }
-        let window = frames.filter { latest.timestamp - $0.timestamp <= configuration.stabilityWindow + 0.05 }
+        // Frames are sampled ~0.1 s apart (ARSessionController), so allow one extra sample of slack;
+        // with only 0.05 s the oldest sample in range was ~0.23 s old and the 0.3 s check never passed.
+        let window = frames.filter { latest.timestamp - $0.timestamp <= configuration.stabilityWindow + 0.15 }
         guard let first = window.first, latest.timestamp - first.timestamp >= configuration.stabilityWindow else { throw Failure.unstable }
         let reference = latest.frame.camera.transform
         for item in window {
