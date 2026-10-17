@@ -35,6 +35,7 @@
 		60C2AB54EE7F78639047B484 /* PhotoCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A70C234762767D0C800572 /* PhotoCamera.swift */; };
 		61C1EFFA721BFCEC5D6412B7 /* PhotoSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23E1970C2B487CBB0EA08BE /* PhotoSession.swift */; };
 		62DAABB9EF80E005F447FD50 /* DevAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 870628B4A1D760DA2D9AE62A /* DevAuth.swift */; };
+		6535B01133D4511BA46D932C /* PhotoResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 368E6D0243C2B60A429BF23D /* PhotoResultView.swift */; };
 		6D41E78BA702EF418494A06F /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAC9836272FB003780B518D6 /* Vision.framework */; };
 		729038930CAADDEFED6F3F3A /* SessionPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D624A7ABF50F3C99DA5D0ADF /* SessionPresentationTests.swift */; };
 		72B54F42CA10F4754BFF0864 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84CAC115ECF63FDB03CC26B8 /* Inter-SemiBold.ttf */; };
@@ -43,6 +44,7 @@
 		89EF43D89D35C3880A687D29 /* SessionPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6881E6C4A4099231DB05929E /* SessionPresentation.swift */; };
 		9182092E4B5E128F09C0A614 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00B16E38C3E8EC7B01B52E4 /* Inter-Bold.ttf */; };
 		91ED3764D969F8DA61658440 /* NotoSansGeorgian-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5BF721974DE7AA9474A9A606 /* NotoSansGeorgian-SemiBold.ttf */; };
+		9FB1DDE8A787F86E9301E041 /* PhotoOverlays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B190C91D1A200CF71F39219 /* PhotoOverlays.swift */; };
 		A00C7230F3B50860C993A69A /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 340983717E658514DD60A10B /* Inter-Medium.ttf */; };
 		A021D80B098F055B3EF12B0B /* PartAnchors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF5D91DF61E491034224AFC /* PartAnchors.swift */; };
 		A03AEF2EEC043EE877C1A3BA /* DescribeBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE6EB632B576D6674E9FB23 /* DescribeBar.swift */; };
@@ -58,8 +60,10 @@
 		BB29B85D82A8D591764DA7CF /* MeshWrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD4C0E74341F15D5E0088D8 /* MeshWrap.swift */; };
 		BB51ED262643A1C54A8DAEA2 /* SessionFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFA803FB41D7E1F58FD4454 /* SessionFlowView.swift */; };
 		BD67D4209D70CC5DD7C4D768 /* ARSessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0284BC4ED2FA5475C1184EE9 /* ARSessionController.swift */; };
+		C049AD315EE6C3F2DC4528F3 /* PhotoStepCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C59462C2DDEE650A582346E /* PhotoStepCard.swift */; };
 		C2FCE5E1F6B2224395E6B37C /* GoogleAuthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20D3D496D409FAC6A6683F /* GoogleAuthController.swift */; };
 		C480FA751DE36F8B229476CC /* SegmentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79684495C6B552237CE68F89 /* SegmentationTests.swift */; };
+		C5214BAAAC982579370A21A8 /* PhotoGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1512A702D1C9EDDCC4FBA982 /* PhotoGeometry.swift */; };
 		CAC92803A5B7FCAF050E82EB /* SegmentationBench.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CC50C123CF7B32458FEBD3 /* SegmentationBench.swift */; };
 		D6C97E8C50507362CE0C7B9F /* KadriApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD5A9F0403797194A257F7D /* KadriApp.swift */; };
 		D87E546E4D732C3263D4271F /* ContourOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D28A03C9FD37FA0817DC5B /* ContourOverlay.swift */; };
@@ -102,13 +106,17 @@
 		0BC5406AFC56533421633751 /* sink */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sink; path = KadriTests/Fixtures/sink; sourceTree = SOURCE_ROOT; };
 		0CF25B819A4307E63C96B93E /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		0F55593458662C90DBD1A8F7 /* ScanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanningView.swift; sourceTree = "<group>"; };
+		1512A702D1C9EDDCC4FBA982 /* PhotoGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGeometry.swift; sourceTree = "<group>"; };
 		1B5A4C245D4AD9B3997F740D /* PartsRevealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartsRevealView.swift; sourceTree = "<group>"; };
 		24C23715356543CFFCCA0738 /* MeshWrapIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrapIntegrationTests.swift; sourceTree = "<group>"; };
 		24F1F6DCECABEBE28315A574 /* NotoSansGeorgian-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansGeorgian-Bold.ttf"; sourceTree = "<group>"; };
+		2B190C91D1A200CF71F39219 /* PhotoOverlays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoOverlays.swift; sourceTree = "<group>"; };
+		2C59462C2DDEE650A582346E /* PhotoStepCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoStepCard.swift; sourceTree = "<group>"; };
 		2CE6EB632B576D6674E9FB23 /* DescribeBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescribeBar.swift; sourceTree = "<group>"; };
 		317A97DEC8B919E1D5640FD6 /* OFL-NotoSansGeorgian.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OFL-NotoSansGeorgian.txt"; sourceTree = "<group>"; };
 		323ABB0C7AC98B5137031173 /* Kadri.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Kadri.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		340983717E658514DD60A10B /* Inter-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Medium.ttf"; sourceTree = "<group>"; };
+		368E6D0243C2B60A429BF23D /* PhotoResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoResultView.swift; sourceTree = "<group>"; };
 		3DE74887511C25C4481B6F46 /* MeshWrapGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrapGeometry.swift; sourceTree = "<group>"; };
 		45B6800C7C6BC6DFD3FD195E /* CoreML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreML.framework; path = System/Library/Frameworks/CoreML.framework; sourceTree = SDKROOT; };
 		4ADA8C9D26AAC7620338D783 /* TrackedMesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedMesh.swift; sourceTree = "<group>"; };
@@ -379,7 +387,11 @@
 			isa = PBXGroup;
 			children = (
 				B1A70C234762767D0C800572 /* PhotoCamera.swift */,
+				1512A702D1C9EDDCC4FBA982 /* PhotoGeometry.swift */,
+				2B190C91D1A200CF71F39219 /* PhotoOverlays.swift */,
+				368E6D0243C2B60A429BF23D /* PhotoResultView.swift */,
 				A23E1970C2B487CBB0EA08BE /* PhotoSession.swift */,
+				2C59462C2DDEE650A582346E /* PhotoStepCard.swift */,
 				5F6E6B4DF75E0A41E1189F56 /* Fixtures */,
 			);
 			path = Photo;
@@ -594,7 +606,11 @@
 				084494FD3093DD288DA33FE8 /* PartTracker.swift in Sources */,
 				54F0522C6E62571ABF309D4D /* PartsRevealView.swift in Sources */,
 				60C2AB54EE7F78639047B484 /* PhotoCamera.swift in Sources */,
+				C5214BAAAC982579370A21A8 /* PhotoGeometry.swift in Sources */,
+				9FB1DDE8A787F86E9301E041 /* PhotoOverlays.swift in Sources */,
+				6535B01133D4511BA46D932C /* PhotoResultView.swift in Sources */,
 				61C1EFFA721BFCEC5D6412B7 /* PhotoSession.swift in Sources */,
+				C049AD315EE6C3F2DC4528F3 /* PhotoStepCard.swift in Sources */,
 				247480935EFF895F6D00FED6 /* SAMDecoder.mlpackage in Sources */,
 				A4DB14A44099C06725059BA0 /* SAMDecoderPoint.mlpackage in Sources */,
 				207F06A72FB17D6F63A804D3 /* SAMEncoder.mlpackage in Sources */,
