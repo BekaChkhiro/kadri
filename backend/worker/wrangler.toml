@@ -23,6 +23,8 @@ compatibility_flags = ["nodejs_compat"]
 [vars]
 AI_PROVIDER = "astra"
 ENVIRONMENT = "dev"
+DAILY_SESSION_LIMIT = "20"
+AI_TIMEOUT_MS = "60000"
 
 [[d1_databases]]
 binding = "DB"
@@ -39,6 +41,8 @@ name = "kadri-worker-staging"
 [env.staging.vars]
 AI_PROVIDER = "astra"
 ENVIRONMENT = "staging"
+DAILY_SESSION_LIMIT = "20"
+AI_TIMEOUT_MS = "60000"
 
 [[env.staging.d1_databases]]
 binding = "DB"
@@ -55,6 +59,8 @@ name = "kadri-worker-prod"
 [env.production.vars]
 AI_PROVIDER = "astra"
 ENVIRONMENT = "production"
+DAILY_SESSION_LIMIT = "20"
+AI_TIMEOUT_MS = "60000"
 
 [[env.production.d1_databases]]
 binding = "DB"

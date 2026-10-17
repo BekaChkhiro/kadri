@@ -11,4 +11,8 @@ export interface Env {
   GEMINI_API_KEY?: string;
   SESSION_SECRET?: string;
   GOOGLE_CLIENT_IDS?: string;
+  /** Started sessions per user per UTC day; default 20 (src/limits.ts). */
+  DAILY_SESSION_LIMIT?: string;
+  /** Per AI request timeout in ms; default 60000 (src/limits.ts). */
+  AI_TIMEOUT_MS?: string;
 }

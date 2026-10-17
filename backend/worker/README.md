@@ -69,6 +69,26 @@ production-ისთვის იგივე `--env production`-ით (`kadri-
 `.dev.vars`-ში ჩაწერე და `npx wrangler d1 migrations apply kadri-dev --local`. ტესტებს ნამდვილი Google client
 არ სჭირდება — ID token-ს ტესტი საკუთარი RSA key-ით აწერს ხელს და JWKS fetch stub-ით მოდის.
 
+## Limits
+
+`src/limits.ts` — დამოუკიდებელი მოდული AI route-ებისთვის; ჩანაწერები D1 `usage` ცხრილშია (`migrations/0002_usage.sql`).
+
+| ფუნქცია | რას აკეთებს |
+|---|---|
+| `assertDailyLimit(env, userId)` | დღევანდელი (UTC) `stage='parts'` ჩანაწერები ≥ `DAILY_SESSION_LIMIT` → `429 daily_limit` („დღევანდელი ლიმიტი ამოიწურა, სცადეთ ხვალ“), `Retry-After` = წამები UTC შუაღამემდე |
+| `recordUsage(env, row)` | ერთი AI მოთხოვნის ჩაწერა (ტოკენები, `cost_usd`, `latency_ms`, `status` ok\|error\|timeout); ფასს გამომძახებელი ითვლის |
+| `withTimeout(ms, signal => …)` | `AbortController`; ვადის გასვლისას signal abort-დება და `504 ai_timeout` („პასუხი დროში ვერ მოვიდა, სცადეთ თავიდან“) |
+| `usageSummary(env, userId, days = 30)` | `{days, sessions, costUsd}` პარამეტრების ეკრანისთვის |
+
+ცვლადები (`wrangler.toml` `[vars]`, სამივე გარემოში): `DAILY_SESSION_LIMIT` (default `20`), `AI_TIMEOUT_MS` (default `60000`).
+სესიად ითვლება ყოველი `parts` ჩანაწერი, მათ შორის `error`/`timeout` — ფასიანი მოთხოვნა მაინც დაიხარჯა.
+
+> **⚠️ ფასიან AI მოთხოვნაზე retry არ ხდება — არც `withTimeout`-ში, არც სერვერზე სხვაგან.** Timeout-ის ან შეცდომის
+> შემდეგ კლიენტი (მომხმარებელი) წყვეტს, სცადოს თუ არა თავიდან; ყოველი ცდა ცალკე ჩაიწერება `usage`-ში.
+
+`assertDailyLimit` აგდებს `LimitError`-ს (`ApiError` + `headers`); `Retry-After` პასუხამდე რომ მივიდეს, router-მა
+`errorResponse(err, err.headers)` უნდა გამოიძახოს `LimitError`-ისთვის.
+
 ## Deploy (ადამიანმა უნდა გააკეთოს)
 
 1. `npx wrangler login`
