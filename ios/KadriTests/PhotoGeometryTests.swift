@@ -3,79 +3,103 @@ import KadriCore
 @testable import Kadri
 
 final class PhotoGeometryTests: XCTestCase {
-    func testCoverCropsHorizontally() {
-        let rect = PhotoGeometry.imageRect(viewport: CGSize(width: 390, height: 844), imageSize: CGSize(width: 1024, height: 1536))
-        XCTAssertEqual(rect.width, 562.6666667, accuracy: 0.0001)
-        XCTAssertEqual(rect.height, 844)
-        XCTAssertEqual(rect.minX, -86.3333333, accuracy: 0.0001)
-        XCTAssertEqual(rect.minY, 0)
+    func testPortraitFitKeepsWholePhotoCentered() {
+        XCTAssertEqual(PhotoGeometry.imageRect(viewport: CGSize(width: 400, height: 450), imageSize: CGSize(width: 1000, height: 1500)),
+                       CGRect(x: 50, y: 0, width: 300, height: 450))
     }
 
-    func testCoverCropsVertically() {
-        XCTAssertEqual(PhotoGeometry.imageRect(viewport: CGSize(width: 800, height: 400), imageSize: CGSize(width: 400, height: 800)),
-                       CGRect(x: 0, y: -600, width: 800, height: 1600))
+    func testLandscapeFitKeepsWholePhotoCentered() {
+        XCTAssertEqual(PhotoGeometry.imageRect(viewport: CGSize(width: 400, height: 450), imageSize: CGSize(width: 1500, height: 1000)),
+                       CGRect(x: 0, y: (450 - 800.0 / 3) / 2, width: 400, height: 800.0 / 3))
     }
 
-    func testMockBoxUsesSameCropAsImage() throws {
-        let boxes = PhotoGeometry.boxes(parts: MockKadriAPI.result.parts, viewport: CGSize(width: 390, height: 844), imageSize: CGSize(width: 1024, height: 1536))
-        let box = try XCTUnwrap(boxes["p1"])
-        XCTAssertEqual(box.minX, 31.8266667, accuracy: 0.0001)
-        XCTAssertEqual(box.minY, 177.24, accuracy: 0.0001)
-        XCTAssertEqual(box.width, 61.8933333, accuracy: 0.0001)
-        XCTAssertEqual(box.height, 105.5, accuracy: 0.0001)
+    func testMockBoxUsesSameFitAsImage() throws {
+        let viewport = CGSize(width: 400, height: 450), image = CGSize(width: 1000, height: 1500)
+        let parts = MockKadriAPI.result.parts
+        let boxes = PhotoGeometry.boxes(parts: parts, viewport: viewport, imageSize: image)
+        let transform = PhotoGeometry.focusTransform(imageSize: image, viewport: viewport,
+            visibleRect: CGRect(origin: .zero, size: viewport), focusBoxes: [])
+        let transformed = PhotoGeometry.boxes(parts: parts, imageSize: image, transform: transform)
+        let part = try XCTUnwrap(parts.first)
+        let box = try XCTUnwrap(boxes[part.id])
+        XCTAssertEqual(box.minX, 50 + CGFloat(part.box[0]) * 0.3, accuracy: 0.001)
+        XCTAssertEqual(box.minY, CGFloat(part.box[1]) * 0.45, accuracy: 0.001)
+        for (id, box) in boxes {
+            assertRect(box, equals: try XCTUnwrap(transformed[id]))
+        }
     }
 
     func testInvalidBoxIsOmitted() throws {
         let part = try JSONDecoder().decode(Part.self, from: Data(#"{"id":"bad","name":"bad","box":[100,100,90,200]}"#.utf8))
-        XCTAssertTrue(PhotoGeometry.boxes(parts: [part], viewport: CGSize(width: 390, height: 844), imageSize: CGSize(width: 1024, height: 1536)).isEmpty)
-    }
-    func testVisibleAreaExcludesMeasuredCardAndBottomInset() {
-        XCTAssertEqual(PhotoGeometry.visibleRect(viewport: CGSize(width: 390, height: 750), cardHeight: 300, bottomInset: 34),
-                       CGRect(x: 0, y: 0, width: 390, height: 400))
-        XCTAssertEqual(PhotoGeometry.visibleRect(viewport: CGSize(width: 390, height: 300), cardHeight: 400, bottomInset: 34).height, 0)
+        XCTAssertTrue(PhotoGeometry.boxes(parts: [part], viewport: CGSize(width: 390, height: 450), imageSize: CGSize(width: 1024, height: 1536)).isEmpty)
     }
 
-    func testEmptyFocusUsesCover() {
-        let image = CGSize(width: 1024, height: 1536), viewport = CGSize(width: 390, height: 750)
-        let mapping = PhotoGeometry.focusTransform(imageSize: image, viewport: viewport,
-            visibleRect: CGRect(x: 0, y: 0, width: 390, height: 400), focusBoxes: [])
-        XCTAssertEqual(CGRect(origin: .zero, size: image).applying(mapping),
-                       PhotoGeometry.imageRect(viewport: viewport, imageSize: image))
+    func testEmptyAndOutsideFocusUseFit() {
+        let viewport = CGSize(width: 400, height: 450)
+        for image in [CGSize(width: 1000, height: 1500), CGSize(width: 1500, height: 1000)] {
+            for boxes in [[], [CGRect(x: -100, y: -100, width: 10, height: 10)]] as [[CGRect]] {
+                let mapping = PhotoGeometry.focusTransform(imageSize: image, viewport: viewport,
+                    visibleRect: CGRect(origin: .zero, size: viewport), focusBoxes: boxes)
+                assertRect(CGRect(origin: .zero, size: image).applying(mapping),
+                           equals: PhotoGeometry.imageRect(viewport: viewport, imageSize: image))
+            }
+        }
     }
 
-    func testFocusUnionFitsAndCentersAboveCard() {
-        let image = CGSize(width: 1000, height: 1500), viewport = CGSize(width: 400, height: 800)
-        let visible = CGRect(x: 0, y: 0, width: 400, height: 400)
-        let boxes = [CGRect(x: 350, y: 450, width: 100, height: 100), CGRect(x: 450, y: 500, width: 150, height: 100)]
+    func testFocusUnionFitsWithPaddingAndCentersInPhotoArea() {
+        let image = CGSize(width: 1000, height: 1500), viewport = CGSize(width: 400, height: 450)
+        let visible = CGRect(origin: .zero, size: viewport)
+        let boxes = [CGRect(x: 300, y: 600, width: 200, height: 100), CGRect(x: 500, y: 700, width: 200, height: 100)]
         let mapping = PhotoGeometry.focusTransform(imageSize: image, viewport: viewport, visibleRect: visible, focusBoxes: boxes)
         let union = boxes[0].union(boxes[1]).applying(mapping)
         XCTAssertEqual(union.midX, visible.midX, accuracy: 0.001)
         XCTAssertEqual(union.midY, visible.midY, accuracy: 0.001)
-        XCTAssertTrue(visible.contains(union))
         XCTAssertEqual(union.width * 1.25, visible.width, accuracy: 0.001)
     }
 
-    func testEdgeFocusClampsImageWithoutExposingEdges() {
-        let image = CGSize(width: 1000, height: 1500), viewport = CGSize(width: 400, height: 800)
-        for box in [CGRect(x: 0, y: 0, width: 50, height: 50), CGRect(x: 950, y: 1450, width: 50, height: 50)] {
-            let mapping = PhotoGeometry.focusTransform(imageSize: image, viewport: viewport,
-                visibleRect: CGRect(x: 0, y: 0, width: 400, height: 400), focusBoxes: [box])
-            let rendered = CGRect(origin: .zero, size: image).applying(mapping)
-            XCTAssertLessThanOrEqual(rendered.minX, 0)
-            XCTAssertLessThanOrEqual(rendered.minY, 0)
-            XCTAssertGreaterThanOrEqual(rendered.maxX, viewport.width)
-            XCTAssertGreaterThanOrEqual(rendered.maxY, viewport.height)
+    func testEdgeFocusClampsEnlargedAxesAndCentersNarrowAxes() {
+        let viewport = CGSize(width: 400, height: 450)
+        for image in [CGSize(width: 1000, height: 1500), CGSize(width: 1500, height: 1000),
+                      CGSize(width: 100, height: 1500), CGSize(width: 1500, height: 100)] {
+            for box in [CGRect(x: 0, y: 0, width: 10, height: 10),
+                        CGRect(x: image.width - 10, y: image.height - 10, width: 10, height: 10)] {
+                let mapping = PhotoGeometry.focusTransform(imageSize: image, viewport: viewport,
+                    visibleRect: CGRect(origin: .zero, size: viewport), focusBoxes: [box])
+                let rendered = CGRect(origin: .zero, size: image).applying(mapping)
+                if rendered.width < viewport.width {
+                    XCTAssertEqual(rendered.midX, viewport.width / 2, accuracy: 0.001)
+                } else {
+                    XCTAssertLessThanOrEqual(rendered.minX, 0)
+                    XCTAssertGreaterThanOrEqual(rendered.maxX, viewport.width)
+                }
+                if rendered.height < viewport.height {
+                    XCTAssertEqual(rendered.midY, viewport.height / 2, accuracy: 0.001)
+                } else {
+                    XCTAssertLessThanOrEqual(rendered.minY, 0)
+                    XCTAssertGreaterThanOrEqual(rendered.maxY, viewport.height)
+                }
+            }
         }
     }
 
-    func testSmallFocusCapsZoomAtThreeTimesCover() {
-        let image = CGSize(width: 1000, height: 1500), viewport = CGSize(width: 400, height: 800)
-        let mapping = PhotoGeometry.focusTransform(imageSize: image, viewport: viewport,
-            visibleRect: CGRect(x: 0, y: 0, width: 400, height: 400),
-            focusBoxes: [CGRect(x: 450, y: 450, width: 10, height: 10)])
-        let coverScale = PhotoGeometry.imageRect(viewport: viewport, imageSize: image).width / image.width
-        XCTAssertEqual(mapping.a, coverScale * 3, accuracy: 0.001)
-        XCTAssertEqual(mapping.d, mapping.a)
+    func testZoomStaysBetweenFitAndThreeTimesFit() {
+        let image = CGSize(width: 1000, height: 1500), viewport = CGSize(width: 400, height: 450)
+        let visible = CGRect(origin: .zero, size: viewport)
+        let fitScale = PhotoGeometry.imageRect(viewport: viewport, imageSize: image).width / image.width
+        let tiny = PhotoGeometry.focusTransform(imageSize: image, viewport: viewport, visibleRect: visible,
+            focusBoxes: [CGRect(x: 450, y: 650, width: 10, height: 10)])
+        XCTAssertEqual(tiny.a, fitScale * 3, accuracy: 0.001)
+        let whole = PhotoGeometry.focusTransform(imageSize: image, viewport: viewport, visibleRect: visible,
+            focusBoxes: [CGRect(origin: .zero, size: image)])
+        XCTAssertEqual(whole.a, fitScale, accuracy: 0.001)
+        XCTAssertEqual(whole.d, whole.a)
+    }
+
+    private func assertRect(_ actual: CGRect, equals expected: CGRect, file: StaticString = #filePath, line: UInt = #line) {
+        XCTAssertEqual(actual.minX, expected.minX, accuracy: 0.0001, file: file, line: line)
+        XCTAssertEqual(actual.minY, expected.minY, accuracy: 0.0001, file: file, line: line)
+        XCTAssertEqual(actual.width, expected.width, accuracy: 0.0001, file: file, line: line)
+        XCTAssertEqual(actual.height, expected.height, accuracy: 0.0001, file: file, line: line)
     }
 
 }
