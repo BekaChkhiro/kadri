@@ -31,7 +31,7 @@ struct MockKadriAPI: KadriAPI {
         }
     }
 
-    static let result = PartsResult(object: "სიფონის შეკეთება", parts: [
+    static let result = PartsResult(object: "ნიჟარის სიფონი", parts: [
         Part(id: "p1", name: "ონკანი", box: [210, 210, 320, 335]),
         Part(id: "p2", name: "ქანჩი", box: [615, 245, 755, 380]),
         Part(id: "p3", name: "სიფონი", box: [300, 380, 670, 530]),
@@ -47,10 +47,15 @@ struct MockKadriAPI: KadriAPI {
              tools: ["ვედრო", "ტილო"],
              tip: "ვედრო პირდაპირ სიფონის ქვეშ დადგი."),
         Step(index: 3, title: "მოუშვი ქანჩი", text: "ხელით მოუშვი საათის ისრის საწინააღმდეგოდ.", focus: ["p2"],
-             markers: [StepMarker(part: "p2", label: "ქანჩი · ჟონავს")],
+             markers: [StepMarker(part: "p2", label: "ქანჩი")],
              arrows: [StepArrow(part: "p2", type: "rotate", dir: "ccw")],
              tools: ["ხელთათმანი"],
              warn: "პლასტმასისაა, ზედმეტ ძალას ნუ დაატან."),
+        Step(index: 4, title: "შეამოწმე შეერთება", text: "გაწმინდე შეერთება და შეამოწმე რეზინის რგოლი. დაზიანებული რგოლი შეცვალე.", focus: ["p2"],
+             markers: [StepMarker(part: "p2", label: "შეერთება")], tools: ["ტილო"],
+             tip: "აწყობისას ქანჩი ხელით მოუჭირე."),
+        Step(index: 5, title: "გადაამოწმე გაჟონვა", text: "ნელა გახსენი წყალი და დააკვირდი სიფონს. შეერთება მშრალი უნდა დარჩეს.", focus: ["p3"],
+             markers: [StepMarker(part: "p3", label: "სიფონი")], tools: ["მშრალი ტილო"]),
     ]
 }
 
