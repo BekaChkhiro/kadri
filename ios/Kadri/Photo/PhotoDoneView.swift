@@ -65,7 +65,7 @@ struct PhotoDoneView: View {
         ZStack {
             Theme.Colors.surface
             if let image = UIImage(named: "illo-done") {
-                Image(uiImage: image).resizable().scaledToFit().brightness(0.02).blendMode(.multiply)
+                Image(uiImage: image).resizable().scaledToFit().brightness(0.03).blendMode(.multiply)
             }
         }
         .compositingGroup()
