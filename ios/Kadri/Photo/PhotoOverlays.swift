@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreText
 import KadriCore
 
 enum PhotoTone {
@@ -188,15 +189,19 @@ struct PhotoAnnotationsView: View {
                     ForEach(Array(step.arrows.enumerated()), id: \.offset) { _, arrow in
                         if let box = boxes[arrow.part] { arrowView(arrow, box: box) }
                     }
+                    let pins = step.markers.map { marker in
+                        PhotoGeometry.Pin(part: marker.part, size: pinSize(marker.label),
+                                          prefersBelow: step.arrows.contains { $0.part == marker.part })
+                    }
+                    let rects = PhotoGeometry.pinRects(pins: pins, boxes: boxes,
+                        focus: step.focus + step.avoid, viewport: proxy.size,
+                        visibleHeight: visibleHeight ?? proxy.size.height)
                     ForEach(Array(step.markers.enumerated()), id: \.offset) { i, marker in
-                        if let box = boxes[marker.part] {
-                            let below = step.arrows.contains { $0.part == marker.part }
-                            let pinWidth = min(220.0, max(0, proxy.size.width - 16))
+                        if let rect = rects[i] {
                             PhotoMarkerPin(number: i + 1, label: marker.label,
                                            tone: marker.tone == "danger" || step.avoid.contains(marker.part) ? .danger : .brand)
-                                .frame(width: pinWidth)
-                                .position(x: min(max(box.midX, pinWidth / 2 + 8), max(pinWidth / 2 + 8, proxy.size.width - pinWidth / 2 - 8)),
-                                          y: min(max(below ? box.maxY + 14 : box.minY - 14, 20), max(20, min(proxy.size.height, visibleHeight ?? proxy.size.height) - 20)))
+                                .frame(width: rect.width, height: rect.height)
+                                .position(x: rect.midX, y: rect.midY)
                         }
                     }
                 }
@@ -205,6 +210,16 @@ struct PhotoAnnotationsView: View {
 
         }
         .allowsHitTesting(false).accessibilityHidden(true)
+    }
+
+    private func pinSize(_ label: String) -> CGSize {
+        let font = Theme.ctFont(size: 12.5, weight: .semibold)
+        let text = NSAttributedString(string: label, attributes: [
+            NSAttributedString.Key(kCTFontAttributeName as String): font
+        ])
+        let width = CTLineGetTypographicBounds(CTLineCreateWithAttributedString(text), nil, nil, nil)
+        return CGSize(width: ceil(width) + 28 + 6 + 20,
+                      height: max(28, ceil(CTFontGetAscent(font) + CTFontGetDescent(font) + CTFontGetLeading(font)) + 8))
     }
 
     @ViewBuilder private func arrowView(_ arrow: StepArrow, box: CGRect) -> some View {

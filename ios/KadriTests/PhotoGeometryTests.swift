@@ -4,6 +4,45 @@ import KadriCore
 @testable import Kadri
 
 final class PhotoGeometryTests: XCTestCase {
+    func testClusteredPinsAvoidEachOtherAndChips() throws {
+        let boxes = ["p3": CGRect(x: 130, y: 62, width: 100, height: 90),
+                     "p9": CGRect(x: 95, y: 240, width: 100, height: 65),
+                     "p10": CGRect(x: 210, y: 240, width: 90, height: 65)]
+        let pins = ["p3", "p9", "p10"].map {
+            PhotoGeometry.Pin(part: $0, size: CGSize(width: 190, height: 28))
+        }
+        let rects = try PhotoGeometry.pinRects(pins: pins, boxes: boxes, focus: Array(boxes.keys),
+            viewport: CGSize(width: 402, height: 500), visibleHeight: 380).map { try XCTUnwrap($0) }
+        for (i, rect) in rects.enumerated() {
+            XCTAssertGreaterThanOrEqual(rect.minY, 60)
+            XCTAssertLessThanOrEqual(rect.maxY, 380)
+            XCTAssertGreaterThanOrEqual(rect.minX, 8)
+            XCTAssertLessThanOrEqual(rect.maxX, 394)
+            for other in rects.dropFirst(i + 1) { XCTAssertFalse(rect.intersects(other)) }
+        }
+    }
+
+    func testBodyPinAvoidsNeighbouringNutFocus() throws {
+        let boxes = ["p6": CGRect(x: 110, y: 210, width: 180, height: 160),
+                     "p5": CGRect(x: 140, y: 175, width: 120, height: 70)]
+        let rect = try XCTUnwrap(PhotoGeometry.pinRects(
+            pins: [.init(part: "p6", size: CGSize(width: 190, height: 28))],
+            boxes: boxes, focus: ["p5", "p6"], viewport: CGSize(width: 402, height: 500),
+            visibleHeight: 440).first!)
+        XCTAssertFalse(rect.intersects(try XCTUnwrap(boxes["p5"])))
+    }
+
+    func testPinClampsAtEdgesAndMissingBoxKeepsMarkerIndex() throws {
+        let rects = PhotoGeometry.pinRects(pins: [
+            .init(part: "missing", size: CGSize(width: 100, height: 28)),
+            .init(part: "edge", size: CGSize(width: 600, height: 28), prefersBelow: true)
+        ], boxes: ["edge": CGRect(x: 380, y: 390, width: 50, height: 40)], focus: [],
+           viewport: CGSize(width: 402, height: 500), visibleHeight: 300)
+        XCTAssertNil(rects[0])
+        let rect = try XCTUnwrap(rects[1])
+        XCTAssertTrue(CGRect(x: 8, y: 60, width: 386, height: 232).contains(rect))
+    }
+
     func testPortraitFitKeepsWholePhotoCentered() {
         XCTAssertEqual(PhotoGeometry.imageRect(viewport: CGSize(width: 400, height: 450), imageSize: CGSize(width: 1000, height: 1500)),
                        CGRect(x: 50, y: 0, width: 300, height: 450))
