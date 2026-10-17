@@ -31,6 +31,9 @@
 		5BE739AD9DDDF79EFA649F4E /* StepCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57C76ED6947A710AECBC58E /* StepCard.swift */; };
 		5C58BFDF78CA098BC961D969 /* ThemePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50FB119A97C98B1472B896A /* ThemePreview.swift */; };
 		5D35D91417AC03986C5F4A42 /* TrackedMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ADA8C9D26AAC7620338D783 /* TrackedMesh.swift */; };
+		5F818ED4AB940E0B1812DB85 /* PhotoDemo.png in Resources */ = {isa = PBXBuildFile; fileRef = F8E66C7D6A0C31CC5777A9C6 /* PhotoDemo.png */; };
+		60C2AB54EE7F78639047B484 /* PhotoCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A70C234762767D0C800572 /* PhotoCamera.swift */; };
+		61C1EFFA721BFCEC5D6412B7 /* PhotoSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A23E1970C2B487CBB0EA08BE /* PhotoSession.swift */; };
 		62DAABB9EF80E005F447FD50 /* DevAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 870628B4A1D760DA2D9AE62A /* DevAuth.swift */; };
 		6D41E78BA702EF418494A06F /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAC9836272FB003780B518D6 /* Vision.framework */; };
 		729038930CAADDEFED6F3F3A /* SessionPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D624A7ABF50F3C99DA5D0ADF /* SessionPresentationTests.swift */; };
@@ -134,10 +137,12 @@
 		9CA49D98CA7EF7D73C52CB82 /* ARBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARBackgroundView.swift; sourceTree = "<group>"; };
 		A00B16E38C3E8EC7B01B52E4 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		A07FD3A6DD38BBD488C4C97D /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
+		A23E1970C2B487CBB0EA08BE /* PhotoSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSession.swift; sourceTree = "<group>"; };
 		A57C76ED6947A710AECBC58E /* StepCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepCard.swift; sourceTree = "<group>"; };
 		A67531DAC3A9852818926C8F /* MockKadriAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockKadriAPI.swift; sourceTree = "<group>"; };
 		A7232F6CADE38F5998CDD86B /* NotoSansGeorgian-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansGeorgian-Regular.ttf"; sourceTree = "<group>"; };
 		ABD5A9F0403797194A257F7D /* KadriApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KadriApp.swift; sourceTree = "<group>"; };
+		B1A70C234762767D0C800572 /* PhotoCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCamera.swift; sourceTree = "<group>"; };
 		B3D97CD203D0775D8B41AFD6 /* NotoSansGeorgian-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansGeorgian-Medium.ttf"; sourceTree = "<group>"; };
 		B46F495E5E37069B8DAB0CB7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B50FB119A97C98B1472B896A /* ThemePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePreview.swift; sourceTree = "<group>"; };
@@ -163,6 +168,7 @@
 		F0248C421A7F6709755E1292 /* ARControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARControllerTests.swift; sourceTree = "<group>"; };
 		F4910DAFAB764B1ABC03FDC1 /* KadriTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KadriTests.swift; sourceTree = "<group>"; };
 		F5B80B22199E8789EA305100 /* SAMDecoderPoint.mlpackage */ = {isa = PBXFileReference; path = SAMDecoderPoint.mlpackage; sourceTree = "<group>"; };
+		F8E66C7D6A0C31CC5777A9C6 /* PhotoDemo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PhotoDemo.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -215,6 +221,7 @@
 				FEBD1F9BFC33BA0433BD23BE /* Auth */,
 				EAF36B7FB440F8813F254796 /* Design */,
 				5E66F25C962EEED5CFFBC6FA /* Flow */,
+				C391D9D24B7014744F5FAAF4 /* Photo */,
 				FEB0235438BDD303D3660CCA /* Resources */,
 				ABF72A8CBFCE25F197A6D52A /* Segmentation */,
 				303718F3E800726231EC8190 /* Session */,
@@ -292,6 +299,14 @@
 			path = Flow;
 			sourceTree = "<group>";
 		};
+		5F6E6B4DF75E0A41E1189F56 /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				F8E66C7D6A0C31CC5777A9C6 /* PhotoDemo.png */,
+			);
+			path = Fixtures;
+			sourceTree = "<group>";
+		};
 		648EBA9760727415058E98B8 /* Overlays */ = {
 			isa = PBXGroup;
 			children = (
@@ -358,6 +373,16 @@
 				5BC9A3615F9651942AE4DF2B /* KadriCore */,
 			);
 			path = Packages;
+			sourceTree = "<group>";
+		};
+		C391D9D24B7014744F5FAAF4 /* Photo */ = {
+			isa = PBXGroup;
+			children = (
+				B1A70C234762767D0C800572 /* PhotoCamera.swift */,
+				A23E1970C2B487CBB0EA08BE /* PhotoSession.swift */,
+				5F6E6B4DF75E0A41E1189F56 /* Fixtures */,
+			);
+			path = Photo;
 			sourceTree = "<group>";
 		};
 		E07FD20A3DCA15A56793AB97 /* Fonts */ = {
@@ -515,6 +540,7 @@
 				91ED3764D969F8DA61658440 /* NotoSansGeorgian-SemiBold.ttf in Resources */,
 				F3A6721520CD41B44AAC06CB /* OFL-Inter.txt in Resources */,
 				4209CE751639036987E4CB8A /* OFL-NotoSansGeorgian.txt in Resources */,
+				5F818ED4AB940E0B1812DB85 /* PhotoDemo.png in Resources */,
 				39CD30AE8466CBDF141C4E82 /* sink in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -567,6 +593,8 @@
 				A021D80B098F055B3EF12B0B /* PartAnchors.swift in Sources */,
 				084494FD3093DD288DA33FE8 /* PartTracker.swift in Sources */,
 				54F0522C6E62571ABF309D4D /* PartsRevealView.swift in Sources */,
+				60C2AB54EE7F78639047B484 /* PhotoCamera.swift in Sources */,
+				61C1EFFA721BFCEC5D6412B7 /* PhotoSession.swift in Sources */,
 				247480935EFF895F6D00FED6 /* SAMDecoder.mlpackage in Sources */,
 				A4DB14A44099C06725059BA0 /* SAMDecoderPoint.mlpackage in Sources */,
 				207F06A72FB17D6F63A804D3 /* SAMEncoder.mlpackage in Sources */,
