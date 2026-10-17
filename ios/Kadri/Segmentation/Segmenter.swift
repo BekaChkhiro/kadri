@@ -246,11 +246,9 @@ extension Segmenter {
     /// One process-wide instance. On iPhone 12 the first Core ML load of the encoder takes ~30 s
     /// (Neural Engine compile), so it starts at app launch and every caller awaits the same load.
     private static let sharedLoad = Task.detached(priority: .utility) { () throws -> Segmenter in
-        #if targetEnvironment(simulator)
+        // CPU everywhere: on iPhone 12 the Neural Engine run gave visibly broken masks while the
+        // same photos segmented cleanly on the simulator's CPU.
         try Segmenter(computeUnits: .cpuOnly)
-        #else
-        try Segmenter()
-        #endif
     }
 
     static func shared() async throws -> Segmenter { try await sharedLoad.value }
