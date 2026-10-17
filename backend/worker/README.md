@@ -239,3 +239,32 @@ node scripts/live_check.mjs --runs 3 --cap 3 --port 8797
 `node scripts/dev_token.mjs --sub dev-user`; `--url`-ისთვის `--token`). ყოველ გამოძახებას
 წინასწარ აჯავშნის `scripts/ledger.json`-ში და cap-ზე ჩერდება. შედეგები: `scripts/out/live_check.json`
 (gitignored), ანგარიში — `docs/AI_LIVE_CHECK.md`.
+
+## Knowledge Hub
+
+Guarded `POST /ai/steps` performs one optional, text-only `knowledge_search`
+before generating steps. It sends the object, instructions (titles for a list),
+and session question/answer pairs, capped at 500 characters; the result limit is
+3. A domain is supplied only for recognized object/instruction keywords.
+Photos, base64 images and part data are never sent to Knowledge Hub.
+The bare steps handler and the parts stage do not perform a lookup.
+
+The stateless MCP request uses `tools/call`, bearer authentication, and
+`Accept: application/json, text/event-stream`. Georgian record fields take
+precedence over English fields. Titles, summaries and notes are capped at
+80/240/160 characters and included as reference data in the steps prompt,
+not instructions or authorization for physical actions. With no hits, the
+prompt is unchanged. Both AI retry attempts reuse the same lookup result.
+
+Configuration:
+- `KNOWLEDGE_HUB_ENABLED="true"` enables lookup (staging only by default).
+- `KNOWLEDGE_HUB_URL` is the MCP endpoint configured in staging vars.
+- `KNOWLEDGE_HUB_KEY` is a Worker secret. Before staging deployment, the
+  orchestrator installs it with `wrangler secret put KNOWLEDGE_HUB_KEY --env staging`,
+  using stdin from the local credential file. Never put the key in vars or logs.
+
+Disabled or missing configuration skips lookup. HTTP, MCP, parsing and timeout
+failures also skip it; the lookup deadline is 2500 ms and honors client
+cancellation. A failure emits one sanitized warning; success logs only
+`knowledge: N records in MS ms`. Usage storage and AI retry rules are unchanged.
+Local tests use mocked fetch only and make no real Knowledge Hub requests.
