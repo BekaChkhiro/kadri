@@ -109,7 +109,9 @@ struct PhotoFlowView: View {
         case .done(let result, _):
             PhotoDoneView(object: result.object, steps: session.model.allSteps, photos: session.model.round,
                           minutes: session.minutes(), thumbnail: image,
-                          close: session.retake, newPhoto: session.retake)
+                          close: session.retake, newPhoto: session.retake,
+                          cause: session.model.foundCause, diagnosticSummary: session.model.completionSummary,
+                          answers: session.model.answers.count)
         case .scanning(let startedAt):
             TimelineView(.periodic(from: startedAt, by: 1)) { context in
                 let status = SessionPresentation.scanStatus(elapsed: context.date.timeIntervalSince(startedAt))
@@ -201,6 +203,7 @@ struct PhotoFlowView: View {
                         completed: completed, newPhoto: session.retake,
                         round: session.model.displayedRound, totalRounds: session.model.round,
                         continuation: session.model.continuation, continueCamera: { camera = true },
-                        picked: $picked, continueDemo: continueDemo, cameraAvailable: cameraAvailable)
+                        picked: $picked, continueDemo: continueDemo, cameraAvailable: cameraAvailable,
+                        canContinueWithAnswer: session.model.canContinueWithAnswer, answer: session.model.continueWithAnswer)
     }
 }

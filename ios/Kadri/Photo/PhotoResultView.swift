@@ -27,6 +27,24 @@ struct PhotoResultView: View {
     var continueDemo: (() -> Void)? = nil
     var cameraAvailable = true
     var initiallyShowingPhotoRequest = false
+    var canContinueWithAnswer = false
+    var answer: (String, String?) -> Void = { _, _ in }
+    var initiallyShowingAnswerRequest = false
+    @State private var answerRequestToggle: Bool?
+
+    private var showingAnswerRequest: Bool {
+        get { answerRequestToggle ?? initiallyShowingAnswerRequest }
+        nonmutating set { answerRequestToggle = newValue }
+    }
+
+    private var answerAction: PhotoStepPresentation? {
+        guard canContinueWithAnswer else { return nil }
+        switch continuation {
+        case .needsAnswer: return .answer
+        case .needsMeasurement: return .measure
+        default: return nil
+        }
+    }
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// nil until the user toggles it, so `initiallyShowingPhotoRequest` seeds the first render.
@@ -81,6 +99,10 @@ struct PhotoResultView: View {
                         .padding(12)
                     }
                 }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                }
             }
         } panel: {
             if completed {
@@ -93,6 +115,11 @@ struct PhotoResultView: View {
                     }
                     Button("ახალი ფოტო", action: newPhoto).buttonStyle(SessionButtonStyle())
                 }.padding(16)
+            } else if showingAnswerRequest, answerAction != nil, let continuation {
+                PhotoAnswerCard(continuation: continuation, submit: { value, unit in
+                    showingAnswerRequest = false
+                    answer(value, unit)
+                }, back: { showingAnswerRequest = false })
             } else if showingPhotoRequest, let photoRequest {
                 PhotoRequestCard(round: totalRounds + 1, prompt: photoRequest.prompt, reason: photoRequest.reason,
                                  cameraAvailable: cameraAvailable, camera: continueCamera, picked: picked,
@@ -100,11 +127,13 @@ struct PhotoResultView: View {
             } else {
                 PhotoStepCard(step: step, index: index, count: count, streaming: streaming,
                               previous: previous, next: next, finish: finish,
-                              needsPhoto: photoRequest != nil, requestPhoto: { showingPhotoRequest = true })
+                              needsPhoto: photoRequest != nil, requestPhoto: { showingPhotoRequest = true },
+                              answerAction: answerAction, requestAnswer: { showingAnswerRequest = true })
             }
         }
         .onChange(of: round) { showingPhotoRequest = false }
-        .onChange(of: index) { showingPhotoRequest = false }
+        .onChange(of: index) { showingPhotoRequest = false; showingAnswerRequest = false }
+        .onChange(of: streaming) { if streaming { showingAnswerRequest = false } }
     }
 }
 

@@ -9,6 +9,7 @@ struct MockKadriAPI: KadriAPI {
     var failure: SessionError?
     /// Two photos: the first stops after three steps and asks for the removed siphon, the second finishes.
     var multiPhoto = false
+    var diagnostic = false
 
     func parts(keyframe: Data, instructions: String, context: SessionContext?) async throws -> PartsResult {
         try await Task.sleep(for: scanDelay)
@@ -17,26 +18,45 @@ struct MockKadriAPI: KadriAPI {
     }
 
     func steps(object: String, parts: [Part], instructions: String, context: SessionContext?) -> AsyncThrowingStream<StepEvent, Error> {
-        let (steps, next): ([Step], StepsContinuation) = switch (multiPhoto, context?.round) {
+        var (steps, next): ([Step], StepsContinuation) = switch (multiPhoto, context?.round) {
         case (false, _): (Self.sampleSteps, .complete)
         case (true, nil): (Array(Self.sampleSteps.prefix(3)), .needsPhoto(prompt: Self.round2Prompt, reason: "შუასადების მდგომარეობა ამ ფოტოზე არ ჩანს."))
         case (true, _): (Self.round2Steps, .complete)
         }
+        if diagnostic {
+            switch context?.answers.count ?? 0 {
+            case 0:
+                steps = Array(Self.sampleSteps.prefix(3))
+                next = Self.answerRequest
+            case 1:
+                steps = Array(Self.sampleSteps.suffix(2))
+                next = Self.measurementRequest
+            default:
+                steps = Array(Self.round2Steps.suffix(2))
+                next = .complete(cause: "პარაზიტული დენი სალონის განათებიდან", summary: "მცველი F12 ამოღებისას დენი 30 mA-მდე დაეცა.")
+            }
+        }
+        let outputSteps = steps
+        let outputContinuation = next
         return AsyncThrowingStream { continuation in
             let task = Task {
                 do {
                     try await Task.sleep(for: initialStepDelay)
-                    for step in steps {
+                    for step in outputSteps {
                         continuation.yield(.step(step))
                         try await Task.sleep(for: stepDelay)
                     }
-                    continuation.yield(.done(nil, continuation: next))
+                    continuation.yield(.done(nil, continuation: outputContinuation))
                     continuation.finish()
                 } catch { continuation.finish(throwing: error) }
             }
             continuation.onTermination = { _ in task.cancel() }
         }
     }
+
+    static let answerRequest = StepsContinuation.needsAnswer(question: "ვენტილატორი ტრიალებს?", options: ["კი", "არა", "ხანდახან"], allowOther: true, reason: "პასუხი შემდეგ შემოწმებას განსაზღვრავს.")
+    static let measurementRequest = StepsContinuation.needsMeasurement(question: "რამდენი mA აჩვენებს?", unit: "mA", min: 0, max: 500,
+        how: "მულტიმეტრი 10A რეჟიმზე, უარყოფით კლემასა და კაბელს შორის", reason: nil)
 
     static let result = PartsResult(object: "ნიჟარის სიფონი", parts: [
         Part(id: "p1", name: "ონკანი", box: [210, 65, 320, 252]),

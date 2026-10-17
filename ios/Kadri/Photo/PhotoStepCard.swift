@@ -2,14 +2,14 @@ import SwiftUI
 import KadriCore
 
 enum PhotoStepPresentation: Equatable {
-    case next, preparing, finish, newPhoto
+    case next, preparing, finish, newPhoto, answer, measure
 
     /// `needsPhoto`: the finished round asks for another photo, so its last step leads there instead of finishing.
-    static func state(index: Int, count: Int, streaming: Bool, needsPhoto: Bool = false) -> Self {
+    static func state(index: Int, count: Int, streaming: Bool, needsPhoto: Bool = false, answerAction: Self? = nil) -> Self {
         guard count > 0 else { return .preparing }
         if index < count - 1 { return .next }
         if streaming { return .preparing }
-        return needsPhoto ? .newPhoto : .finish
+        return answerAction ?? (needsPhoto ? .newPhoto : .finish)
     }
 
     var disabled: Bool { self == .preparing }
@@ -19,6 +19,8 @@ enum PhotoStepPresentation: Equatable {
         case .preparing: "მზადდება…"
         case .finish: "დასრულება"
         case .newPhoto: "ახალი ფოტო"
+        case .answer: "პასუხი"
+        case .measure: "გაზომვა"
         }
     }
 
@@ -26,6 +28,8 @@ enum PhotoStepPresentation: Equatable {
         switch self {
         case .finish: "დაასრულებს სესიას"
         case .newPhoto: "ახალი ფოტოს გადაღებას მოგთხოვს"
+        case .answer: "კითხვას აჩვენებს"
+        case .measure: "გაზომვის შეყვანას გახსნის"
         default: "შემდეგ ნაბიჯს აჩვენებს"
         }
     }
@@ -41,11 +45,13 @@ struct PhotoStepCard: View {
     var finish: () -> Void
     var needsPhoto = false
     var requestPhoto: () -> Void = {}
+    var answerAction: PhotoStepPresentation? = nil
+    var requestAnswer: () -> Void = {}
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var presentation: PhotoStepPresentation {
-        .state(index: index, count: count, streaming: streaming, needsPhoto: needsPhoto)
+        .state(index: index, count: count, streaming: streaming, needsPhoto: needsPhoto, answerAction: answerAction)
     }
 
     private var swap: AnyTransition {
@@ -87,6 +93,7 @@ struct PhotoStepCard: View {
                     switch presentation {
                     case .finish: finish()
                     case .newPhoto: requestPhoto()
+                    case .answer, .measure: requestAnswer()
                     default: next()
                     }
                 } label: {

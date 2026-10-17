@@ -26,7 +26,7 @@ final class PhotoSession: ObservableObject {
 
     init(api: (any KadriAPI)? = nil) {
         #if DEBUG && targetEnvironment(simulator)
-        isMock = ProcessInfo.processInfo.arguments.contains("--photo-mock")
+        isMock = ProcessInfo.processInfo.arguments.contains("--photo-mock") || ProcessInfo.processInfo.arguments.contains("--photo-diagnostic")
         #else
         isMock = false
         #endif
@@ -41,7 +41,7 @@ final class PhotoSession: ObservableObject {
         #else
         let multiPhoto = false
         #endif
-        model = SessionModel(api: api ?? (isMock ? MockKadriAPI(scanDelay: .seconds(1.2), stepDelay: .seconds(2.5), multiPhoto: multiPhoto) : live()))
+        model = SessionModel(api: api ?? (isMock ? MockKadriAPI(scanDelay: .seconds(1.2), stepDelay: .seconds(2.5), multiPhoto: multiPhoto, diagnostic: ProcessInfo.processInfo.arguments.contains("--photo-diagnostic")) : live()))
         #else
         model = SessionModel(api: api ?? live())
         #endif

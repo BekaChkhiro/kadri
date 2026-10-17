@@ -82,6 +82,7 @@
 		CAC92803A5B7FCAF050E82EB /* SegmentationBench.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CC50C123CF7B32458FEBD3 /* SegmentationBench.swift */; };
 		CC92A60666AAAD13ACF206A0 /* PhotoStartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA410B8EC20B6C333B177B1 /* PhotoStartView.swift */; };
 		CF9340E3801202F0077B1839 /* PhotoScreenLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D1B07A812427B1A2956178 /* PhotoScreenLayout.swift */; };
+		D3ED407E60FAF0C1D2A7C9EC /* PhotoAnswerCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2053C3CD5043169500D908 /* PhotoAnswerCard.swift */; };
 		D6C97E8C50507362CE0C7B9F /* KadriApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD5A9F0403797194A257F7D /* KadriApp.swift */; };
 		D87E546E4D732C3263D4271F /* ContourOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D28A03C9FD37FA0817DC5B /* ContourOverlay.swift */; };
 		D99995671C2CD82936EFFE51 /* KeyframePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889B405E7EAD71436F553E6 /* KeyframePicker.swift */; };
@@ -180,6 +181,7 @@
 		99687EAE3E171EF0C6542A36 /* illo-done.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "illo-done.png"; sourceTree = "<group>"; };
 		99E69F2BA389AE1BEFA6DBDA /* PhotoDescribePanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDescribePanel.swift; sourceTree = "<group>"; };
 		9A050936A9DE4965679EB720 /* ARKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARKit.framework; path = System/Library/Frameworks/ARKit.framework; sourceTree = SDKROOT; };
+		9B2053C3CD5043169500D908 /* PhotoAnswerCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAnswerCard.swift; sourceTree = "<group>"; };
 		9CA49D98CA7EF7D73C52CB82 /* ARBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARBackgroundView.swift; sourceTree = "<group>"; };
 		A00B16E38C3E8EC7B01B52E4 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		A07FD3A6DD38BBD488C4C97D /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
@@ -444,6 +446,7 @@
 		C391D9D24B7014744F5FAAF4 /* Photo */ = {
 			isa = PBXGroup;
 			children = (
+				9B2053C3CD5043169500D908 /* PhotoAnswerCard.swift */,
 				D9E5B5646238AA2DB44DA103 /* PhotoAutopilot.swift */,
 				B1A70C234762767D0C800572 /* PhotoCamera.swift */,
 				99E69F2BA389AE1BEFA6DBDA /* PhotoDescribePanel.swift */,
@@ -696,6 +699,7 @@
 				A021D80B098F055B3EF12B0B /* PartAnchors.swift in Sources */,
 				084494FD3093DD288DA33FE8 /* PartTracker.swift in Sources */,
 				54F0522C6E62571ABF309D4D /* PartsRevealView.swift in Sources */,
+				D3ED407E60FAF0C1D2A7C9EC /* PhotoAnswerCard.swift in Sources */,
 				E2D7326CA43EAFCD9CC35B9F /* PhotoAutopilot.swift in Sources */,
 				60C2AB54EE7F78639047B484 /* PhotoCamera.swift in Sources */,
 				C28D4BEE3D67FCA70CE9F6C2 /* PhotoDescribePanel.swift in Sources */,

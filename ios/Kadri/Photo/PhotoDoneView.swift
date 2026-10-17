@@ -10,6 +10,9 @@ struct PhotoDoneView: View {
     let thumbnail: UIImage?
     var close: () -> Void
     var newPhoto: () -> Void
+    var cause: String? = nil
+    var diagnosticSummary: String? = nil
+    var answers = 0
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var appeared = false
     @State private var fixed: Bool?
@@ -89,10 +92,23 @@ struct PhotoDoneView: View {
                     stat(steps.count, "ნაბიჯი")
                     Theme.Colors.ink[100]!.frame(width: 1)
                     stat(photos, "ფოტო")
+                    if answers > 0 {
+                        Theme.Colors.ink[100]!.frame(width: 1)
+                        stat(answers, "პასუხი")
+                    }
                     Theme.Colors.ink[100]!.frame(width: 1)
                     stat(minutes, "წუთი")
                 }
                 .fixedSize(horizontal: false, vertical: true)
+            }
+            if cause != nil || diagnosticSummary != nil {
+                VStack(alignment: .leading, spacing: 8) {
+                    if let cause { Text("ნაპოვნი მიზეზი: \(cause)").font(.kadri(15, weight: .semibold)) }
+                    if let diagnosticSummary { Text(diagnosticSummary).font(.kadri(14)) }
+                }
+                .foregroundStyle(Theme.Colors.brand[800]!).padding(12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Theme.Colors.brand[50]!, in: RoundedRectangle(cornerRadius: 12))
             }
             VStack(alignment: .leading, spacing: 6) {
                 ForEach(Array(steps.enumerated()), id: \.offset) { _, step in
