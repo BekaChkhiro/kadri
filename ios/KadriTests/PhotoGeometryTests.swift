@@ -53,3 +53,15 @@ final class PhotoStepPresentationTests: XCTestCase {
         }
     }
 }
+
+@MainActor
+final class PhotoIconTests: XCTestCase {
+    func testUnknownAndEmptyIconsHaveNoSymbol() {
+        for key in [nil, "", "unknown", "arrow.up"] as [String?] {
+            XCTAssertNil(PhotoIcon.action(key))
+            XCTAssertNil(PhotoIcon.tool(key))
+        }
+        XCTAssertEqual(PhotoIcon.action("rotate_cw"), "arrow.clockwise")
+        XCTAssertEqual(PhotoIcon.tool("cloth"), "rectangle.portrait")
+    }
+}

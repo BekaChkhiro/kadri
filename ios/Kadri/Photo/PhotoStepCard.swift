@@ -98,14 +98,29 @@ struct PhotoStepCard: View {
     @ViewBuilder private var content: some View {
         if let step {
             VStack(alignment: .leading, spacing: 0) {
-                Text(Self.displayTitle(step.title)).font(.kadri(21, weight: .semibold)).tracking(-0.3)
-                    .accessibilityAddTraits(.isHeader)
+                HStack(spacing: 10) {
+                    if let symbol = PhotoIcon.action(step.icon) {
+                        Image(systemName: symbol).font(.system(size: 15, weight: .medium))
+                            .foregroundStyle(.white).frame(width: 32, height: 32)
+                            .background(step.icon == "warning" ? Color(hex: "#dc2626") : Theme.Colors.brand[500]!, in: Circle())
+                            .accessibilityHidden(true)
+                    }
+                    Text(Self.displayTitle(step.title)).font(.kadri(21, weight: .semibold)).tracking(-0.3)
+                        .accessibilityAddTraits(.isHeader)
+                }
                 Text(step.text).font(.kadri(14.5)).lineSpacing(4)
                     .foregroundStyle(Theme.Colors.ink[600]!).fixedSize(horizontal: false, vertical: true).padding(.top, 6)
-                if !step.tools.isEmpty {
+                let tools = step.toolItems ?? step.tools.map { StepTool(label: $0) }
+                if !tools.isEmpty {
                     PhotoToolsLayout {
-                        ForEach(Array(step.tools.prefix(3).enumerated()), id: \.offset) { _, tool in
-                                Text(tool).font(.kadri(12.5, weight: .medium))
+                        ForEach(Array(tools.prefix(3).enumerated()), id: \.offset) { _, tool in
+                                HStack(spacing: 5) {
+                                    if let symbol = PhotoIcon.tool(tool.icon) {
+                                        Image(systemName: symbol).font(.system(size: 12, weight: .medium))
+                                            .accessibilityHidden(true)
+                                    }
+                                    Text(tool.label).font(.kadri(12.5, weight: .medium))
+                                }
                                     .foregroundStyle(Theme.Colors.ink[700]!)
                                     .padding(.horizontal, 10).padding(.vertical, 4)
                                     .background(.white, in: Capsule())
@@ -166,5 +181,33 @@ private struct PhotoToolsLayout: Layout {
             rowHeight = max(rowHeight, size.height)
         }
         return (CGSize(width: width, height: y + rowHeight), points)
+    }
+}
+
+/// Keep the wire enum separate from SF names; unknown or unavailable symbols have no visual fallback.
+enum PhotoIcon {
+    private static let actions = [
+        "rotate_cw": "arrow.clockwise", "rotate_ccw": "arrow.counterclockwise",
+        "unscrew": "arrow.counterclockwise.circle", "tighten": "arrow.clockwise.circle",
+        "pull": "arrow.up", "push": "arrow.down", "press": "hand.tap", "open": "lock.open",
+        "close": "lock", "pour": "drop", "check": "checkmark.circle", "clean": "sparkles",
+        "place": "square.and.arrow.down", "remove": "minus.circle", "wait": "clock",
+        "warning": "exclamationmark.triangle"
+    ]
+    private static let tools = [
+        "wrench": "wrench", "screwdriver": "screwdriver", "pliers": "wrench.adjustable",
+        "hex_key": "hexagon", "hammer": "hammer", "bucket": "bucket", "gloves": "hand.raised",
+        "towel": "rectangle.portrait", "cloth": "rectangle.portrait", "brush": "paintbrush",
+        "flashlight": "flashlight.on.fill", "tape": "bandage", "knife": "scissors", "funnel": "triangle",
+        "container": "cube", "oil": "drop.fill", "water": "drop", "cable": "cable.connector",
+        "phone": "iphone", "paper": "doc"
+    ]
+
+    static func action(_ key: String?) -> String? { available(key.flatMap { actions[$0] }) }
+    static func tool(_ key: String?) -> String? { available(key.flatMap { tools[$0] }) }
+
+    private static func available(_ symbol: String?) -> String? {
+        guard let symbol, UIImage(systemName: symbol) != nil else { return nil }
+        return symbol
     }
 }
