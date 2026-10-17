@@ -241,3 +241,19 @@ enum Clock {
     static var now: UInt64 { DispatchTime.now().uptimeNanoseconds }
     static func ms(since start: UInt64) -> Double { Double(now - start) / 1e6 }
 }
+
+extension Segmenter {
+    /// One process-wide instance. On iPhone 12 the first Core ML load of the encoder takes ~30 s
+    /// (Neural Engine compile), so it starts at app launch and every caller awaits the same load.
+    private static let sharedLoad = Task.detached(priority: .utility) { () throws -> Segmenter in
+        #if targetEnvironment(simulator)
+        try Segmenter(computeUnits: .cpuOnly)
+        #else
+        try Segmenter()
+        #endif
+    }
+
+    static func shared() async throws -> Segmenter { try await sharedLoad.value }
+
+    static func preload() { _ = sharedLoad }
+}

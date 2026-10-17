@@ -11,7 +11,7 @@ struct KadriApp: App {
                 .environment(app)
                 .environment(app.googleAuth)
                 .onOpenURL { GIDSignIn.sharedInstance.handle($0) }
-                .task { await app.googleAuth.restorePreviousSignIn() }
+                .task { Segmenter.preload(); await app.googleAuth.restorePreviousSignIn() }
         }
     }
 }

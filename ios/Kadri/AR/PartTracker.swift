@@ -34,13 +34,10 @@ private actor ContourProcessor {
         let model: Segmenter
         if let segmenter { model = segmenter }
         else {
-            #if targetEnvironment(simulator)
-            model = try Segmenter(computeUnits: .cpuOnly)
-            #else
-            model = try Segmenter()
-            #endif
+            let start = Clock.now
+            model = try await Segmenter.shared()
             segmenter = model
-            samLog.notice("ge.kadri sam-load ms=\(Int(model.loadMs))")
+            samLog.notice("ge.kadri sam-ready waitMs=\(Int(Clock.ms(since: start))) loadMs=\(Int(model.loadMs))")
         }
         let embedding = try await model.embed(image)
         var contours: [TrackedContour] = []

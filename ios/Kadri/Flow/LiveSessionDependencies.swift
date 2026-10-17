@@ -154,11 +154,7 @@ final class LiveSessionDependencies: ObservableObject {
         onMask: @Sendable (Part, Mask, TrackedContour) async -> Void) async throws {
         guard let source = CGImageSourceCreateWithData(data as CFData, nil),
               let image = CGImageSourceCreateImageAtIndex(source, 0, nil) else { throw SegmentationError.imageDecodeFailed }
-        #if targetEnvironment(simulator)
-        let segmenter = try Segmenter(computeUnits: .cpuOnly)
-        #else
-        let segmenter = try Segmenter()
-        #endif
+        let segmenter = try await Segmenter.shared()
         let embedding = try await segmenter.embed(image)
         for part in parts {
             try Task.checkCancellation()

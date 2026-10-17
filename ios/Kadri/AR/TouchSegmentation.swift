@@ -68,11 +68,7 @@ private actor TouchProcessor {
         let segmenter: Segmenter
         if let model { segmenter = model }
         else {
-            #if targetEnvironment(simulator)
-            segmenter = try Segmenter(computeUnits: .cpuOnly)
-            #else
-            segmenter = try Segmenter()
-            #endif
+            segmenter = try await Segmenter.shared()
             model = segmenter
         }
         let start = Clock.now
