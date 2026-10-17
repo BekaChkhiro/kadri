@@ -6,6 +6,8 @@ struct ARDebugView: View {
     @StateObject private var controller = ARSessionController()
     @StateObject private var anchors = PartAnchors()
     @Environment(\.displayScale) private var displayScale
+    @State private var fps: Double = 0
+    @State private var lastTimestamp: TimeInterval?
 
     var body: some View {
         GeometryReader { geometry in
@@ -38,7 +40,13 @@ struct ARDebugView: View {
                     }
                 }
                 VStack(spacing: 12) {
-                    Text(controller.status).font(.headline)
+                    if let snapshot = controller.latest {
+                        ARStatusBar(frame: snapshot.frame, status: controller.status, fps: fps,
+                                    anchored: anchors.projections(frame: snapshot.frame, viewport: geometry.size, scale: displayScale).count,
+                                    unanchored: anchors.unanchored.count)
+                    } else {
+                        Text(controller.status).font(.headline)
+                    }
                     Text(controller.captureStatus).font(.caption)
                     if !anchors.unanchored.isEmpty {
                         Text("მიბმის გარეშე (2D): " + anchors.unanchored.joined(separator: ", ")).font(.caption)
@@ -66,8 +74,56 @@ struct ARDebugView: View {
         .preferredColorScheme(.dark)
         .navigationTitle("AR დებაგი")
         .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: controller.latest?.frame.timestamp) { _, timestamp in
+            guard let timestamp else { return }
+            if let last = lastTimestamp, timestamp > last {
+                fps = fps == 0 ? 1 / (timestamp - last) : fps * 0.9 + 0.1 / (timestamp - last)
+            }
+            lastTimestamp = timestamp
+        }
         .onAppear { controller.start() }
         .onDisappear { anchors.clear(session: controller.session); controller.pause() }
+    }
+}
+
+/// Live proof the session is really looking: tracking state, camera rate, feature points, depth source, anchors, light.
+private struct ARStatusBar: View {
+    let frame: ARFrame
+    let status: String
+    let fps: Double
+    let anchored: Int
+    let unanchored: Int
+
+    private var color: Color {
+        switch frame.camera.trackingState {
+        case .normal: return .green
+        case .limited: return .orange
+        case .notAvailable: return .red
+        }
+    }
+
+    var body: some View {
+        let points = frame.rawFeaturePoints?.points.count ?? 0
+        let depth = frame.sceneDepth != nil ? "LiDAR" : "raycast"
+        let lux = frame.lightEstimate.map { Int($0.ambientIntensity) }
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 8) {
+                Circle().fill(color).frame(width: 10, height: 10)
+                Text(status).font(.subheadline.bold())
+            }
+            HStack(spacing: 12) {
+                Label(String(format: "%.0f fps", fps), systemImage: "camera")
+                Label("\(points)", systemImage: "circle.grid.cross")
+                Label(depth, systemImage: "cube.transparent")
+                Label("\(anchored)/\(anchored + unanchored)", systemImage: "mappin.and.ellipse")
+                if let lux { Label("\(lux)", systemImage: "sun.max") }
+            }
+            .font(.caption.monospacedDigit())
+            .labelStyle(.titleAndIcon)
+        }
+        .padding(.horizontal, 12).padding(.vertical, 8)
+        .background(.black.opacity(0.55), in: RoundedRectangle(cornerRadius: 12))
+        .accessibilityElement(children: .combine)
     }
 }
 
