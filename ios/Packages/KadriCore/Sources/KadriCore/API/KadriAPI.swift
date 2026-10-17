@@ -147,6 +147,7 @@ private struct PartsBody: Decodable {
 }
 
 private struct StepsRequest: Encodable {
+    let capabilities = ["needs_answer", "needs_measurement", "summary"]
     let object: String
     let parts: [Part]
     let instructions: String

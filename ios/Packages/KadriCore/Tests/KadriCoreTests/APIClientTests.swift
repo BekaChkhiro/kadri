@@ -101,6 +101,25 @@ final class APIClientTests: XCTestCase {
         XCTAssertEqual(garbage, .server(code: "bad_response", message: ""))
     }
 
+    func testAnswerRequestCapabilitiesContextAndImage() async throws {
+        let seen = Locked<Data?>(nil)
+        let api = client { _, body in
+            seen.value = body
+            return .init(headers: ["Content-Type": "text/event-stream"], chunks: [Data("event: done\ndata: {}\n\n".utf8)])
+        }
+        let answer = SessionAnswer(question: "რამდენი?", answer: "30", unit: "mA")
+        let context = SessionContext(round: 1, photoPrompt: "", doneSteps: ["გაზომე"], answers: [answer])
+        for try await _ in api.steps(object: "ობიექტი", parts: parts, instructions: "შეამოწმე", image: jpeg, context: context) {}
+        let json = try XCTUnwrap(try JSONSerialization.jsonObject(with: XCTUnwrap(seen.value)) as? [String: Any])
+        XCTAssertEqual(json["capabilities"] as? [String], ["needs_answer", "needs_measurement", "summary"])
+        XCTAssertEqual(json["image"] as? String, jpeg.base64EncodedString())
+        let bodyContext = try XCTUnwrap(json["context"] as? [String: Any])
+        XCTAssertNil(bodyContext["photoPrompt"])
+        XCTAssertEqual(bodyContext["round"] as? Int, 1)
+        XCTAssertEqual((bodyContext["answers"] as? [[String: String]])?.first?["unit"], "mA")
+        XCTAssertEqual(try JSONDecoder().decode(SessionContext.self, from: JSONSerialization.data(withJSONObject: bodyContext)), context)
+    }
+
     // MARK: steps
 
     private let stepsStream = """

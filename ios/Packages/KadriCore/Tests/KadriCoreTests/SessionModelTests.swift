@@ -31,6 +31,115 @@ final class SessionModelTests: XCTestCase {
         return false
     }
 
+    private var answerRequest: StepsContinuation {
+        .needsAnswer(question: "ტრიალებს?", options: ["კი", "არა"], allowOther: true, reason: nil)
+    }
+
+    private func finishTurn(_ call: Int, steps: [Step] = Fixtures.steps, continuation: StepsContinuation) async {
+        await waitUntil { self.api.stepsCalls.count > call }
+        let stream = api.stepsContinuation(call)
+        steps.forEach { stream.yield(.step($0)) }
+        stream.yield(.done(nil, continuation: continuation))
+        await model.workTask?.value
+    }
+
+    func testAnswerAndMeasurementKeepPhotoAndGlobalNavigation() async {
+        await reachParts()
+        model.startSteps()
+        await finishTurn(0, continuation: answerRequest)
+        model.continueWithAnswer("კი")
+        XCTAssertEqual(model.stepOffset, 3)
+        XCTAssertEqual(model.round, 1)
+        let measurement = StepsContinuation.needsMeasurement(question: "რამდენი?", unit: "mA", min: 0, max: 500, how: "გაზომე", reason: nil)
+        await finishTurn(1, steps: Array(Fixtures.steps.prefix(2)), continuation: measurement)
+        XCTAssertEqual(model.allSteps.count, 5)
+        XCTAssertEqual(api.stepsCalls[1].context?.answers, [SessionAnswer(question: "ტრიალებს?", answer: "კი")])
+        XCTAssertEqual(api.stepsCalls[1].context?.doneSteps, Fixtures.steps.map(\.title))
+        XCTAssertEqual(api.stepsCalls[1].object, api.stepsCalls[0].object)
+        model.previous()
+        XCTAssertEqual(model.currentStepIndex, 2)
+        XCTAssertEqual(model.displayedRound, 1)
+        XCTAssertEqual(model.displayedResult, Fixtures.parts)
+        model.continueWithAnswer("30", unit: "mA")
+        await finishTurn(2, steps: Array(Fixtures.steps.prefix(2)), continuation: .complete(cause: "მიზეზი", summary: "შეჯამება"))
+        XCTAssertEqual(model.allSteps.count, 7)
+        XCTAssertEqual(model.stepOffset, 5)
+        XCTAssertEqual(model.answers.last?.unit, "mA")
+        XCTAssertEqual(model.foundCause, "მიზეზი")
+        XCTAssertEqual(model.completionSummary, "შეჯამება")
+        XCTAssertEqual(api.partsCalls.count, 1)
+        model.finish()
+        XCTAssertEqual(model.allSteps.count, 7)
+    }
+
+    func testAnswerTurnLimit() async {
+        await reachParts()
+        model.startSteps()
+        await finishTurn(0, continuation: answerRequest)
+        for call in 1...6 {
+            XCTAssertTrue(model.canContinueWithAnswer)
+            model.continueWithAnswer("კი")
+            await finishTurn(call, continuation: answerRequest)
+        }
+        XCTAssertFalse(model.canContinueWithAnswer)
+        XCTAssertEqual(model.answers.count, 6)
+        XCTAssertTrue(model.continuation?.isComplete == true)
+        model.continueWithAnswer("კი")
+        XCTAssertEqual(api.stepsCalls.count, 7)
+    }
+
+    func testAnswerRetryAndCancelRestorePreviousTurn() async {
+        await reachParts()
+        model.startSteps()
+        await finishTurn(0, continuation: answerRequest)
+        model.continueWithAnswer("არა")
+        await waitUntil { self.api.stepsCalls.count == 2 }
+        let context = model.pendingContext
+        api.stepsContinuation(1).finish(throwing: SessionError.network)
+        await model.workTask?.value
+        model.retry()
+        await waitUntil { self.api.stepsCalls.count == 3 }
+        XCTAssertEqual(api.stepsCalls[2].context, context)
+        model.cancel()
+        XCTAssertEqual(model.allSteps, Fixtures.steps)
+        XCTAssertTrue(model.canContinueWithAnswer)
+        XCTAssertTrue(model.answers.isEmpty)
+        XCTAssertNil(model.pendingContext)
+        XCTAssertEqual(model.stepOffset, 0)
+        model.continueWithAnswer("კი")
+        await waitUntil { self.api.stepsCalls.count == 4 }
+        api.stepsContinuation(3).finish(throwing: SessionError.network)
+        await model.workTask?.value
+        model.cancel()
+        XCTAssertTrue(model.canContinueWithAnswer)
+        XCTAssertEqual(model.round, 1)
+    }
+
+    func testPhotoThenAnswerKeepsRoundTwoAndCarriesAnswersForward() async {
+        await reachParts()
+        model.startSteps()
+        await finishTurn(0, continuation: .needsPhoto(prompt: "ახლოდან", reason: "მიზეზი"))
+        model.continueWithPhoto { Fixtures.keyframe }
+        await model.workTask?.value
+        model.startSteps()
+        await finishTurn(1, continuation: answerRequest)
+        model.continueWithAnswer("კი")
+        await finishTurn(2, continuation: .needsPhoto(prompt: "გვერდიდან", reason: "მიზეზი"))
+        XCTAssertEqual(model.round, 2)
+        XCTAssertEqual(api.stepsCalls[2].context?.photoPrompt, "ახლოდან")
+        XCTAssertEqual(api.stepsCalls[2].context?.answers.count, 1)
+        model.previous()
+        XCTAssertEqual(model.displayedRound, 2)
+        model.continueWithPhoto { Fixtures.keyframe }
+        XCTAssertEqual(model.round, 3)
+        XCTAssertEqual(model.pendingContext?.answers.count, 1)
+        model.cancel()
+        XCTAssertEqual(model.round, 2)
+        XCTAssertEqual(model.allSteps.count, 9)
+        XCTAssertEqual(model.stepOffset, 6)
+        XCTAssertEqual(model.answers.count, 1)
+    }
+
     // MARK: - Happy path
 
     func testFullFlowIdleToDone() async {

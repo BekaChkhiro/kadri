@@ -15,6 +15,14 @@ public enum SessionPhase: Equatable, Sendable {
     case error(SessionError, retryFrom: RetryPoint)
 }
 
+/// A finished response on the current photo; its context allows cancellation to restore it exactly.
+public struct SessionTurn: Equatable, Sendable {
+    public let steps: [Step]
+    public let continuation: StepsContinuation
+    public let context: SessionContext?
+    public let answers: [SessionAnswer]
+}
+
 /// One finished photo of a multi-photo session.
 public struct SessionRound: Equatable, Sendable {
     /// 1-based.
@@ -24,6 +32,9 @@ public struct SessionRound: Equatable, Sendable {
     public let result: PartsResult
     public let steps: [Step]
     public let continuation: StepsContinuation
+    public var turns: [SessionTurn] = []
+    public var context: SessionContext?
+    public var answers: [SessionAnswer] = []
 
     public init(number: Int, photoPrompt: String?, result: PartsResult, steps: [Step], continuation: StepsContinuation) {
         self.number = number

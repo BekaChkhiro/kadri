@@ -12,6 +12,27 @@ import Observation
 @Observable
 public final class SessionModel {
     public static let maxRounds = 5
+    public static let maxAnswerTurns = 6
+    public private(set) var answers: [SessionAnswer] = []
+    public private(set) var completedTurns: [SessionTurn] = []
+
+    public var foundCause: String? {
+        if case .complete(let cause, _) = continuation { return cause }
+        return nil
+    }
+
+    public var completionSummary: String? {
+        if case .complete(_, let summary) = continuation { return summary }
+        return nil
+    }
+
+    public var canContinueWithAnswer: Bool {
+        guard case .steps(_, _, streaming: false) = phase, answers.count < Self.maxAnswerTurns else { return false }
+        switch continuation {
+        case .needsAnswer, .needsMeasurement: return true
+        default: return false
+        }
+    }
 
     public private(set) var phase: SessionPhase = .idle
     /// Index into `allSteps`; clamped to the steps received so far.
@@ -19,9 +40,9 @@ public final class SessionModel {
     /// Finished rounds before the current one, oldest first.
     public private(set) var completedRounds: [SessionRound] = []
     /// The current round's continuation, set by the done event (nil while streaming).
-    /// Always `.complete` in round `maxRounds`.
+    /// Photo requests are disabled at `maxRounds`; answers have their own turn limit.
     public private(set) var continuation: StepsContinuation?
-    /// The context sent with the current round's requests; nil in round 1.
+    /// The context sent with the current request; nil before the first answer or next photo.
     public private(set) var pendingContext: SessionContext?
     /// The trimmed text sent with the last `submit`.
     public private(set) var instructions = ""
@@ -64,11 +85,11 @@ public final class SessionModel {
     public var round: Int { completedRounds.count + 1 }
 
     /// How many steps the earlier rounds hold; the current round's first step has this global index.
-    public var stepOffset: Int { completedRounds.reduce(0) { $0 + $1.steps.count } }
+    public var stepOffset: Int { completedRounds.reduce(0) { $0 + $1.steps.count } + completedTurns.reduce(0) { $0 + $1.steps.count } }
 
     /// Every step of the session: the earlier rounds' and then the current round's.
     public var allSteps: [Step] {
-        completedRounds.flatMap(\.steps) + currentRoundSteps
+        completedRounds.flatMap(\.steps) + completedTurns.flatMap(\.steps) + currentRoundSteps
     }
 
     /// The current round finished with a request for another photo, and another round is allowed.
@@ -218,8 +239,45 @@ public final class SessionModel {
             return
         }
         // A stream without a done event (or the last allowed round) cannot ask for another photo.
-        if continuation == nil || round >= Self.maxRounds { continuation = .complete }
+        if continuation == nil { continuation = .complete }
+        if round >= Self.maxRounds, case .needsPhoto = continuation { continuation = .complete }
+        if answers.count >= Self.maxAnswerTurns {
+            switch continuation {
+            case .needsAnswer, .needsMeasurement: continuation = .complete
+            default: break
+            }
+        }
         phase = .steps(result, receivedSteps, streaming: false)
+    }
+
+    // MARK: - Answers on the same photo
+
+    public func continueWithAnswer(_ answer: String, unit: String? = nil) {
+        let trimmed = answer.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard canContinueWithAnswer, !trimmed.isEmpty, trimmed.count <= 120,
+              case .steps(let result, let steps, _) = phase, let continuation else { return }
+        let question: String
+        switch continuation {
+        case .needsAnswer(let value, _, _, _), .needsMeasurement(let value, _, _, _, _, _): question = value
+        default: return
+        }
+        let titles = allSteps.map(\.title)
+        completedTurns.append(SessionTurn(steps: steps, continuation: continuation, context: pendingContext, answers: answers))
+        answers.append(SessionAnswer(question: question, answer: trimmed, unit: unit))
+        pendingContext = SessionContext(round: round, photoPrompt: pendingContext?.photoPrompt ?? "",
+                                        doneSteps: titles, previousObject: result.object, answers: answers)
+        streamSteps(for: result)
+    }
+
+    private func restorePreviousTurn() {
+        guard let last = completedTurns.popLast(), let partsResult else { return }
+        answers = last.answers
+        pendingContext = last.context
+        receivedSteps = last.steps
+        continuation = last.continuation
+        usage = nil
+        phase = .steps(partsResult, last.steps, streaming: false)
+        currentStepIndex = max(stepOffset, allSteps.count - 1)
     }
 
     // MARK: - More photos
@@ -230,8 +288,13 @@ public final class SessionModel {
     public func continueWithPhoto(keyframeProvider: @escaping @Sendable () async throws -> Data) {
         guard canContinueWithPhoto, case .steps(let result, let steps, _) = phase,
               let continuation else { return }
-        completedRounds.append(SessionRound(number: round, photoPrompt: pendingContext?.photoPrompt,
-                                            result: result, steps: steps, continuation: continuation))
+        var finished = SessionRound(number: round, photoPrompt: pendingContext?.photoPrompt,
+                                    result: result, steps: completedTurns.flatMap(\.steps) + steps, continuation: continuation)
+        finished.turns = completedTurns
+        finished.context = pendingContext
+        finished.answers = answers
+        completedRounds.append(finished)
+        completedTurns = []
         pendingContext = context(forRound: round)
         self.continuation = nil
         usage = nil
@@ -247,18 +310,21 @@ public final class SessionModel {
         let earlier = completedRounds.prefix(number - 1)
         guard let last = earlier.last, case .needsPhoto(let prompt, _) = last.continuation else { return nil }
         return SessionContext(round: number, photoPrompt: prompt, doneSteps: earlier.flatMap(\.steps).map(\.title),
-                              previousObject: last.result.object)
+                              previousObject: last.result.object, answers: answers)
     }
 
     /// Makes the last finished round current again, as it was when its steps ended.
     private func restorePreviousRound() {
         guard let last = completedRounds.popLast() else { return }
-        pendingContext = context(forRound: round)
+        completedTurns = last.turns
+        answers = last.answers
+        pendingContext = last.context
         partsResult = last.result
-        receivedSteps = last.steps
+        let steps = Array(last.steps.dropFirst(completedTurns.reduce(0) { $0 + $1.steps.count }))
+        receivedSteps = steps
         continuation = last.continuation
         usage = nil
-        phase = .steps(last.result, last.steps, streaming: false)
+        phase = .steps(last.result, steps, streaming: false)
         currentStepIndex = max(stepOffset, allSteps.count - 1)
     }
 
@@ -301,6 +367,8 @@ public final class SessionModel {
         let previous = phase
         stopWork()
         switch previous {
+        case .steps(_, _, streaming: true) where !completedTurns.isEmpty, .error(_, .steps) where !completedTurns.isEmpty:
+            restorePreviousTurn()
         case .scanning where round > 1, .parts where round > 1, .error where round > 1:
             restorePreviousRound()
         case .scanning:
@@ -346,6 +414,8 @@ public final class SessionModel {
         currentStepIndex = 0
         usage = nil
         completedRounds = []
+        completedTurns = []
+        answers = []
         continuation = nil
         pendingContext = nil
     }

@@ -2,6 +2,22 @@ import XCTest
 @testable import KadriCore
 
 final class ModelsTests: XCTestCase {
+    func testDiagnosticContinuationsDecodeAndFallback() throws {
+        func decode(_ json: String) throws -> StepsContinuation {
+            try JSONDecoder().decode(StepsContinuation.self, from: Data(json.utf8))
+        }
+        XCTAssertEqual(try decode(#"{"kind":"complete","cause":"cause","summary":"summary"}"#), .complete(cause: "cause", summary: "summary"))
+        XCTAssertEqual(try decode(#"{"kind":"needs_answer","question":"q","options":["a","b"],"allowOther":true,"reason":null}"#),
+                       .needsAnswer(question: "q", options: ["a", "b"], allowOther: true, reason: nil))
+        XCTAssertEqual(try decode(#"{"kind":"needs_measurement","question":"q","unit":"mA","min":0,"max":500,"how":"h","reason":null}"#),
+                       .needsMeasurement(question: "q", unit: "mA", min: 0, max: 500, how: "h", reason: nil))
+        for json in [#"{"kind":"needs_measurement","question":"q","unit":"mA","how":"h","min":"bad"}"#, #"{"kind":"unknown"}"#, #"{"kind":"needs_answer","options":["a"]}"#,
+                     #"{"kind":"needs_measurement","question":"q","unit":" ","how":"h"}"#, #"[]"#,
+                     #"{"kind":"needs_answer","question":"q","options":["a","b"],"allowOther":"yes"}"#] {
+            XCTAssertTrue(try decode(json).isComplete)
+        }
+    }
+
     func testPartDecodesAndValidatesBox() throws {
         let json = #"{"id":"p1","name":"სიფონი","box":[120,300,480,760]}"#
         let part = try JSONDecoder().decode(Part.self, from: Data(json.utf8))
@@ -72,7 +88,7 @@ final class ModelsTests: XCTestCase {
     func testSessionContextEncodesWireNames() throws {
         let context = SessionContext(round: 2, photoPrompt: "გადაიღე", doneSteps: ["დაკეტე წყალი", "ჩადგი ვედრო"], previousObject: "ნიჟარის სიფონი")
         let json = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(context)) as? [String: Any])
-        XCTAssertEqual(Set(json.keys), ["round", "photoPrompt", "doneSteps", "previousObject"])
+        XCTAssertEqual(Set(json.keys), ["round", "photoPrompt", "doneSteps", "previousObject", "answers"])
         XCTAssertEqual(json["round"] as? Int, 2)
         XCTAssertEqual(json["photoPrompt"] as? String, "გადაიღე")
         XCTAssertEqual(json["doneSteps"] as? [String], ["დაკეტე წყალი", "ჩადგი ვედრო"])
