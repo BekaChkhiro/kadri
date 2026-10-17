@@ -12,14 +12,6 @@ struct ContentView: View {
     var body: some View {
         NavigationStack(path: $path) {
             PhotoFlowView()
-                .toolbar {
-                    Menu("დებაგი", systemImage: "ellipsis.circle") {
-                        NavigationLink("სესია", value: "flow")
-                        NavigationLink("AR დებაგი", value: "ar")
-                        NavigationLink("SAM bench", value: "sam")
-                        NavigationLink("შესვლა", value: "signin")
-                    }
-                }
                 .navigationDestination(for: String.self) { destination in
                     switch destination {
                     case "flow": SessionFlowView()
