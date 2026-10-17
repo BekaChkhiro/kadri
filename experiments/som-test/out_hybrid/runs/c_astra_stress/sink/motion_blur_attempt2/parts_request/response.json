@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\"object\": \"ნიჟარის ქვეშ კანალიზაციისა და წყალმომარაგების სისტემა\", \"parts\": [{\"label\": \"მარცხენა წყლის ჩამკეტი სარქველი\", \"box_2d\": [0, 0, 337, 159]}, {\"label\": \"მარჯვენა (შუა) წყლის ჩამკეტი სარქველი\", \"box_2d\": [0, 206, 339, 321]}, {\"label\": \"U-ფორმის თეთრი პლასტმასის სიფონი (მუხლი)\", \"box_2d\": [277, 309, 497, 655]}, {\"label\": \"ზედა პლასტმასის ხრახნიანი ქანჩი (შეერთება ნიჟარის მილთან)\", \"box_2d\": [85, 260, 169, 496]}, {\"label\": \"მარჯვენა ჰორიზონტალური შეერთების პლასტმასის ქანჩი\", \"box_2d\": [245, 622, 388, 755]}]}",
+            "thoughtSignature": "EmgKZgFpFH0TKom1itdnCT6a7GgqU4i2XozUyLt0dpy96yA074CEPkeEUH5uDWqh8KZECBGZvGgStKfOVnrMPCDgbu75K9Wxde19TavL/P9CsN+jPlUmafKl2V0uhm9TB/WX+Ys+zRa6aQ=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1672,
+    "candidatesTokenCount": 282,
+    "totalTokenCount": 1954,
+    "promptTokensDetails": [
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1080
+      },
+      {
+        "modality": "TEXT",
+        "tokenCount": 592
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "WXfTat6RL_CuxN8PjuiGIA"
+}

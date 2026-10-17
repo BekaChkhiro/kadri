@@ -13,6 +13,7 @@ def main():
     lines = ['# Gemini → SAM2 → Astra ჰიბრიდი', '',
         f'შეფასებულია **{n}/22 კადრი**, {h["steps"]} ნაბიჯი. '+
         ('კამპანია დასრულებულია.' if n==22 else '**შეფასება ნაწილობრივია; 22-კადრიანი საბოლოო დასკვნა არ კეთდება.**'), '',
+        f'ამ შერჩევაში კონტურის p50 შემცირდა {a["outline"]["p50"]:.2f}-დან {h["outline"]["p50"]:.2f} წმ-მდე, პირველი ნაბიჯის p50 — {a["first_step"]["p50"]:.2f}-დან {h["first_step"]["p50"]:.2f} წმ-მდე. თანაბარი ხარისხი არ დადასტურდა.', '',
         '## რეკომენდაცია', '',
         'ჰიბრიდი შემდგომი ექსპერიმენტის კანდიდატია, მაგრამ production pipeline-ად მიღებისთვის საკმარისი მტკიცებულება არ გვაქვს. '+
         'მონიშნული სამიზნეები ძირითად სცენებში გამოსადეგია, თუმცა ნაწილების გაერთიანება და დაკარგული პატარა კომპონენტები `avoid`-ის დეტალიზაციას ცვლის. '+
@@ -46,7 +47,7 @@ def main():
     notes=load(root/'review/visual_notes.json')
     links={'sink/original':'sink-original-target.jpg', 'car/original':'car-original-avoid.jpg',
            'chemistry/original':'chemistry-original-step2.jpg', 'gym/original':'gym-original-weight.jpg', 'car/motion_blur':'car-motion-blur-avoid.jpg',
-           'car/occlusion':'car-occlusion-target.jpg', 'gym/motion_blur':'gym-motion-blur-weight.jpg'}
+           'car/occlusion':'car-occlusion-target.jpg', 'gym/motion_blur':'gym-motion-blur-weight.jpg', 'sink/motion_blur':'sink-motion-blur-target.jpg', 'sink/occlusion':'sink-occlusion-target.jpg'}
     for scene,note in notes.items():
         link=links.get(scene)
         lines.append(f'- **{scene}**: {note["finding"]}'+(f' [ნაბიჯის სურათი](out_hybrid/review/{link}).' + (f' [ნაწილები Astra-სთან გვერდიგვერდ](out_hybrid/review/{scene.split(chr(47))[0]}-paired-parts.jpg).' if scene.endswith('/original') else '') if link else ''))
@@ -89,7 +90,7 @@ def main():
             'დარჩენილი $0.266437 ვერ ფარავდა შემდეგ $0.288640 რეზერვს. მომხმარებელმა OpenAI ზღვარი $2.40-მდე გაზარდა, '+
             'საერთო $2.50 და Gemini $0.50 უცვლელად. sink/motion_blur სრულად ხელახლა გაიშვა ცალკე attempt2-ში; '+
             'პირველი ცდის ფასიანი Gemini შედეგიც ledger-ში დარჩა. sink/occlusion ახალი სრული timeline-ით დასრულდა. '+
-            'არც ძველი ეტაპები შეკერილა ახალ latency-ში და არც ავტომატური retry შესრულებულა. '+
+            'არც ძველი ეტაპები შეკერილა ახალ latency-ში და არც ავტომატური retry შესრულებულა. საბოლოო რეალური token ხარჯი OpenAI-ზე საწყის $2-ზეც ნაკლები დარჩა; გაზრდა აუცილებელი იყო წინასწარი რეზერვისთვის. '+
             '[ავტორიზაციის ჩანაწერი](out_hybrid/budget_authorization.json), '+
             '[შერჩეული ახალი მცდელობა](out_hybrid/run_selection.json), [წინა ბლოკერი](out_hybrid/blocked.json).']
     (HERE/'HYBRID.md').write_text('\n'.join(lines)+'\n')

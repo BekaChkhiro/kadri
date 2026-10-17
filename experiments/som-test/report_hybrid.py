@@ -45,6 +45,7 @@ def main():
         baseline = HERE/frame['baseline']
         transform = load(baseline.parent/'transform.json')
         rows.append({'frame': frame['key'], 'scene': frame['scene'], 'kind': frame['kind'],
+            'hybrid_run': str(run.relative_to(HERE)), 'baseline_run': frame['baseline'],
             'hybrid': load(run/'latency.json'), 'astra': load(baseline/'latency.json'),
             'hybrid_quality': evaluate_run(run, baseline.parent),
             'astra_quality': evaluate_run(baseline, baseline.parent),

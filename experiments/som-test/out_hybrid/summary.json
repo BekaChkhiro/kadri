@@ -1,10 +1,12 @@
 {
-  "n": 20,
+  "n": 22,
   "rows": [
     {
       "frame": "c_astra_tracking/car/original",
       "scene": "car",
       "kind": "original",
+      "hybrid_run": "out_hybrid/runs/c_astra_tracking/car/original",
+      "baseline_run": "out_realism/c_astra_tracking/car/car-engine/original/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 6.1274985000000015,
         "time_to_first_outline_seconds": 7.992422332999922,
@@ -191,6 +193,8 @@
       "frame": "c_astra_tracking/car/shift_left",
       "scene": "car",
       "kind": "shift_left",
+      "hybrid_run": "out_hybrid/runs/c_astra_tracking/car/shift_left",
+      "baseline_run": "out_realism/c_astra_tracking/car/car-engine/shift_left/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 4.789466917000027,
         "time_to_first_outline_seconds": 7.355755458000203,
@@ -374,6 +378,8 @@
       "frame": "c_astra_tracking/car/shift_right",
       "scene": "car",
       "kind": "shift_right",
+      "hybrid_run": "out_hybrid/runs/c_astra_tracking/car/shift_right",
+      "baseline_run": "out_realism/c_astra_tracking/car/car-engine/shift_right/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 4.983073167000839,
         "time_to_first_outline_seconds": 6.280594042000303,
@@ -557,6 +563,8 @@
       "frame": "c_astra_tracking/chemistry/original",
       "scene": "chemistry",
       "kind": "original",
+      "hybrid_run": "out_hybrid/runs/c_astra_tracking/chemistry/original",
+      "baseline_run": "out_realism/c_astra_tracking/chemistry/chem-titration/original/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 8.102695165998739,
         "time_to_first_outline_seconds": 11.570850624999366,
@@ -811,6 +819,8 @@
       "frame": "c_astra_tracking/chemistry/shift_left",
       "scene": "chemistry",
       "kind": "shift_left",
+      "hybrid_run": "out_hybrid/runs/c_astra_tracking/chemistry/shift_left",
+      "baseline_run": "out_realism/c_astra_tracking/chemistry/chem-titration/shift_left/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 5.784055875001286,
         "time_to_first_outline_seconds": 9.213363542001389,
@@ -1035,6 +1045,8 @@
       "frame": "c_astra_tracking/chemistry/shift_right",
       "scene": "chemistry",
       "kind": "shift_right",
+      "hybrid_run": "out_hybrid/runs/c_astra_tracking/chemistry/shift_right",
+      "baseline_run": "out_realism/c_astra_tracking/chemistry/chem-titration/shift_right/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 7.149421459000223,
         "time_to_first_outline_seconds": 10.623344708999866,
@@ -1279,6 +1291,8 @@
       "frame": "c_astra_tracking/gym/original",
       "scene": "gym",
       "kind": "original",
+      "hybrid_run": "out_hybrid/runs/c_astra_tracking/gym/original",
+      "baseline_run": "out_realism/c_astra_tracking/gym/gym-lat-pulldown/original/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 5.755333625000276,
         "time_to_first_outline_seconds": 8.74158479200014,
@@ -1506,6 +1520,8 @@
       "frame": "c_astra_tracking/gym/shift_left",
       "scene": "gym",
       "kind": "shift_left",
+      "hybrid_run": "out_hybrid/runs/c_astra_tracking/gym/shift_left",
+      "baseline_run": "out_realism/c_astra_tracking/gym/gym-lat-pulldown/shift_left/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 6.141874707998795,
         "time_to_first_outline_seconds": 9.149482541999532,
@@ -1710,6 +1726,8 @@
       "frame": "c_astra_tracking/gym/shift_right",
       "scene": "gym",
       "kind": "shift_right",
+      "hybrid_run": "out_hybrid/runs/c_astra_tracking/gym/shift_right",
+      "baseline_run": "out_realism/c_astra_tracking/gym/gym-lat-pulldown/shift_right/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 8.40528387499944,
         "time_to_first_outline_seconds": 11.896740124999269,
@@ -1939,6 +1957,8 @@
       "frame": "c_astra_tracking/microscope/original",
       "scene": "microscope",
       "kind": "original",
+      "hybrid_run": "out_hybrid/runs/c_astra_tracking/microscope/original",
+      "baseline_run": "out_realism/c_astra_tracking/microscope/microscope/original/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 7.18082079099986,
         "time_to_first_outline_seconds": 13.304536957999517,
@@ -2211,6 +2231,8 @@
       "frame": "c_astra_tracking/sink/original",
       "scene": "sink",
       "kind": "original",
+      "hybrid_run": "out_hybrid/runs/c_astra_tracking/sink/original",
+      "baseline_run": "out_realism/c_astra_tracking/sink/sink-trap/original/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 6.98087120800119,
         "time_to_first_outline_seconds": 17.97772616600014,
@@ -2405,6 +2427,8 @@
       "frame": "c_astra_tracking/sink/shift_left",
       "scene": "sink",
       "kind": "shift_left",
+      "hybrid_run": "out_hybrid/runs/c_astra_tracking/sink/shift_left",
+      "baseline_run": "out_realism/c_astra_tracking/sink/sink-trap/shift_left/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 5.4009685830005765,
         "time_to_first_outline_seconds": 7.9954564580002625,
@@ -2610,6 +2634,8 @@
       "frame": "c_astra_tracking/sink/shift_right",
       "scene": "sink",
       "kind": "shift_right",
+      "hybrid_run": "out_hybrid/runs/c_astra_tracking/sink/shift_right",
+      "baseline_run": "out_realism/c_astra_tracking/sink/sink-trap/shift_right/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 5.5313832920001005,
         "time_to_first_outline_seconds": 7.691080124999644,
@@ -2807,6 +2833,8 @@
       "frame": "c_astra_stress/car/dark_noise",
       "scene": "car",
       "kind": "dark_noise",
+      "hybrid_run": "out_hybrid/runs/c_astra_stress/car/dark_noise",
+      "baseline_run": "out_realism/c_astra_stress/car/car-engine/dark_noise/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 4.190602542001216,
         "time_to_first_outline_seconds": 5.455852834000325,
@@ -2989,6 +3017,8 @@
       "frame": "c_astra_stress/car/motion_blur",
       "scene": "car",
       "kind": "motion_blur",
+      "hybrid_run": "out_hybrid/runs/c_astra_stress/car/motion_blur",
+      "baseline_run": "out_realism/c_astra_stress/car/car-engine/motion_blur/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 4.273001167000984,
         "time_to_first_outline_seconds": 5.535668833999807,
@@ -3176,6 +3206,8 @@
       "frame": "c_astra_stress/car/occlusion",
       "scene": "car",
       "kind": "occlusion",
+      "hybrid_run": "out_hybrid/runs/c_astra_stress/car/occlusion",
+      "baseline_run": "out_realism/c_astra_stress/car/car-engine/occlusion/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 7.709821709000607,
         "time_to_first_outline_seconds": 8.537982750000083,
@@ -3341,6 +3373,8 @@
       "frame": "c_astra_stress/gym/dark_noise",
       "scene": "gym",
       "kind": "dark_noise",
+      "hybrid_run": "out_hybrid/runs/c_astra_stress/gym/dark_noise",
+      "baseline_run": "out_realism/c_astra_stress/gym/gym-lat-pulldown/dark_noise/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 5.778440500000215,
         "time_to_first_outline_seconds": 8.81369745899974,
@@ -3563,6 +3597,8 @@
       "frame": "c_astra_stress/gym/motion_blur",
       "scene": "gym",
       "kind": "motion_blur",
+      "hybrid_run": "out_hybrid/runs/c_astra_stress/gym/motion_blur",
+      "baseline_run": "out_realism/c_astra_stress/gym/gym-lat-pulldown/motion_blur/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 5.983220791998974,
         "time_to_first_outline_seconds": 9.404132124998796,
@@ -3800,6 +3836,8 @@
       "frame": "c_astra_stress/gym/occlusion",
       "scene": "gym",
       "kind": "occlusion",
+      "hybrid_run": "out_hybrid/runs/c_astra_stress/gym/occlusion",
+      "baseline_run": "out_realism/c_astra_stress/gym/gym-lat-pulldown/occlusion/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 6.468038875000275,
         "time_to_first_outline_seconds": 8.166081708001002,
@@ -3978,6 +4016,8 @@
       "frame": "c_astra_stress/sink/dark_noise",
       "scene": "sink",
       "kind": "dark_noise",
+      "hybrid_run": "out_hybrid/runs/c_astra_stress/sink/dark_noise",
+      "baseline_run": "out_realism/c_astra_stress/sink/sink-trap/dark_noise/run_1",
       "hybrid": {
         "real_wall_time_to_first_box_seconds": 5.357750167000631,
         "time_to_first_outline_seconds": 7.942013083000347,
@@ -4176,74 +4216,466 @@
         "raw_id_stability": 1.0,
         "raw_label_stability": 0.0
       }
+    },
+    {
+      "frame": "c_astra_stress/sink/motion_blur",
+      "scene": "sink",
+      "kind": "motion_blur",
+      "hybrid_run": "out_hybrid/runs/c_astra_stress/sink/motion_blur_attempt2",
+      "baseline_run": "out_realism/c_astra_stress/sink/sink-trap/motion_blur/run_1",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 5.800755791000483,
+        "time_to_first_outline_seconds": 9.221529333000944,
+        "time_to_first_step_from_start_seconds": 16.122040248999838,
+        "total_seconds": 31.950551416000962,
+        "sam_seconds": 3.372840083000483,
+        "gemini_count_seconds": 0.8474161670001195,
+        "gemini_usd": 0.0023115,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 0.8671154170006048,
+        "parts_preflight_seconds": 0.4215750000003027,
+        "steps_preflight_seconds": 0.4455404170003021,
+        "real_wall_time_to_first_box_seconds": 6.78168633399946,
+        "first_box_full_response_seconds": 6.78168633399946,
+        "first_box_model_only_seconds": 6.360111333999157,
+        "time_to_parts_response_seconds": 6.78168633399946,
+        "time_to_first_outline_seconds": 9.683984833000068,
+        "time_to_first_step_seconds": 4.814526041998761,
+        "time_to_first_step_from_start_seconds": 14.503004458998475,
+        "sam_seconds": 2.8170996670014574,
+        "steps_seconds": 19.52437262499916,
+        "total_seconds": 29.38200974999927,
+        "adapter_wall_seconds": 29.383311166999192,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაკეტე წყალი",
+          "focus": [
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.5053997135877348,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": true,
+          "title": "ჩადგი ვედრო სიფონის ქვეშ",
+          "focus": [],
+          "avoid": [],
+          "focus_iou": 0.0,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუშვი ქანჩი",
+          "focus": [
+            "p4"
+          ],
+          "avoid": [
+            "p2",
+            "p3"
+          ],
+          "focus_iou": 0.7811038353601497,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "შეამოწმე შუასადები",
+          "focus": [
+            "p5"
+          ],
+          "avoid": [
+            "p2",
+            "p3"
+          ],
+          "focus_iou": 0.5875149241002899,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუჭირე და შეამოწმე",
+          "focus": [
+            "p4",
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.15122766613424465,
+          "avoid_iou": 1.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაკეტე წყალი",
+          "focus": [
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6656711037874301,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": true,
+          "title": "ჩადგი ვედრო სიფონის ქვეშ",
+          "focus": [],
+          "avoid": [],
+          "focus_iou": 0.0,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუშვი ქანჩი",
+          "focus": [
+            "p4"
+          ],
+          "avoid": [],
+          "focus_iou": 0.7875038663779771,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "შეამოწმე შუასადები",
+          "focus": [
+            "p5",
+            "p4"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6905721076857896,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუჭირე და შეამოწმე",
+          "focus": [
+            "p4",
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.1897409317001755,
+          "avoid_iou": 1.0
+        }
+      ],
+      "hybrid_parts": 5,
+      "astra_parts": 5,
+      "astra_generation_usd": 0.12191250000000001,
+      "hybrid_generation_usd": 0.103529,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 3,
+            "current": 3,
+            "iou": 0.8815086782376502,
+            "phone_id": "phone_4",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 0,
+            "current": 0,
+            "iou": 0.8811853766617433,
+            "phone_id": "phone_1",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 4,
+            "current": 4,
+            "iou": 0.6203267792855165,
+            "phone_id": "phone_5",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_1",
+          "phone_6",
+          "phone_7",
+          "phone_4",
+          "phone_5"
+        ],
+        "unmatched": [
+          1,
+          2
+        ],
+        "dropout": [
+          1,
+          2
+        ],
+        "raw_id_stability": 1.0,
+        "raw_label_stability": 0.0
+      }
+    },
+    {
+      "frame": "c_astra_stress/sink/occlusion",
+      "scene": "sink",
+      "kind": "occlusion",
+      "hybrid_run": "out_hybrid/runs/c_astra_stress/sink/occlusion",
+      "baseline_run": "out_realism/c_astra_stress/sink/sink-trap/occlusion/run_1",
+      "hybrid": {
+        "real_wall_time_to_first_box_seconds": 5.696633916999417,
+        "time_to_first_outline_seconds": 7.8753065840010095,
+        "time_to_first_step_from_start_seconds": 13.299946875000387,
+        "total_seconds": 27.062023250000493,
+        "sam_seconds": 2.1388812080003845,
+        "gemini_count_seconds": 0.8310818750014732,
+        "gemini_usd": 0.002169,
+        "definition": "Fresh sequential wall time, includes Gemini countTokens and artifact writes; OpenAI has no count preflight; total includes render_steps."
+      },
+      "astra": {
+        "preflight_seconds": 0.8639682920020277,
+        "parts_preflight_seconds": 0.4015974580015609,
+        "steps_preflight_seconds": 0.46237083400046686,
+        "real_wall_time_to_first_box_seconds": 9.382262791999892,
+        "first_box_full_response_seconds": 9.382262791999892,
+        "first_box_model_only_seconds": 8.980665333998331,
+        "time_to_parts_response_seconds": 9.382262791999892,
+        "time_to_first_outline_seconds": 12.422697083999083,
+        "time_to_first_step_seconds": 3.8782865000011952,
+        "time_to_first_step_from_start_seconds": 16.30538020899985,
+        "sam_seconds": 2.959873958001481,
+        "steps_seconds": 19.971612667000954,
+        "total_seconds": 32.53720791699925,
+        "adapter_wall_seconds": 32.53811287499957,
+        "first_box_definition": "C parts response; streaming steps; outline after SAM",
+        "partial_recovery": false,
+        "is_replay": false,
+        "original_wall_total_available": true
+      },
+      "hybrid_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაკეტე წყალი",
+          "focus": [
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.6822495332918481,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": true,
+          "title": "ჩადგი ვედრო სიფონის ქვეშ",
+          "focus": [],
+          "avoid": [],
+          "focus_iou": 0.0,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუშვი ქანჩი",
+          "focus": [
+            "p4"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.7048774449121069,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": true,
+          "title": "შეამოწმე შუასადები",
+          "focus": [],
+          "avoid": [],
+          "focus_iou": 0.0,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუჭირე და შეამოწმე",
+          "focus": [
+            "p4",
+            "p2",
+            "p3"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.15667678648408193,
+          "avoid_iou": 0.0
+        }
+      ],
+      "astra_quality": [
+        {
+          "empty_focus": false,
+          "title": "დაკეტე წყალი",
+          "focus": [
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.28334060897086105,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": true,
+          "title": "ჩადგი ვედრო სიფონის ქვეშ",
+          "focus": [],
+          "avoid": [],
+          "focus_iou": 0.0,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუშვი ქანჩი",
+          "focus": [
+            "p4"
+          ],
+          "avoid": [
+            "p1"
+          ],
+          "focus_iou": 0.703125,
+          "avoid_iou": 0.0
+        },
+        {
+          "empty_focus": false,
+          "title": "შეამოწმე შუასადები",
+          "focus": [
+            "p5",
+            "p4"
+          ],
+          "avoid": [],
+          "focus_iou": 0.8133004544515596,
+          "avoid_iou": 1.0
+        },
+        {
+          "empty_focus": false,
+          "title": "მოუჭირე და შეამოწმე",
+          "focus": [
+            "p4",
+            "p2",
+            "p3"
+          ],
+          "avoid": [],
+          "focus_iou": 0.18735824869342274,
+          "avoid_iou": 1.0
+        }
+      ],
+      "hybrid_parts": 4,
+      "astra_parts": 5,
+      "astra_generation_usd": 0.12295,
+      "hybrid_generation_usd": 0.093749,
+      "id_match": {
+        "method": "geometry-only greedy one-to-one IoU; inverse transform compensation",
+        "threshold": 0.5,
+        "matches": [
+          {
+            "previous": 0,
+            "current": 0,
+            "iou": 0.9616766467065867,
+            "phone_id": "phone_1",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          },
+          {
+            "previous": 3,
+            "current": 3,
+            "iou": 0.874306018210082,
+            "phone_id": "phone_4",
+            "raw_id_equal": true,
+            "raw_label_equal": false
+          }
+        ],
+        "phone_ids": [
+          "phone_1",
+          "phone_6",
+          "phone_7",
+          "phone_4"
+        ],
+        "unmatched": [
+          1,
+          2
+        ],
+        "dropout": [
+          1,
+          2,
+          4
+        ],
+        "raw_id_stability": 1.0,
+        "raw_label_stability": 0.0
+      }
     }
   ],
   "hybrid": {
     "first_box": {
-      "n": 20,
-      "p50": 5.88363833350013,
-      "p90": 7.749109054700421
+      "n": 22,
+      "p50": 5.792405833000885,
+      "p90": 7.656921617200534
     },
     "outline": {
-      "n": 20,
+      "n": 22,
       "p50": 8.639783771000111,
-      "p90": 12.037519808299296
+      "p90": 11.864151174999279
     },
     "first_step": {
-      "n": 20,
+      "n": 22,
       "p50": 14.316049416500391,
-      "p90": 17.734673775299054
+      "p90": 17.63883582529907
     },
     "total": {
-      "n": 20,
-      "p50": 25.47683374999997,
-      "p90": 32.52035869099873
+      "n": 22,
+      "p50": 25.662052416500046,
+      "p90": 32.39899070349893
     },
-    "steps": 100,
-    "empty_focus": 7,
-    "focus_iou": 0.5081093647492645,
-    "avoid_iou": 0.5354637958114113
+    "steps": 110,
+    "empty_focus": 10,
+    "focus_iou": 0.49436351253451727,
+    "avoid_iou": 0.5413307234649194
   },
   "astra": {
     "first_box": {
-      "n": 20,
+      "n": 22,
       "p50": 7.474925374999657,
-      "p90": 11.405000291299624
+      "p90": 11.027608403899652
     },
     "outline": {
-      "n": 20,
+      "n": 22,
       "p50": 11.709129083499647,
-      "p90": 16.529883053599956
+      "p90": 16.021350203599837
     },
     "first_step": {
-      "n": 20,
-      "p50": 16.965322707998894,
-      "p90": 23.34113864939991
+      "n": 22,
+      "p50": 16.710920145999808,
+      "p90": 23.01321844529976
     },
     "total": {
-      "n": 20,
-      "p50": 28.19795354100006,
-      "p90": 36.79867306639954
+      "n": 22,
+      "p50": 29.01757845799966,
+      "p90": 36.35579920379951
     },
-    "steps": 100,
-    "empty_focus": 6,
-    "focus_iou": 0.512400505135425,
-    "avoid_iou": 0.6573610019646365
+    "steps": 110,
+    "empty_focus": 8,
+    "focus_iou": 0.5050969348655427,
+    "avoid_iou": 0.6794190926951241
   },
   "cost": {
-    "gemini": 0.05227649999999999,
-    "openai": 1.7335625000000001
+    "gemini": 0.05675699999999999,
+    "openai": 1.92636
   },
   "paired_cost": {
-    "hybrid": 1.7833475,
-    "astra": 2.234875
+    "hybrid": 1.9806255000000001,
+    "astra": 2.4797375
   },
   "faster_frames": {
-    "first_box": 14,
-    "outline": 15,
-    "first_step": 15,
-    "total": 16
+    "first_box": 16,
+    "outline": 17,
+    "first_step": 16,
+    "total": 17
   },
-  "all_22_complete": false,
+  "all_22_complete": true,
   "unsettled": 0
 }

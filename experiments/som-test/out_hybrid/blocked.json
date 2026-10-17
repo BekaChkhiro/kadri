@@ -1,5 +1,5 @@
 {
-  "status": "blocked_by_provider_cap",
+  "status": "resolved_with_user_authorization",
   "completed": 20,
   "expected": 22,
   "openai_settled_usd": 1.7335625000000001,
@@ -11,5 +11,12 @@
   "paid_steps_request_sent": false,
   "unstarted_frame": "c_astra_stress/sink/occlusion",
   "automatic_retry": false,
-  "note": "Gemini and SAM completed for motion_blur; fresh full timeline required if manually rerun."
+  "note": "Gemini and SAM completed for motion_blur; fresh full timeline required if manually rerun.",
+  "resolution": {
+    "completed_frames": 22,
+    "openai_limit_usd": 2.4,
+    "combined_limit_usd": 2.5,
+    "all_reservations_settled": true,
+    "fresh_motion_blur_attempt": "runs/c_astra_stress/sink/motion_blur_attempt2"
+  }
 }

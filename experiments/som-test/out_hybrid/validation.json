@@ -1,9 +1,15 @@
 {
-  "completed_frames_validated": 20,
+  "completed_frames_validated": 22,
   "schemas_valid": true,
   "instructions_exact": true,
   "assign_ids_exact": true,
+  "latency_order_valid": true,
+  "provider_and_total_caps_pass": true,
   "report_links_exist": true,
   "credential_scan_passed": true,
-  "offline_tests": 110
+  "offline_tests": 111,
+  "paid_generation_requests": {
+    "gemini": 23,
+    "openai": 22
+  }
 }

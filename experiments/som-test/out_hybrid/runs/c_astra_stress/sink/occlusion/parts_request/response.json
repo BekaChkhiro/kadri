@@ -1,0 +1,35 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "{\"object\": \"ნიჟარის ქვეშ სანტექნიკის სისტემა\", \"parts\": [{\"label\": \"მარცხენა წყლის ჩამკეტი ონკანი (სარქველი)\", \"box_2d\": [207, 12, 331, 149]}, {\"label\": \"მარჯვენა წყლის ჩამკეტი ონკანი (სარქველი)\", \"box_2d\": [211, 219, 333, 318]}, {\"label\": \"მილის ზედა პლასტმასის ქანჩი (ნიჟარასთან შეერთება)\", \"box_2d\": [91, 269, 169, 489]}, {\"label\": \"ჰორიზონტალური გამავალი მილის პლასტმასის ქანჩი (ქვემოდან ჩამოკიდებული წყლის წვეთით)\", \"box_2d\": [250, 617, 377, 747]}]}",
+            "thoughtSignature": "EmgKZgFpFH0Tv8USELtWqUhEH6EJpSzHVNH5o+OLcThjEtbVZn0BcE9V7+kB3qA0QVM8c8/DFyGk6tawvI86fGa23pnQFkPrkFtzyIylCEEh4cLGhTy8sl1yG37PGvGtUcTBVbshyaP1Hg=="
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 1672,
+    "candidatesTokenCount": 244,
+    "totalTokenCount": 1916,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 592
+      },
+      {
+        "modality": "IMAGE",
+        "tokenCount": 1080
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.8-flash",
+  "responseId": "eXfTav-uJ_uIxN8Pq4CasAE"
+}
