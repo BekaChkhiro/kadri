@@ -26,7 +26,7 @@ final class PhotoSession: ObservableObject {
 
     init(api: (any KadriAPI)? = nil) {
         #if DEBUG && targetEnvironment(simulator)
-        isMock = ProcessInfo.processInfo.arguments.contains("--photo-mock") || ProcessInfo.processInfo.arguments.contains("--photo-diagnostic")
+        isMock = ProcessInfo.processInfo.arguments.contains("--photo-check") || ProcessInfo.processInfo.arguments.contains("--photo-mock") || ProcessInfo.processInfo.arguments.contains("--photo-diagnostic")
         #else
         isMock = false
         #endif
@@ -41,9 +41,10 @@ final class PhotoSession: ObservableObject {
         #else
         let multiPhoto = false
         #endif
-        model = SessionModel(api: api ?? (isMock ? MockKadriAPI(scanDelay: .seconds(1.2), stepDelay: .seconds(2.5), multiPhoto: multiPhoto, diagnostic: ProcessInfo.processInfo.arguments.contains("--photo-diagnostic"), answerThenPhoto: ProcessInfo.processInfo.arguments.contains("--photo-answer-then-photo"), answerOnSecondPhoto: ProcessInfo.processInfo.arguments.contains("--photo-answer-on-second-photo")) : live()))
+        let preview: any KadriAPI = ProcessInfo.processInfo.arguments.contains("--photo-check") ? MockKadriAPI.checkPhotoScenario() : MockKadriAPI(scanDelay: .seconds(1.2), stepDelay: .seconds(2.5), multiPhoto: multiPhoto, diagnostic: ProcessInfo.processInfo.arguments.contains("--photo-diagnostic"), answerThenPhoto: ProcessInfo.processInfo.arguments.contains("--photo-answer-then-photo"), answerOnSecondPhoto: ProcessInfo.processInfo.arguments.contains("--photo-answer-on-second-photo"))
+        model = SessionModel(api: api ?? (isMock ? preview : live()), scanTimeout: .seconds(config.scanTimeout))
         #else
-        model = SessionModel(api: api ?? live())
+        model = SessionModel(api: api ?? live(), scanTimeout: .seconds(config.scanTimeout))
         #endif
         model.beginDescribing()
     }
@@ -82,6 +83,13 @@ final class PhotoSession: ObservableObject {
         let failure = isMock ? nil : authError
         let keyframe = prepared.apiJPEG
         model.continueWithPhoto { if let failure { throw failure }; return keyframe }
+    }
+
+    /// Verification uses the detector-sized JPEG without changing the reference photo or running SAM.
+    func continueWithCheckPhoto(_ source: UIImage) {
+        guard model.canContinueWithCheckPhoto, let prepared = prepare(source) else { return }
+        selectionError = nil
+        model.continueWithCheckPhoto(prepared.apiJPEG)
     }
 
     /// The photo of the round the current step belongs to; earlier rounds come back after `previous()`.
@@ -223,7 +231,9 @@ final class PhotoSession: ObservableObject {
     /// The simulator has no camera; the same demo photo is enough for a later round.
     func continueWithDemo() {
         if let url = Bundle.main.url(forResource: "PhotoDemo", withExtension: "png"),
-           let image = UIImage(contentsOfFile: url.path) { continueWithPhoto(image) }
+           let image = UIImage(contentsOfFile: url.path) {
+            if model.canContinueWithCheckPhoto { continueWithCheckPhoto(image) } else { continueWithPhoto(image) }
+        }
         else { selectionError = "სატესტო ფოტო ვერ მოიძებნა." }
     }
     #endif

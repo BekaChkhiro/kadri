@@ -6,8 +6,13 @@ struct PhotoCamera: View {
     var selected: (UIImage) -> Void
     @StateObject private var camera: PhotoCaptureCamera
 
-    init(camera: PhotoCaptureCamera = PhotoCaptureCamera(), selected: @escaping (UIImage) -> Void) {
+    private let fullFrame: Bool
+
+    /// fullFrame keeps the whole sensor frame (explain: wide dashboards lose edge lights in a square crop).
+    init(camera: PhotoCaptureCamera? = nil, fullFrame: Bool = false, selected: @escaping (UIImage) -> Void) {
+        let camera = camera ?? PhotoCaptureCamera(fullFrame: fullFrame)
         _camera = StateObject(wrappedValue: camera)
+        self.fullFrame = camera.fullFrame
         self.selected = selected
     }
     @Environment(\.dismiss) private var dismiss
@@ -17,11 +22,11 @@ struct PhotoCamera: View {
 
     var body: some View {
         GeometryReader { geometry in
-            let side = min(geometry.size.width - 24, geometry.size.height - 156)
+            let size = viewfinderSize(width: geometry.size.width - 24, height: geometry.size.height - 156)
             VStack(spacing: 0) {
                 Spacer(minLength: 0)
                 viewfinder
-                    .frame(width: side, height: side)
+                    .frame(width: size.width, height: size.height)
                     .clipShape(RoundedRectangle(cornerRadius: Theme.Radius.card))
                     .shadow(Theme.Shadow.card)
                 Spacer(minLength: 0)
@@ -45,6 +50,13 @@ struct PhotoCamera: View {
         }
     }
 
+    /// Square for the photo session; the portrait 3:4 photo frame when fullFrame.
+    private func viewfinderSize(width: CGFloat, height: CGFloat) -> CGSize {
+        guard fullFrame else { let side = min(width, height); return CGSize(width: side, height: side) }
+        let fitted = min(width, height * 3 / 4)
+        return CGSize(width: fitted, height: fitted * 4 / 3)
+    }
+
     private var viewfinder: some View {
         ZStack {
             Theme.Colors.ink[200]!
@@ -60,9 +72,13 @@ struct PhotoCamera: View {
                     }
                 }.foregroundStyle(Theme.Colors.ink[800]!).padding(24)
             } else if let image = camera.image ?? camera.demoImage {
-                Image(uiImage: image).resizable().scaledToFill()
+                if fullFrame {
+                    Image(uiImage: image).resizable().scaledToFit()
+                } else {
+                    Image(uiImage: image).resizable().scaledToFill()
+                }
             } else {
-                PhotoCapturePreview(session: camera.session)
+                PhotoCapturePreview(session: camera.session, gravity: fullFrame ? .resizeAspect : .resizeAspectFill)
             }
             Color.white.opacity(blink ? (reduceMotion ? 0.4 : 0.9) : 0)
                 .allowsHitTesting(false)
@@ -126,10 +142,11 @@ private struct PhotoCapturePressStyle: ButtonStyle {
 
 private struct PhotoCapturePreview: UIViewRepresentable {
     let session: AVCaptureSession
+    let gravity: AVLayerVideoGravity
     func makeUIView(context: Context) -> Preview {
         let view = Preview()
         view.preview.session = session
-        view.preview.videoGravity = .resizeAspectFill
+        view.preview.videoGravity = gravity
         return view
     }
     func updateUIView(_ view: Preview, context: Context) {
@@ -152,6 +169,7 @@ private struct PhotoCapturePreview: UIViewRepresentable {
 /// Session and output are confined to queue; observable UI state is published on main.
 final class PhotoCaptureCamera: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate, @unchecked Sendable {
     let session = AVCaptureSession()
+    let fullFrame: Bool
     private let output = AVCapturePhotoOutput()
     private let queue = DispatchQueue(label: "ge.kadri.photo-capture")
     private var wantsRunning = false
@@ -162,11 +180,16 @@ final class PhotoCaptureCamera: NSObject, ObservableObject, AVCapturePhotoCaptur
     @Published private(set) var message: String?
     @Published private(set) var permissionDenied = false
 
+    init(fullFrame: Bool = false) {
+        self.fullFrame = fullFrame
+        super.init()
+    }
+
     var demoImage: UIImage? {
         #if DEBUG && targetEnvironment(simulator)
         guard let url = Bundle.main.url(forResource: "PhotoDemo", withExtension: "png"),
               let image = UIImage(contentsOfFile: url.path) else { return nil }
-        return Self.square(image)
+        return Self.prepared(image, fullFrame: fullFrame)
         #else
         return nil
         #endif
@@ -263,9 +286,9 @@ final class PhotoCaptureCamera: NSObject, ObservableObject, AVCapturePhotoCaptur
         guard error == nil, let data = photo.fileDataRepresentation(), let original = UIImage(data: data) else {
             fail("ფოტოს გადაღება ვერ მოხერხდა. სცადე ხელახლა."); return
         }
-        let square = Self.square(original)
+        let prepared = Self.prepared(original, fullFrame: fullFrame)
         DispatchQueue.main.async {
-            self.image = square
+            self.image = prepared
             self.message = nil
             self.capturing = false
         }
@@ -273,6 +296,17 @@ final class PhotoCaptureCamera: NSObject, ObservableObject, AVCapturePhotoCaptur
 
     private func fail(_ message: String) {
         DispatchQueue.main.async { self.message = message; self.capturing = false }
+    }
+
+    /// Square crop for the photo session; fullFrame only bakes the EXIF orientation in, keeping the aspect.
+    static func prepared(_ image: UIImage, fullFrame: Bool) -> UIImage {
+        guard fullFrame else { return square(image) }
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = image.scale
+        format.opaque = true
+        return UIGraphicsImageRenderer(size: image.size, format: format).image { _ in
+            image.draw(in: CGRect(origin: .zero, size: image.size))
+        }
     }
 
     /// UIImage.draw applies EXIF orientation before the central crop, matching aspect-fill preview.

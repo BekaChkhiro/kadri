@@ -239,6 +239,42 @@ final class PhotoAutopilotTests: XCTestCase {
         XCTAssertEqual((try json("round-2.result.json", in: directory)["continuation"] as? [String: Any])?["kind"] as? String, "complete")
     }
 
+    func testCheckPhotoGoesToStepsWithoutAnotherScanOrRound() async throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("autopilot-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let demo = try XCTUnwrap(Bundle.main.url(forResource: "PhotoDemo", withExtension: "png"))
+        let api = MockKadriAPI.checkPhotoScenario()
+        let session = PhotoSession(api: api)
+        let pilot = PhotoAutopilot(session: session, directory: directory, stepDelay: 0, pollInterval: 0.02)
+        pilot.start()
+        defer { pilot.stop() }
+        try "ყოველი ნაწილის შემდეგ ფოტოთი შემიმოწმე".write(to: directory.appendingPathComponent("comment.txt"), atomically: true, encoding: .utf8)
+        try FileManager.default.copyItem(at: demo, to: directory.appendingPathComponent("round-1.png"))
+        try await waitForFile("check-1.request.json", in: directory)
+        XCTAssertFalse(pilot.isStopped)
+        XCTAssertNil(try? json("round-1.result.json", in: directory))
+        XCTAssertEqual(try json("status.json", in: directory)["kind"] as? String, "needs_check_photo")
+        try FileManager.default.copyItem(at: demo, to: directory.appendingPathComponent("check-1.png"))
+        try await waitForFile("question-1.json", in: directory)
+        XCTAssertEqual(api.partsCount, 1)
+        XCTAssertEqual(api.images.count, 2)
+        XCTAssertNotNil(api.images[1])
+        XCTAssertEqual(api.contexts[1]?.checkPhotos, 1)
+        XCTAssertEqual(api.contexts[1]?.checkPrompt, MockCheckPhotoAPI.prompt)
+        XCTAssertEqual(session.model.round, 1)
+        // An explicit photo answer must not reread answer-1 for the next question.
+        try "ფოტოს გაჩვენებ".write(to: directory.appendingPathComponent("answer-1.txt"), atomically: true, encoding: .utf8)
+        try await waitForFile("check-2.request.json", in: directory)
+        try FileManager.default.copyItem(at: demo, to: directory.appendingPathComponent("check-2.png"))
+        try await waitForFile("done.json", in: directory)
+        XCTAssertEqual(api.partsCount, 1)
+        XCTAssertEqual(api.contexts[2]?.checkPhotos, 2)
+        XCTAssertNotNil(api.images.last!)
+        XCTAssertEqual(try json("round-1.result.json", in: directory)["checkPhotos"] as? Int, 2)
+        XCTAssertEqual(try json("done.json", in: directory)["rounds"] as? Int, 1)
+    }
+
     // MARK: - Helpers
 
     private func json(_ name: String, in directory: URL) throws -> [String: Any] {

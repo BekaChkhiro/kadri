@@ -10,7 +10,7 @@ final class PhotoSnapshotTests: XCTestCase {
         let demo = try XCTUnwrap(UIImage(contentsOfFile: url.path))
         let photo = try XCTUnwrap(PhotoSession.squareJPEG(demo, maxSide: 1536).flatMap(UIImage.init(data:)))
         XCTAssertEqual(photo.size, CGSize(width: 1024, height: 1024))
-        let result = MockKadriAPI.result
+        let result = MockKadriAPI.toolPreviewResult
         let meshes = result.parts.map { part in
             let b = part.box.map { CGFloat($0) / 1000 }
             let rect = CGRect(x: b[0], y: b[1], width: b[2] - b[0], height: b[3] - b[1])
@@ -67,6 +67,8 @@ final class PhotoSnapshotTests: XCTestCase {
             attachment.lifetime = .keepAlways
             add(attachment)
             window.isHidden = true
+            window.rootViewController = nil
+            window.windowScene = nil
             previousWindow?.makeKeyAndVisible()
         }
     }
@@ -85,6 +87,96 @@ final class PhotoSnapshotTests: XCTestCase {
         // The warning box fill (#fef2f2) must cover at least two lines of text, not a clipped sliver above the buttons.
         let rows = Self.rows(in: image, matching: (254, 242, 242))
         XCTAssertGreaterThanOrEqual(CGFloat(rows) / image.scale, 40, "warning box is clipped or hidden")
+    }
+
+    func testByHandOnlyCard() async throws {
+        let hands: [StepHand] = [.init(part: "p2", grip: "turn", hand: "right", byHandOnly: true)]
+        let step = Step(index: 1, title: "მოუშვი ხელით", text: "ნელა მოატრიალე. ძალას ნუ დაატან.", hands: hands)
+        XCTAssertTrue(PhotoByHandCard.isVisible(for: step))
+        XCTAssertTrue(PhotoByHandCard.isVisible(for: Step(index: 1, title: "", text: "", toolCards: [], hands: hands)))
+        XCTAssertFalse(PhotoByHandCard.isVisible(for: Step(index: 1, title: "", text: "", toolCards: [MockKadriAPI.seenTool], hands: hands)))
+        XCTAssertFalse(PhotoByHandCard.isVisible(for: Step(index: 1, title: "", text: "")))
+        _ = try await render(screen(step: step, index: 0, count: 2)
+            .environment(\.photoOverlayReduceMotion, true), name: "hands-by-hand-card")
+    }
+
+    func testToolCardsSeenAndTypical() async throws {
+        for large in [false, true] {
+            let view = ScrollView {
+                VStack(spacing: 12) {
+                    PhotoToolCard(tool: MockKadriAPI.seenTool)
+                    PhotoToolCard(tool: MockKadriAPI.typicalTool)
+                }.padding(16)
+            }
+            .background(Theme.Colors.surface)
+            .environment(\.dynamicTypeSize, large ? .accessibility2 : .large)
+            _ = try await render(view, name: large ? "tools-accessibility" : "tools-seen-typical")
+        }
+    }
+
+    func testToolTipTypes() async throws {
+        _ = try await render(ScrollView {
+            VStack(spacing: 10) {
+                ForEach([("ph2", "PH2"), ("torx_t20", "T20"), ("flat_small", "5 მმ")], id: \.0) { id, size in
+                    PhotoToolCard(tool: .init(id: id, size: size, why: "მჭიდროდ უნდა მოერგოს", sizeSource: "model"))
+                }
+            }.padding(16)
+        }.background(Theme.Colors.surface), name: "tools-tip-types")
+    }
+
+    func testActionsReduceMotionAndFrames() async throws {
+        let boxes = ["p1": CGRect(x: 70, y: 140, width: 50, height: 50),
+                     "p2": CGRect(x: 260, y: 140, width: 50, height: 50),
+                     "p3": CGRect(x: 70, y: 310, width: 50, height: 50),
+                     "p4": CGRect(x: 260, y: 310, width: 50, height: 50)]
+        let turn = StepAction(part: "p1", kind: "rotate_ccw", amount: "¼")
+        let order = StepAction(part: "p2", kind: "tighten_order", order: ["p1", "p4", "p2", "p3"])
+        XCTAssertEqual(PhotoActionOverlays.affectedParts([turn, order], boxes: boxes), Set(boxes.keys))
+        XCTAssertTrue(PhotoActionOverlays.affectedParts([.init(part: "p1", kind: "unknown")], boxes: boxes).isEmpty)
+        XCTAssertTrue(PhotoActionOverlays.affectedParts([.init(part: "p1", kind: "tighten_order")], boxes: boxes).isEmpty)
+        XCTAssertTrue(PhotoActionOverlays.affectedParts([.init(part: "missing", kind: "press")], boxes: boxes).isEmpty)
+        for (name, actions) in [("rotate-quarter-reduce-motion", [turn]), ("tighten-order-reduce-motion", [order])] {
+            _ = try await render(PhotoActionOverlays(actions: actions, boxes: boxes)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Theme.Colors.ink[800]!)
+                .environment(\.photoOverlayReduceMotion, true), name: name)
+        }
+        for (index, progress) in [CGFloat(0.2), 0.6, 1].enumerated() {
+            _ = try await render(ZStack(alignment: .topLeading) {
+                PhotoActionFrame(action: turn, boxes: boxes, progress: progress)
+                PhotoActionFrame(action: order, boxes: boxes.mapValues { $0.offsetBy(dx: 0, dy: 260) }, progress: progress)
+            }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Theme.Colors.ink[800]!), name: "actions-frame-\(index)")
+        }
+    }
+
+    func testLongStepToolsTipAndWarningScrollAboveFooter() async throws {
+        let tool = StepToolCard(id: "open_wrench", size: "10 მმ", why: "ქანჩის მოსაშვებად",
+            notThis: .init(id: "pliers", reason: "ქანჩის კიდეებს დააზიანებს. ძალას ნუ დაატან."),
+            fitCheck: MockKadriAPI.typicalTool.fitCheck, alternatives: ["11 მმ"])
+        let step = Step(index: 2, title: "შეამოწმე სამაგრი",
+            text: "მოარგე ხელსაწყო სამაგრს. ზომა ჯერ შეამოწმე და მხოლოდ შემდეგ მოუშვი ნელა. " +
+                  "თუ ხელსაწყო თავისუფლად ბრუნავს ან ჭრილიდან ამოდის, გაჩერდი და სხვა ზომა სცადე.",
+            warn: "ძალას ნუ დაატან: შეუსაბამო ზომა სამაგრს დააზიანებს.",
+            tip: "შეინახე მოხსნილი ნაწილები თანმიმდევრობით, რომ აწყობისას არცერთი არ გამოგრჩეს.",
+            icon: "unscrew", toolCards: [MockKadriAPI.seenTool, tool])
+        let view = screen(step: step, index: 1, count: 3).environment(\.photoOverlayReduceMotion, true)
+        _ = try await render(view, name: "tools-long-step-top")
+        let image = try await render(view, name: "tools-long-step-bottom") { window in
+            let scrolls = Self.descendants(window).compactMap { $0 as? UIScrollView }
+            let scroll = try XCTUnwrap(scrolls.max(by: { $0.contentSize.height < $1.contentSize.height }))
+            let bottom = scroll.contentSize.height - scroll.bounds.height + scroll.adjustedContentInset.bottom
+            XCTAssertGreaterThan(bottom, 100, "Fixture must require scrolling")
+            scroll.setContentOffset(CGPoint(x: 0, y: bottom), animated: false)
+            scroll.layoutIfNeeded()
+            XCTAssertEqual(scroll.contentOffset.y, bottom, accuracy: 1)
+        }
+        XCTAssertGreaterThan(CGFloat(Self.rows(in: image, matching: (254, 242, 242))) / image.scale, 40,
+                             "The last tool's complete warning must remain visible above the footer")
+    }
+
+    private static func descendants(_ view: UIView) -> [UIView] {
+        view.subviews.flatMap { [$0] + descendants($0) }
     }
 
     func testDiagnosticCardsAndSummary() async throws {
@@ -106,7 +198,7 @@ final class PhotoSnapshotTests: XCTestCase {
     }
 
     private func screen(step: Step, index: Int, count: Int, continuation: StepsContinuation? = nil) -> some View {
-        let result = MockKadriAPI.result
+        let result = MockKadriAPI.toolPreviewResult
         let url = Bundle.main.url(forResource: "PhotoDemo", withExtension: "png")!
         let photo = PhotoSession.squareJPEG(UIImage(contentsOfFile: url.path)!, maxSide: 1536).flatMap(UIImage.init(data:))!
         return PhotoResultView(image: photo, parts: result.parts, meshes: [], step: step, index: index, count: count,
@@ -118,7 +210,7 @@ final class PhotoSnapshotTests: XCTestCase {
     }
 
     /// Renders a full-screen window like the step snapshots above and writes it beside them.
-    private func render(_ view: some View, name: String) async throws -> UIImage {
+    private func render(_ view: some View, name: String, interact: ((UIWindow) throws -> Void)? = nil) async throws -> UIImage {
         let directory = URL(fileURLWithPath: "/tmp/kadri-photo-shots-square/result")
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         let host = UIHostingController(rootView: view)
@@ -131,6 +223,8 @@ final class PhotoSnapshotTests: XCTestCase {
         host.view.frame = window.bounds
         host.view.layoutIfNeeded()
         try await Task.sleep(for: .milliseconds(1500))
+        try interact?(window)
+        try await Task.sleep(for: .milliseconds(100))
         var rendered = false
         let image = UIGraphicsImageRenderer(bounds: window.bounds).image { _ in
             rendered = window.drawHierarchy(in: window.bounds, afterScreenUpdates: true)
@@ -143,6 +237,8 @@ final class PhotoSnapshotTests: XCTestCase {
         attachment.lifetime = .keepAlways
         add(attachment)
         window.isHidden = true
+        window.rootViewController = nil
+        window.windowScene = nil
         previousWindow?.makeKeyAndVisible()
         return image
     }

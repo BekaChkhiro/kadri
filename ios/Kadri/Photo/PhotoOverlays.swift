@@ -2,6 +2,18 @@ import SwiftUI
 import CoreText
 import KadriCore
 
+private struct PhotoOverlayReduceMotionKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
+extension EnvironmentValues {
+    /// Preview/test opt-in. Cannot override the system's Reduce Motion preference to false.
+    var photoOverlayReduceMotion: Bool {
+        get { self[PhotoOverlayReduceMotionKey.self] }
+        set { self[PhotoOverlayReduceMotionKey.self] = newValue }
+    }
+}
+
 enum PhotoTone {
     case brand, danger
 
@@ -12,17 +24,20 @@ struct PhotoMarkerPin: View {
     let number: Int
     let label: String
     let tone: PhotoTone
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    var showsNumber = true
+    @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
+    @Environment(\.photoOverlayReduceMotion) private var previewReduceMotion
+    private var reduceMotion: Bool { systemReduceMotion || previewReduceMotion }
     @State private var appeared = false
 
     var body: some View {
         HStack(spacing: 6) {
-            ZStack {
+            if showsNumber { ZStack {
                 Circle().fill(tone.color.opacity(0.25)).frame(width: 28, height: 28)
                 Circle().fill(tone.color).frame(width: 24, height: 24)
                     .overlay(Circle().strokeBorder(.white, lineWidth: 2))
                 Text(tone == .danger ? "✕" : "\(number)").font(.kadri(12, weight: .bold)).foregroundStyle(.white)
-            }
+            } }
             Text(label).font(.kadri(12.5, weight: .semibold))
                 .foregroundStyle(Theme.Colors.ink[800]!).lineLimit(1)
                 .padding(.horizontal, 10).padding(.vertical, 4)
@@ -55,16 +70,19 @@ struct PhotoTargetFrame: View {
 }
 
 /// The pause is part of the cycle, so both strokes and heads restart together.
-private struct PhotoArrowTimeline<Content: View>: View {
+struct PhotoArrowTimeline<Content: View>: View {
     let duration: Double
+    var cycle: Double = 1.8
     @ViewBuilder let content: (CGFloat, Double) -> Content
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
+    @Environment(\.photoOverlayReduceMotion) private var previewReduceMotion
+    private var reduceMotion: Bool { systemReduceMotion || previewReduceMotion }
     @State private var startedAt = Date()
 
     var body: some View {
         TimelineView(.animation(paused: reduceMotion)) { context in
             let elapsed = max(0, context.date.timeIntervalSince(startedAt))
-            let linear = reduceMotion ? 1 : min(1, elapsed.truncatingRemainder(dividingBy: 1.8) / duration)
+            let linear = reduceMotion ? 1 : min(1, elapsed.truncatingRemainder(dividingBy: cycle) / duration)
             let eased = (1 - cos(linear * .pi)) / 2
             content(CGFloat(eased), min(1, max(0, (linear - 0.8) / 0.2)))
         }
@@ -111,60 +129,6 @@ private struct TurnHead: Shape {
     }
 }
 
-struct MoveArrowView: View {
-    enum Direction { case up, down, left, right }
-    let direction: Direction
-
-    var body: some View {
-        GeometryReader { proxy in
-            let endpoints = endpoints(in: proxy.size)
-            let line = Path { path in
-                path.move(to: endpoints.0)
-                path.addLine(to: endpoints.1)
-            }
-            PhotoArrowTimeline(duration: 1.2) { progress, head in
-                ZStack(alignment: .topLeading) {
-                    line.stroke(.white.opacity(0.35), style: StrokeStyle(lineWidth: 6, lineCap: .round, dash: [2, 10]))
-                    line.trimmedPath(from: 0, to: progress)
-                        .stroke(.white, style: StrokeStyle(lineWidth: 6, lineCap: .round))
-                    MoveHead().stroke(.white, style: StrokeStyle(lineWidth: 4, lineCap: .round, lineJoin: .round))
-                        .frame(width: 32, height: 32).rotationEffect(rotation)
-                        .position(endpoints.1).opacity(head)
-                }
-            }
-        }
-        .shadow(color: Color(hex: "#0f172a").opacity(0.35), radius: 6, y: 2)
-    }
-
-    private var rotation: Angle {
-        switch direction {
-        case .down: .degrees(0)
-        case .up: .degrees(180)
-        case .left: .degrees(90)
-        case .right: .degrees(-90)
-        }
-    }
-
-    private func endpoints(in size: CGSize) -> (CGPoint, CGPoint) {
-        switch direction {
-        case .down: (CGPoint(x: size.width / 2, y: 0), CGPoint(x: size.width / 2, y: size.height))
-        case .up: (CGPoint(x: size.width / 2, y: size.height), CGPoint(x: size.width / 2, y: 0))
-        case .left: (CGPoint(x: size.width, y: size.height / 2), CGPoint(x: 0, y: size.height / 2))
-        case .right: (CGPoint(x: 0, y: size.height / 2), CGPoint(x: size.width, y: size.height / 2))
-        }
-    }
-}
-
-private struct MoveHead: Shape {
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        path.move(to: CGPoint(x: 5, y: 11))
-        path.addLine(to: CGPoint(x: 12, y: 18))
-        path.addLine(to: CGPoint(x: 19, y: 11))
-        return path.applying(CGAffineTransform(scaleX: rect.width / 24, y: rect.height / 24))
-    }
-}
-
 struct PhotoAnnotationsView: View {
     let step: Step?
     let parts: [Part]
@@ -172,7 +136,9 @@ struct PhotoAnnotationsView: View {
     let meshReady: Set<String>
     var visibleHeight: CGFloat? = nil
     var arrowSizeBoxes: [String: CGRect]? = nil
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityReduceMotion) private var systemReduceMotion
+    @Environment(\.photoOverlayReduceMotion) private var previewReduceMotion
+    private var reduceMotion: Bool { systemReduceMotion || previewReduceMotion }
 
     var body: some View {
         GeometryReader { proxy in
@@ -186,19 +152,36 @@ struct PhotoAnnotationsView: View {
                                 .position(x: box.midX, y: box.midY)
                         }
                     }
-                    ForEach(Array(step.arrows.enumerated()), id: \.offset) { _, arrow in
-                        if let box = boxes[arrow.part] { arrowView(arrow, box: box) }
-                    }
-                    let pins = step.markers.map { marker in
+                    let viewport = CGSize(width: proxy.size.width,
+                        height: max(0, min(proxy.size.height, visibleHeight ?? proxy.size.height)))
+                    let selection = PhotoAnnotationSelection.make(step: step, parts: parts, boxes: boxes,
+                        sizeBoxes: arrowSizeBoxes, viewport: viewport)
+                    let layouts = PhotoArrowLayout.make(arrows: selection.arrows, boxes: boxes,
+                        sizeBoxes: arrowSizeBoxes, avoid: step.avoid, viewport: viewport)
+                    let actionParts = PhotoActionOverlays.affectedParts(selection.actions, boxes: boxes)
+                    let occupied = layouts.flatMap { $0.occupiedRects(viewport: viewport) } +
+                        selection.actions.compactMap { action -> CGRect? in
+                            guard let box = boxes[action.part] else { return nil }
+                            let size = PhotoActionOverlays.size(arrowSizeBoxes?[action.part] ?? box)
+                            let centerY = action.kind == "align" ? box.minY : box.midY
+                            let glyph = CGRect(x: box.midX - size * 0.6, y: centerY - size * 0.6,
+                                               width: size * 1.2, height: size * 1.2)
+                            return action.kind == "lift" ? glyph.union(box.insetBy(dx: -4, dy: -14)) : glyph
+                        }
+                    let pins = selection.markers.map { marker in
                         PhotoGeometry.Pin(part: marker.part, size: pinSize(marker.label),
-                                          prefersBelow: step.arrows.contains { $0.part == marker.part })
+                                          prefersBelow: actionParts.contains(marker.part) || step.arrows.contains { $0.part == marker.part })
                     }
                     let rects = PhotoGeometry.pinRects(pins: pins, boxes: boxes,
                         focus: step.focus + step.avoid, viewport: proxy.size,
-                        visibleHeight: visibleHeight ?? proxy.size.height)
-                    ForEach(Array(step.markers.enumerated()), id: \.offset) { i, marker in
+                        visibleHeight: viewport.height, occupiedRects: occupied)
+                    PhotoArrowOverlays(arrows: selection.arrows, boxes: boxes,
+                                       sizeBoxes: arrowSizeBoxes, avoid: step.avoid, visibleHeight: viewport.height)
+                    PhotoActionOverlays(actions: selection.actions, boxes: boxes, sizeBoxes: arrowSizeBoxes)
+                        .frame(width: viewport.width, height: viewport.height, alignment: .topLeading).clipped()
+                    ForEach(Array(selection.markers.enumerated()), id: \.offset) { i, marker in
                         if let rect = rects[i] {
-                            PhotoMarkerPin(number: i + 1, label: marker.label,
+                            PhotoMarkerPin(number: selection.orderNumbers[marker.part] ?? (i + 1), label: marker.label,
                                            tone: marker.tone == "danger" || step.avoid.contains(marker.part) ? .danger : .brand)
                                 .frame(width: rect.width, height: rect.height)
                                 .position(x: rect.midX, y: rect.midY)
@@ -212,40 +195,14 @@ struct PhotoAnnotationsView: View {
         .allowsHitTesting(false).accessibilityHidden(true)
     }
 
-    private func pinSize(_ label: String) -> CGSize {
+    private func pinSize(_ label: String, numbered: Bool = true) -> CGSize {
         let font = Theme.ctFont(size: 12.5, weight: .semibold)
         let text = NSAttributedString(string: label, attributes: [
             NSAttributedString.Key(kCTFontAttributeName as String): font
         ])
         let width = CTLineGetTypographicBounds(CTLineCreateWithAttributedString(text), nil, nil, nil)
-        return CGSize(width: ceil(width) + 28 + 6 + 20,
+        return CGSize(width: ceil(width) + (numbered ? 34 : 0) + 20,
                       height: max(28, ceil(CTFontGetAscent(font) + CTFontGetDescent(font) + CTFontGetLeading(font)) + 8))
     }
 
-    @ViewBuilder private func arrowView(_ arrow: StepArrow, box: CGRect) -> some View {
-        let sizeBox = arrowSizeBoxes?[arrow.part] ?? box
-        if arrow.type == "rotate" {
-            let size = min(160, max(72, max(sizeBox.width, sizeBox.height) * 1.25))
-            TurnArrowView(clockwise: arrow.dir == "cw").frame(width: size, height: size)
-                .position(x: box.midX, y: box.midY)
-        } else if arrow.type == "move", let direction = direction(arrow.dir) {
-            let vertical = arrow.dir == "up" || arrow.dir == "down"
-            let length = max(60, (vertical ? sizeBox.height : sizeBox.width) * 0.6)
-            let dx: CGFloat = arrow.dir == "left" ? -1 : arrow.dir == "right" ? 1 : 0
-            let dy: CGFloat = arrow.dir == "up" ? -1 : arrow.dir == "down" ? 1 : 0
-            MoveArrowView(direction: direction)
-                .frame(width: vertical ? 32 : length, height: vertical ? length : 32)
-                .position(x: box.midX + dx * length / 2, y: box.midY + dy * length / 2)
-        }
-    }
-
-    private func direction(_ value: String) -> MoveArrowView.Direction? {
-        switch value {
-        case "up": .up
-        case "down": .down
-        case "left": .left
-        case "right": .right
-        default: nil
-        }
-    }
 }

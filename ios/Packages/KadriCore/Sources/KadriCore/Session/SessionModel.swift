@@ -11,6 +11,19 @@ import Observation
 @MainActor
 @Observable
 public final class SessionModel {
+    public static let maxCheckPhotos = 20
+    public private(set) var checkPhotos = 0
+    public private(set) var checkPrompt: String?
+    public private(set) var checkPhotoPhase: CheckPhotoPhase = .idle
+    @ObservationIgnored private var keyframe: Data?
+    @ObservationIgnored private var stepsImage: Data?
+
+    public var canContinueWithCheckPhoto: Bool {
+        guard case .steps(_, _, streaming: false) = phase,
+              case .needsCheckPhoto = continuation else { return false }
+        return checkPhotos < Self.maxCheckPhotos
+    }
+
     public static let maxRounds = 5
     public static let maxAnswerTurns = 6
     public private(set) var answers: [SessionAnswer] = []
@@ -66,7 +79,7 @@ public final class SessionModel {
     public init(
         api: any KadriAPI,
         clock: any Clock<Duration> = ContinuousClock(),
-        scanTimeout: Duration = .seconds(45),
+        scanTimeout: Duration = .seconds(APIConfig.defaultScanTimeout),
         firstStepTimeout: Duration = .seconds(60)
     ) {
         self.api = api
@@ -167,8 +180,11 @@ public final class SessionModel {
             do {
                 let keyframe = try await provider()
                 try Task.checkCancellation()
+                guard let self, gen == self.generation else { return }
+                self.keyframe = keyframe
+                self.stepsImage = keyframe
                 let result = try await api.parts(keyframe: keyframe, instructions: instructions, context: context, provider: requestedProvider)
-                self?.scanFinished(result, generation: gen)
+                self.scanFinished(result, generation: gen)
             } catch {
                 self?.fail(error, retryFrom: .scan, generation: gen)
             }
@@ -207,7 +223,7 @@ public final class SessionModel {
         let context = pendingContext
         let requestedProvider: AIProvider? = aiProvider == .astra ? nil : aiProvider
         workTask = Task { [weak self, api] in
-            let stream = api.steps(object: result.object, parts: result.parts, instructions: instructions, context: context, provider: requestedProvider)
+            let stream = api.steps(object: result.object, parts: result.parts, instructions: instructions, image: self?.stepsImage, context: context, provider: requestedProvider)
             do {
                 for try await event in stream {
                     guard let self, self.handle(event, result: result, generation: gen) else { return }
@@ -227,6 +243,7 @@ public final class SessionModel {
         case .step(let step):
             timeoutTask?.cancel()
             timeoutTask = nil
+            checkPhotoPhase = .idle
             receivedSteps.append(step)
             phase = .steps(result, receivedSteps, streaming: true)
             return true
@@ -249,12 +266,25 @@ public final class SessionModel {
         }
         // A stream without a done event (or the last allowed round) cannot ask for another photo.
         if continuation == nil { continuation = .complete }
+        if case .needsCheckPhoto(let prompt, let reason) = continuation {
+            if checkPhotos >= Self.maxCheckPhotos {
+                continuation = round < Self.maxRounds ? .needsPhoto(prompt: prompt, reason: reason) : .complete
+                checkPhotoPhase = .idle
+            } else {
+                checkPhotoPhase = .requested(prompt: prompt, reason: reason)
+            }
+        }
         if round >= Self.maxRounds, case .needsPhoto = continuation { continuation = .complete }
         if answers.count >= Self.maxAnswerTurns {
             switch continuation {
             case .needsAnswer, .needsMeasurement: continuation = .complete
             default: break
             }
+        }
+        if checkPhotos >= Self.maxCheckPhotos,
+           case .needsAnswer(let question, let options, let allowOther, let reason) = continuation {
+            continuation = .needsAnswer(question: question, options: options.filter { $0 != "ფოტოს გაჩვენებ" },
+                allowOther: allowOther, reason: reason)
         }
         phase = .steps(result, receivedSteps, streaming: false)
     }
@@ -270,20 +300,52 @@ public final class SessionModel {
         case .needsAnswer(let value, _, _, _), .needsMeasurement(let value, _, _, _, _, _): question = value
         default: return
         }
+        if trimmed == "ფოტოს გაჩვენებ", case .needsAnswer = continuation {
+            guard checkPhotos < Self.maxCheckPhotos else { return }
+            self.continuation = .needsCheckPhoto(prompt: question, reason: "პასუხს ფოტოთი გადავამოწმებ.")
+            checkPhotoPhase = .requested(prompt: question, reason: "პასუხს ფოტოთი გადავამოწმებ.")
+            return
+        }
         let titles = allSteps.map(\.title)
-        completedTurns.append(SessionTurn(steps: steps, continuation: continuation, context: pendingContext, answers: answers))
+        completedTurns.append(SessionTurn(steps: steps, continuation: continuation, context: pendingContext, answers: answers, image: stepsImage))
+        stepsImage = keyframe
         answers.append(SessionAnswer(question: question, answer: trimmed, unit: unit))
         pendingContext = SessionContext(round: round, photoPrompt: pendingContext?.photoPrompt ?? "",
-                                        doneSteps: titles, previousObject: result.object, answers: answers)
+                                        doneSteps: titles, previousObject: result.object, answers: answers,
+                                        checkPhotos: checkPhotos > 0 ? checkPhotos : nil, checkPrompt: checkPrompt)
+        streamSteps(for: result)
+    }
+
+    /// A new verification image goes straight to steps; parts and round are unchanged.
+    public func continueWithCheckPhoto(_ image: Data) {
+        guard canContinueWithCheckPhoto, case .steps(let result, let steps, _) = phase,
+              let continuation, case .needsCheckPhoto(let prompt, _) = continuation else { return }
+        let titles = allSteps.map(\.title)
+        completedTurns.append(SessionTurn(steps: steps, continuation: continuation, context: pendingContext, answers: answers, image: stepsImage))
+        checkPhotos += 1
+        checkPrompt = String(prompt.prefix(120))
+        pendingContext = SessionContext(round: round, photoPrompt: pendingContext?.photoPrompt ?? "",
+            doneSteps: titles, previousObject: result.object, answers: answers,
+            checkPhotos: checkPhotos, checkPrompt: checkPrompt)
+        stepsImage = image
+        checkPhotoPhase = .checking
         streamSteps(for: result)
     }
 
     private func restorePreviousTurn() {
         guard let last = completedTurns.popLast(), let partsResult else { return }
         answers = last.answers
+        stepsImage = last.image
+        checkPhotoPhase = .idle
         pendingContext = last.context
         receivedSteps = last.steps
         continuation = last.continuation
+        checkPrompt = last.context?.checkPrompt
+        if case .needsCheckPhoto(let prompt, let reason) = continuation {
+            if checkPhotos >= Self.maxCheckPhotos {
+                continuation = round < Self.maxRounds ? .needsPhoto(prompt: prompt, reason: reason) : .complete
+            } else { checkPhotoPhase = .requested(prompt: prompt, reason: reason) }
+        }
         usage = nil
         phase = .steps(partsResult, last.steps, streaming: false)
         currentStepIndex = max(stepOffset, allSteps.count - 1)
@@ -302,6 +364,9 @@ public final class SessionModel {
         finished.turns = completedTurns
         finished.context = pendingContext
         finished.answers = answers
+        finished.keyframe = keyframe
+        checkPrompt = nil
+        checkPhotoPhase = .idle
         completedRounds.append(finished)
         completedTurns = []
         pendingContext = context(forRound: round)
@@ -319,19 +384,29 @@ public final class SessionModel {
         let earlier = completedRounds.prefix(number - 1)
         guard let last = earlier.last, case .needsPhoto(let prompt, _) = last.continuation else { return nil }
         return SessionContext(round: number, photoPrompt: prompt, doneSteps: earlier.flatMap(\.steps).map(\.title),
-                              previousObject: last.result.object, answers: answers)
+                              previousObject: last.result.object, answers: answers,
+                              checkPhotos: checkPhotos > 0 ? checkPhotos : nil)
     }
 
     /// Makes the last finished round current again, as it was when its steps ended.
     private func restorePreviousRound() {
         guard let last = completedRounds.popLast() else { return }
         completedTurns = last.turns
+        keyframe = last.keyframe
         answers = last.answers
+        stepsImage = keyframe
+        checkPhotoPhase = .idle
         pendingContext = last.context
         partsResult = last.result
         let steps = Array(last.steps.dropFirst(completedTurns.reduce(0) { $0 + $1.steps.count }))
         receivedSteps = steps
         continuation = last.continuation
+        checkPrompt = last.context?.checkPrompt
+        if case .needsCheckPhoto(let prompt, let reason) = continuation {
+            if checkPhotos >= Self.maxCheckPhotos {
+                continuation = round < Self.maxRounds ? .needsPhoto(prompt: prompt, reason: reason) : .complete
+            } else { checkPhotoPhase = .requested(prompt: prompt, reason: reason) }
+        }
         usage = nil
         phase = .steps(last.result, steps, streaming: false)
         currentStepIndex = max(stepOffset, allSteps.count - 1)
@@ -424,6 +499,8 @@ public final class SessionModel {
 
     private func resetSession() {
         instructions = ""
+        keyframe = nil; stepsImage = nil
+        checkPhotos = 0; checkPrompt = nil; checkPhotoPhase = .idle
         keyframeProvider = nil
         partsResult = nil
         receivedSteps = []

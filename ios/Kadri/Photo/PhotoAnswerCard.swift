@@ -61,7 +61,10 @@ struct PhotoAnswerCard: View {
                     }
                     if case .needsAnswer(_, let options, _, _) = continuation {
                         ForEach(Array(options.enumerated()), id: \.offset) { _, option in
-                            Button(option) { send(option, unit: nil) }
+                            Button { send(option, unit: nil) } label: {
+                                if option == "ფოტოს გაჩვენებ" { Label(option, systemImage: "camera") }
+                                else { Text(option) }
+                            }
                                 .buttonStyle(SessionButtonStyle(primary: false)).accessibilityLabel(option)
                         }
                     }

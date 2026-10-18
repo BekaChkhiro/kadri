@@ -16,6 +16,10 @@
  * {kind: "needs_photo", prompt, reason} — take that photo and call again with
  * `context`. Negotiated capabilities also allow needs_answer/needs_measurement
  * on the same photo, and complete cause/summary. Round 5 forbids needs_photo.
+ * check_photo adds {kind: "needs_check_photo", prompt, reason}: send the same
+ * round again with `image` = the close-up and context.checkPhotos (+1) and
+ * context.checkPrompt (allowed on round 1 without answers); ≤20 per session.
+ * Its needs_answer options always end in „არ ვიცი“, „ფოტოს გაჩვენებ“.
  */
 import { ApiError } from "../errors";
 import type { Handler } from "../router";
@@ -52,8 +56,14 @@ export async function readStepsRequest(request: Request): Promise<{ input: Steps
   if (body.image !== undefined && body.image !== null) {
     imageBase64 = checkedJpegBase64(typeof body.image === "string" ? fromBase64(body.image) : null);
   }
-  const context = parseContext(body.context);
+  let context = parseContext(body.context);
   const capabilities = parseCapabilities(body.capabilities);
+  if (context && !capabilities.includes("check_photo") && (context.checkPhotos !== undefined || context.checkPrompt !== undefined)) {
+    // Without the capability the request is the legacy one: check fields are ignored.
+    const { checkPhotos: _n, checkPrompt: _p, ...legacy } = context;
+    if (legacy.round === 1 && !legacy.answers?.length) throw aiErrors.badRequest("context.round 1-ს answers სჭირდება");
+    context = legacy;
+  }
   if (capabilities.length && typeof instructions === "string") count = Math.min(count, 5);
   return {
     input: { object: body.object, parts, instructions, count, imageBase64, capabilities, ...(context && { context }) },
@@ -75,16 +85,34 @@ export interface StepsStreamOptions {
   signal?: AbortSignal;
   /** True when `signal` fired because of our own deadline; the error event becomes ai_timeout. */
   timedOut?: () => boolean;
-  /** Called once, after the last event was written. */
+  /** Called once when the stream finishes or the client disconnects. */
   onEnd?: (outcome: StepsOutcome) => void;
 }
 
 export function stepsStream(provider: StepsProvider, input: StepsInput, opts: StepsStreamOptions = {}): Response {
+  const controller = new AbortController();
+  let ended = false;
+  const finish = (outcome: StepsOutcome) => {
+    if (ended) return;
+    ended = true;
+    opts.signal?.removeEventListener("abort", onAbort);
+    opts.onEnd?.(outcome);
+  };
+  const cancel = () => {
+    finish({ kind: "gone" });
+    controller.abort();
+  };
+  const onAbort = () => {
+    if (!opts.timedOut?.()) finish({ kind: "gone" });
+    controller.abort();
+  };
+  opts.signal?.addEventListener("abort", onAbort, { once: true });
+  if (opts.signal?.aborted) onAbort();
   return sseResponse(async (send) => {
     let outcome: StepsOutcome = { kind: "gone" };
     try {
-      for await (const ev of provider.steps(input, opts.signal)) {
-        if (ev.type === "done") outcome = { kind: "done", done: ev };
+      for await (const ev of provider.steps(input, controller.signal)) {
+        if (ended) return;
         const ok =
           ev.type === "step"
             ? await send("step", { index: ev.index, ...ev.step })
@@ -98,17 +126,22 @@ export function stepsStream(provider: StepsProvider, input: StepsInput, opts: St
                 continuation: ev.continuation,
               });
         // Client went away: stop reading (the generator aborts the upstream call).
-        if (!ok) return;
+        if (!ok) {
+          cancel();
+          return;
+        }
+        if (ev.type === "done") outcome = { kind: "done", done: ev };
       }
     } catch (err) {
+      if (ended) return;
       const e = opts.timedOut?.() ? aiErrors.timeout() : err instanceof ApiError ? err : aiErrors.upstream();
       if (!(err instanceof ApiError)) console.error("ai/steps failed", err);
       outcome = { kind: "error", error: e };
       await send("error", { code: e.code, message: e.message });
     } finally {
-      opts.onEnd?.(outcome);
+      finish(outcome);
     }
-  });
+  }, { onCancel: cancel });
 }
 
 /** Bare stage handler: no auth or usage. The app mounts the guarded one (src/routes/ai.ts). */

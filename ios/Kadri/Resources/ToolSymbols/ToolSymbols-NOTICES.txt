@@ -1,0 +1,25 @@
+Kadri tool symbol attributions
+
+Material Design Icons
+Source: https://github.com/Templarian/MaterialDesign-SVG
+Pinned commit: 9e04201d4557e729822fb57f62a316c3dea1d4a8
+Copyright remains with the respective authors: Austin Andrews, Google, GreenTurtwig, Michael Irigoyen, Simran.
+Icons distributed under Apache License 2.0; see MDI-LICENSE.txt and APACHE-2.0.txt.
+The pinned upstream distribution has no NOTICE file. This attribution file is supplied by Kadri, not copied from upstream.
+SVG geometry is unmodified. Xcode renders assets as tintable templates.
+
+Wikimedia Commons screw-head diagrams
+Original author: Inductiveload; simplified SVG revisions by Andrew Pertsev and other contributors listed on each file history.
+Torx, Phillips, Slotted and Hex Socket files are identified as public domain on their individual description pages. Source URLs, file revision dates and hashes are recorded in ToolSymbols-Sources.json.
+These are profile illustrations, not technical specifications of dimensions or tool compatibility.
+
+Coverage
+Exact-family means the illustration depicts that family, not a certified model or size. Family means a generic family silhouette paired with a specific text label/profile. Placeholder means a generic toolbox symbol because no suitable exact depiction was verified in the selected library; it must not be described as an accurate illustration of that tool.
+
+Additional sources
+Google Material Symbols: Copyright Google, Apache License 2.0, pinned 49d4db35df873165d6bd6ba09b063c7dafbac2f4.
+Lucide Lab: ISC, copyright Lucide contributors (see Lucide-Lab-LICENSE.txt), pinned 34b6526d0a67bbe67b8a54b9b101018b1377ef28. currentColor replaced with explicit black; geometry unchanged.
+OpenMoji: gardening gloves E342, OpenMoji contributors, https://openmoji.org/ , CC BY-SA4.0 https://creativecommons.org/licenses/by-sa/4.0/ , pinned aeb8bb3a59e2de39c754ac79180c8131c906acea. Geometry unmodified. The bundled glove SVG and any derivative remain under CC BY-SA4.0.
+
+SVG Repo assets: Allen Tool https://www.svgrepo.com/svg/178494/allen-tool and Multimeter https://www.svgrepo.com/svg/278734/multimeter-multimeter ; each asset page specifies CC0 1.0. Uploader SVG Repo; no separate author listed. Allen unchanged. Multimeter palette replaced with Kadri blue/white; geometry unchanged. Source bytes SHA256 recorded in manifest.
+Font Awesome Free tape icon, Copyright Fonticons, Inc., https://fontawesome.com/ ; CC BY4.0 https://creativecommons.org/licenses/by/4.0/ . Source pinned 14c65a3747d0f3b751f15831fc719236aea8729d. Geometry unchanged, runtime template tint. This is a tape-roll family symbol, not a verified PTFE-material depiction.

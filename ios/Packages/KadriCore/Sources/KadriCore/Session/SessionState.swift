@@ -21,6 +21,7 @@ public struct SessionTurn: Equatable, Sendable {
     public let continuation: StepsContinuation
     public let context: SessionContext?
     public let answers: [SessionAnswer]
+    public var image: Data? = nil
 }
 
 /// One finished photo of a multi-photo session.
@@ -35,6 +36,7 @@ public struct SessionRound: Equatable, Sendable {
     public var turns: [SessionTurn] = []
     public var context: SessionContext?
     public var answers: [SessionAnswer] = []
+    public var keyframe: Data? = nil
 
     public init(number: Int, photoPrompt: String?, result: PartsResult, steps: [Step], continuation: StepsContinuation) {
         self.number = number
@@ -120,4 +122,11 @@ public enum SessionError: LocalizedError, Equatable, Sendable {
             self = .network
         }
     }
+}
+
+/// Verification stays within the current photo round and reuses its parts.
+public enum CheckPhotoPhase: Equatable, Sendable {
+    case idle
+    case requested(prompt: String, reason: String)
+    case checking
 }

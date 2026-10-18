@@ -10,6 +10,22 @@ struct ContentView: View {
         #endif
     }()
     var body: some View {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("--problem-demo") {
+            PhotoProblemFlowView(model: PhotoProblemDemo.model(), isDemo: true)
+        } else if ProcessInfo.processInfo.arguments.contains("--tool-icon-demo") {
+            PhotoDemoShowcaseView(startWithTools: true)
+        } else if ProcessInfo.processInfo.arguments.contains("--arrow-overlay-demo") {
+            PhotoDemoShowcaseView()
+        } else {
+            mainContent
+        }
+        #else
+        mainContent
+        #endif
+    }
+
+    private var mainContent: some View {
         NavigationStack(path: $path) {
             PhotoFlowView()
                 .navigationDestination(for: String.self) { destination in

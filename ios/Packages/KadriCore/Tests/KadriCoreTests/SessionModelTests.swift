@@ -5,13 +5,15 @@ import XCTest
 @MainActor
 final class SessionModelTests: XCTestCase {
     private var api: MockKadriAPI!
+    private var recorder: CheckPhotoRecordingAPI!
     private var clock: TestClock!
     private var model: SessionModel!
 
     override func setUp() async throws {
         api = MockKadriAPI(parts: .success(Fixtures.parts))
         clock = TestClock()
-        model = SessionModel(api: api, clock: clock)
+        recorder = CheckPhotoRecordingAPI(base: api)
+        model = SessionModel(api: recorder, clock: clock)
     }
 
     private func submit(_ text: String = "როგორ შევცვალო ონკანის ქანჩი?") {
@@ -41,6 +43,120 @@ final class SessionModelTests: XCTestCase {
         steps.forEach { stream.yield(.step($0)) }
         stream.yield(.done(nil, continuation: continuation))
         await model.workTask?.value
+    }
+
+    private let checkRequest = StepsContinuation.needsCheckPhoto(prompt: "გადაიღე CPU-ს ბერკეტი ახლოდან", reason: "შევამოწმებ")
+
+    func testCheckPhotoReusesPartsAndRoundAndSendsImages() async {
+        await reachParts()
+        model.startSteps()
+        await finishTurn(0, continuation: checkRequest)
+        XCTAssertEqual(recorder.images, [Fixtures.keyframe])
+        XCTAssertEqual(model.checkPhotoPhase, .requested(prompt: "გადაიღე CPU-ს ბერკეტი ახლოდან", reason: "შევამოწმებ"))
+        let photo = Data([9, 8, 7])
+        model.continueWithCheckPhoto(photo)
+        XCTAssertEqual(model.checkPhotoPhase, .checking)
+        await finishTurn(1, steps: Array(Fixtures.steps.prefix(2)), continuation: answerRequest)
+        XCTAssertEqual(recorder.images.last!, photo)
+        XCTAssertEqual(api.partsCalls.count, 1)
+        XCTAssertEqual(api.stepsCalls[1].parts, Fixtures.parts.parts)
+        XCTAssertEqual(api.stepsCalls[1].context?.checkPhotos, 1)
+        XCTAssertEqual(api.stepsCalls[1].context?.checkPrompt, "გადაიღე CPU-ს ბერკეტი ახლოდან")
+        XCTAssertEqual(api.stepsCalls[1].context?.doneSteps, Fixtures.steps.map(\.title))
+        XCTAssertEqual(model.round, 1)
+        XCTAssertEqual(model.allSteps.count, 5)
+        model.continueWithAnswer("დიახ")
+        await finishTurn(2, continuation: .complete)
+        XCTAssertEqual(recorder.images.last!, Fixtures.keyframe)
+        XCTAssertEqual(api.stepsCalls[2].context?.checkPhotos, 1)
+        XCTAssertEqual(api.stepsCalls[2].context?.doneSteps.count, 5)
+    }
+
+    func testPhotoAnswerDoesNotRecordAnswerOrSendUntilPhotoArrives() async {
+        await reachParts()
+        model.startSteps()
+        await finishTurn(0, continuation: answerRequest)
+        model.continueWithAnswer("ფოტოს გაჩვენებ")
+        XCTAssertTrue(model.canContinueWithCheckPhoto)
+        XCTAssertEqual(model.checkPhotoPhase, .requested(prompt: "ტრიალებს?", reason: "პასუხს ფოტოთი გადავამოწმებ."))
+        XCTAssertTrue(model.answers.isEmpty)
+        XCTAssertEqual(api.stepsCalls.count, 1)
+        model.continueWithCheckPhoto(Data([7]))
+        await finishTurn(1, continuation: .complete)
+        XCTAssertEqual(api.stepsCalls[1].context?.checkPrompt, "ტრიალებს?")
+        XCTAssertEqual(api.stepsCalls[1].context?.answers, [])
+    }
+
+    func testTwentyChecksFallBackToNormalPhotoAndKeepHistory() async {
+        await reachParts()
+        model.startSteps()
+        await finishTurn(0, steps: [Fixtures.steps[0]], continuation: checkRequest)
+        for count in 1...20 {
+            XCTAssertTrue(model.canContinueWithCheckPhoto)
+            model.continueWithCheckPhoto(Data([UInt8(count)]))
+            await finishTurn(count, steps: [Fixtures.steps[0]], continuation: checkRequest)
+            XCTAssertEqual(api.stepsCalls[count].context?.checkPhotos, count)
+        }
+        XCTAssertFalse(model.canContinueWithCheckPhoto)
+        XCTAssertTrue(model.canContinueWithPhoto)
+        XCTAssertEqual(model.round, 1)
+        XCTAssertEqual(model.allSteps.count, 21)
+        model.continueWithCheckPhoto(Data([21]))
+        XCTAssertEqual(api.stepsCalls.count, 21)
+        model.continueWithPhoto { Fixtures.keyframe }
+        await model.workTask?.value
+        XCTAssertEqual(api.partsCalls.count, 2)
+        XCTAssertEqual(model.round, 2)
+        XCTAssertEqual(api.partsCalls.last?.context?.checkPhotos, 20)
+    }
+
+    func testCheckPhotosRemainAvailableAfterAnswerLimitAndLastRound() async {
+        await reachParts()
+        model.startSteps()
+        await finishTurn(0, continuation: answerRequest)
+        for count in 1...6 {
+            model.continueWithAnswer("დიახ")
+            await finishTurn(count, continuation: count == 6 ? checkRequest : answerRequest)
+        }
+        XCTAssertTrue(model.canContinueWithCheckPhoto)
+        XCTAssertFalse(model.canContinueWithAnswer)
+        model.continueWithCheckPhoto(Data([7]))
+        await finishTurn(7, continuation: .needsPhoto(prompt: "სხვა კუთხე", reason: ""))
+        for count in 8...11 {
+            model.continueWithPhoto { Fixtures.keyframe }
+            await model.workTask?.value
+            model.startSteps()
+            await finishTurn(count, continuation: count == 11 ? checkRequest : .needsPhoto(prompt: "სხვა", reason: ""))
+        }
+        XCTAssertEqual(model.round, 5)
+        XCTAssertTrue(model.canContinueWithCheckPhoto)
+        for count in 2...20 {
+            model.continueWithCheckPhoto(Data([UInt8(count)]))
+            await finishTurn(count + 10, steps: [Fixtures.steps[0]], continuation: checkRequest)
+        }
+        XCTAssertTrue(model.continuation?.isComplete == true)
+        XCTAssertFalse(model.canContinueWithCheckPhoto)
+        XCTAssertFalse(model.canContinueWithPhoto)
+    }
+
+    func testCheckPhotoRetryKeepsImageAndCountAndCancelRestoresSteps() async {
+        await reachParts()
+        model.startSteps()
+        await finishTurn(0, continuation: checkRequest)
+        let photo = Data([8])
+        model.continueWithCheckPhoto(photo)
+        await waitUntil { self.api.stepsCalls.count == 2 }
+        api.stepsContinuation(1).finish(throwing: SessionError.network)
+        await model.workTask?.value
+        model.retry()
+        await waitUntil { self.api.stepsCalls.count == 3 }
+        XCTAssertEqual(recorder.images.last!, photo)
+        XCTAssertEqual(api.stepsCalls[2].context?.checkPhotos, 1)
+        model.cancel()
+        XCTAssertTrue(model.canContinueWithCheckPhoto)
+        XCTAssertEqual(model.allSteps, Fixtures.steps)
+        XCTAssertEqual(model.round, 1)
+        XCTAssertEqual(model.checkPhotos, 1)
     }
 
     func testGeminiStaysSelectedAcrossAnswersPhotosAndRetry() async {
@@ -452,11 +568,36 @@ final class SessionModelTests: XCTestCase {
 
     // MARK: - Timeouts
 
-    func testScanTimesOutAfter45Seconds() async {
+    func testScanTimerStaysAboveAITimeout() {
+        let config = APIConfig(baseURL: URL(string: "https://example.com")!)
+        XCTAssertEqual(model.scanTimeout, .seconds(APIConfig.defaultScanTimeout))
+        XCTAssertEqual(APIConfig.defaultScanTimeout, config.scanTimeout)
+        XCTAssertGreaterThanOrEqual(config.scanTimeout, config.aiTimeout + 10)
+    }
+
+    func testSlowPartsWithinAITimeoutDoesNotTimeOut() async {
+        // A 50 s parts call (slow model, or a token refresh first) used to hit the old 45 s scan timer.
+        model = SessionModel(api: SlowPartsAPI(clock: clock, delay: .seconds(50)), clock: clock)
+        submit()
+        await waitUntil { self.clock.sleeperCount == 2 }
+        clock.advance(by: .seconds(45))
+        try? await Task.sleep(for: .milliseconds(20))
+        guard case .scanning = model.phase else { return XCTFail("timed out at 45 s: \(model.phase)") }
+
+        clock.advance(by: .seconds(5))
+        await waitUntil { self.model.phase == .parts(Fixtures.parts) }
+        await waitUntil { self.clock.sleeperCount == 0 }
+        XCTAssertNil(model.timeoutTask)
+    }
+
+    func testScanTimesOutAfter85Seconds() async {
         api.setParts(.hang)
         submit()
         await waitUntil { self.clock.sleeperCount == 1 }
-        clock.advance(by: .seconds(44))
+        clock.advance(by: .seconds(50))
+        try? await Task.sleep(for: .milliseconds(20))
+        guard case .scanning = model.phase else { return XCTFail("timed out at 50 s: \(model.phase)") }
+        clock.advance(by: .seconds(34))
         try? await Task.sleep(for: .milliseconds(20))
         guard case .scanning = model.phase else { return XCTFail("timed out early: \(model.phase)") }
 
@@ -627,8 +768,10 @@ final class SessionModelTests: XCTestCase {
         model.continueWithPhoto { captures.increment(); return Data([1, 2]) }
         guard case .scanning = model.phase else { return XCTFail("expected scanning, got \(model.phase)") }
         XCTAssertEqual(model.round, 2)
-        XCTAssertEqual(model.completedRounds, [SessionRound(number: 1, photoPrompt: nil, result: Fixtures.parts,
-                                                            steps: Array(Fixtures.steps[...1]), continuation: Self.needsPhoto)])
+        var firstRound = SessionRound(number: 1, photoPrompt: nil, result: Fixtures.parts,
+                                      steps: Array(Fixtures.steps[...1]), continuation: Self.needsPhoto)
+        firstRound.keyframe = Fixtures.keyframe
+        XCTAssertEqual(model.completedRounds, [firstRound])
         XCTAssertNil(model.continuation)
         let context = SessionContext(round: 2, photoPrompt: Self.prompt, doneSteps: ["წყალი", "ქანჩი"], previousObject: "ონკანი")
         XCTAssertEqual(model.pendingContext, context)
@@ -683,6 +826,40 @@ final class SessionModelTests: XCTestCase {
         model.finish()
         XCTAssertEqual(model.phase, .done(Self.round2Parts, Self.round2Steps))
         XCTAssertEqual(model.allSteps.count, 4)
+    }
+
+    func testThirdPhotoStartsFreshTimeoutAndPreservesContext() async {
+        await reachNeedsPhoto()
+        model.continueWithPhoto { Fixtures.keyframe }
+        await model.workTask?.value
+        await streamRound(call: 1, steps: Self.round2Steps, continuation: Self.needsPhoto)
+        await waitUntil { self.clock.sleeperCount == 0 }
+        // Taking the next photo can outlast both network deadlines.
+        clock.advance(by: .seconds(120))
+        XCTAssertTrue(model.canContinueWithPhoto)
+        api.setParts(.hang)
+        model.continueWithPhoto { Data([3]) }
+        await waitUntil { self.api.partsCalls.count == 3 && self.clock.sleeperCount == 1 }
+        let context = api.partsCalls[2].context
+        XCTAssertEqual(context?.round, 3)
+        XCTAssertEqual(context?.photoPrompt, Self.prompt)
+        XCTAssertEqual(context?.doneSteps, (Array(Fixtures.steps[...1]) + Self.round2Steps).map(\.title))
+        XCTAssertLessThanOrEqual(context?.doneSteps.count ?? 0, 40)
+        XCTAssertEqual(api.partsCalls[2].keyframe, Data([3]))
+        clock.advance(by: .seconds(84))
+        await Task.yield()
+        guard case .scanning = model.phase else { return XCTFail("third scan timed out early") }
+        clock.advance(by: .seconds(1))
+        await waitUntil { self.model.phase == .error(.timeout, retryFrom: .scan) }
+        api.setParts(.success(Self.round2Parts))
+        model.retry()
+        await model.workTask?.value
+        XCTAssertEqual(api.partsCalls.last?.context, context)
+        XCTAssertEqual(model.phase, .parts(Self.round2Parts))
+        await waitUntil { self.clock.sleeperCount == 0 }
+        clock.advance(by: .seconds(120))
+        await Task.yield()
+        XCTAssertEqual(model.phase, .parts(Self.round2Parts))
     }
 
     func testLastRoundForcesComplete() async {
@@ -781,4 +958,41 @@ final class Counter: @unchecked Sendable {
     private var _value = 0
     var value: Int { lock.withLock { _value } }
     func increment() { lock.withLock { _value += 1 } }
+}
+
+/// Answers `parts` after `delay` on the test clock, like a slow Worker that still beats `aiTimeout`.
+private struct SlowPartsAPI: KadriAPI {
+    let clock: TestClock
+    let delay: Duration
+
+    func parts(keyframe: Data, instructions: String, context: SessionContext?) async throws -> PartsResult {
+        try await clock.sleep(for: delay)
+        return Fixtures.parts
+    }
+
+    func steps(object: String, parts: [Part], instructions: String, context: SessionContext?) -> AsyncThrowingStream<StepEvent, Error> {
+        AsyncThrowingStream { $0.finish() }
+    }
+}
+
+/// Keeps image assertions separate from the legacy mock, proving its default overload remains compatible.
+private final class CheckPhotoRecordingAPI: KadriAPI, @unchecked Sendable {
+    let base: MockKadriAPI
+    private let lock = NSLock()
+    private var recorded: [Data?] = []
+    var images: [Data?] { lock.withLock { recorded } }
+    init(base: MockKadriAPI) { self.base = base }
+    func parts(keyframe: Data, instructions: String, context: SessionContext?) async throws -> PartsResult {
+        try await base.parts(keyframe: keyframe, instructions: instructions, context: context)
+    }
+    func parts(keyframe: Data, instructions: String, context: SessionContext?, provider: AIProvider?) async throws -> PartsResult {
+        try await base.parts(keyframe: keyframe, instructions: instructions, context: context, provider: provider)
+    }
+    func steps(object: String, parts: [Part], instructions: String, context: SessionContext?) -> AsyncThrowingStream<StepEvent, Error> {
+        base.steps(object: object, parts: parts, instructions: instructions, context: context)
+    }
+    func steps(object: String, parts: [Part], instructions: String, image: Data?, context: SessionContext?, provider: AIProvider?) -> AsyncThrowingStream<StepEvent, Error> {
+        lock.withLock { recorded.append(image) }
+        return base.steps(object: object, parts: parts, instructions: instructions, context: context, provider: provider)
+    }
 }

@@ -30,6 +30,8 @@ struct PhotoResultView: View {
     var canContinueWithAnswer = false
     var answer: (String, String?) -> Void = { _, _ in }
     var initiallyShowingAnswerRequest = false
+    var askContinue: (String) -> Void = { _ in }
+    @StateObject private var askSession = PhotoAskSession()
     @State private var answerRequestToggle: Bool?
 
     private var showingAnswerRequest: Bool {
@@ -63,6 +65,12 @@ struct PhotoResultView: View {
     /// The next photo is framed on the whole first one, so the request state drops the zoom and annotations.
     private var requesting: Bool { !completed && showingPhotoRequest && photoRequest != nil }
 
+    /// Keep every numbered fastener in view when the action spans several parts.
+    private var focusParts: [String] {
+        guard let step else { return [] }
+        return step.focus + (step.actions ?? []).filter { $0.kind == "tighten_order" }.flatMap { $0.order ?? [] }
+    }
+
     var body: some View {
         PhotoScreenLayout(title: object, subtitle: requesting ? "ნაბიჯი \(count) დასრულდა" : nil,
                           close: close, newPhoto: newPhoto) {
@@ -70,7 +78,7 @@ struct PhotoResultView: View {
                 let sourceBoxes = PhotoGeometry.boxes(parts: parts, imageSize: image.size, transform: .identity)
                 let transform = PhotoGeometry.focusTransform(imageSize: image.size, viewport: proxy.size,
                     visibleRect: CGRect(origin: .zero, size: proxy.size),
-                    focusBoxes: completed || requesting ? [] : (step?.focus ?? []).compactMap { sourceBoxes[$0] })
+                    focusBoxes: completed || requesting ? [] : focusParts.compactMap { sourceBoxes[$0] })
                 ZStack(alignment: .topLeading) {
                     Theme.Colors.ink[800]!
                     PhotoFocusedImageLayer(image: image, parts: parts, meshes: meshes,
@@ -78,6 +86,16 @@ struct PhotoResultView: View {
                         viewport: proxy.size, visibleHeight: proxy.size.height,
                         scale: transform.a, translationX: transform.tx, translationY: transform.ty)
                         .animation(reduceMotion ? nil : .spring(duration: 0.55), value: transform)
+                    if let selection = askSession.selection {
+                        let rect = PhotoAskGeometry.rect(selection.box, imageSize: image.size, transform: transform)
+                        PhotoTargetFrame(tone: .brand, dashed: false)
+                            .frame(width: rect.width, height: rect.height)
+                            .position(x: rect.midX, y: rect.midY).allowsHitTesting(false)
+                        if let contour = selection.contour {
+                            ContourOverlay(contours: [contour], boxes: [contour.id: rect], focus: [contour.id])
+                                .allowsHitTesting(false)
+                        }
+                    }
                     if requesting {
                         Theme.Colors.ink[900]!.opacity(0.4).accessibilityHidden(true)
                         if let step {
@@ -100,8 +118,10 @@ struct PhotoResultView: View {
                     }
                 }
                 .contentShape(Rectangle())
-                .onTapGesture {
+                .onTapGesture { point in
                     UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    guard !requesting, completed || step != nil else { return }
+                    askSession.select(point: point, image: image, transform: transform, parts: parts)
                 }
             }
         } panel: {
@@ -131,6 +151,13 @@ struct PhotoResultView: View {
                               answerAction: answerAction, requestAnswer: { showingAnswerRequest = true })
             }
         }
+        .sheet(isPresented: $askSession.showingSheet, onDismiss: { askSession.dismiss() }) {
+            PhotoAskSheet(session: askSession, image: image, parts: parts,
+                          context: AskContext(object: object), continueSteps: askContinue)
+        }
+        .onDisappear { askSession.dismiss() }
+        .onChange(of: round) { askSession.dismiss() }
+        .onChange(of: index) { askSession.dismiss() }
         .onChange(of: round) { showingPhotoRequest = false }
         .onChange(of: index) { showingPhotoRequest = false; showingAnswerRequest = false }
         .onChange(of: streaming) { if streaming { showingAnswerRequest = false } }
@@ -232,7 +259,7 @@ private struct PhotoResultPreview: View {
 
     private var meshes: [TrackedMesh] {
         guard showMeshes else { return [] }
-        return MockKadriAPI.result.parts.map { part in
+        return MockKadriAPI.toolPreviewResult.parts.map { part in
             let b = part.box.map { CGFloat($0) / 1000 }
             let rect = CGRect(x: b[0], y: b[1], width: b[2] - b[0], height: b[3] - b[1])
             let polygon = [CGPoint(x: rect.minX, y: rect.minY), CGPoint(x: rect.maxX, y: rect.minY),
@@ -243,10 +270,10 @@ private struct PhotoResultPreview: View {
     }
 
     var body: some View {
-        PhotoResultView(image: photo, parts: MockKadriAPI.result.parts, meshes: meshes,
+        PhotoResultView(image: photo, parts: MockKadriAPI.toolPreviewResult.parts, meshes: meshes,
                         step: waiting ? nil : MockKadriAPI.sampleSteps[index], index: index,
                         count: waiting ? 0 : MockKadriAPI.sampleSteps.count, streaming: waiting,
-                        object: MockKadriAPI.result.object, segmentationStatus: waiting ? "ვასკანერებ…" : nil,
+                        object: MockKadriAPI.toolPreviewResult.object, segmentationStatus: waiting ? "ვასკანერებ…" : nil,
                         close: { completed = true }, previous: { index = max(0, index - 1) },
                         next: { index = min(MockKadriAPI.sampleSteps.count - 1, index + 1) },
                         finish: { completed = true })

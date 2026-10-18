@@ -33,6 +33,7 @@ struct PhotoRequestCard: View {
                             .padding(.horizontal, 8).padding(.vertical, 2)
                             .background(Theme.Colors.brand[50]!, in: Capsule())
                             Text(prompt).font(.kadri(20, weight: .semibold)).tracking(-0.3).lineSpacing(2)
+                                .lineLimit(2)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .accessibilityAddTraits(.isHeader).padding(.top, 6)
                         }

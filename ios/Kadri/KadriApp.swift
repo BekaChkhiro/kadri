@@ -11,7 +11,14 @@ struct KadriApp: App {
                 .environment(app)
                 .environment(app.googleAuth)
                 .onOpenURL { GIDSignIn.sharedInstance.handle($0) }
-                .task { Segmenter.preload(); await app.googleAuth.restorePreviousSignIn() }
+                .task {
+                    #if DEBUG
+                    if ProcessInfo.processInfo.arguments.contains("--arrow-overlay-demo") ||
+                       ProcessInfo.processInfo.arguments.contains("--tool-icon-demo") ||
+                       ProcessInfo.processInfo.arguments.contains("--problem-demo") { return }
+                    #endif
+                    Segmenter.preload(); await app.googleAuth.restorePreviousSignIn()
+                }
         }
     }
 }

@@ -3,7 +3,7 @@
 import { aiErrors } from "./errors";
 import type { Usage } from "./pricing";
 import type { JsonSchema } from "./schema";
-import { validateSchema } from "./schema";
+import { softened, validateSchema } from "./schema";
 import { readSse } from "../sse";
 
 export const GEMINI_MODEL = "gemini-3.8-flash";
@@ -28,25 +28,79 @@ function content(raw: GeminiResponse): string {
   return (raw.candidates?.[0]?.content?.parts ?? []).filter(p => !p.thought).map(p => p.text ?? "").join("");
 }
 
+type Props = Record<string, JsonSchema>;
+
+/** Gemini rejects bounded steps arrays once tools/hands increase grammar complexity.
+ * Keep their count as guidance on the wire; the shared validator still enforces
+ * the original bounds. Nullable types and all per-step constraints stay intact.
+ */
+export function geminiSchema(schema: JsonSchema): JsonSchema {
+  const result = structuredClone(schema);
+  const steps = (result.properties as Props | undefined)?.steps;
+  const fields = (steps?.items as JsonSchema | undefined)?.properties as Props | undefined;
+  if (steps && (fields?.toolCards || fields?.hands)) {
+    const { minItems, maxItems } = steps;
+    if (typeof minItems === "number" && typeof maxItems === "number") {
+      const count = minItems === maxItems ? `exactly ${minItems}` : `between ${minItems} and ${maxItems}`;
+      steps.description = [steps.description, `Return ${count} steps.`].filter(Boolean).join(" ");
+      delete steps.minItems;
+      delete steps.maxItems;
+    }
+  }
+  return result;
+}
+
+/** Every object schema reachable through properties/items that has a `box` property. */
+function boxObjects(schema: JsonSchema, visit: (item: JsonSchema) => void): void {
+  const props = schema.properties as Props | undefined;
+  if (props?.box) visit(schema);
+  for (const sub of Object.values(props ?? {})) boxObjects(sub, visit);
+  if (schema.items && typeof schema.items === "object") boxObjects(schema.items as JsonSchema, visit);
+}
+
+/** Gemini's native boxes: `box` [x0,y0,x1,y1] → `box_2d` [ymin,xmin,ymax,xmax], in place. */
+function renameBoxes(schema: JsonSchema): void {
+  boxObjects(schema, item => {
+    const props = item.properties as Props;
+    const renamed: Props = {};
+    for (const [key, value] of Object.entries(props)) renamed[key === "box" ? "box_2d" : key] = value;
+    item.properties = renamed;
+    item.required = (item.required as string[] | undefined)?.map(key => key === "box" ? "box_2d" : key);
+  });
+}
+
+/** Walks `value` along the renamed schema and turns every `box_2d` back into an XYXY `box`. */
+function unrenameBoxes(schema: JsonSchema, value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return schema.items && typeof schema.items === "object" ? value.map(v => unrenameBoxes(schema.items as JsonSchema, v)) : value;
+  }
+  if (!value || typeof value !== "object") return value;
+  const props = (schema.properties ?? {}) as Props;
+  const out: Record<string, unknown> = {};
+  for (const [key, v] of Object.entries(value as Record<string, unknown>)) {
+    if (key === "box_2d" && props.box_2d) {
+      const [y0, x0, y1, x1] = v as [number, number, number, number];
+      out.box = [x0, y0, x1, y1];
+    } else {
+      out[key] = props[key] ? unrenameBoxes(props[key]!, v) : v;
+    }
+  }
+  return out;
+}
+
 export async function postGemini(apiKey: string, payload: Record<string, unknown>, signal: AbortSignal): Promise<Response> {
   const stream = payload.stream === true;
   const schema = structuredClone((payload.text as { format: { schema: JsonSchema } }).format.schema);
   const input = (payload.input as Array<{ content: Array<{ type: string; text?: string; image_url?: string }> }>)[0]!;
   const parts = input.content.map(item => item.type === "input_text"
-    ? { text: stream ? item.text : item.text!.replace("box=[x0,y0,x1,y1]", "box_2d=[ymin,xmin,ymax,xmax]") }
+    ? { text: stream ? item.text : item.text!.replaceAll("box=[x0,y0,x1,y1]", "box_2d=[ymin,xmin,ymax,xmax]") }
     : { inlineData: { mimeType: "image/jpeg", data: item.image_url!.split(",")[1] } });
-  if (!stream) {
-    const item = ((schema.properties as Record<string, JsonSchema>).parts!.items as JsonSchema);
-    const props = item.properties as Record<string, JsonSchema>;
-    props.box_2d = props.box!;
-    delete props.box;
-    item.required = ["label", "box_2d"];
-  }
+  if (!stream) renameBoxes(schema);
   const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:${stream ? "streamGenerateContent?alt=sse" : "generateContent"}`, {
     method: "POST", signal,
     headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
     body: JSON.stringify({ contents: [{ role: "user", parts }], generationConfig: {
-      responseMimeType: "application/json", responseJsonSchema: schema,
+      responseMimeType: "application/json", responseJsonSchema: geminiSchema(schema),
       thinkingConfig: { thinkingLevel: "low" }, maxOutputTokens: 8192, candidateCount: 1,
     } }),
   });
@@ -59,14 +113,17 @@ export async function postGemini(apiKey: string, payload: Record<string, unknown
       throw aiErrors.invalid();
     }
     if (raw.candidates?.length !== 1 || raw.candidates[0]?.finishReason !== "STOP") throw aiErrors.incomplete();
-    let parsed: { object: string; parts: Array<{ label: string; box_2d: number[] }> };
+    let parsed: unknown;
     try { parsed = JSON.parse(content(raw)); } catch { throw aiErrors.invalid(); }
-    if (validateSchema(schema, parsed)) throw aiErrors.invalid();
-    const result = { object: parsed.object, parts: parsed.parts.map(p => {
-      const [y0, x0, y1, x1] = p.box_2d as [number, number, number, number];
-      if (y1 <= y0 || x1 <= x0 || !p.label.trim()) throw aiErrors.invalid();
-      return { label: p.label, box: [x0, y0, x1, y1] };
-    }) };
+    // Length caps are guidance; callers clamp (as with the Responses API).
+    if (validateSchema(softened(schema), parsed)) throw aiErrors.invalid();
+    const result = unrenameBoxes(schema, parsed);
+    // Parts keep their strict box check; other stages drop bad items themselves.
+    const found = (result as { parts?: Array<{ label: string; box: number[] }> }).parts;
+    if ((schema.properties as Record<string, JsonSchema>).parts && found?.some(p => {
+      const [x0, y0, x1, y1] = p.box as [number, number, number, number];
+      return y1 <= y0 || x1 <= x0 || !p.label.trim();
+    })) throw aiErrors.invalid();
     return Response.json({ status: "completed", usage: geminiUsage(raw.usageMetadata),
       output: [{ type: "message", content: [{ type: "output_text", text: JSON.stringify(result) }] }] });
   }

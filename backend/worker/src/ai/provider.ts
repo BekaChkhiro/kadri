@@ -21,6 +21,7 @@ import {
   type Continuation,
   type ModelStep,
   type Part,
+  type SizeEvidence,
   type Step,
 } from "./validate";
 import { readSse } from "../sse";
@@ -61,6 +62,19 @@ export interface StepsInput {
   imageBase64?: string;
   /** A later photo of a multi-photo session; absent on round 1. */
   context?: Context;
+}
+
+/** A model code like "WAN28", "RTX-4070" or "F28-a" in the person's text or the part names. */
+const MODEL_MARKER = /\b[A-Za-z]{1,6}-?\d{2,}[A-Za-z0-9-]*\b/;
+
+/** What tidyStep may confirm a tool size against (tools_v2): parts, instructions, answers, knowledge. */
+export function sizeEvidence(input: StepsInput): SizeEvidence {
+  const instructions = typeof input.instructions === "string"
+    ? input.instructions
+    : input.instructions.map((s) => `${s.title} ${s.text}`).join(" ");
+  const answers = (input.context?.answers ?? []).map((a) => `${a.question} ${a.answer} ${a.unit ?? ""}`);
+  const text = [...input.parts.map((p) => p.name), instructions, ...answers].join(" ");
+  return { text, modelKnown: (input.knowledge?.length ?? 0) > 0 || MODEL_MARKER.test(text) };
 }
 
 export type StepsEvent =
@@ -176,10 +190,14 @@ export class AstraProvider implements PartsProvider, StepsProvider {
       answerCount: input.context?.answers?.length ?? 0,
       answerTurnLimit: this.config.answerTurnLimit ?? DEFAULT_ANSWER_TURN_LIMIT,
       lastRound,
+      ...(input.capabilities?.includes("check_photo") && {
+        checkPhotos: input.context?.checkPhotos ?? 0,
+        askedQuestions: (input.context?.answers ?? []).map((a) => a.question),
+      }),
     };
     const schema = schemaSteps(ids, input.count, { freeText: typeof input.instructions === "string", ...continuationOptions });
     // Length caps are guidance for the model; tidyStep clamps instead of a 502.
-    const itemSchema = softened(stepItemSchema(ids));
+    const itemSchema = softened(stepItemSchema(ids, input.capabilities));
     const promptParts = input.parts.map((p) => ({ id: p.id, label: p.name, box: p.box }));
     const payload = responsesPayload({
       model,
@@ -194,12 +212,14 @@ export class AstraProvider implements PartsProvider, StepsProvider {
       schema,
       imageBase64: input.imageBase64,
     });
-    if (!input.capabilities?.some(c => ["needs_answer", "needs_measurement", "summary"].includes(c))) {
+    // tools_v2/hands_v1 add cards, actions and hands to every step: they do not fit the legacy budget.
+    if (!input.capabilities?.some(c => ["needs_answer", "needs_measurement", "summary", "tools_v2", "check_photo", "hands_v1"].includes(c))) {
       payload.max_output_tokens = LEGACY_STEPS_OUTPUT_LIMIT;
     }
+    const evidence = sizeEvidence(input);
     const checkStep = (raw: unknown): Step => {
       const schemaErr = validateSchema(itemSchema, raw);
-      const step = schemaErr ? null : tidyStep(raw as ModelStep, labels);
+      const step = schemaErr ? null : tidyStep(raw as ModelStep, labels, evidence);
       const err = schemaErr ?? stepRuleError(step!, labels);
       if (err) {
         console.error("ai/steps invalid step", err);

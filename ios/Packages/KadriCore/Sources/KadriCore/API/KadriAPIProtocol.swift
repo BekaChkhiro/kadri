@@ -42,6 +42,7 @@ public struct StepsUsage: Hashable, Codable, Sendable {
 public enum StepsContinuation: Hashable, Sendable, Decodable {
     case complete(cause: String?, summary: String?)
     case needsPhoto(prompt: String, reason: String)
+    case needsCheckPhoto(prompt: String, reason: String)
     case needsAnswer(question: String, options: [String], allowOther: Bool, reason: String?)
     case needsMeasurement(question: String, unit: String, min: Double?, max: Double?, how: String, reason: String?)
 
@@ -70,10 +71,13 @@ public enum StepsContinuation: Hashable, Sendable, Decodable {
             case "needs_photo":
                 guard let prompt = text(.prompt), nonempty(prompt) else { return }
                 self = .needsPhoto(prompt: prompt, reason: reason ?? "")
+            case "needs_check_photo":
+                guard let prompt = text(.prompt), nonempty(prompt) else { return }
+                self = .needsCheckPhoto(prompt: prompt, reason: reason ?? "")
             case "needs_answer":
                 guard let question = text(.question), nonempty(question),
                       let options = try? c.decode([String].self, forKey: .options),
-                      (2...4).contains(options.count), options.allSatisfy(nonempty),
+                      (2...6).contains(options.count), options.allSatisfy(nonempty),
                       let allowOther = try? c.decode(Bool.self, forKey: .allowOther) else { return }
                 self = .needsAnswer(question: question, options: options, allowOther: allowOther, reason: reason)
             case "needs_measurement":
@@ -107,17 +111,21 @@ public struct SessionContext: Hashable, Codable, Sendable {
     public let doneSteps: [String]
     public let previousObject: String?
     public let answers: [SessionAnswer]
+    public let checkPhotos: Int?
+    public let checkPrompt: String?
 
     public init(round: Int, photoPrompt: String, doneSteps: [String], previousObject: String? = nil,
-                answers: [SessionAnswer] = []) {
+                answers: [SessionAnswer] = [], checkPhotos: Int? = nil, checkPrompt: String? = nil) {
         self.round = round
         self.photoPrompt = photoPrompt
         self.doneSteps = doneSteps
         self.previousObject = previousObject
         self.answers = answers
+        self.checkPhotos = checkPhotos
+        self.checkPrompt = checkPrompt
     }
 
-    private enum CodingKeys: String, CodingKey { case round, photoPrompt, doneSteps, previousObject, answers }
+    private enum CodingKeys: String, CodingKey { case round, photoPrompt, doneSteps, previousObject, answers, checkPhotos, checkPrompt }
 
     public init(from decoder: any Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
@@ -126,6 +134,8 @@ public struct SessionContext: Hashable, Codable, Sendable {
         doneSteps = try c.decode([String].self, forKey: .doneSteps)
         previousObject = try c.decodeIfPresent(String.self, forKey: .previousObject)
         answers = try c.decodeIfPresent([SessionAnswer].self, forKey: .answers) ?? []
+        checkPhotos = try c.decodeIfPresent(Int.self, forKey: .checkPhotos)
+        checkPrompt = try c.decodeIfPresent(String.self, forKey: .checkPrompt)
     }
 
     public func encode(to encoder: any Encoder) throws {
@@ -135,6 +145,8 @@ public struct SessionContext: Hashable, Codable, Sendable {
         try c.encode(doneSteps, forKey: .doneSteps)
         try c.encodeIfPresent(previousObject, forKey: .previousObject)
         try c.encode(answers, forKey: .answers)
+        try c.encodeIfPresent(checkPhotos, forKey: .checkPhotos)
+        try c.encodeIfPresent(checkPrompt, forKey: .checkPrompt)
     }
 }
 
@@ -153,6 +165,9 @@ public enum AIProvider: String, Codable, CaseIterable, Sendable {
 /// The Worker's AI endpoints. Implementations throw `SessionError` where they can
 /// (see `SessionError.init(status:body:)`); anything else is mapped by `SessionError.init(_:)`.
 public protocol KadriAPI: Sendable {
+    func problem(_ request: ProblemRequest) async throws -> ProblemResult
+    func ask(keyframe: Data, question: String, box: [Int]?, partId: String?, parts: [Part], context: AskContext?, provider: AIProvider?) async throws -> AskResult
+    func steps(object: String, parts: [Part], instructions: String, image: Data?, context: SessionContext?, provider: AIProvider?) -> AsyncThrowingStream<StepEvent, Error>
     func parts(keyframe: Data, instructions: String, context: SessionContext?, provider: AIProvider?) async throws -> PartsResult
     func steps(object: String, parts: [Part], instructions: String, context: SessionContext?, provider: AIProvider?) -> AsyncThrowingStream<StepEvent, Error>
 
@@ -162,10 +177,22 @@ public protocol KadriAPI: Sendable {
 
     /// `POST /ai/steps`, streamed. Cancelling the consuming task must cancel the request.
     func steps(object: String, parts: [Part], instructions: String, context: SessionContext?) -> AsyncThrowingStream<StepEvent, Error>
+
 }
 
 extension KadriAPI {
-    // Existing preview/test implementations remain source compatible.
+    public func problem(_ request: ProblemRequest) async throws -> ProblemResult {
+        throw SessionError.server(code: "unsupported", message: "რამდენიმე ფოტოს ერთობლივი ანალიზი ამ კავშირზე მიუწვდომელია.")
+    }
+
+    public func ask(keyframe: Data, question: String, box: [Int]?, partId: String?, parts: [Part], context: AskContext?, provider: AIProvider?) async throws -> AskResult {
+        throw SessionError.server(code: "unsupported", message: "")
+    }
+
+    public func steps(object: String, parts: [Part], instructions: String, image: Data? = nil, context: SessionContext? = nil, provider: AIProvider? = nil) -> AsyncThrowingStream<StepEvent, Error> {
+        steps(object: object, parts: parts, instructions: instructions, context: context, provider: provider)
+    }
+
     public func parts(keyframe: Data, instructions: String, context: SessionContext?, provider: AIProvider?) async throws -> PartsResult {
         try await parts(keyframe: keyframe, instructions: instructions, context: context)
     }

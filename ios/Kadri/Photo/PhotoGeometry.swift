@@ -11,12 +11,12 @@ enum PhotoGeometry {
     /// Greedy placement in marker order. Keep chips clear, then prefer free space
     /// near the owning box; focus overlap is preferable to overlapping labels.
     static func pinRects(pins: [Pin], boxes: [String: CGRect], focus: [String],
-                         viewport: CGSize, visibleHeight: CGFloat) -> [CGRect?] {
+                         viewport: CGSize, visibleHeight: CGFloat, occupiedRects: [CGRect] = []) -> [CGRect?] {
         let height = max(0, min(viewport.height, visibleHeight))
         let top = min(60, height)
         let bounds = CGRect(x: 8, y: top, width: max(0, viewport.width - 16),
                             height: max(0, height - top - 8))
-        var placed: [CGRect] = []
+        var placed: [CGRect] = occupiedRects
         return pins.map { pin in
             guard let box = boxes[pin.part], !bounds.isEmpty else { return nil }
             let size = CGSize(width: min(pin.size.width, bounds.width), height: min(pin.size.height, bounds.height))

@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { GeminiProvider, selectedEnv } from "../src/ai/provider";
-import { geminiUsage, GEMINI_MODEL } from "../src/ai/gemini";
+import { geminiUsage, geminiSchema, GEMINI_MODEL } from "../src/ai/gemini";
+import { schemaSteps, validateSchema } from "../src/ai/schema";
 import { estimateCost } from "../src/ai/pricing";
 import { b64, call, diagnosticContinuation, fakeJpeg, mockFetch, testEnv } from "./ai-helpers";
 
@@ -13,6 +14,58 @@ const frame = (data: unknown) => new TextEncoder().encode(`data: ${JSON.stringif
 afterEach(() => vi.restoreAllMocks());
 
 describe("Gemini provider", () => {
+  it.each([[], ["needs_answer", "needs_measurement", "summary"], ["check_photo"]].map(capabilities => ({ capabilities })))(
+    "preserves schemas without tools/hands byte-for-byte: $capabilities", ({ capabilities }) => {
+      const schema = schemaSteps(["p1", "p2"], 5, { capabilities });
+      expect(JSON.stringify(geminiSchema(schema))).toBe(JSON.stringify(schema));
+    },
+  );
+
+  it.each([false, true])("only relaxes the outer steps count in Gemini payloads (freeText=%s)", freeText => {
+    const schema = schemaSteps(["p1", "p2"], 5, { freeText, capabilities: ["tools_v2", "hands_v1", "check_photo"] });
+    const before = JSON.stringify(schema);
+    const adapted = geminiSchema(schema) as any;
+    const list = adapted.properties.steps;
+    expect(list.minItems).toBeUndefined();
+    expect(list.maxItems).toBeUndefined();
+    expect(list.description).toBe(freeText ? "Return between 1 and 5 steps." : "Return exactly 5 steps.");
+    const original = (schema.properties as any).steps;
+    expect(list.items).toEqual(original.items);
+    expect(validateSchema(original, [])).toContain("too few items");
+    expect(validateSchema(original, Array(6).fill({}))).toContain("too many items");
+    expect(JSON.stringify(schema)).toBe(before);
+    const fields = list.items.properties;
+    expect(fields.toolCards.items.properties.notThis.type).toEqual(["object", "null"]);
+    expect(fields.actions.items.properties.order.type).toEqual(["array", "null"]);
+    expect(fields.hands.maxItems).toBe(2);
+    expect(fields.actions.maxItems).toBe(3);
+    expect(fields.toolCards.maxItems).toBe(3);
+  });
+
+  it.each([["tools_v2"], ["hands_v1"], ["tools_v2", "hands_v1", "check_photo"]].map(extra => ({ extra })))(
+    "sends adapted steps and preserves nullable output with $extra", async ({ extra }) => {
+      const capabilities = [...input.capabilities, ...extra];
+      const extended = { ...step,
+        ...(extra.includes("tools_v2") ? { toolCards: [{ id: "ph2", size: null, sizeSource: "typical", fitCheck: "შეამოწმე", alternatives: [], why: "მოხსენი", notThis: null }],
+          actions: [{ part: "p1", kind: "press", amount: null, order: null }] } : {}),
+        ...(extra.includes("hands_v1") ? { hands: [{ part: "p1", grip: "support", hand: "right", byHandOnly: false }] } : {}),
+      };
+      mockFetch((_url, init) => {
+        const sent = JSON.parse(init.body as string).generationConfig.responseJsonSchema;
+        expect(sent).toEqual(geminiSchema(schemaSteps(["p1"], 5, { freeText: true, capabilities })));
+        const text = JSON.stringify({ steps: [extended], unknown_parts: [], continuation: diagnosticContinuation({ kind: "complete" }) });
+        return new Response(new ReadableStream({ start(c) { c.enqueue(frame(chunk(text, true))); c.close(); } }));
+      });
+      const events = [];
+      for await (const event of provider().steps({ ...input, capabilities })) events.push(event);
+      expect(events[0]).toMatchObject({ type: "step", step: {
+        ...(extra.includes("tools_v2") ? { toolCards: [{ notThis: null }], actions: [{ order: null, amount: null }] } : {}),
+        ...(extra.includes("hands_v1") ? { hands: extended.hands } : {}),
+      } });
+      expect(events.at(-1)).toMatchObject({ type: "done" });
+    },
+  );
+
   it("converts YXYX boxes and sends JSON schema, low thinking and JPEG", async () => {
     mockFetch((url, init) => {
       expect(url).toContain(`${GEMINI_MODEL}:generateContent`);

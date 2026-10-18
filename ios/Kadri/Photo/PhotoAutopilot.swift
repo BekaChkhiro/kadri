@@ -6,6 +6,7 @@ import KadriCore
 /// the autopilot submits them, walks every step and reports each round back as JSON files in the same folder.
 ///
 /// In: `round-N.jpg|png` (round 1 also needs `comment.txt`), `answer-K.txt` for the session's K-th question.
+/// Check photos: `check-N.request.json` out, `check-N.png` in; they keep the current round.
 /// Out: `status.json` on every change, `question-K.json` when steps end with a question or a measurement,
 /// `round-N.result.json` when a photo round ends (all of its answer turns included), `round-N.error.json`
 /// on an error (it stops there), `done.json` once the session is finished. Every file is written atomically.
@@ -19,7 +20,7 @@ final class PhotoAutopilot {
     /// Answering "I have no tool" to a measurement sends no unit.
     static let noToolAnswer = "არ მაქვს ხელსაწყო"
 
-    private enum Stage: Equatable { case waitingForPhoto(Int), waitingForAnswer(Int), running, stopped }
+    private enum Stage: Equatable { case waitingForPhoto(Int), waitingForCheckPhoto(Int), waitingForAnswer(Int), running, stopped }
     private var stage: Stage = .waitingForPhoto(1)
     private var task: Task<Void, Never>?
     private var lastStatus: [String: AnyHashable]?
@@ -34,6 +35,8 @@ final class PhotoAutopilot {
     private var turnFirstStepMs: [Int] = []
     /// Steps cost of this photo's finished answer turns; `model.usage` only holds the latest stream's.
     private var turnCosts: [Double] = []
+    private var questions = 0
+    private var photoAnswerCostRecorded = false
 
     init(session: PhotoSession, directory: URL, stepDelay: TimeInterval = 3.5, pollInterval: TimeInterval = 0.5) {
         self.session = session
@@ -81,6 +84,7 @@ final class PhotoAutopilot {
         switch stage {
         case .stopped: return
         case .waitingForPhoto(let number): takePhoto(number)
+        case .waitingForCheckPhoto(let number): takeCheckPhoto(number)
         case .waitingForAnswer(let number): takeAnswer(number, model)
         case .running: drive(model)
         }
@@ -105,6 +109,14 @@ final class PhotoAutopilot {
         stage = .running
     }
 
+    private func takeCheckPhoto(_ number: Int) {
+        guard session.model.canContinueWithCheckPhoto,
+              let image = UIImage(contentsOfFile: file("check-\(number).png").path) else { return }
+        session.continueWithCheckPhoto(image)
+        turnStart = Date()
+        stage = .running
+    }
+
     private func takeAnswer(_ number: Int, _ model: SessionModel) {
         guard let raw = try? String(contentsOf: file("answer-\(number).txt"), encoding: .utf8) else { return }
         let text = String(raw.trimmingCharacters(in: .whitespacesAndNewlines).prefix(120))
@@ -113,6 +125,11 @@ final class PhotoAutopilot {
         if case .needsMeasurement(_, let value, _, _, _, _) = model.continuation, text != Self.noToolAnswer { unit = value }
         let before = model.answers.count
         model.continueWithAnswer(text, unit: unit)
+        if model.canContinueWithCheckPhoto {
+            photoAnswerCostRecorded = true
+            stage = .running
+            return
+        }
         guard model.answers.count > before else { return }
         turnStart = Date()
         stage = .running
@@ -149,11 +166,19 @@ final class PhotoAutopilot {
                 model.next()
             } else if !streaming {
                 if model.canContinueWithAnswer, var question = questionJSON(model) {
-                    let number = model.answers.count + 1
+                    questions += 1
+                    let number = questions
                     question["costUsd"] = model.usage?.costUsd ?? NSNull()
                     turnCosts.append(model.usage?.costUsd ?? 0)
                     write(question, to: "question-\(number).json")
                     stage = .waitingForAnswer(number)
+                    return
+                }
+                if model.canContinueWithCheckPhoto {
+                    write(resultJSON(model, result: result), to: "check-\(model.checkPhotos + 1).request.json")
+                    if !photoAnswerCostRecorded { turnCosts.append(model.usage?.costUsd ?? 0) }
+                    photoAnswerCostRecorded = false
+                    stage = .waitingForCheckPhoto(model.checkPhotos + 1)
                     return
                 }
                 write(resultJSON(model, result: result), to: "round-\(round).result.json")
@@ -164,7 +189,7 @@ final class PhotoAutopilot {
                     let cause = model.foundCause, summary = model.completionSummary
                     model.finish()
                     session.phaseChanged()
-                    write(["rounds": round, "steps": model.allSteps.count, "answers": model.answers.count,
+                    write(["rounds": round, "checkPhotos": model.checkPhotos, "steps": model.allSteps.count, "answers": model.answers.count,
                            "cause": cause ?? NSNull(), "summary": summary ?? NSNull()], to: "done.json")
                     stage = .stopped
                 }
@@ -178,7 +203,7 @@ final class PhotoAutopilot {
     // MARK: - Files
 
     private func questionJSON(_ model: SessionModel) -> [String: Any]? {
-        var json: [String: Any] = ["round": model.round, "turn": model.answers.count + 1, "stepsSoFar": model.allSteps.count,
+        var json: [String: Any] = ["round": model.round, "turn": questions + 1, "stepsSoFar": model.allSteps.count,
                                    "stepTitles": model.allSteps.map(\.title)]
         switch model.continuation {
         case .needsAnswer(let question, let options, let allowOther, let reason):
@@ -197,6 +222,7 @@ final class PhotoAutopilot {
     private static func kind(_ continuation: StepsContinuation?) -> String {
         switch continuation {
         case .needsPhoto: "needs_photo"
+        case .needsCheckPhoto: "needs_check_photo"
         case .needsAnswer: "needs_answer"
         case .needsMeasurement: "needs_measurement"
         default: "complete"
@@ -214,6 +240,9 @@ final class PhotoAutopilot {
         switch model.continuation {
         case .needsPhoto(let prompt, let reason):
             continuation = ["kind": "needs_photo", "prompt": prompt, "reason": reason]
+        case .needsCheckPhoto(let prompt, let reason):
+            // A check photo goes straight to /ai/steps; the loop treats it like needs_photo (see e2e_codex_loop.py).
+            continuation = ["kind": "needs_check_photo", "prompt": prompt, "reason": reason]
         case .complete(let cause, let summary):
             continuation = ["kind": "complete", "cause": cause ?? NSNull(), "summary": summary ?? NSNull()]
         case .needsAnswer, .needsMeasurement:
@@ -222,20 +251,28 @@ final class PhotoAutopilot {
         case nil: break
         }
         // Each finished turn was answered by the answer appended right after it.
-        let answers = model.answers.suffix(model.completedTurns.count)
-        let turns: [[String: Any]] = zip(model.completedTurns, answers).map { turn, answer in
+        let answerTurns = model.completedTurns.filter {
+            switch $0.continuation {
+            case .needsAnswer, .needsMeasurement: true
+            default: false
+            }
+        }
+        let answers = model.answers.suffix(answerTurns.count)
+        let turns: [[String: Any]] = zip(answerTurns, answers).map { turn, answer in
             ["kind": Self.kind(turn.continuation), "question": answer.question, "answer": answer.answer,
              "unit": answer.unit ?? NSNull()]
         }
-        let costs = turnCosts + [model.usage?.costUsd].compactMap { $0 }
+        let costs = turnCosts + (photoAnswerCostRecorded ? [] : [model.usage?.costUsd].compactMap { $0 })
         let cost: Double? = costs.isEmpty ? nil : costs.reduce(0, +)
         return [
             "round": model.round,
+            "checkPhotos": model.checkPhotos,
             "object": result.object,
             "parts": result.parts.map { ["id": $0.id, "name": $0.name, "box": $0.box] as [String: Any] },
             "steps": steps,
             "continuation": continuation,
             "turns": turns,
+            "latestCostUsd": model.usage?.costUsd ?? NSNull(),
             "costUsd": cost.map { $0 as Any } ?? NSNull(),
             "timings": ["scanMs": scanMs ?? NSNull(), "firstStepMs": firstStepMs ?? NSNull(),
                         "stepsDoneMs": stepsDoneMs ?? NSNull(), "turnFirstStepMs": turnFirstStepMs] as [String: Any],
@@ -255,10 +292,17 @@ final class PhotoAutopilot {
         case .error: phase = "error"
         }
         var status: [String: AnyHashable] = [
-            "phase": phase, "round": model.round, "stepIndex": model.currentStepIndex + 1,
+            "phase": phase, "round": model.round, "checkPhotos": model.checkPhotos, "stepIndex": model.currentStepIndex + 1,
             "stepsCount": model.allSteps.count, "streaming": streaming,
         ]
         if case .waitingForPhoto(let number) = stage { status["waitingForPhoto"] = number }
+        if case .waitingForCheckPhoto(let number) = stage {
+            status["waitingForCheckPhoto"] = number
+            status["kind"] = "needs_check_photo"
+            if case .needsCheckPhoto(let prompt, let reason) = model.continuation {
+                status["prompt"] = prompt; status["reason"] = reason
+            }
+        }
         if case .waitingForAnswer(let number) = stage { status["waitingForAnswer"] = number }
         guard status != lastStatus else { return }
         lastStatus = status

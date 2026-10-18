@@ -9,6 +9,7 @@ struct PhotoStartView: View {
     @Binding var picked: PhotosPickerItem?
     var selectExample: (PhotoExample) -> Void
     var demo: (() -> Void)? = nil
+    var multiplePhotos: (() -> Void)? = nil
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var appeared = false
 
@@ -99,6 +100,11 @@ struct PhotoStartView: View {
                 Label("აირჩიე გალერეიდან", systemImage: "photo.on.rectangle")
             }
             .buttonStyle(SessionButtonStyle(primary: false))
+            if let multiplePhotos {
+                Button(action: multiplePhotos) {
+                    Label("რამდენიმე ფოტო · ერთი პრობლემა", systemImage: "square.stack")
+                }.buttonStyle(SessionButtonStyle(primary: false))
+            }
             if let demo {
                 Button("სატესტო ფოტო", action: demo)
                     .buttonStyle(SessionButtonStyle(primary: false))

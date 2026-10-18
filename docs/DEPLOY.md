@@ -17,9 +17,10 @@ npx wrangler whoami
 | D1 (`DB`) | `kadri-staging` (EEUR) | `3857740b-3d9a-4738-aaa8-14e7d8573789` |
 | R2 (`PHOTOS`) | `kadri-photos-staging` | — |
 
-- Migration-ები remote-ზე: `0000_users`, `0001_init`, `0002_usage`.
-- Secret-ები: `OPENAI_API_KEY`, `SESSION_SECRET`, `GOOGLE_CLIENT_IDS` (iOS + Web client ID მძიმით — `src/auth.ts` `split(",")`).
-  `GEMINI_API_KEY` ჯერ არ არის (default provider `astra` მას არ იყენებს).
+- Migration-ები remote-ზე: `0000_users`, `0001_init`, `0002_usage`, `0003_usage_explain` (2026-10-18).
+- Secret-ები: `OPENAI_API_KEY`, `SESSION_SECRET`, `GOOGLE_CLIENT_IDS` (iOS + Web client ID მძიმით — `src/auth.ts` `split(",")`),
+  `GEMINI_API_KEY` (`/ai/explain` და `/ai/ask` default-ად Gemini-ს იყენებს), `KNOWLEDGE_HUB_KEY`.
+- ბოლო deploy: 2026-10-18, ვერსია `91884ca1` — იხ. [STAGING_2026-10-18.md](STAGING_2026-10-18.md).
 - Vars (`[env.staging.vars]`): `ENVIRONMENT=staging`, `AI_PROVIDER=astra`, `DAILY_SESSION_LIMIT=20`, `AI_TIMEOUT_MS=60000`.
 - `SESSION_SECRET`-ის ასლი მხოლოდ deploy-ის გამკეთებლის მანქანაზეა: `~/.config/kadri/staging.env` (chmod 600, git-ის გარეთ) —
   ფასიანი acceptance-ისთვის dev token-ის მოსაწერად. დაკარგვის შემთხვევაში უბრალოდ დაატრიალე (იხ. ქვემოთ).
@@ -52,6 +53,18 @@ node scripts/live_check.mjs --runs 1 --cap 1 --url https://kadri-worker-staging.
 ```
 
 Inputs: `experiments/som-test/out_realism/c_astra_tracking/**/input.png` მთავარი checkout-იდან (git-ში არ არის).
+
+მოკლე ფასიანი smoke ახალი route-ებისთვის (თითო ცალი გამოძახება, token იგივე `staging.env`-იდან, არ იბეჭდება):
+
+```sh
+node scripts/staging_smoke.mjs explain --image <photo> --out <dir>                      # ≈ $0.003 (Gemini)
+node scripts/staging_smoke.mjs ask --image <photo> --out <dir> --box x0,y0,x1,y1         # ≈ $0.002 (Gemini)
+node scripts/staging_smoke.mjs steps --image <photo> --out <dir> --parts <parts.json> \
+  --instructions <parts_request/request.json> --max-steps 2                              # astra; ჩერდება N step-ზე
+```
+
+`/ai/parts`-ის რეგრესია deploy-მდე: [PARTS_REGRESSION_CHECK.md](PARTS_REGRESSION_CHECK.md). `--cap` ≥ $0.30 დატოვე,
+თორემ $0.10-იანი რეზერვი მესამე სცენას (gym) აღარ უშვებს.
 
 ## Production (ჯერ არ შექმნილა)
 

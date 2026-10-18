@@ -42,6 +42,7 @@ interface UsageDbRow {
   input_tokens: number;
   output_tokens: number;
   cost_usd: number;
+  latency_ms: number;
 }
 
 async function token(sub: string): Promise<string> {
@@ -66,7 +67,7 @@ function post(path: string, body: unknown, auth?: string, overrides: Partial<Env
 
 async function usageOf(userId: string): Promise<UsageDbRow[]> {
   const { results } = await env.DB.prepare(
-    "SELECT stage, status, session_id, model, input_tokens, output_tokens, cost_usd FROM usage WHERE user_id = ? ORDER BY id",
+    "SELECT stage, status, session_id, model, input_tokens, output_tokens, cost_usd, latency_ms FROM usage WHERE user_id = ? ORDER BY id",
   )
     .bind(userId)
     .all<UsageDbRow>();
@@ -223,6 +224,57 @@ describe("AI routes in the app router", () => {
     expect(evs).toHaveLength(1);
     expect(evs[0]).toMatchObject({ event: "error", data: { code: "ai_timeout" } });
     expect(await usageOf(sub)).toMatchObject([{ stage: "steps", status: "timeout", cost_usd: 0 }]);
+  });
+
+  it.each(["cancel", "abort"])("steps: %s after two steps records one error while upstream is waiting", async (mode) => {
+    const sub = `wiring-steps-disconnect-${mode}`;
+    let upstream!: ReadableStreamDefaultController<Uint8Array>;
+    let upstreamSignal!: AbortSignal;
+    const spy = mockFetch((_url, init) => {
+      upstreamSignal = init.signal!;
+      return new Response(new ReadableStream<Uint8Array>({
+        start(c) {
+          upstream = c;
+          const delta = '{"steps":[' + JSON.stringify(stepsResult.steps[0]) + ',' +
+            JSON.stringify(stepsResult.steps[0]) + ',';
+          c.enqueue(frame({ type: "response.output_text.delta", delta } as any));
+          upstreamSignal.addEventListener("abort", () => c.error(new DOMException("aborted", "AbortError")), { once: true });
+        },
+      }));
+    });
+    const ctx = createExecutionContext();
+    const controller = new AbortController();
+    const res = await router.handle(new Request("http://example.com/ai/steps", {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${await token(sub)}` },
+      body: JSON.stringify({ object: "ძრავი", parts, instructions: "შეამოწმე", count: 3 }),
+      signal: controller.signal,
+    }), aiEnv, ctx);
+    const reader = res.body!.getReader();
+    try {
+      for (let i = 0; i < 2; i++) {
+        const chunk = await reader.read();
+        expect(new TextDecoder().decode(chunk.value)).toContain("event: step");
+      }
+      // Let the provider request its next chunk; no further upstream data arrives.
+      await new Promise(resolve => setTimeout(resolve, 10));
+      if (mode === "cancel") await reader.cancel();
+      else controller.abort();
+      await waitOnExecutionContext(ctx);
+      const rows = await usageOf(sub);
+      expect(rows).toHaveLength(1);
+      expect(rows[0]).toMatchObject({ stage: "steps", status: "error", cost_usd: 0 });
+      expect(rows[0]!.latency_ms).toBeGreaterThan(0);
+      expect(upstreamSignal.aborted).toBe(true);
+      expect(spy).toHaveBeenCalledTimes(1);
+    } finally {
+      await reader.cancel();
+      if (!upstreamSignal.aborted) upstream.close();
+      await new Promise(resolve => setTimeout(resolve, 10));
+      await waitOnExecutionContext(ctx);
+    }
+    // The provider's eventual finally must not insert a second row.
+    expect(await usageOf(sub)).toHaveLength(1);
   });
 
   it("steps: a mid-stream failure sends an error event and logs an error row", async () => {

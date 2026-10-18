@@ -12,7 +12,7 @@ export const DEFAULT_AI_TIMEOUT_MS = 60_000;
 export const DEFAULT_AI_ATTEMPT_TIMEOUT_MS = 20_000;
 export const DEFAULT_AI_FIRST_STEP_TIMEOUT_MS = 25_000;
 
-export type UsageStage = "parts" | "steps";
+export type UsageStage = "parts" | "steps" | "explain" | "ask" | "problem";
 export type UsageStatus = "ok" | "error" | "timeout";
 
 export interface UsageRow {
@@ -84,12 +84,13 @@ export function secondsUntilUtcMidnight(now = new Date()): number {
 
 /**
  * Throws 429 `daily_limit` when the user has already started DAILY_SESSION_LIMIT sessions today (UTC).
- * A started session = one `usage` row with stage='parts', whatever its status (failed calls are still paid).
+ * One legacy parts request or one multi-photo problem turn counts, including failed paid attempts.
+ * Problem turns are counted individually: client-selected session IDs must not bypass quota.
  */
 export async function assertDailyLimit(env: Env, userId: string, now = new Date()): Promise<void> {
   const limit = dailySessionLimit(env);
   const row = await env.DB.prepare(
-    "SELECT COUNT(*) AS n FROM usage WHERE user_id = ?1 AND stage = 'parts' AND created_at >= ?2",
+    "SELECT COUNT(*) AS n FROM usage WHERE user_id = ?1 AND stage IN ('parts', 'problem') AND created_at >= ?2",
   )
     .bind(userId, utcMidnight(now).toISOString())
     .first<{ n: number }>();
@@ -127,7 +128,7 @@ export async function recordUsage(env: Env, row: UsageRow): Promise<void> {
 export async function usageSummary(env: Env, userId: string, days = 30, now = new Date()): Promise<UsageSummary> {
   const since = new Date(now.getTime() - days * 86_400_000).toISOString();
   const row = await env.DB.prepare(
-    `SELECT COALESCE(SUM(cost_usd), 0) AS cost, COALESCE(SUM(stage = 'parts'), 0) AS sessions
+    `SELECT COALESCE(SUM(cost_usd), 0) AS cost, COALESCE(SUM(stage IN ('parts', 'problem')), 0) AS sessions
      FROM usage WHERE user_id = ?1 AND created_at >= ?2`,
   )
     .bind(userId, since)

@@ -8,6 +8,9 @@ next one from the previous photo and the model's request. When it asks a questio
 
     python3 ios/Tools/e2e_codex_loop.py --udid <simulator-udid>
 
+`--pause-before-round N SECONDS` waits before delivering round N's photo, so a `--reuse` replay keeps the
+original run's timing (Codex generating the photo between rounds).
+
 Stdlib only. The session token is never printed or written to disk.
 """
 from __future__ import annotations
@@ -38,6 +41,8 @@ ANSWER_SCHEMA = {
 }
 NO_TOOL = "არ მაქვს ხელსაწყო"  # PhotoAutopilot.noToolAnswer: sent without a unit
 MAX_QUESTIONS = 8
+MAX_CHECK_PHOTOS = 20
+PHOTO_ANSWER = "ფოტოს გაჩვენებ"
 PHOTO_STYLE = (
     "ფოტორეალისტური კადრი, თითქოს ჩვეულებრივი ტელეფონით არის გადაღებული: ბუნებრივი სინათლე, "
     "ოდნავ არასრულყოფილი კომპოზიცია. კვადრატული ფორმატი 1:1 (1024×1024). არანაირი ტექსტი, წარწერა, "
@@ -133,27 +138,30 @@ class Codex:
         self.generated = 0
         self.answered = 0
 
-    def photo(self, number: int, prompt: str, previous: Path | None) -> tuple[Path, str]:
-        target = self.dir / f"round-{number}.png"
-        if self.reuse and (self.reuse / "codex" / target.name).exists():
+    def photo(self, number: int, prompt: str, previous: Path | None, *, check: bool = False) -> tuple[Path, str]:
+        stem = f"check-{number}" if check else f"round-{number}"
+        label = f"check photo {number}" if check else f"round {number}"
+        meta_stem = f"codex-check-{number}" if check else f"codex-{number}"
+        target = self.dir / f"{stem}.png"
+        if not check and self.reuse and (self.reuse / "codex" / target.name).exists():
             shutil.copy(self.reuse / "codex" / target.name, target)
-            meta = read_json(self.reuse / "codex" / f"codex-{number}.json") or {}
-            log(f"round {number}: photo reused from {self.reuse}")
+            meta = read_json(self.reuse / "codex" / f"{meta_stem}.json") or {}
+            log(f"{label}: photo reused from {self.reuse}")
             return target, meta.get("comment", "")
         started = time.time()
-        output = self.dir / f"codex-{number}.json"
+        output = self.dir / f"{meta_stem}.json"
         cmd = ["codex", "exec", "--skip-git-repo-check", "--sandbox", "workspace-write", "-C", str(self.dir),
                "--output-schema", str(self.schema), "-o", str(output)]
         if previous:
             cmd += ["-i", str(previous)]
-        log(f"round {number}: Codex is generating the photo…")
+        log(f"{label}: Codex is generating the photo…")
         # The prompt goes through stdin: `-i` takes several values and would swallow a positional prompt.
-        with (self.dir / f"codex-{number}.log").open("w") as out:
+        with (self.dir / f"{meta_stem}.log").open("w") as out:
             code = subprocess.run(cmd, input=prompt, text=True, stdout=out, stderr=subprocess.STDOUT,
                                   timeout=600).returncode
         self.generated += 1
         if code != 0:
-            raise RuntimeError(f"codex exited {code}, see {self.dir / f'codex-{number}.log'}")
+            raise RuntimeError(f"codex exited {code}, see {self.dir / f'{meta_stem}.log'}")
         meta = read_json(output) or {}
         source = Path(meta.get("image_path", ""))
         if not target.exists():
@@ -164,7 +172,7 @@ class Codex:
                     raise RuntimeError(f"codex produced no image for round {number}")
                 source = max(fresh, key=lambda p: p.stat().st_mtime)
             shutil.copy(source, target)
-        log(f"round {number}: photo ready in {time.time() - started:.0f} s ({size(target)})")
+        log(f"{label}: photo ready in {time.time() - started:.0f} s ({size(target)})")
         return target, meta.get("comment", "").strip()
 
 
@@ -335,7 +343,9 @@ def spent(rounds: list[dict]) -> float:
         if r.get("result"):
             total += r["result"].get("costUsd") or 0
         else:
-            total += sum(q.get("costUsd") or 0 for q in r.get("questions", []))
+            checkpoint = r.get("checkpoint") or {}
+            total += (checkpoint.get("costUsd") or 0) + sum(
+                q.get("costUsd") or 0 for q in r.get("questions", [])[r.get("checkpointQuestions", 0):])
     return total
 
 
@@ -354,7 +364,8 @@ def write_summary(out: Path, args, rounds: list[dict], stop: str) -> None:
     result = outcome(rounds, out)
     summary = {
         "scenario": args.scenario, "stop": stop, "rounds": len(rounds),
-        "steps": sum(len((r.get("result") or {}).get("steps", [])) for r in rounds),
+        "steps": sum(len((r.get("result") or r.get("checkpoint") or {}).get("steps", [])) for r in rounds),
+        "checkPhotos": (read_json(out / "status.json") or {}).get("checkPhotos", 0),
         "answers": result["answers"], "cause": result["cause"], "summary": result["summary"],
         "costUsd": round(spent(rounds), 4),
     }
@@ -384,14 +395,14 @@ def report(out: Path, args, rounds: list[dict], stop: str, watcher: Watcher, cod
                   f"- კომენტარი: {r.get('comment') or '—'}"]
         if r.get("request"):
             lines.append(f"- მოთხოვნა, რომელზეც ფოტო გადაიღო: „{r['request']}“")
-        result = r.get("result")
+        result = r.get("result") or r.get("checkpoint")
         if r.get("error"):
             lines.append(f"- **შეცდომა**: `{r['error'].get('code')}` — {r['error'].get('message')}")
         if result:
             parts = ", ".join(f"{p['name']} `{p['id']}` {p['box']}" for p in result.get("parts", []))
             cont = result.get("continuation", {})
             cont_text = cont.get("kind", "?")
-            if cont.get("kind") == "needs_photo":
+            if cont.get("kind") in ("needs_photo", "needs_check_photo"):
                 cont_text += f" — „{cont.get('prompt')}“ (მიზეზი: {cont.get('reason')})"
             elif cont.get("cause") or cont.get("summary"):
                 cont_text += f" — cause: {cont.get('cause') or '—'}; summary: {cont.get('summary') or '—'}"
@@ -422,6 +433,14 @@ def report(out: Path, args, rounds: list[dict], stop: str, watcher: Watcher, cod
         if shots:
             lines += ["", "სქრინშოტები: " + ", ".join(f"[{s}](shots/{s})" for s in shots)]
         lines.append("")
+    checks = sorted(out.glob("check-*.request.json"), key=lambda p: int(p.name.split("-")[1].split(".")[0]))
+    if checks:
+        lines += ["## შემოწმების ფოტოები", ""]
+        for path in checks:
+            n = int(path.name.split("-")[1].split(".")[0])
+            cont = (read_json(path) or {}).get("continuation", {})
+            lines.append(f"- check photo {n}: {cont.get('prompt', '')} — [მოთხოვნა]({path.name}), [ფოტო](codex/check-{n}.png)")
+        lines.append("")
     run_dir = out.name
     lines += [
         "## ხელახლა ნახვა შენს სიმულატორზე", "",
@@ -446,6 +465,7 @@ def report(out: Path, args, rounds: list[dict], stop: str, watcher: Watcher, cod
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--prefer-photo-answers", action="store_true")
     parser.add_argument("--udid", required=True)
     parser.add_argument("--scenario", default="ნიჟარის ქვეშ სიფონიდან წყალი ჟონავს")
     parser.add_argument("--max-rounds", type=int, default=5)
@@ -456,7 +476,15 @@ def main() -> int:
     parser.add_argument("--token-env", default="KADRI_SESSION_TOKEN")
     parser.add_argument("--timeout", type=float, default=300, help="seconds per wait for the app")
     parser.add_argument("--reuse", type=Path, help="earlier --out folder: reuse its codex/round-N.png instead of Codex")
+    parser.add_argument("--pause-before-round", nargs=2, type=float, metavar=("N", "SECONDS"),
+                        help="wait SECONDS before delivering round N's photo (e.g. with --reuse: the original Codex delay)")
     args = parser.parse_args()
+    pause_round, pause_seconds = (int(args.pause_before_round[0]), args.pause_before_round[1]) if args.pause_before_round else (0, 0.0)
+
+    def pause_before(number: int) -> None:
+        if number == pause_round and pause_seconds > 0:
+            log(f"round {number}: pausing {pause_seconds:.0f} s before delivering the photo")
+            time.sleep(pause_seconds)
 
     out: Path = args.out.resolve()
     if out.exists() and any(out.iterdir()):
@@ -488,21 +516,44 @@ def main() -> int:
             raise RuntimeError("the app wrote no status.json (is it a Debug simulator build?)")
 
         write_atomic(out / "comment.txt", comment.encode())
+        pause_before(1)
         deliver(png, out, 1)
         number = 1
         asked = 0
+        checks = 0
         while True:
             def finished(n=number, k=asked + 1):
                 if (out / f"round-{n}.error.json").exists():
                     return "error"
                 if (out / f"round-{n}.result.json").exists():
                     return "result"
+                if (out / f"check-{checks + 1}.request.json").exists():
+                    return "check"
                 return "question" if (out / f"question-{k}.json").exists() else None
 
             event = watcher.wait(args.timeout, finished)
             if event is None:
                 stop = f"timeout: round {number} gave no result in {args.timeout:.0f} s"
                 break
+            if event == "check":
+                request = read_json(out / f"check-{checks + 1}.request.json") or {}
+                rounds[-1]["checkpoint"] = request
+                rounds[-1]["checkpointQuestions"] = len(rounds[-1].get("questions", []))
+                total = spent(rounds)
+                estimate = max([q.get("costUsd") or 0 for r in rounds for q in r.get("questions", [])]
+                               + [r.get("checkpoint", {}).get("latestCostUsd") or 0 for r in rounds])
+                if checks >= MAX_CHECK_PHOTOS or total + estimate > args.cost_cap:
+                    stop = f"check photo limit or cost cap reached (${total:.4f})"
+                    break
+                checks += 1
+                cont = request.get("continuation", {})
+                titles = [step.get("title", "") for step in request.get("steps", [])]
+                prompt = next_prompt(number, args.scenario, titles, cont.get("prompt", ""), cont.get("reason", ""))
+                prompt = prompt.replace(f"round-{number}.png", f"check-{checks}.png")
+                png, _ = codex.photo(checks, prompt, png, check=True)
+                write_atomic(out / f"check-{checks}.png", png.read_bytes())
+                log(f"check photo {checks}: delivered (round {number})")
+                continue
             if event == "question":
                 asked += 1
                 question = read_json(out / f"question-{asked}.json") or {}
@@ -517,7 +568,10 @@ def main() -> int:
                     stop = f"cost cap: ${total:.4f} spent, another answer turn (~${heaviest:.4f}) would pass ${args.cost_cap:.2f}"
                     break
                 titles = question.get("stepTitles") or []
-                answer, note = codex.answer(asked, question, answer_prompt(args.scenario, titles, question))
+                if args.prefer_photo_answers and PHOTO_ANSWER in question.get("options", []):
+                    answer, note = PHOTO_ANSWER, "--prefer-photo-answers"
+                else:
+                    answer, note = codex.answer(asked, question, answer_prompt(args.scenario, titles, question))
                 unit = question.get("unit") if question.get("kind") == "needs_measurement" and answer != NO_TOOL else None
                 question.update({"answer": answer, "note": note, "answerUnit": unit})
                 write_atomic(out / f"answer-{asked}.txt", answer.encode())
@@ -551,6 +605,7 @@ def main() -> int:
             png, comment = codex.photo(number, next_prompt(number, args.scenario, titles, cont.get("prompt", ""),
                                                            cont.get("reason", "")), png)
             rounds.append({"number": number, "comment": comment, "size": size(png), "request": cont.get("prompt")})
+            pause_before(number)
             deliver(png, out, number)
     except (RuntimeError, subprocess.SubprocessError) as error:
         stop = f"driver error: {error}"

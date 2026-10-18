@@ -19,11 +19,17 @@ export type SseSend = (event: string, data: unknown) => Promise<boolean>;
  * Starts `run` and returns its events as a streaming response right away.
  * The stream closes when `run` settles.
  */
-export function sseResponse(run: (send: SseSend) => Promise<void>, init: { status?: number } = {}): Response {
+export function sseResponse(run: (send: SseSend) => Promise<void>, init: { status?: number; onCancel?: () => void } = {}): Response {
   const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>();
   const writer = writable.getWriter();
   const encoder = new TextEncoder();
   let open = true;
+  // Cancellation rejects closed even while run is waiting for upstream data,
+  // with no pending write to notice that the reader has disconnected.
+  void writer.closed.catch(() => {
+    open = false;
+    init.onCancel?.();
+  });
   const send: SseSend = async (event, data) => {
     if (!open) return false;
     try {

@@ -12,7 +12,17 @@ public struct APIConfig: Hashable, Sendable {
     /// Timeout for auth and other quick requests.
     public var requestTimeout: TimeInterval
 
-    public init(baseURL: URL, aiTimeout: TimeInterval = 75, requestTimeout: TimeInterval = 20) {
+    public static let defaultAITimeout: TimeInterval = 75
+    public static let defaultRequestTimeout: TimeInterval = 20
+    /// How far the scan timer stays above `aiTimeout`, so the request's own timeout or the Worker's
+    /// 504 arrives first and a token refresh before the request fits too.
+    public static let scanTimeoutMargin: TimeInterval = 10
+    public static let defaultScanTimeout = defaultAITimeout + scanTimeoutMargin
+
+    /// The app-side scan timer (keyframe, auth and the parts request together); always above `aiTimeout`.
+    public var scanTimeout: TimeInterval { aiTimeout + Self.scanTimeoutMargin }
+
+    public init(baseURL: URL, aiTimeout: TimeInterval = defaultAITimeout, requestTimeout: TimeInterval = defaultRequestTimeout) {
         self.baseURL = baseURL
         self.aiTimeout = aiTimeout
         self.requestTimeout = requestTimeout

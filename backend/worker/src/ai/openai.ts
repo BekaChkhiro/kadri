@@ -11,7 +11,7 @@ export const DEFAULT_MODEL = "gpt-6-astra";
 export const DEFAULT_EFFORT = "low";
 /** Reasoning and visible output share this budget. Legacy steps retain their cap. */
 export const LEGACY_STEPS_OUTPUT_LIMIT = 2200;
-export const OUTPUT_LIMITS = { parts: 1200, steps: 4000 } as const;
+export const OUTPUT_LIMITS = { parts: 1200, steps: 4000, explain: 2500, ask: 1500, problem: 6000 } as const;
 
 export type Stage = keyof typeof OUTPUT_LIMITS;
 

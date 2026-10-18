@@ -18,6 +18,34 @@ final class ModelsTests: XCTestCase {
         }
     }
 
+    func testHandsDecodeAndIgnoreUnknownGestures() throws {
+        let payload = #"{"index":1,"title":"x","text":"y","hands":[{"part":"p1","grip":"hold","hand":"left","byHandOnly":false},{"part":"p2","grip":"turn","hand":"right","byHandOnly":true},{"part":"p3","grip":"future","hand":"both","byHandOnly":true},{"part":"p4","grip":"hold","hand":"future","byHandOnly":true}]}"#
+        let step = try JSONDecoder().decode(Step.self, from: Data(payload.utf8))
+        XCTAssertEqual(step.hands, [
+            .init(part: "p1", grip: "hold", hand: "left", byHandOnly: false),
+            .init(part: "p2", grip: "turn", hand: "right", byHandOnly: true)
+        ])
+        XCTAssertEqual(try JSONDecoder().decode(Step.self, from: JSONEncoder().encode(step)), step)
+        for json in [#"{"index":1,"title":"x","text":"y"}"#,
+                     #"{"index":1,"title":"x","text":"y","hands":null}"#] {
+            XCTAssertNil(try JSONDecoder().decode(Step.self, from: Data(json.utf8)).hands)
+        }
+    }
+
+    func testCheckPhotoAndSixAnswerOptionsDecode() throws {
+        let decoder = JSONDecoder()
+        let photo = Data(#"{"kind":"needs_check_photo","prompt":"ახლოდან","reason":"შევამოწმებ"}"#.utf8)
+        XCTAssertEqual(try decoder.decode(StepsContinuation.self, from: photo), .needsCheckPhoto(prompt: "ახლოდან", reason: "შევამოწმებ"))
+        let answer = Data(#"{"kind":"needs_answer","question":"q","options":["a","b","c","d","არ ვიცი","ფოტოს გაჩვენებ"],"allowOther":true}"#.utf8)
+        guard case .needsAnswer(_, let options, let allowOther, _) = try decoder.decode(StepsContinuation.self, from: answer) else { return XCTFail("expected answer") }
+        XCTAssertEqual(options.count, 6)
+        XCTAssertTrue(allowOther)
+        let legacy = SessionContext(round: 2, photoPrompt: "photo", doneSteps: [])
+        let json = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(legacy)) as? [String: Any])
+        XCTAssertNil(json["checkPhotos"])
+        XCTAssertNil(json["checkPrompt"])
+    }
+
     func testPartDecodesAndValidatesBox() throws {
         let json = #"{"id":"p1","name":"სიფონი","box":[120,300,480,760]}"#
         let part = try JSONDecoder().decode(Part.self, from: Data(json.utf8))
@@ -64,6 +92,65 @@ final class ModelsTests: XCTestCase {
         let empty = try JSONDecoder().decode(Step.self, from: Data(nulls.utf8))
         XCTAssertNil(empty.icon)
         XCTAssertNil(empty.toolItems)
+    }
+
+    func testToolCardsAndActionsDecodeAndRoundTrip() throws {
+        let payload = #"{"index":1,"title":"x","text":"y","toolCards":[{"id":"ph2","size":"PH2","why":"ჯვარედინი ჭანჭიკი","notThis":{"id":"flat_small","reason":"ჭრილს დააზიანებს"}},{"id":"towel","size":null,"why":"წყალი წვეთავს","notThis":null}],"actions":[{"part":"p1","kind":"rotate_ccw","amount":"½","order":null},{"part":"p2","kind":"tighten_order","amount":"hand_tight_plus_quarter","order":["p2","p3","p4"]}]}"#
+        let step = try JSONDecoder().decode(Step.self, from: Data(payload.utf8))
+        XCTAssertEqual(step.toolCards, [
+            StepToolCard(id: "ph2", size: "PH2", why: "ჯვარედინი ჭანჭიკი",
+                         notThis: .init(id: "flat_small", reason: "ჭრილს დააზიანებს")),
+            StepToolCard(id: "towel", why: "წყალი წვეთავს"),
+        ])
+        XCTAssertEqual(step.actions, [
+            StepAction(part: "p1", kind: "rotate_ccw", amount: "½"),
+            StepAction(part: "p2", kind: "tighten_order", amount: "hand_tight_plus_quarter", order: ["p2", "p3", "p4"]),
+        ])
+        XCTAssertEqual(try JSONDecoder().decode(Step.self, from: JSONEncoder().encode(step)), step)
+
+        let old = #"{"index":1,"title":"x","text":"y","tools":["ტილო"]}"#
+        let legacy = try JSONDecoder().decode(Step.self, from: Data(old.utf8))
+        XCTAssertNil(legacy.toolCards)
+        XCTAssertNil(legacy.actions)
+        let nulls = #"{"index":1,"title":"x","text":"y","toolCards":null,"actions":null}"#
+        let empty = try JSONDecoder().decode(Step.self, from: Data(nulls.utf8))
+        XCTAssertNil(empty.toolCards)
+        XCTAssertNil(empty.actions)
+    }
+
+    func testToolCatalog() {
+        XCTAssertEqual(ToolCatalog.ids.count, 32)
+        XCTAssertEqual(Set(ToolCatalog.ids).count, 32)
+        XCTAssertEqual(Set(ToolCatalog.names.keys), Set(ToolCatalog.ids))
+        for id in ToolCatalog.ids {
+            XCTAssertFalse(ToolCatalog.name(id)?.isEmpty ?? true, id)
+        }
+        XCTAssertEqual(ToolCatalog.ids.first, "ph1")
+        XCTAssertEqual(ToolCatalog.ids.last, "spudger")
+        XCTAssertEqual(ToolCatalog.name("ph2"), "ჯვარედინი სახრახნისი PH2")
+        XCTAssertNil(ToolCatalog.name("chainsaw"))
+        XCTAssertEqual(ToolCatalog.assetName("ph2"), "tool-ph2")
+    }
+
+    func testToolSizeEvidenceAndLegacyDefaults() throws {
+        let json = #"{"id":"open_wrench","size":"10 მმ","why":"ქანჩისთვის","sizeSource":"typical","fitCheck":"მჭიდროდ უნდა მოერგოს","alternatives":["11 მმ"]}"#
+        let card = try JSONDecoder().decode(StepToolCard.self, from: Data(json.utf8))
+        XCTAssertEqual(card.sizeSource, "typical")
+        XCTAssertEqual(card.fitCheck, "მჭიდროდ უნდა მოერგოს")
+        XCTAssertEqual(card.alternatives, ["11 მმ"])
+        XCTAssertEqual(try JSONDecoder().decode(StepToolCard.self, from: JSONEncoder().encode(card)), card)
+        for source in ["seen", "model"] {
+            let payload = json.replacingOccurrences(of: "typical", with: source)
+            XCTAssertEqual(try JSONDecoder().decode(StepToolCard.self, from: Data(payload.utf8)).sizeSource, source)
+        }
+        for payload in [#"{"id":"ph2","size":"PH2","why":"ხრახნისთვის"}"#,
+                        #"{"id":"ph2","size":"PH2","why":"ხრახნისთვის","sizeSource":null,"fitCheck":null,"alternatives":null}"#] {
+            let legacy = try JSONDecoder().decode(StepToolCard.self, from: Data(payload.utf8))
+            XCTAssertEqual(legacy.sizeSource, "typical")
+            XCTAssertNil(legacy.fitCheck)
+            XCTAssertEqual(legacy.alternatives, [])
+            XCTAssertEqual(legacy, StepToolCard(id: "ph2", size: "PH2", why: "ხრახნისთვის"))
+        }
     }
 
     // MARK: multi-photo

@@ -32,6 +32,81 @@ final class APIClientTests: XCTestCase {
         XCTAssertEqual(body["provider"] as? String, "gemini")
     }
 
+    func testAIRequestsRetryLostConnectionAndTimeoutOnce() async throws {
+        for path in ["/ai/parts", "/ai/steps"] {
+            for code in [URLError.networkConnectionLost, .timedOut] {
+                let requests = Locked<[(URLRequest, Data)]>([])
+                let api = client { request, body in
+                    requests.value.append((request, body))
+                    if requests.value.count == 1 { return .init(chunks: [], failure: URLError(code)) }
+                    return .json(200, path == "/ai/parts" ? #"{"object":"o","parts":[]}"# : "event: done\ndata: {}\n\n")
+                }
+                if path == "/ai/parts" {
+                    let result = try await api.parts(keyframe: jpeg, instructions: "x")
+                    XCTAssertEqual(result.object, "o")
+                } else {
+                    var events: [StepEvent] = []
+                    for try await event in api.steps(object: "o", parts: [], instructions: "x") { events.append(event) }
+                    XCTAssertEqual(events, [.done(StepsUsage())])
+                }
+                XCTAssertEqual(requests.value.count, 2)
+                XCTAssertEqual(requests.value.map { $0.0.url?.path }, [path, path])
+                XCTAssertEqual(requests.value.first?.1, requests.value.last?.1)
+                XCTAssertEqual(requests.value.last?.0.value(forHTTPHeaderField: "Authorization"), "Bearer tok")
+            }
+        }
+    }
+
+    func testAIRequestsStopAfterSecondTransportFailureAndDoNotRetryOffline() async {
+        for path in ["/ai/parts", "/ai/steps"] {
+            for code in [URLError.networkConnectionLost, .timedOut, .notConnectedToInternet, .cancelled] {
+                let calls = Locked(0)
+                let api = client { _, _ in
+                    calls.value += 1
+                    return .init(chunks: [], failure: URLError(code))
+                }
+                do {
+                    if path == "/ai/parts" {
+                        _ = try await api.parts(keyframe: jpeg, instructions: "x")
+                    } else {
+                        for try await _ in api.steps(object: "o", parts: [], instructions: "x") {}
+                    }
+                    XCTFail("expected transport failure")
+                } catch {
+                    XCTAssertEqual(error as? SessionError, SessionError(URLError(code)))
+                }
+                XCTAssertEqual(calls.value, code == .networkConnectionLost || code == .timedOut ? 2 : 1)
+            }
+        }
+    }
+
+    func testAIRequestsDoNotRetryAfterResponseStarted() async {
+        for path in ["/ai/parts", "/ai/steps"] {
+            for code in [URLError.networkConnectionLost, .timedOut] {
+                ResponseFailureProtocol.calls.value = 0
+                ResponseFailureProtocol.failure.value = code
+                let configuration = URLSessionConfiguration.ephemeral
+                configuration.protocolClasses = [ResponseFailureProtocol.self]
+                let session = URLSession(configuration: configuration)
+                defer { session.invalidateAndCancel() }
+                let api = KadriClient(config: APIConfig(baseURL: URL(string: "https://response.test")!), auth: nil, session: session)
+                var events: [StepEvent] = []
+                do {
+                    if path == "/ai/parts" {
+                        _ = try await api.parts(keyframe: jpeg, instructions: "x")
+                    } else {
+                        for try await event in api.steps(object: "o", parts: [], instructions: "x") { events.append(event) }
+                    }
+                    XCTFail("expected transport failure")
+                } catch {
+                    XCTAssertEqual(error as? SessionError, SessionError(URLError(code)))
+                }
+                XCTAssertEqual(ResponseFailureProtocol.calls.value, 1)
+                if path == "/ai/steps" { XCTAssertEqual(events.count, 1, "must not replay a delivered step") }
+            }
+        }
+    }
+
     // MARK: parts
 
     func testPartsSendsMultipartWithBearerAndDecodesResult() async throws {
@@ -122,13 +197,15 @@ final class APIClientTests: XCTestCase {
             return .init(headers: ["Content-Type": "text/event-stream"], chunks: [Data("event: done\ndata: {}\n\n".utf8)])
         }
         let answer = SessionAnswer(question: "რამდენი?", answer: "30", unit: "mA")
-        let context = SessionContext(round: 1, photoPrompt: "", doneSteps: ["გაზომე"], answers: [answer])
+        let context = SessionContext(round: 1, photoPrompt: "", doneSteps: ["გაზომე"], answers: [answer], checkPhotos: 1, checkPrompt: "გადაიღე ახლოდან")
         for try await _ in api.steps(object: "ობიექტი", parts: parts, instructions: "შეამოწმე", image: jpeg, context: context) {}
         let json = try XCTUnwrap(try JSONSerialization.jsonObject(with: XCTUnwrap(seen.value)) as? [String: Any])
-        XCTAssertEqual(json["capabilities"] as? [String], ["needs_answer", "needs_measurement", "summary"])
+        XCTAssertEqual(json["capabilities"] as? [String], ["needs_answer", "needs_measurement", "summary", "tools_v2", "check_photo", "arrows_v2"])
         XCTAssertEqual(json["image"] as? String, jpeg.base64EncodedString())
         let bodyContext = try XCTUnwrap(json["context"] as? [String: Any])
         XCTAssertNil(bodyContext["photoPrompt"])
+        XCTAssertEqual(bodyContext["checkPhotos"] as? Int, 1)
+        XCTAssertEqual(bodyContext["checkPrompt"] as? String, "გადაიღე ახლოდან")
         XCTAssertEqual(bodyContext["round"] as? Int, 1)
         XCTAssertEqual((bodyContext["answers"] as? [[String: String]])?.first?["unit"], "mA")
         XCTAssertEqual(try JSONDecoder().decode(SessionContext.self, from: JSONSerialization.data(withJSONObject: bodyContext)), context)
@@ -342,4 +419,27 @@ final class APIClientTests: XCTestCase {
         XCTAssertEqual(KadriClient.streamError(Data("garbage".utf8)), .server(code: "ai_upstream", message: ""))
         XCTAssertEqual(KadriClient.streamError(Data(#"{"code":"unauthorized","message":"x"}"#.utf8)), .unauthorized)
     }
+}
+
+/// A response that starts successfully and then loses the transport; the shared stub fails
+/// before headers, so this specifically exercises the non-replay boundary.
+private final class ResponseFailureProtocol: URLProtocol, @unchecked Sendable {
+    static let calls = Locked(0)
+    static let failure = Locked(URLError.networkConnectionLost)
+    override class func canInit(with request: URLRequest) -> Bool { true }
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+    override func startLoading() {
+        Self.calls.value += 1
+        let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: "HTTP/1.1", headerFields: ["Content-Type": request.url?.path == "/ai/steps" ? "text/event-stream" : "application/json"])!
+        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        let text = request.url?.path == "/ai/steps"
+            ? "event: step\ndata: {\"index\":0,\"title\":\"t\",\"text\":\"x\",\"focus\":[],\"avoid\":[]}\n\n"
+            : "{\"object\":"
+        client?.urlProtocol(self, didLoad: Data(text.utf8))
+        let code = Self.failure.value
+        DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) { [self] in
+            client?.urlProtocol(self, didFailWithError: URLError(code))
+        }
+    }
+    override func stopLoading() {}
 }

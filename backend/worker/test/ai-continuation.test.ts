@@ -271,6 +271,11 @@ it("locks the legacy prompt and schema", async () => {
   const digest = async (value: string) => Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value))), b => b.toString(16).padStart(2, "0")).join("");
   expect(await digest(promptSteps("x", [], "ზეთი", undefined, { count: 5 }))).toMatchInlineSnapshot(`"e1559541892bd01a6981fa9a97da361c0699a5353da2fa4750706b635cf09f3b"`);
   expect(await digest(JSON.stringify(schemaSteps(["p1"], 5, { freeText: true })))).toMatchInlineSnapshot(`"b8071c946144f73c67a33ff2b09856ca7146e17ef0f7a2c961dda0e48d2f44cd"`);
+  // Without check_photo the diagnostic prompt and schema are as before it (2026-10-18).
+  const caps = ["needs_answer", "needs_measurement", "summary", "tools_v2"];
+  const ctx = { round: 2, photoPrompt: "გადაიღე", doneSteps: ["ა"], answers: [{ question: "q?", answer: "a" }] };
+  expect(await digest(promptSteps("x", [], "ზეთი", ctx, { capabilities: caps, count: 5 }))).toMatchInlineSnapshot(`"a3779d5a03844f7bfd9960ff61353107a0b5d4a12c503f0ed379754bfc53a6ee"`);
+  expect(await digest(JSON.stringify(schemaSteps(["p1"], 5, { freeText: true, capabilities: caps, answerCount: 1 })))).toMatchInlineSnapshot(`"ed8f688ce810a3f66519f2f11b7a263ba00f79959ac6171921711ec0d944658d"`);
 });
 
 const capabilities = ["needs_answer", "needs_measurement", "summary"];

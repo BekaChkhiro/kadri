@@ -17,19 +17,25 @@ struct PhotoDoneView: View {
     @State private var appeared = false
     @State private var fixed: Bool?
 
+    private var completion: PhotoDoneContent {
+        PhotoDoneContent(cause: cause, summary: diagnosticSummary, stepCount: steps.count)
+    }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
                 header
                 hero.padding(.top, 4)
                 VStack(spacing: 6) {
-                    Text("მზადაა!").font(.kadri(27, weight: .semibold)).tracking(-0.5)
+                    Text(completion.title).font(.kadri(27, weight: .semibold)).tracking(-0.5)
                         .accessibilityAddTraits(.isHeader)
                         .photoEnter(0, appeared, base: 0.25, rise: 12)
-                    Text("ყველა \(steps.count) ნაბიჯი შესრულებულია.")
-                        .font(.kadri(15)).foregroundStyle(Theme.Colors.ink[600]!)
-                        .frame(maxWidth: 300)
-                        .photoEnter(1, appeared, base: 0.25, rise: 12)
+                    if let subtitle = completion.subtitle {
+                        Text(subtitle)
+                            .font(.kadri(15)).foregroundStyle(Theme.Colors.ink[600]!)
+                            .frame(maxWidth: 300)
+                            .photoEnter(1, appeared, base: 0.25, rise: 12)
+                    }
                 }
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 20)
@@ -67,7 +73,7 @@ struct PhotoDoneView: View {
         // The PNG has no alpha and an off-white ground: lifted to white, multiply leaves only the surface behind it.
         ZStack {
             Theme.Colors.surface
-            if let image = UIImage(named: "illo-done") {
+            if let image = UIImage(named: PhotoDoneContent.illustrationName(for: object)) {
                 Image(uiImage: image).resizable().scaledToFit().brightness(0.03).blendMode(.multiply)
             }
         }
@@ -101,14 +107,14 @@ struct PhotoDoneView: View {
                 }
                 .fixedSize(horizontal: false, vertical: true)
             }
-            if cause != nil || diagnosticSummary != nil {
+            if completion.cardTitle != nil || completion.summary != nil {
                 VStack(alignment: .leading, spacing: 8) {
-                    if let cause { Text("ნაპოვნი მიზეზი: \(cause)").font(.kadri(15, weight: .semibold)) }
-                    if let diagnosticSummary { Text(diagnosticSummary).font(.kadri(14)) }
+                    if let title = completion.cardTitle { Text(title).font(.kadri(15, weight: .semibold)) }
+                    if let summary = completion.summary { Text(summary).font(.kadri(14)) }
                 }
-                .foregroundStyle(Theme.Colors.brand[800]!).padding(12)
+                .foregroundStyle(Theme.Colors.ink[700]!).padding(12)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Theme.Colors.brand[50]!, in: RoundedRectangle(cornerRadius: 12))
+                .background(Theme.Colors.ink[50]!, in: RoundedRectangle(cornerRadius: 12))
             }
             VStack(alignment: .leading, spacing: 6) {
                 ForEach(Array(steps.enumerated()), id: \.offset) { _, step in
@@ -212,5 +218,35 @@ private struct PhotoWhiteButtonStyle: ButtonStyle {
             .foregroundStyle(Theme.Colors.ink[800]!)
             .background(.white, in: RoundedRectangle(cornerRadius: Theme.Radius.btn))
             .opacity(isEnabled ? (configuration.isPressed ? 0.75 : 1) : 0.4)
+    }
+}
+
+/// Presentation shared by the view and its contract tests.
+struct PhotoDoneContent {
+    let title: String
+    let subtitle: String?
+    let cardTitle: String?
+    let summary: String?
+
+    init(cause: String?, summary: String?, stepCount: Int) {
+        self.summary = summary
+        if let cause {
+            title = "მიზეზი ნაპოვნია"
+            subtitle = cause
+            cardTitle = nil
+        } else if summary != nil {
+            title = "ნაბიჯები შესრულდა"
+            subtitle = nil
+            cardTitle = "მიზეზი სავარაუდოა — შემოწმება საჭიროა"
+        } else {
+            title = "მზადაა!"
+            subtitle = "ყველა \(stepCount) ნაბიჯი შესრულებულია."
+            cardTitle = nil
+        }
+    }
+
+    static func illustrationName(for object: String) -> String {
+        let plumbing = ["ონკან", "სიფონ", "მილ", "ნიჟარ", "უნიტაზ"]
+        return plumbing.contains(where: object.contains) ? "illo-done" : "illo-done-neutral"
     }
 }

@@ -20,7 +20,7 @@ public struct HealthInfo: Hashable, Decodable, Sendable {
 public struct KadriClient: KadriAPI {
     public let config: APIConfig
     private let auth: (any TokenProviding)?
-    private let session: URLSession
+    let session: URLSession
 
     /// `auth` nil sends no Authorization header (the AI routes then answer 401 once auth is mounted).
     /// `session` defaults to one configured from `config`; tests pass one with a mock URLProtocol.
@@ -53,7 +53,19 @@ public struct KadriClient: KadriAPI {
         var request = try await authorizedRequest("/ai/parts")
         request.setValue(form.contentType, forHTTPHeaderField: "Content-Type")
         request.httpBody = form.body()
-        let data = try await session.kadriData(for: request)
+        let data: Data
+        do {
+            let (bytes, response, retrySession) = try await aiBytes(for: request)
+            defer { retrySession?.invalidateAndCancel() }
+            var received = Data()
+            for try await byte in bytes { received.append(byte) }
+            try Task.checkCancellation()
+            let status = (response as? HTTPURLResponse)?.statusCode ?? 0
+            guard (200..<300).contains(status) else { throw SessionError(status: status, body: received) }
+            data = received
+        } catch {
+            throw SessionError(error)
+        }
         let body = try decodeResponse(PartsBody.self, from: data)
         return PartsResult(object: body.object, parts: body.parts, latencyMs: body.latencyMs.map { Int($0.rounded()) })
     }
@@ -93,7 +105,8 @@ public struct KadriClient: KadriAPI {
         request.setValue("text/event-stream", forHTTPHeaderField: "Accept")
         request.httpBody = try JSONEncoder().encode(body)
 
-        let (bytes, response) = try await session.bytes(for: request)
+        let (bytes, response, retrySession) = try await aiBytes(for: request)
+        defer { retrySession?.invalidateAndCancel() }
         let status = (response as? HTTPURLResponse)?.statusCode ?? 0
         guard (200..<300).contains(status) else {
             var data = Data()
@@ -109,6 +122,33 @@ public struct KadriClient: KadriAPI {
         if let message = parser.finish(), try handle(message, continuation) { return }
         // The Worker always ends with `done` or `error`; anything else is a cut-off stream.
         throw SessionError.server(code: "ai_incomplete", message: "")
+    }
+
+    /// Retry only opening the response, never consuming it: replaying an already-started
+    /// response could duplicate steps or a model call. Keep the raw URL error until this decision.
+    private func aiBytes(for request: URLRequest) async throws -> (URLSession.AsyncBytes, URLResponse, URLSession?) {
+        do {
+            let (bytes, response) = try await session.bytes(for: request)
+            return (bytes, response, nil)
+        } catch {
+            try Task.checkCancellation()
+            let failure = error as NSError
+            guard failure.domain == NSURLErrorDomain,
+                  failure.code == URLError.networkConnectionLost.rawValue || failure.code == URLError.timedOut.rawValue
+            else { throw error }
+        }
+
+        // configuration is a copy; a separate session has a new connection pool while retaining
+        // the caller's timeouts and protocol configuration. Never reset other in-flight requests.
+        let retrySession = URLSession(configuration: session.configuration)
+        do {
+            try Task.checkCancellation()
+            let (bytes, response) = try await retrySession.bytes(for: request)
+            return (bytes, response, retrySession)
+        } catch {
+            retrySession.invalidateAndCancel()
+            throw error
+        }
     }
 
     /// Yields one SSE message; returns true once the stream is complete.
@@ -137,7 +177,7 @@ public struct KadriClient: KadriAPI {
         return SessionError(status: 200, body: Data("{\"error\":".utf8) + data + Data("}".utf8))
     }
 
-    private func authorizedRequest(_ path: String) async throws -> URLRequest {
+    func authorizedRequest(_ path: String) async throws -> URLRequest {
         var request = URLRequest(url: config.url(path), timeoutInterval: config.aiTimeout)
         request.httpMethod = "POST"
         if let auth {
@@ -157,7 +197,7 @@ private struct PartsBody: Decodable {
 
 private struct StepsRequest: Encodable {
     // nil is omitted to preserve the default Astra request.
-    let capabilities = ["needs_answer", "needs_measurement", "summary"]
+    let capabilities = ["needs_answer", "needs_measurement", "summary", "tools_v2", "check_photo", "arrows_v2"]
     let object: String
     let parts: [Part]
     let instructions: String
@@ -168,7 +208,7 @@ private struct StepsRequest: Encodable {
 }
 
 /// `done` payload: `{unknownParts, usage: {input_tokens, output_tokens, output_tokens_details}, costUsd, latencyMs, firstStepMs, model, continuation}`.
-private struct DoneBody: Decodable {
+struct DoneBody: Decodable {
     struct Usage: Decodable {
         struct OutputDetails: Decodable {
             let reasoning_tokens: Int?

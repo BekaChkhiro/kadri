@@ -82,27 +82,41 @@ struct MockKadriAPI: KadriAPI {
         Part(id: "p2", name: "ქანჩი", box: [615, 117, 755, 320]),
         Part(id: "p3", name: "სიფონი", box: [300, 320, 670, 545]),
     ])
+    // The shared sink fixture has three meshes; only the tool preview adds the fourth target.
+    static let toolPreviewResult = PartsResult(object: result.object, parts: result.parts + [
+        Part(id: "p4", name: "შეერთება", box: [370, 250, 490, 345])
+    ])
+    static let seenTool = StepToolCard(id: "ph2", size: "PH2", why: "ჯვარედინი სამაგრისთვის",
+        notThis: .init(id: "flat_small", reason: "ჭრილს დააზიანებს"), sizeSource: "seen")
+    static let typicalTool = StepToolCard(id: "open_wrench", size: "10 მმ", why: "ქანჩის მოსაშვებად",
+        fitCheck: "10 მმ მჭიდროდ უნდა მოერგოს; თუ თავისუფლად ბრუნავს, სცადე 11 მმ. ძალას ნუ დაატან.",
+        alternatives: ["11 მმ"])
     static let sampleSteps = [
         Step(index: 1, title: "დაკეტე წყალი", text: "მოატრიალე ონკანი საათის ისრის მიმართულებით ბოლომდე. შემდეგ მეორეც დაკეტე.", focus: ["p1"], avoid: ["p2"],
              markers: [StepMarker(part: "p1", label: "ონკანი")],
              arrows: [StepArrow(part: "p1", type: "rotate", dir: "cw")],
-             tip: "მეორე ონკანი მარცხნივაა", icon: "rotate_cw"),
+             tip: "მეორე ონკანი მარცხნივაა", icon: "rotate_cw",
+             toolCards: [seenTool], actions: [.init(part: "p1", kind: "press")]),
         Step(index: 2, title: "ჩადგი ვედრო სიფონის ქვეშ", text: "სიფონში წყალი დგას. ვედრო პირდაპირ მის ქვეშ დადგი.", focus: ["p3"],
              markers: [StepMarker(part: "p3", label: "ვედრო აქ")],
              arrows: [StepArrow(part: "p3", type: "move", dir: "down")],
              tools: ["ვედრო", "ტილო"],
              tip: "ვედრო პირდაპირ სიფონის ქვეშ დადგი.", icon: "place",
              toolItems: [StepTool(label: "ვედრო", icon: "bucket"), StepTool(label: "ტილო", icon: "cloth")]),
-        Step(index: 3, title: "მოუშვი ქანჩი", text: "ხელით მოუშვი საათის ისრის საწინააღმდეგოდ.", focus: ["p2"],
+        Step(index: 3, title: "მოუშვი ქანჩი", text: "ხელით მოუშვი საათის ისრის საწინააღმდეგოდ.", focus: ["p1", "p2"],
              markers: [StepMarker(part: "p2", label: "ქანჩი")],
              arrows: [StepArrow(part: "p2", type: "rotate", dir: "ccw")],
              tools: ["ხელთათმანი"],
              warn: "პლასტმასისაა, ზედმეტ ძალას ნუ დაატან.", icon: "unscrew",
-             toolItems: [StepTool(label: "ხელთათმანი", icon: "gloves")]),
+             toolItems: [StepTool(label: "ხელთათმანი", icon: "gloves")],
+             toolCards: [typicalTool], actions: [.init(part: "p2", kind: "rotate_ccw", amount: "¼")],
+             hands: [.init(part: "p1", grip: "hold", hand: "left", byHandOnly: false),
+                     .init(part: "p2", grip: "turn", hand: "right", byHandOnly: true)]),
         Step(index: 4, title: "შეამოწმე შეერთება", text: "გაწმინდე შეერთება და შეამოწმე რეზინის რგოლი. დაზიანებული რგოლი შეცვალე.", focus: ["p2"],
              markers: [StepMarker(part: "p2", label: "შეერთება")], tools: ["ტილო"],
              tip: "აწყობისას ქანჩი ხელით მოუჭირე.", icon: "clean",
-             toolItems: [StepTool(label: "ტილო", icon: "cloth")]),
+             toolItems: [StepTool(label: "ტილო", icon: "cloth")],
+             actions: [.init(part: "p2", kind: "tighten_order", order: ["p2", "p3", "p1", "p4"])]),
         Step(index: 5, title: "გადაამოწმე გაჟონვა", text: "ნელა გახსენი წყალი და დააკვირდი სიფონს. შეერთება მშრალი უნდა დარჩეს.", focus: ["p3"],
              markers: [StepMarker(part: "p3", label: "სიფონი")], tools: ["მშრალი ტილო"], icon: "check",
              toolItems: [StepTool(label: "მშრალი ტილო", icon: "cloth")]),

@@ -59,31 +59,35 @@ struct PhotoStepCard: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text(SessionPresentation.progress(index: index, count: count, streaming: streaming))
-                        .font(.kadri(13, weight: .semibold)).foregroundStyle(Theme.Colors.brand[600]!)
-                    HStack(spacing: 4) {
-                        ForEach(0..<max(count, 1), id: \.self) { item in
-                            Capsule().fill(barColor(item)).frame(height: 4)
-                        }
+        ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                Text(SessionPresentation.progress(index: index, count: count, streaming: streaming))
+                    .font(.kadri(13, weight: .semibold)).foregroundStyle(Theme.Colors.brand[600]!)
+                HStack(spacing: 4) {
+                    ForEach(0..<max(count, 1), id: \.self) { item in
+                        Capsule().fill(barColor(item)).frame(height: 4)
                     }
-                    .animation(.easeOut(duration: 0.2), value: index)
-                    .accessibilityHidden(true).padding(.top, 10)
-                    // Overlapping old and new content keeps the footer still while steps swap.
-                    ZStack(alignment: .topLeading) {
-                        content.id(index).transition(swap)
-                            .frame(maxWidth: .infinity, alignment: .topLeading)
-                    }
-                    .animation(.easeOut(duration: 0.2), value: index)
-                    .padding(.top, 16)
-                    .frame(maxWidth: .infinity, minHeight: 178, alignment: .topLeading)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 16)
+                .animation(.easeOut(duration: 0.2), value: index)
+                .accessibilityHidden(true).padding(.top, 10)
+                // Overlapping old and new content keeps the footer still while steps swap.
+                ZStack(alignment: .topLeading) {
+                    content.id(index).transition(swap)
+                        .frame(maxWidth: .infinity, alignment: .topLeading)
+                }
+                .animation(.easeOut(duration: 0.2), value: index)
+                .padding(.top, 16)
+                .frame(maxWidth: .infinity, minHeight: 178, alignment: .topLeading)
             }
-            .scrollBounceBehavior(.basedOnSize)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
+            .padding(.bottom, 16)
+        }
+        .id(index) // Each new instruction starts at its title, even after scrolling a tall tool card.
+        .scrollBounceBehavior(.basedOnSize)
+        .accessibilityIdentifier("step-scroll")
+        .safeAreaInset(edge: .bottom, spacing: 0) {
             HStack(spacing: 8) {
                 Button(action: previous) { Text("უკან").padding(.horizontal, 2) }
                     .buttonStyle(SessionButtonStyle(primary: false)).fixedSize(horizontal: true, vertical: false)
@@ -112,11 +116,12 @@ struct PhotoStepCard: View {
                 .disabled(presentation.disabled)
                 .accessibilityLabel(presentation.title)
                 .accessibilityHint(presentation.hint)
-            }.padding(.top, 12).padding(.horizontal, 16)
-
+            }
+            .padding(.horizontal, 16).padding(.top, 12).padding(.bottom, 16)
+            .background(Theme.Colors.surface)
+            .accessibilityIdentifier("step-footer")
         }
         .foregroundStyle(Theme.Colors.ink[900]!)
-        .padding(.vertical, 16)
         .transaction { $0.animation = nil }
     }
 
@@ -175,7 +180,26 @@ struct PhotoStepCard: View {
                     .padding(.top, 12)
                 }
                 let tools = step.toolItems ?? step.tools.map { StepTool(label: $0) }
-                if !tools.isEmpty {
+                if let cards = step.toolCards, !cards.isEmpty {
+                    let known = Array(cards.filter { ToolCatalog.name($0.id) != nil }.prefix(3))
+                    if known.count <= 2 {
+                        VStack(spacing: 10) {
+                            ForEach(Array(known.enumerated()), id: \.offset) { _, card in
+                                PhotoToolCard(tool: card)
+                            }
+                        }.padding(.top, 12)
+                    } else {
+                        ScrollView(.horizontal) {
+                            HStack(alignment: .top, spacing: 10) {
+                                ForEach(Array(known.enumerated()), id: \.offset) { _, card in
+                                    PhotoToolCard(tool: card).frame(width: 290)
+                                }
+                            }
+                        }.padding(.top, 12)
+                    }
+                } else if PhotoByHandCard.isVisible(for: step) {
+                    PhotoByHandCard().padding(.top, 12)
+                } else if !tools.isEmpty {
                     PhotoToolsLayout {
                         ForEach(Array(tools.prefix(3).enumerated()), id: \.offset) { _, tool in
                                 HStack(spacing: 6) {
