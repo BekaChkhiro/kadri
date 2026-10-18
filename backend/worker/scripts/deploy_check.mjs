@@ -4,7 +4,7 @@
 //   node scripts/deploy_check.mjs https://kadri-worker-staging.bekachkhirodze1.workers.dev [--env staging]
 //
 // Checks: GET /health → 200 {ok:true, env}; POST /ai/parts without a session →
-// 401 JSON; GET /sessions without a session → 401 JSON. Exits 1 on any failure.
+// 401 JSON; POST /ai/problem and GET /sessions without a session → 401 JSON. Exits 1 on any failure.
 const args = process.argv.slice(2);
 const url = args.find((a) => !a.startsWith("--"))?.replace(/\/+$/, "");
 const envIdx = args.indexOf("--env");
@@ -38,6 +38,11 @@ const checks = [
   {
     name: "POST /ai/parts (no auth)",
     run: () => call("POST", "/ai/parts", { image: "", instructions: "" }),
+    ok: (r) => r.status === 401 && r.json !== null && r.type.includes("application/json"),
+  },
+  {
+    name: "POST /ai/problem (no auth)",
+    run: () => call("POST", "/ai/problem", {}),
     ok: (r) => r.status === 401 && r.json !== null && r.type.includes("application/json"),
   },
   {

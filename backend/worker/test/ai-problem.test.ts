@@ -186,6 +186,29 @@ describe("guarded multi-photo transport", () => {
     const row = await env.DB.prepare("SELECT stage,status,provider,input_tokens FROM usage WHERE user_id=?").bind(user).first<any>();
     expect(row).toMatchObject({ stage: "problem", status: "ok", provider }); expect(row.input_tokens).toBeGreaterThan(0);
   });
+  it.each(["astra", "gemini"])("preserves dependency order and revisits the correct photo through %s", async provider => {
+    const body = input();
+    const originalPhotos = structuredClone(body.photos);
+    const value = plan();
+    const base = value.steps[0]!;
+    value.steps = [
+      { ...base, id: "dry_joint", photoId: "detail", componentIds: ["joint"] },
+      { ...base, id: "dry_pipe", title: "გაამშრალე მილი", text: "მილის ზედაპირი მშრალი ქსოვილით გაწმინდე.", photoId: "overview", componentIds: ["pipe"] },
+      { ...base, id: "inspect_joint", title: "შეამოწმე შეერთება", text: "შეერთებას დააკვირდი: ახალი წვეთი ხომ არ გაჩნდა?", photoId: "detail", componentIds: ["joint"], tool: null },
+    ];
+    mockFetch(() => Response.json(provider === "gemini" ? geminiBody(value) : responseBody(value)));
+    const res = await post({ ...body, provider }, `problem-revisit-${provider}`);
+    expect(res.status).toBe(200);
+    const result = await res.json<ProblemPlan>();
+    expect(result.steps).toEqual(value.steps);
+    expect(result.steps.map(s => s.photoId)).toEqual(["detail", "overview", "detail"]);
+    // The renderer must resolve each target against that step's own photo, including a revisit.
+    expect(result.steps.map(step => step.componentIds.map(id => result.components
+      .find(component => component.id === id)!.views.find(view => view.photoId === step.photoId)!.box)))
+      .toEqual([[[200, 100, 700, 800]], [[100, 500, 400, 900]], [[200, 100, 700, 800]]]);
+    expect(result.components).toEqual(value.components);
+    expect(body.photos).toEqual(originalPhotos);
+  });
   it("quota counts problem turns, failed requests included, no provider call after limit", async () => {
     const spy = mockFetch(() => Response.json(responseBody(plan())));
     expect((await post(input(), "problem-quota", { DAILY_SESSION_LIMIT: "1" })).status).toBe(200);

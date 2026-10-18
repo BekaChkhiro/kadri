@@ -7,6 +7,9 @@ final class PhotoSession: ObservableObject {
     let model: SessionModel
     let isMock: Bool
     @Published private(set) var image: UIImage?
+    /// Full-frame evidence is kept separately from the legacy square detector image.
+    @Published private(set) var draftPhotos: [ProblemPhoto] = []
+    @Published var selectedDraftPhotoID: String?
     @Published private(set) var meshes: [TrackedMesh] = []
     @Published private(set) var segmentationStatus: String?
     @Published var selectionError: String?
@@ -19,10 +22,18 @@ final class PhotoSession: ObservableObject {
     private var segmentation: Task<Void, Never>?
     private var preparedResult: PartsResult?
     private let authError: SessionError?
+    private let api: any KadriAPI
     /// A finished earlier round's photo; `rounds[i]` is round `i + 1`. The current round lives in `image`/`jpeg`/`meshes`.
     private struct PhotoRound { let image: UIImage; let jpeg: Data; let apiJPEG: Data; let meshes: [TrackedMesh] }
     private var rounds: [PhotoRound] = []
     var imageSize: CGSize { image?.size ?? CGSize(width: 1024, height: 1024) }
+    var selectedDraftPhoto: ProblemPhoto? {
+        draftPhotos.first(where: { $0.id == selectedDraftPhotoID }) ?? draftPhotos.first
+    }
+    var canAddDraftPhoto: Bool {
+        guard case .describing = model.phase else { return false }
+        return draftPhotos.count < ProblemSessionModel.maxPhotos
+    }
 
     init(api: (any KadriAPI)? = nil) {
         #if DEBUG && targetEnvironment(simulator)
@@ -42,10 +53,11 @@ final class PhotoSession: ObservableObject {
         let multiPhoto = false
         #endif
         let preview: any KadriAPI = ProcessInfo.processInfo.arguments.contains("--photo-check") ? MockKadriAPI.checkPhotoScenario() : MockKadriAPI(scanDelay: .seconds(1.2), stepDelay: .seconds(2.5), multiPhoto: multiPhoto, diagnostic: ProcessInfo.processInfo.arguments.contains("--photo-diagnostic"), answerThenPhoto: ProcessInfo.processInfo.arguments.contains("--photo-answer-then-photo"), answerOnSecondPhoto: ProcessInfo.processInfo.arguments.contains("--photo-answer-on-second-photo"))
-        model = SessionModel(api: api ?? (isMock ? preview : live()), scanTimeout: .seconds(config.scanTimeout))
+        self.api = api ?? (isMock ? preview : live())
         #else
-        model = SessionModel(api: api ?? live(), scanTimeout: .seconds(config.scanTimeout))
+        self.api = api ?? live()
         #endif
+        model = SessionModel(api: self.api, scanTimeout: .seconds(config.scanTimeout))
         model.beginDescribing()
     }
 
@@ -55,11 +67,62 @@ final class PhotoSession: ObservableObject {
             print("PHOTO_RESET_TRACE \(#function)\n" + Thread.callStackSymbols.joined(separator: "\n"))
         }
         #endif
+        guard let prepared = prepare(source), let photo = prepareDraft(source, role: .overview) else { return }
         cancelSegmentation()
         if case .describing = model.phase {} else { model.beginDescribing() }
         rounds = []
-        guard let prepared = prepare(source) else { return }
         jpeg = prepared.jpeg; apiJPEG = prepared.apiJPEG; image = prepared.image; selectionError = nil
+        draftPhotos = [photo]; selectedDraftPhotoID = photo.id
+    }
+
+    @discardableResult
+    func addDraftPhoto(_ source: UIImage) -> Bool {
+        guard canAddDraftPhoto else { return false }
+        if draftPhotos.isEmpty {
+            select(source)
+            return !draftPhotos.isEmpty
+        }
+        guard let photo = prepareDraft(source, role: .detail) else { return false }
+        draftPhotos.append(photo)
+        selectedDraftPhotoID = photo.id
+        selectionError = nil
+        return true
+    }
+
+    /// Keep at least one photo; replacing the first also updates the legacy single-photo input.
+    @discardableResult
+    func removeDraftPhoto(id: String) -> Bool {
+        guard case .describing = model.phase, draftPhotos.count > 1,
+              let index = draftPhotos.firstIndex(where: { $0.id == id }) else { return false }
+        if index == 0 {
+            guard let source = UIImage(data: draftPhotos[1].image), let prepared = prepare(source) else { return false }
+            jpeg = prepared.jpeg; apiJPEG = prepared.apiJPEG; image = prepared.image
+        }
+        draftPhotos.remove(at: index)
+        if selectedDraftPhotoID == id {
+            selectedDraftPhotoID = draftPhotos[min(index, draftPhotos.count - 1)].id
+        }
+        selectionError = nil
+        return true
+    }
+
+    /// Transfer the untouched evidence and description to a single problem without starting network work.
+    func makeProblemModel(provider: AIProvider = .astra, description: String? = nil) -> ProblemSessionModel {
+        let failure = isMock ? nil : authError
+        let problemAPI: any KadriAPI
+        if let failure { problemAPI = PhotoDraftUnavailableAPI(error: failure) }
+        else { problemAPI = api }
+        let problemModel = ProblemSessionModel(api: problemAPI, provider: provider)
+        if let description { problemModel.problem = description }
+        else if case .describing(let text) = model.phase { problemModel.problem = text }
+        else { problemModel.problem = model.instructions }
+        for photo in draftPhotos { problemModel.addPhoto(photo) }
+        return problemModel
+    }
+
+    private func prepareDraft(_ source: UIImage, role: ProblemPhoto.Role) -> ProblemPhoto? {
+        do { return ProblemPhoto(image: try ProblemPhotoImport.jpeg(from: source), role: role) }
+        catch { selectionError = error.localizedDescription; return nil }
     }
 
     /// Square-crop and rasterize orientation once. SAM and display consume the ≤1536 px JPEG; the detector gets a ≤768 px copy.
@@ -166,6 +229,7 @@ final class PhotoSession: ObservableObject {
         #endif
         cancelSegmentation()
         image = nil; jpeg = nil; apiJPEG = nil; preparedResult = nil; rounds = []; startedAt = nil
+        draftPhotos = []; selectedDraftPhotoID = nil
         model.beginDescribing()
     }
 
@@ -237,4 +301,13 @@ final class PhotoSession: ObservableObject {
         else { selectionError = "სატესტო ფოტო ვერ მოიძებნა." }
     }
     #endif
+}
+
+private struct PhotoDraftUnavailableAPI: KadriAPI {
+    let error: SessionError
+    func problem(_ request: ProblemRequest) async throws -> ProblemResult { throw error }
+    func parts(keyframe: Data, instructions: String, context: SessionContext?) async throws -> PartsResult { throw error }
+    func steps(object: String, parts: [Part], instructions: String, context: SessionContext?) -> AsyncThrowingStream<StepEvent, Error> {
+        AsyncThrowingStream { $0.finish(throwing: error) }
+    }
 }

@@ -17,11 +17,11 @@ npx wrangler whoami
 | D1 (`DB`) | `kadri-staging` (EEUR) | `3857740b-3d9a-4738-aaa8-14e7d8573789` |
 | R2 (`PHOTOS`) | `kadri-photos-staging` | — |
 
-- Migration-ები remote-ზე: `0000_users`, `0001_init`, `0002_usage`, `0003_usage_explain` (2026-10-18).
+- Migration-ები remote-ზე: `0000_users`, `0001_init`, `0002_usage`, `0003_usage_explain`, `0004_usage_problem` (2026-10-18).
 - Secret-ები: `OPENAI_API_KEY`, `SESSION_SECRET`, `GOOGLE_CLIENT_IDS` (iOS + Web client ID მძიმით — `src/auth.ts` `split(",")`),
-  `GEMINI_API_KEY` (`/ai/explain` და `/ai/ask` default-ად Gemini-ს იყენებს), `KNOWLEDGE_HUB_KEY`.
-- ბოლო deploy: 2026-10-18, ვერსია `91884ca1` — იხ. [STAGING_2026-10-18.md](STAGING_2026-10-18.md).
-- Vars (`[env.staging.vars]`): `ENVIRONMENT=staging`, `AI_PROVIDER=astra`, `DAILY_SESSION_LIMIT=20`, `AI_TIMEOUT_MS=60000`.
+  `GEMINI_API_KEY` (`/ai/ask` default-ად Gemini-ს იყენებს), `KNOWLEDGE_HUB_KEY`.
+- ბოლო deploy: 2026-10-18, ვერსია `1a075bb0-6eb7-44b9-945b-6640386fa4b7` — ერთობლივი მრავალფოტოიანი ანალიზი; იხ. [MULTI_PHOTO_PROBLEM.md](MULTI_PHOTO_PROBLEM.md).
+- Vars (`[env.staging.vars]`): `ENVIRONMENT=staging`, `AI_PROVIDER=astra`, `DAILY_SESSION_LIMIT=1000`, `AI_TIMEOUT_MS=60000`.
 - `SESSION_SECRET`-ის ასლი მხოლოდ deploy-ის გამკეთებლის მანქანაზეა: `~/.config/kadri/staging.env` (chmod 600, git-ის გარეთ) —
   ფასიანი acceptance-ისთვის dev token-ის მოსაწერად. დაკარგვის შემთხვევაში უბრალოდ დაატრიალე (იხ. ქვემოთ).
 
@@ -43,7 +43,7 @@ npm run deploy:staging
 node scripts/deploy_check.mjs https://kadri-worker-staging.bekachkhirodze1.workers.dev --env staging
 ```
 
-`deploy_check.mjs` უფასოა: `/health` → 200 `{ok:true, env}`, `POST /ai/parts` და `GET /sessions` auth-ის გარეშე → 401 JSON.
+`deploy_check.mjs` უფასოა: `/health` → 200 `{ok:true, env}`, `POST /ai/parts`, `POST /ai/problem` და `GET /sessions` auth-ის გარეშე → 401 JSON.
 
 ფასიანი acceptance (ledger + cap):
 
@@ -57,7 +57,6 @@ Inputs: `experiments/som-test/out_realism/c_astra_tracking/**/input.png` მთ�
 მოკლე ფასიანი smoke ახალი route-ებისთვის (თითო ცალი გამოძახება, token იგივე `staging.env`-იდან, არ იბეჭდება):
 
 ```sh
-node scripts/staging_smoke.mjs explain --image <photo> --out <dir>                      # ≈ $0.003 (Gemini)
 node scripts/staging_smoke.mjs ask --image <photo> --out <dir> --box x0,y0,x1,y1         # ≈ $0.002 (Gemini)
 node scripts/staging_smoke.mjs steps --image <photo> --out <dir> --parts <parts.json> \
   --instructions <parts_request/request.json> --max-steps 2                              # astra; ჩერდება N step-ზე

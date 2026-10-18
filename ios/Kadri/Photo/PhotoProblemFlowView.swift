@@ -6,6 +6,8 @@ import KadriCore
 struct PhotoProblemFlowView: View {
     @State private var model: ProblemSessionModel
     private let isDemo: Bool
+    private let submitOnAppear: Bool
+    @State private var started = false
     @Environment(\.dismiss) private var dismiss
     @State private var picked: [PhotosPickerItem] = []
     @State private var camera = false
@@ -16,9 +18,10 @@ struct PhotoProblemFlowView: View {
     @State private var stepNote = ""
     @State private var operation: Task<Void, Never>?
 
-    init(model: ProblemSessionModel? = nil, isDemo: Bool = false) {
+    init(model: ProblemSessionModel? = nil, isDemo: Bool = false, submitOnAppear: Bool = false) {
         _model = State(initialValue: model ?? Self.liveModel())
         self.isDemo = isDemo
+        self.submitOnAppear = submitOnAppear
     }
 
     var body: some View {
@@ -100,7 +103,13 @@ struct PhotoProblemFlowView: View {
                 if let step = model.currentStep { selectedID = step.photoId }
                 stepNote = ""
             }
-            .onAppear { if selectedID == nil { selectedID = model.currentStep?.photoId } }
+            .onAppear {
+                if selectedID == nil { selectedID = model.currentStep?.photoId }
+                if submitOnAppear && !started {
+                    started = true
+                    run { await model.submit() }
+                }
+            }
             .onDisappear { if !camera { operation?.cancel() } }
         }.preferredColorScheme(.light)
     }

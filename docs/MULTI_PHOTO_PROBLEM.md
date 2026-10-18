@@ -25,6 +25,8 @@ Observations classify relevance as `relevant`, `uncertain`, or `unrelated`. A co
 
 Each step contains `id`, `title`, `text`, `photoId`, `componentIds`, nullable `arrow`, nullable `warning`, and nullable `tool`. Every targeted component must have a view on the selected relevant photo. IDs already in history cannot be replayed. Arrow pairs are `rotate:cw/ccw`, `move:up/down/left/right/toward/away/up_left/up_right/down_left/down_right`, and `press/hold/align:none`.
 
+The model orders actions by their prerequisites and the problem's needs, independently of upload order. Each step selects the clearest available view of its target; a plan can revisit a photo, for example photo 2 → photo 1 → photo 2. The input photos, their IDs, and their evidence associations stay intact. Both provider transport tests exercise that sequence and verify the selected components' photo-specific boxes after response validation and coordinate conversion. These mocked tests establish ordering and reference preservation, not the model's ability to choose a correct real-world sequence.
+
 `next` contains `kind`, `prompt`, and `reason`:
 
 - `needs_answer` / `needs_photo`: request missing evidence with zero actionable steps.
@@ -44,7 +46,7 @@ Each paid problem turn counts toward the existing daily limit, together with leg
 
 Successful requests record provider/model, tokens, estimated cost and latency; failures record an error/timeout row. As in older routes, unknown tokens/cost on failed requests are recorded as zero and are not proof that the provider charged nothing. No images or prompt contents are saved in usage rows. Database writes are kept alive through the Worker execution context.
 
-**Not deployed:** development and testing used mocked provider responses only, with no paid AI calls. A production-quality claim needs a separately authorized real multi-photo evaluation; the simulator demo proves the app flow, not model accuracy.
+**Deployed to staging on 2026-10-18:** Worker version `1a075bb0-6eb7-44b9-945b-6640386fa4b7`, after migration `0004_usage_problem.sql`. The 439 existing usage rows were preserved. Free health/auth checks passed, including `/ai/problem` returning 401 without credentials. Development tests used mocked provider responses; no paid multi-photo evaluation has been run. Routing and simulator checks do not establish model accuracy.
 
 ## Backend verification
 
@@ -59,7 +61,7 @@ Current result: all 399 Worker tests passed, including 70 new multi-photo tests.
 
 ## iOS workflow and simulator review
 
-The start screen has a **რამდენიმე ფოტო · ერთი პრობლემა** entry. `PhotoProblemFlowView` uses its own `ProblemSessionModel`, leaving the single-photo flow available. Photos can be selected together from the library or added from the full-frame camera. Import normalizes all eight orientations, preserves the entire frame, downsamples to ≤768 pixels without upscaling, and caps source/output bytes. Each photo has an editable role and note until a successful analysis submits that evidence.
+The start screen uses its existing **გადაიღე ფოტო** and gallery entries. After the first capture, the original description screen shows a photo strip and **ფოტოს დამატება** for another camera shot or multiple gallery photos (up to five total). Adding/removing photos preserves the description and stable photo IDs. There is no separate multi-photo start button. Submitting one photo keeps the existing single-photo pipeline; submitting several transfers all full-frame evidence, description and selected AI provider into `ProblemSessionModel` and opens `PhotoProblemFlowView` directly in analysis. Users do not have to describe the problem again. Closing that result view returns to the original draft. Import normalizes all eight orientations, preserves the entire frame, downsamples to ≤768 pixels without upscaling, and caps source/output bytes. Each photo has an editable role and note until a successful analysis submits that evidence.
 
 The current step selects its own photo. Component IDs can occur in multiple photos, each with its own box; `ProblemEvidenceView` refuses to draw a step's arrow on a different selected photo. Users can report done/unable/unchanged, answer clarification, or add another evidence photo and request a revised plan. Pending new photos disable old action controls until reconsidered. The original description, submitted evidence, answers and history remain in the in-memory session. Closing the session does not persist it to disk.
 
@@ -80,3 +82,10 @@ Tap **შეადგინე ნაბიჯები**, answer where the drop
 Core validation: 151 tests executed, one skipped, zero failures; 14 specifically cover multi-photo state/transport, including Unicode-safe request bounds and network cancellation. New simulator tests cover full-frame imports and the complete mocked multi-photo flow, including wrong-photo arrow exclusion and unsuccessful-action handling.
 
 Simulator regression result: **39/39 passed**, covering the new flow/import tests plus existing annotation selection, autopilot, camera, check-photo, completion and multi-round tests. The final UI-only rerun after presentation refinements also passed **2/2**. Logs: `/tmp/kadri-problem-regression.log`, `/tmp/kadri-problem-ui-final.log`; screenshots of seven flow states are in `/tmp/kadri-problem-shots/`. Simulator tests and screenshots do not establish live model accuracy. No videos were created.
+
+
+### Unified capture validation (2026-10-18)
+
+The unified draft preserves the original description panel and AI-provider picker. Camera captures retain the full frame; additional photos may come from camera or library. Tests verify first/last-photo removal, five-photo limit, preserved description/provider/IDs, automatic analysis on submission, and photo 2 → photo 1 → photo 2 step order. The initial simulator regression passed 18/18 tests; the final draft/flow suite passed 11/11. Backend problem tests passed 72/72 and typecheck passed. Screenshots were inspected at iPhone 12 dimensions and a compact keyboard-sized viewport. No video was recorded.
+
+iPhone 12 build `2026101802` was installed over the previous NETA app and launched normally, using staging rather than mock launch arguments. A real user-photo AI run is still to be evaluated.

@@ -8,6 +8,8 @@ struct PhotoScreenLayout<Photo: View, Panel: View>: View {
     var subtitle: String? = nil
     var close: () -> Void
     var newPhoto: () -> Void
+    var newPhotoLabel = "სხვა ფოტო"
+    var panelMinimumHeight: CGFloat = 210
     @ViewBuilder var photo: () -> Photo
     @ViewBuilder var panel: () -> Panel
     static var minimumPanelHeight: CGFloat { 210 }
@@ -16,10 +18,10 @@ struct PhotoScreenLayout<Photo: View, Panel: View>: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            PhotoHeader(title: title, subtitle: subtitle, close: close, newPhoto: newPhoto)
+            PhotoHeader(title: title, subtitle: subtitle, close: close, newPhoto: newPhoto, newPhotoLabel: newPhotoLabel)
                 .padding(.horizontal, 16).padding(.top, 8).padding(.bottom, 10)
             GeometryReader { proxy in
-                let side = max(0, min(proxy.size.width - 2 * Self.horizontalInset, proxy.size.height - Self.minimumPanelHeight))
+                let side = max(0, min(proxy.size.width - 2 * Self.horizontalInset, proxy.size.height - panelMinimumHeight))
                 VStack(spacing: 0) {
                     photo()
                         .allowsHitTesting(false)
@@ -47,6 +49,7 @@ struct PhotoHeader: View {
     var subtitle: String? = nil
     var close: () -> Void
     var newPhoto: () -> Void
+    var newPhotoLabel = "სხვა ფოტო"
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var pulse = false
 
@@ -77,7 +80,7 @@ struct PhotoHeader: View {
                 Image(systemName: "photo.on.rectangle").font(.system(size: 16, weight: .medium))
                     .frame(width: 44, height: 44).glass(radius: 22)
             }
-            .accessibilityLabel("სხვა ფოტო").accessibilityHint("ახალი ფოტოს არჩევაზე გადავა")
+            .accessibilityLabel(newPhotoLabel).accessibilityHint("ახალი ფოტოს არჩევაზე გადავა")
         }
         .onAppear { pulse = !reduceMotion }
     }

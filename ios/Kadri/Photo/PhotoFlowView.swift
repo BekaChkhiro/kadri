@@ -13,6 +13,12 @@ struct PhotoFlowView: View {
     }()
     @State private var checkPhotoRequest = false
     @State private var problemFlow = false
+    @State private var problemModel: ProblemSessionModel?
+    @State private var addSource = false
+    @State private var draftLibrary = false
+    @State private var draftPicked: [PhotosPickerItem] = []
+    @State private var importingDraft = false
+    @State private var draftImportGeneration = UUID()
     @State private var picked: PhotosPickerItem?
     @State private var launchedDemo = false
     #if DEBUG && targetEnvironment(simulator)
@@ -34,16 +40,30 @@ struct PhotoFlowView: View {
             if case .steps(_, _, streaming: true) = session.model.phase { checkPhotoRequest = false }
         }
         .fullScreenCover(isPresented: $camera) {
-            PhotoCamera() { image in
+            PhotoCamera(fullFrame: isDescribing) { image in
                 use(image)
             }
         }
-        .fullScreenCover(isPresented: $problemFlow) { PhotoProblemFlowView() }
+        .fullScreenCover(isPresented: $problemFlow, onDismiss: { problemModel = nil }) {
+            if let problemModel { PhotoProblemFlowView(model: problemModel, submitOnAppear: true) }
+        }
+        .confirmationDialog("ფოტოს დამატება", isPresented: $addSource, titleVisibility: .visible) {
+            if cameraAvailable { Button("გადაიღე კიდევ ერთი ფოტო") { camera = true } }
+            Button("აირჩიე გალერეიდან") { draftLibrary = true }
+            Button("გაუქმება", role: .cancel) {}
+        }
+        .photosPicker(isPresented: $draftLibrary, selection: $draftPicked,
+                      maxSelectionCount: max(1, 5 - session.draftPhotos.count), selectionBehavior: .ordered, matching: .images)
+        .task(id: draftPicked) { await importDraftPhotos() }
         .task(id: picked) {
             guard let picked else { return }
             do {
-                guard let data = try await picked.loadTransferable(type: Data.self),
-                      let image = UIImage(data: data) else {
+                guard let data = try await picked.loadTransferable(type: Data.self) else {
+                    session.selectionError = "ფოტოს წაკითხვა ვერ მოხერხდა."
+                    return
+                }
+                let prepared = isDescribing ? try ProblemPhotoImport.jpeg(from: data) : data
+                guard let image = UIImage(data: prepared) else {
                     session.selectionError = "ფოტოს წაკითხვა ვერ მოხერხდა."
                     return
                 }
@@ -79,7 +99,47 @@ struct PhotoFlowView: View {
         if session.model.canContinueWithCheckPhoto {
             checkPhotoRequest = false
             session.continueWithCheckPhoto(image)
-        } else if session.model.canContinueWithPhoto { session.continueWithPhoto(image) } else { session.select(image) }
+        } else if session.model.canContinueWithPhoto { session.continueWithPhoto(image) }
+        else if isDescribing && !session.draftPhotos.isEmpty { _ = session.addDraftPhoto(image) }
+        else { session.select(image) }
+    }
+
+    private var isDescribing: Bool {
+        switch session.model.phase { case .idle, .describing: true; default: false }
+    }
+
+    private func importDraftPhotos() async {
+        guard !draftPicked.isEmpty else { return }
+        let generation = draftImportGeneration
+        importingDraft = true
+        defer { importingDraft = false }
+        for item in draftPicked {
+            do {
+                guard let data = try await item.loadTransferable(type: Data.self) else { throw CocoaError(.fileReadCorruptFile) }
+                try Task.checkCancellation()
+                let jpeg = try ProblemPhotoImport.jpeg(from: data)
+                guard let image = UIImage(data: jpeg) else { throw CocoaError(.fileReadCorruptFile) }
+                try Task.checkCancellation()
+                guard generation == draftImportGeneration else { return }
+                _ = session.addDraftPhoto(image)
+            } catch is CancellationError { return }
+            catch { session.selectionError = error.localizedDescription }
+        }
+        draftPicked = []
+    }
+
+    private func resetDraft() {
+        draftImportGeneration = UUID()
+        draftPicked = []; picked = nil
+        session.retake()
+    }
+
+    private func submitDraft(provider: AIProvider) {
+        guard !importingDraft else { return }
+        if session.draftPhotos.count > 1 {
+            problemModel = session.makeProblemModel(provider: provider, description: description)
+            problemFlow = true
+        } else { session.submit(description, provider: provider) }
     }
 
     private var continueDemo: (() -> Void)? {
@@ -100,7 +160,7 @@ struct PhotoFlowView: View {
 
     private var picker: some View {
         PhotoStartView(cameraAvailable: cameraAvailable, takePhoto: { camera = true }, picked: $picked,
-                       selectExample: session.selectExample, demo: demo, multiplePhotos: { problemFlow = true })
+                       selectExample: session.selectExample, demo: demo)
     }
 
     private var demo: (() -> Void)? {
@@ -135,7 +195,7 @@ struct PhotoFlowView: View {
         case .done(let result, _):
             PhotoDoneView(object: result.object, steps: session.model.allSteps, photos: session.model.round,
                           minutes: session.minutes(), thumbnail: image,
-                          close: session.retake, newPhoto: session.retake,
+                          close: resetDraft, newPhoto: resetDraft,
                           cause: session.model.foundCause, diagnosticSummary: session.model.completionSummary,
                           answers: session.model.answers.count)
         case .scanning(let startedAt):
@@ -150,12 +210,20 @@ struct PhotoFlowView: View {
                 }
             }
         default:
-            photoScreen(image, title: session.model.round > 1 ? "ფოტო \(session.model.round)" : "ფოტო") {
+            photoScreen(image, title: isDescribing && session.draftPhotos.count > 1 ? "\(session.draftPhotos.count) ფოტო · ერთი პრობლემა" : (session.model.round > 1 ? "ფოტო \(session.model.round)" : "ფოტო"),
+                        panelMinimumHeight: isDescribing ? 330 : 210) {
                 switch session.model.phase {
                 case .idle, .describing:
-                    PhotoDescribePanel(text: Binding(get: { description }, set: { session.model.updateText($0) }), submit: { provider in
-                        session.submit(description, provider: provider)
-                    })
+                    VStack(spacing: 0) {
+                        PhotoDraftAttachments(photos: session.draftPhotos, selectedID: session.selectedDraftPhoto?.id,
+                            canAdd: session.canAddDraftPhoto && !importingDraft, importing: importingDraft,
+                            select: { session.selectedDraftPhotoID = $0 },
+                            remove: { _ = session.removeDraftPhoto(id: $0) }, add: { addSource = true })
+                            .disabled(importingDraft)
+                        PhotoDescribePanel(text: Binding(get: { description }, set: { session.model.updateText($0) }),
+                                           submit: submitDraft)
+                            .disabled(importingDraft)
+                    }
                 case .error(let error, _):
                     // A later round's failure keeps the earlier rounds: retry repeats only the last request,
                     // and "წინა ნაბიჯებზე" returns to the previous round's finished steps.
@@ -180,7 +248,7 @@ struct PhotoFlowView: View {
                         if round > 1 {
                             Button("წინა ნაბიჯებზე", action: session.model.cancel).buttonStyle(SessionButtonStyle(primary: false))
                         } else {
-                            Button("სხვა ფოტო", action: session.retake).buttonStyle(SessionButtonStyle(primary: false))
+                            Button("სხვა ფოტო", action: resetDraft).buttonStyle(SessionButtonStyle(primary: false))
                         }
                     }.padding(16)
                 default: EmptyView()
@@ -190,10 +258,14 @@ struct PhotoFlowView: View {
     }
 
     private func photoScreen<Panel: View>(_ image: UIImage, title: String, subtitle: String? = nil, scanning: Bool = false,
+                                          panelMinimumHeight: CGFloat = 210,
                                           @ViewBuilder panel: @escaping () -> Panel) -> some View {
-        PhotoScreenLayout(title: title, subtitle: subtitle, close: session.retake, newPhoto: session.retake) {
+        PhotoScreenLayout(title: title, subtitle: subtitle, close: resetDraft,
+                          newPhoto: { if isDescribing { if session.canAddDraftPhoto && !importingDraft { addSource = true } } else { resetDraft() } },
+                          newPhotoLabel: isDescribing ? "ფოტოს დამატება" : "სხვა ფოტო", panelMinimumHeight: panelMinimumHeight) {
             GeometryReader { proxy in
-                Image(uiImage: image).resizable().scaledToFit()
+                let shown = isDescribing ? session.selectedDraftPhoto.flatMap { UIImage(data: $0.image) } ?? image : image
+                Image(uiImage: shown).resizable().scaledToFit()
                     .frame(width: proxy.size.width, height: proxy.size.height)
                     .background(Theme.Colors.ink[800]!)
                     .overlay { if scanning { PhotoScanBeam() } }
@@ -232,9 +304,9 @@ struct PhotoFlowView: View {
                         step: session.model.currentStep, index: session.model.currentStepIndex,
                         count: count, streaming: streaming, object: shown.object,
                         segmentationStatus: earlier ? nil : session.segmentationStatus,
-                        close: { session.model.cancel(); session.retake() },
+                        close: { session.model.cancel(); resetDraft() },
                         previous: session.model.previous, next: session.model.next, finish: session.model.finish,
-                        completed: completed, newPhoto: session.retake,
+                        completed: completed, newPhoto: resetDraft,
                         round: session.model.displayedRound, totalRounds: session.model.round,
                         continuation: displayedContinuation, continueCamera: { camera = true },
                         picked: $picked, continueDemo: continueDemo, cameraAvailable: cameraAvailable,

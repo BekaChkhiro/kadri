@@ -72,6 +72,7 @@
 		8263E4FF08D843EB2B3CF8D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6BFC1330F321F32C6012EEBF /* Assets.xcassets */; };
 		82D4EB97AFBD4777405B586E /* PhotoFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89FAEC6BDACE10C06F57842 /* PhotoFlowView.swift */; };
 		89EF43D89D35C3880A687D29 /* SessionPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6881E6C4A4099231DB05929E /* SessionPresentation.swift */; };
+		8AE2042BC2166447BF82367B /* PhotoDraftAttachments.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C6B48863AF852505084DF2 /* PhotoDraftAttachments.swift */; };
 		8AF92C18CC97F538606A9925 /* sink-trap.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CE0790A844E2730486BCBD6 /* sink-trap.jpg */; };
 		90C0E129FBCD2EEB0AF92304 /* PhotoAskSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7EF6CF53BED165709BED902 /* PhotoAskSession.swift */; };
 		911ED0886C0266D78048B031 /* Lucide-Lab-LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 024658046573044EAC551C85 /* Lucide-Lab-LICENSE.txt */; };
@@ -114,6 +115,7 @@
 		CD1809AFA99BF36433718F5C /* PhotoDoneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94BB99EE723CF1A9948665C /* PhotoDoneTests.swift */; };
 		CDB2183EC0AC15321F081B86 /* PhotoAnnotationSelectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095A9F5003EC56513E511669 /* PhotoAnnotationSelectionTests.swift */; };
 		CF9340E3801202F0077B1839 /* PhotoScreenLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D1B07A812427B1A2956178 /* PhotoScreenLayout.swift */; };
+		D18DBD4F534200B26BCD23F0 /* PhotoCaptureDraftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 627BC6E8125430C2726FAD3D /* PhotoCaptureDraftTests.swift */; };
 		D18EA55C063A29BEACCC9797 /* PhotoArrowDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD58CA3CF58F4F043340F23 /* PhotoArrowDemoTests.swift */; };
 		D3ED407E60FAF0C1D2A7C9EC /* PhotoAnswerCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2053C3CD5043169500D908 /* PhotoAnswerCard.swift */; };
 		D4B737239B370539AB196A3C /* ArrowDemoRAM.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9646DFC05D68ED27E1E9A878 /* ArrowDemoRAM.jpg */; };
@@ -211,6 +213,7 @@
 		5C2F2663F8AA61EA2F85AFB1 /* PhotoActionOverlays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoActionOverlays.swift; sourceTree = "<group>"; };
 		5C48F483752F0C98BE7394F2 /* car-engine.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "car-engine.jpg"; sourceTree = "<group>"; };
 		5FF12F4D98C708EE32218BCF /* MeshWrapPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrapPreview.swift; sourceTree = "<group>"; };
+		627BC6E8125430C2726FAD3D /* PhotoCaptureDraftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCaptureDraftTests.swift; sourceTree = "<group>"; };
 		6366AA02F6FA245F00DC540F /* ToolSymbols-NOTICES.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ToolSymbols-NOTICES.txt"; sourceTree = "<group>"; };
 		66787C94DC3D49CBEA588BB7 /* microscope.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = microscope.jpg; sourceTree = "<group>"; };
 		6881E6C4A4099231DB05929E /* SessionPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPresentation.swift; sourceTree = "<group>"; };
@@ -248,6 +251,7 @@
 		A00B16E38C3E8EC7B01B52E4 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
 		A07FD3A6DD38BBD488C4C97D /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
 		A23E1970C2B487CBB0EA08BE /* PhotoSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSession.swift; sourceTree = "<group>"; };
+		A3C6B48863AF852505084DF2 /* PhotoDraftAttachments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDraftAttachments.swift; sourceTree = "<group>"; };
 		A5230CCC2200BBBF0F4F9EC7 /* PhotoProblemDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoProblemDemo.swift; sourceTree = "<group>"; };
 		A57C76ED6947A710AECBC58E /* StepCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepCard.swift; sourceTree = "<group>"; };
 		A67531DAC3A9852818926C8F /* MockKadriAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockKadriAPI.swift; sourceTree = "<group>"; };
@@ -413,6 +417,7 @@
 				4FE8198FFF1A8A2B445C734B /* PhotoAskTests.swift */,
 				1871C6CA29F7300DBC4AE016 /* PhotoAutopilotTests.swift */,
 				DB748283AE19E0D5E0E7A435 /* PhotoCameraTests.swift */,
+				627BC6E8125430C2726FAD3D /* PhotoCaptureDraftTests.swift */,
 				E99544A02637877483716932 /* PhotoCheckPhotoTests.swift */,
 				B94BB99EE723CF1A9948665C /* PhotoDoneTests.swift */,
 				06D7C1BD4975682E54019666 /* PhotoGeometryTests.swift */,
@@ -559,6 +564,7 @@
 				B1A70C234762767D0C800572 /* PhotoCamera.swift */,
 				99E69F2BA389AE1BEFA6DBDA /* PhotoDescribePanel.swift */,
 				2E6781738FE80881F0DDED88 /* PhotoDoneView.swift */,
+				A3C6B48863AF852505084DF2 /* PhotoDraftAttachments.swift */,
 				30A6F03CAD2DF669DE907FD8 /* PhotoExamples.swift */,
 				F89FAEC6BDACE10C06F57842 /* PhotoFlowView.swift */,
 				1512A702D1C9EDDCC4FBA982 /* PhotoGeometry.swift */,
@@ -797,6 +803,7 @@
 				46EEFF85FA4412637D03400D /* PhotoAskTests.swift in Sources */,
 				F1B141686FF19D53FF4EB716 /* PhotoAutopilotTests.swift in Sources */,
 				4BD132D04F687E8E9382E59A /* PhotoCameraTests.swift in Sources */,
+				D18DBD4F534200B26BCD23F0 /* PhotoCaptureDraftTests.swift in Sources */,
 				B99EC8E28F38C0AAAF25F241 /* PhotoCheckPhotoTests.swift in Sources */,
 				CD1809AFA99BF36433718F5C /* PhotoDoneTests.swift in Sources */,
 				6AFFDEEA94A7F59B951C62FF /* PhotoGeometryTests.swift in Sources */,
@@ -850,6 +857,7 @@
 				60C2AB54EE7F78639047B484 /* PhotoCamera.swift in Sources */,
 				C28D4BEE3D67FCA70CE9F6C2 /* PhotoDescribePanel.swift in Sources */,
 				3332F4CC1A65DACD56263648 /* PhotoDoneView.swift in Sources */,
+				8AE2042BC2166447BF82367B /* PhotoDraftAttachments.swift in Sources */,
 				15D7863ED2559AC4F9874683 /* PhotoExamples.swift in Sources */,
 				82D4EB97AFBD4777405B586E /* PhotoFlowView.swift in Sources */,
 				C5214BAAAC982579370A21A8 /* PhotoGeometry.swift in Sources */,
