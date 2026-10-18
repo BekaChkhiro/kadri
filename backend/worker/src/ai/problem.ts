@@ -49,7 +49,7 @@ export function problemSchema(): JsonSchema {
     components: list(componentSchema(), 15),
     links: list(obj({ fromId: id(), toId: id(), relation: oneOf(["same_system", "connected", "uncertain"]),
       evidencePhotoIds: list(id(), 5, 1), reason: str(300) }), 15),
-    steps: list(obj({ id: id(), title: str(100), text: str(600), photoId: id(), componentIds: list(id(), 5, 1),
+    steps: list(obj({ id: id(), title: str(100), text: str(600), photoId: id(), componentIds: list(id(), 5),
       arrow: arrowSchema(), warning: { type: ["string", "null"], maxLength: 300 }, tool: { type: ["string", "null"], maxLength: 100 } }), 5),
     next: obj({ kind: oneOf(["needs_answer", "needs_photo", "verify", "resolved", "unresolved"]), prompt: str(500), reason: str(500) }),
   });
@@ -150,6 +150,7 @@ export function validateProblem(raw: unknown, input: ProblemInput): ProblemPlan 
     unique(step.componentIds, "step components");
     if (step.componentIds.some(id => !components.get(id)?.views.some(v => v.photoId === step.photoId))) throw new Error("Action lacks target on its photo");
     const a = step.arrow;
+    if (!step.componentIds.length && a !== null) throw new Error("Offscreen action cannot have an arrow");
     if (a && !(a.type === "rotate" ? ["cw", "ccw"].includes(a.dir) : a.type === "move"
       ? [...MOVE_ARROW_DIRECTIONS, ...DIAGONAL_ARROW_DIRECTIONS].some(d => d === a.dir) : a.dir === "none")) throw new Error("Invalid arrow pair");
   }
@@ -173,6 +174,8 @@ export function promptProblem(input: ProblemInput, yx = false): string {
 ერთი ფიზიკური დეტალი სხვადასხვა ხედში არის ერთი component ID რამდენიმე views-ით. ერთი სისტემის სხვადასხვა ნაწილები ცალკე components-ია; links ასახავს მხოლოდ ხილულ კავშირს. გაურკვეველი მსგავსება არ ნიშნავს ერთსა და იმავე დეტალს. ასეთ შემთხვევაში დასვი კითხვა, steps=[]; uncertain link არ გადააქციო დადასტურებულად. unrelated ფოტოზე მოქმედება აკრძალულია.
 კოორდინატები box=[x0,y0,x1,y1], 0–1000, ყოველთვის კონკრეტული ფოტოს მიმართ; ერთი ფოტოს კოორდინატები სხვაზე არ გადაიტანო. შეინარჩუნე previousComponents-ის ID მხოლოდ როცა იდენტობა მტკიცდება. ადრე/შემდეგ ფოტოები დროით განსხვავდება; ძველი დაზიანება ახალ მდგომარეობად არ აღწერო.
 ყოველ ნაბიჯს ახალი უნიკალური ID და საუკეთესო photoId აქვს; componentIds-ში ყველა ნაწილი ამ ფოტოზე უნდა ჩანდეს. მაქსიმუმ 5 ნაბიჯი; თითო ნაბიჯი ერთი გასაგები მოქმედება. უკვე შესრულებული ნაბიჯები არ გაიმეორო; unable/unchanged შედეგებზე შეცვალე გზა. საჭირო უსაფრთხო მოქმედება წინ უსწრებს შეხებას/მოხსნას. საფრთხისას შეჩერდი და უსაფრთხო პროფესიული შემოწმება მოითხოვე.
+componentIds მხოლოდ მოქმედების რეალური, ხილული სამიზნეებია. თუ სამიზნე კადრში არ ჩანს (მაგალითად, დამტენის გათიშვა, ჩართვის ღილაკი ან სტატიკური მუხტისგან დაცვა), გამოიყენე componentIds=[] და arrow=null. ასეთი აუცილებელი წინაპირობა დასაშვებია: photoId შეიძლება დარჩეს შესაბამისი კონტექსტის ფოტოდ, მაგრამ ხილული სხვა დეტალი, მეხსიერების კვანძი ან საფარი არ მონიშნო გამოგონილ სამიზნედ. თუ უსაფრთხო მოქმედების აღწერასაც აკლია აუცილებელი ინფორმაცია, ჯერ კითხვა დასვი.
+მომხმარებლისთვის განკუთვნილ ტექსტში (summary, detail, name, reason, title, text, warning, tool, prompt) არ გამოიყენო შიდა photoId, component ID ან step ID. ფოტოსა და დეტალს უწოდე გასაგები ქართული სახელი, მაგალითად „მეხსიერების ახლო ხედი“. შიდა ID-ები გამოიყენე მხოლოდ სტრუქტურულ კავშირებში.
 steps-ის რიგი განსაზღვრე მოქმედებების საჭიროებითა და წინაპირობებით, არა ფოტოების ატვირთვის რიგით. თითო ნაბიჯისთვის აირჩიე ფოტო, რომელზეც შესაბამისი მოქმედება და სამიზნე ყველაზე ნათლად ჩანს. საჭიროებისას დაუბრუნდი უკვე გამოყენებულ ფოტოს ახალ მოქმედებაზე: მაგალითად, photo2 → photo1 → photo2 დასაშვებია. არ გადაანომრო და არ გადაალაგო საწყისი ფოტოები; მათი ID და მტკიცებულებასთან კავშირი უცვლელია. იცვლება ნაბიჯების თანმიმდევრობა და თითო ნაბიჯის photoId.
 arrow: rotate cw/ccw; move up/down/left/right/toward/away/up_left/up_right/down_left/down_right; press/hold/align none. გაურკვეველი მიმართულება arrow=null. tool მხოლოდ საჭირო ხელსაწყოს ქართული სახელი; დაუდასტურებელი ზომა არ მიუწერო.
 next: needs_answer ან needs_photo კონკრეტული ინფორმაციის მოთხოვნაა და steps=[]; verify ნიშნავს მოცემული ნაბიჯების შემდეგ რეალურ შედეგს შეამოწმებ; resolved მხოლოდ resolutionConfirmed=true და history-ში done-ის არსებობისას, როცა შედეგი მომხმარებელმაც დაადასტურა და მტკიცებულება წინააღმდეგობრივი არაა; unresolved ნიშნავს ვერ დადგინდა/ვერ მოგვარდა და steps=[]. resolved-საც steps=[] აქვს. ლიმიტი, პასუხის არქონა ან მხოლოდ ვარაუდი არასოდეს ნიშნავს წარმატებას.

@@ -11,7 +11,9 @@ struct ContentView: View {
     }()
     var body: some View {
         #if DEBUG
-        if ProcessInfo.processInfo.arguments.contains("--problem-demo") {
+        if ProcessInfo.processInfo.arguments.contains("--ui-test-multi-photo") {
+            NavigationStack { PhotoFlowView(session: PhotoProblemUITestFixture.makeSession()) }
+        } else if ProcessInfo.processInfo.arguments.contains("--problem-demo") {
             PhotoProblemFlowView(model: PhotoProblemDemo.model(), isDemo: true)
         } else if ProcessInfo.processInfo.arguments.contains("--tool-icon-demo") {
             PhotoDemoShowcaseView(startWithTools: true)

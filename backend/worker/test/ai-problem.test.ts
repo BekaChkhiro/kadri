@@ -87,6 +87,15 @@ describe("problem input", () => {
 
 describe("problem plan invariants", () => {
   it("accepts a shared component in two views and a single-photo step", () => expect(validateProblem(plan(), input())).toEqual(plan()));
+  it("allows an offscreen prerequisite with a context photo but no false visual target", () => {
+    const value = plan();
+    value.steps[0] = { ...value.steps[0]!, title: "გამორთე დამტენი", text: "დამტენი ლეპტოპიდან გამორთე.", componentIds: [], arrow: null };
+    expect(validateProblem(value, input()).steps[0]!.componentIds).toEqual([]);
+  });
+  it("rejects an arrow when an offscreen prerequisite has no visible target", () => {
+    const value = plan(); value.steps[0]!.componentIds = []; value.steps[0]!.arrow = { type: "move", dir: "away" };
+    expect(() => validateProblem(value, input())).toThrow("Offscreen action cannot have an arrow");
+  });
   it.each([
     ["missing observation", (p: any) => p.observations.pop()],
     ["unknown observation", (p: any) => p.observations[1].photoId = "other"],

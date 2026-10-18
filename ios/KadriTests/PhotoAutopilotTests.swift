@@ -1,3 +1,4 @@
+#if DEBUG && targetEnvironment(simulator)
 import XCTest
 import SwiftUI
 import KadriCore
@@ -333,3 +334,5 @@ private struct DiagnosticAPI: KadriAPI {
         }
     }
 }
+
+#endif

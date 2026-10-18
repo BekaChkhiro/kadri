@@ -15,7 +15,8 @@ struct KadriApp: App {
                     #if DEBUG
                     if ProcessInfo.processInfo.arguments.contains("--arrow-overlay-demo") ||
                        ProcessInfo.processInfo.arguments.contains("--tool-icon-demo") ||
-                       ProcessInfo.processInfo.arguments.contains("--problem-demo") { return }
+                       ProcessInfo.processInfo.arguments.contains("--problem-demo") ||
+                       ProcessInfo.processInfo.arguments.contains("--ui-test-multi-photo") { return }
                     #endif
                     Segmenter.preload(); await app.googleAuth.restorePreviousSignIn()
                 }

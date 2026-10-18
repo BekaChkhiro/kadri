@@ -88,6 +88,46 @@ function unrenameBoxes(schema: JsonSchema, value: unknown): unknown {
   return out;
 }
 
+/** Only allowlisted diagnostics leave this function; provider errors may echo secrets. */
+async function logRejectedResponse(response: Response): Promise<void> {
+  const knownFields = ["maxItems", "minItems", "maxLength", "minLength", "additionalProperties", "thinkingLevel", "responseJsonSchema", "responseMimeType", "inlineData", "mimeType"] as const;
+  let fields: string[] = [];
+  let reason: "schema_complexity" | "quota" | "auth" | "not_found" | "other" =
+    response.status === 429 ? "quota" : [401, 403].includes(response.status) ? "auth" : response.status === 404 ? "not_found" : "other";
+  if (reason === "other" && response.body) {
+    const reader = response.body.getReader();
+    try {
+      const chunks: Uint8Array[] = [];
+      let size = 0;
+      while (size <= 16_384) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        size += value.length;
+        if (size > 16_384) break;
+        chunks.push(value);
+      }
+      if (size <= 16_384) {
+        const bytes = new Uint8Array(size);
+        let offset = 0;
+        for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length; }
+        const raw = JSON.parse(new TextDecoder().decode(bytes)) as { error?: { message?: unknown } };
+        const message = raw?.error?.message;
+        if (typeof message === "string") {
+          if (/api[_\s-]?key.{0,100}(?:invalid|not valid|expired)|(?:invalid|expired).{0,40}api[_\s-]?key/i.test(message)) reason = "auth";
+          else if ((/schema|grammar|constraint/i.test(message) && /complex|states|nesting|depth/i.test(message)) || /too many states/i.test(message)) reason = "schema_complexity";
+          // Emit only names from our constant list, never captured provider text.
+          fields = knownFields.filter(field => new RegExp(`\\b${field}\\b`, "i").test(message));
+        }
+      }
+    } catch { /* Invalid/oversized bodies and read errors remain unclassified. */ }
+    finally {
+      try { await reader.cancel(); } catch { /* Diagnostics must not replace the upstream error. */ }
+      reader.releaseLock();
+    }
+  }
+  console.warn("ai/gemini upstream rejected", { status: response.status, reason, ...(fields.length ? { fields } : {}) });
+}
+
 export async function postGemini(apiKey: string, payload: Record<string, unknown>, signal: AbortSignal): Promise<Response> {
   const stream = payload.stream === true;
   const schema = structuredClone((payload.text as { format: { schema: JsonSchema } }).format.schema);
@@ -105,7 +145,8 @@ export async function postGemini(apiKey: string, payload: Record<string, unknown
     } }),
   });
   // Never log provider bodies or exception text (may contain credentials).
-  if (!response.ok || !response.body) throw aiErrors.upstream();
+  if (!response.ok) { await logRejectedResponse(response); throw aiErrors.upstream(); }
+  if (!response.body) throw aiErrors.upstream();
   if (!stream) {
     let raw: GeminiResponse;
     try { raw = await response.json<GeminiResponse>(); } catch {

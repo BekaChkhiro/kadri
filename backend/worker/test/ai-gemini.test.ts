@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { GeminiProvider, selectedEnv } from "../src/ai/provider";
-import { geminiUsage, geminiSchema, GEMINI_MODEL } from "../src/ai/gemini";
+import { geminiUsage, geminiSchema, GEMINI_MODEL, postGemini } from "../src/ai/gemini";
 import { schemaSteps, validateSchema } from "../src/ai/schema";
 import { estimateCost } from "../src/ai/pricing";
 import { b64, call, diagnosticContinuation, fakeJpeg, mockFetch, testEnv } from "./ai-helpers";
@@ -14,6 +14,47 @@ const frame = (data: unknown) => new TextEncoder().encode(`data: ${JSON.stringif
 afterEach(() => vi.restoreAllMocks());
 
 describe("Gemini provider", () => {
+  it.each([
+    { status: 400, message: "Schema exceeds maximum allowed states: SECRET_KEY private photo text", reason: "schema_complexity" },
+    { status: 400, message: "Schema exceeds maximum nesting depth SECRET_KEY", reason: "schema_complexity" },
+    { status: 400, message: "Constraint has too many states SECRET_KEY", reason: "schema_complexity" },
+    { status: 400, message: "Grammar is too complex SECRET_KEY", reason: "schema_complexity" },
+    { status: 400, message: "Too many states SECRET_KEY", reason: "schema_complexity" },
+    { status: 400, message: "API key not valid. Please pass a valid API key. SECRET_KEY", reason: "auth" },
+    { status: 400, message: "API key expired. Please renew the API key. SECRET_KEY", reason: "auth" },
+    { status: 400, message: "Invalid API key SECRET_KEY", reason: "auth" },
+    { status: 429, message: "Quota for SECRET_KEY exceeded", reason: "quota" },
+    { status: 403, message: "SECRET_KEY unauthorized", reason: "auth" },
+    { status: 404, message: "Private model SECRET_KEY not found", reason: "not_found" },
+    { status: 500, message: "Unexpected SECRET_KEY private prompt", reason: "other" },
+  ])("logs only safe diagnostics for upstream $status/$reason", async ({ status, message, reason }) => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    mockFetch(() => Response.json({ error: { message } }, { status }));
+    const payload = { text: { format: { schema: { type: "object", properties: {} } } }, input: [{ content: [{ type: "input_text", text: "private photo text" }] }] };
+    await expect(postGemini("SECRET_KEY", payload, new AbortController().signal)).rejects.toMatchObject({ code: "ai_upstream" });
+    expect(warn.mock.calls).toEqual([["ai/gemini upstream rejected", { status, reason }]]);
+    expect(JSON.stringify(warn.mock.calls)).not.toContain("SECRET_KEY");
+    expect(JSON.stringify(warn.mock.calls)).not.toContain("private");
+  });
+
+  it("reports only allowlisted field names from a rejected configuration", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    mockFetch(() => Response.json({ error: { message: "Unknown thinkingLevel / responseJsonSchema maxItems, private_SECRET_FIELD; SECRET_KEY" } }, { status: 400 }));
+    const payload = { text: { format: { schema: { type: "object", properties: {} } } }, input: [{ content: [] }] };
+    await expect(postGemini("SECRET_KEY", payload, new AbortController().signal)).rejects.toMatchObject({ code: "ai_upstream" });
+    expect(warn.mock.calls).toEqual([["ai/gemini upstream rejected", {
+      status: 400, reason: "other", fields: ["maxItems", "thinkingLevel", "responseJsonSchema"],
+    }]]);
+  });
+
+  it.each(["not JSON SECRET_KEY", "x".repeat(16_385)])("does not leak malformed or oversized error bodies", async body => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    mockFetch(() => new Response(body, { status: 400 }));
+    const payload = { text: { format: { schema: { type: "object", properties: {} } } }, input: [{ content: [] }] };
+    await expect(postGemini("SECRET_KEY", payload, new AbortController().signal)).rejects.toMatchObject({ code: "ai_upstream" });
+    expect(warn.mock.calls).toEqual([["ai/gemini upstream rejected", { status: 400, reason: "other" }]]);
+  });
+
   it.each([[], ["needs_answer", "needs_measurement", "summary"], ["check_photo"]].map(capabilities => ({ capabilities })))(
     "preserves schemas without tools/hands byte-for-byte: $capabilities", ({ capabilities }) => {
       const schema = schemaSteps(["p1", "p2"], 5, { capabilities });

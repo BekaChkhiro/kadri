@@ -47,6 +47,16 @@ import KadriCore
         try await render(model, name: "07-unresolved")
     }
 
+    func testOffscreenInstructionHasNoFalseVisualTarget() async {
+        let model = PhotoProblemDemo.model()
+        await model.submit()
+        let photo = model.photos[0]
+        let step = ProblemStep(id: "offscreen", title: "ჩართვა", text: "დააჭირე ჩართვის ღილაკს", photoId: photo.id, componentIds: [])
+        let evidence = ProblemEvidenceView(photo: photo, result: model.result, step: step)
+        XCTAssertFalse(evidence.parts.isEmpty, "The context photo still has recognized components")
+        XCTAssertNil(evidence.overlayStep, "Never mark a contextual component as an off-screen action target")
+    }
+
     private func render(_ model: ProblemSessionModel, name: String) async throws {
         let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
         let previous = scene.windows.first(where: \.isKeyWindow)

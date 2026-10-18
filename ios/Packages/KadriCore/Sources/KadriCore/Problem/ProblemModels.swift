@@ -141,10 +141,11 @@ public struct ProblemResult: Codable, Hashable, Sendable {
         for step in steps {
             try require(!request.history.contains { $0.stepId == step.id })
             try require(Set(step.componentIds).count == step.componentIds.count)
-            try require(!step.id.isEmpty && !step.title.isEmpty && !step.text.isEmpty && photoIds.contains(step.photoId) && !step.componentIds.isEmpty)
+            try require(!step.id.isEmpty && !step.title.isEmpty && !step.text.isEmpty && photoIds.contains(step.photoId))
             try require(Set(step.componentIds).isSubset(of: componentIds))
             try require(step.componentIds.allSatisfy { id in components.contains { $0.id == id && $0.views.contains { $0.photoId == step.photoId } } })
             try require(observations.contains { $0.photoId == step.photoId && $0.relevance == "relevant" })
+            if step.componentIds.isEmpty { try require(step.arrow == nil) }
             if let arrow = step.arrow {
                 let directions: [String: Set<String>] = ["rotate": ["cw", "ccw"], "move": ["up", "down", "left", "right", "toward", "away", "up_left", "up_right", "down_left", "down_right"], "press": ["none"], "hold": ["none"], "align": ["none"]]
                 try require(directions[arrow.type]?.contains(arrow.dir) == true)

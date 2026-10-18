@@ -37,8 +37,14 @@ struct PhotoDraftAttachments: View {
             VStack(alignment: .trailing, spacing: 7) {
                 Button(action: add) {
                     Label(importing ? "იტვირთება…" : "ფოტოს დამატება", systemImage: "plus.circle.fill")
-                        .font(.kadri(12, weight: .semibold))
-                }.disabled(!canAdd).accessibilityIdentifier("capture.addPhoto")
+                        .font(.kadri(13, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 12)
+                        .frame(minHeight: 44)
+                        .background(Theme.Colors.brand[500]!, in: RoundedRectangle(cornerRadius: 12))
+                }.buttonStyle(PhotoPressStyle())
+                    .opacity(canAdd ? 1 : 0.45)
+                    .disabled(!canAdd).accessibilityIdentifier("capture.addPhoto")
                 if photos.count > 1, let selectedID {
                     Button("არჩეულის წაშლა", role: .destructive) { remove(selectedID) }.font(.kadri(11))
                 } else {

@@ -46,6 +46,17 @@ final class ProblemTests: XCTestCase {
                                      links: [.init(fromId: "joint", toId: "missing", relation: .connected, evidencePhotoIds: ["photo1"], reason: "r")], steps: base.steps, next: base.next)
         XCTAssertThrowsError(try invented.validate(for: .init(problem: "p", photos: photos)))
     }
+    func testOffscreenActionRequiresNoArrow() throws {
+        let photos = [evidence()]
+        let base = response(photos)
+        for arrow in [nil, ProblemStep.Arrow(type: "press", dir: "none")] {
+            let result = ProblemResult(summary: base.summary, observations: base.observations,
+                                       components: base.components, links: [],
+                                       steps: [.init(id: "power", title: "ჩართვა", text: "დააჭირე ჩართვის ღილაკს", photoId: "photo1", componentIds: [], arrow: arrow)], next: base.next)
+            if arrow == nil { XCTAssertNoThrow(try result.validate(for: .init(problem: "p", photos: photos))) }
+            else { XCTAssertThrowsError(try result.validate(for: .init(problem: "p", photos: photos))) }
+        }
+    }
     func testResolvedRequiresUserConfirmationAndPerformedAction() throws {
         let photos = [evidence()]
         let resolved = response(photos, steps: false, kind: .resolved)

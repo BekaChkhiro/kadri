@@ -62,6 +62,11 @@ struct PhotoProblemFlowView: View {
                     if !model.history.isEmpty { history }
                 }.padding(20)
             }
+            .onChange(of: model.phase) { _, phase in
+                if phase == .ready || phase == .unresolved || phase == .resolved {
+                    withAnimation { scroller.scrollTo(model.currentStep == nil ? "progress" : "evidence", anchor: .top) }
+                }
+            }
             .onChange(of: model.sessionId) { _, _ in scroller.scrollTo("top", anchor: .top) }
             .onChange(of: model.currentStep?.id) { _, value in
                 withAnimation { scroller.scrollTo(value == nil ? "progress" : "evidence", anchor: .top) }
@@ -165,15 +170,24 @@ struct PhotoProblemFlowView: View {
     }
     private var addPhotos: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
+            HStack(spacing: 10) {
                 PhotosPicker(selection: $picked, maxSelectionCount: max(1, 5 - model.photos.count), selectionBehavior: .ordered, matching: .images) {
                     Label(importing ? "იტვირთება…" : "ფოტოების დამატება", systemImage: "photo.badge.plus")
-                }.disabled(importing)
+                        .font(.kadri(15, weight: .semibold))
+                        .frame(maxWidth: .infinity, minHeight: 48)
+                        .foregroundStyle(.white)
+                        .background(Theme.Colors.brand[500]!, in: RoundedRectangle(cornerRadius: 14))
+                }.buttonStyle(PhotoPressStyle()).disabled(importing)
                 if !isDemo && UIImagePickerController.isSourceTypeAvailable(.camera) {
-                    Spacer()
-                    Button { camera = true } label: { Image(systemName: "camera") }.disabled(importing)
+                    Button { camera = true } label: {
+                        Image(systemName: "camera.fill").font(.system(size: 20, weight: .semibold))
+                            .frame(width: 52, height: 48)
+                            .foregroundStyle(Theme.Colors.brand[600]!)
+                            .background(Theme.Colors.brand[50]!, in: RoundedRectangle(cornerRadius: 14))
+                    }.buttonStyle(PhotoPressStyle()).disabled(importing)
+                        .accessibilityLabel("ფოტოს გადაღება და დამატება")
                 }
-            }.font(.kadri(15, weight: .semibold)).padding(14).background(.white, in: RoundedRectangle(cornerRadius: 14))
+            }.opacity(importing ? 0.45 : 1)
             Text("\(model.photos.count)/5 ფოტო · შემოწმების ფოტოსთვის ერთი ადგილი დატოვე.")
                 .font(.kadri(12)).foregroundStyle(.secondary)
         }
@@ -182,6 +196,10 @@ struct PhotoProblemFlowView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("ნაბიჯი \(model.currentStepIndex + 1) / \(model.result?.steps.count ?? 0) · ფოტო \(number(step.photoId))")
                 .font(.kadri(12, weight: .semibold)).foregroundStyle(Theme.Colors.brand[600]!)
+            if step.componentIds.isEmpty {
+                Label("მოქმედების ადგილი ფოტოზე არ ჩანს", systemImage: "viewfinder")
+                    .font(.kadri(12)).foregroundStyle(.secondary)
+            }
             Text(step.title).font(.kadri(20, weight: .semibold))
             Text(step.text).font(.kadri(15)).fixedSize(horizontal: false, vertical: true)
             if selectedPhoto?.id != step.photoId {
@@ -297,7 +315,7 @@ struct ProblemEvidenceView: View {
         }
     }
     var overlayStep: Step? {
-        guard let step, step.photoId == photo.id else { return nil }
+        guard let step, step.photoId == photo.id, !step.componentIds.isEmpty else { return nil }
         return Step(index: 0, title: step.title, text: step.text, focus: step.componentIds,
                     markers: parts.filter { step.componentIds.contains($0.id) }.map { .init(part: $0.id, label: $0.name) },
                     arrows: step.arrow.map { arrow in step.componentIds.map { .init(part: $0, type: arrow.type, dir: arrow.dir) } } ?? [])

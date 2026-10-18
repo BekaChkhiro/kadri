@@ -12,8 +12,13 @@ struct PhotoFlowView: View {
         #endif
     }()
     @State private var checkPhotoRequest = false
-    @State private var problemFlow = false
-    @State private var problemModel: ProblemSessionModel?
+    /// Presentation and its model change atomically; a separate Boolean can present
+    /// a cover whose captured optional model is still nil on the first submission.
+    private struct ProblemPresentation: Identifiable {
+        let id = UUID()
+        let model: ProblemSessionModel
+    }
+    @State private var problemPresentation: ProblemPresentation?
     @State private var addSource = false
     @State private var draftLibrary = false
     @State private var draftPicked: [PhotosPickerItem] = []
@@ -44,8 +49,8 @@ struct PhotoFlowView: View {
                 use(image)
             }
         }
-        .fullScreenCover(isPresented: $problemFlow, onDismiss: { problemModel = nil }) {
-            if let problemModel { PhotoProblemFlowView(model: problemModel, submitOnAppear: true) }
+        .fullScreenCover(item: $problemPresentation) { presentation in
+            PhotoProblemFlowView(model: presentation.model, submitOnAppear: true)
         }
         .confirmationDialog("ფოტოს დამატება", isPresented: $addSource, titleVisibility: .visible) {
             if cameraAvailable { Button("გადაიღე კიდევ ერთი ფოტო") { camera = true } }
@@ -137,8 +142,7 @@ struct PhotoFlowView: View {
     private func submitDraft(provider: AIProvider) {
         guard !importingDraft else { return }
         if session.draftPhotos.count > 1 {
-            problemModel = session.makeProblemModel(provider: provider, description: description)
-            problemFlow = true
+            problemPresentation = ProblemPresentation(model: session.makeProblemModel(provider: provider, description: description))
         } else { session.submit(description, provider: provider) }
     }
 
@@ -211,7 +215,7 @@ struct PhotoFlowView: View {
             }
         default:
             photoScreen(image, title: isDescribing && session.draftPhotos.count > 1 ? "\(session.draftPhotos.count) ფოტო · ერთი პრობლემა" : (session.model.round > 1 ? "ფოტო \(session.model.round)" : "ფოტო"),
-                        panelMinimumHeight: isDescribing ? 330 : 210) {
+                        panelMinimumHeight: isDescribing ? 280 : 210) {
                 switch session.model.phase {
                 case .idle, .describing:
                     VStack(spacing: 0) {
