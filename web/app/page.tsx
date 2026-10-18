@@ -8,8 +8,8 @@ import { useReducedMotion } from "./use-reduced-motion";
 
 const github = "https://github.com/BekaChkhiro/kadri";
 const features = [
-  { image: "parts", title: "ნაწილს ფოტოზე მონიშნავს", text: "ზუსტად დაინახავ, რომელ დეტალზეა საუბარი.", alt: "ლეპტოპის ქვედა საფარი ლურჯი ჩარჩოთი მონიშნული", position: "center 37%" },
-  { image: "arrows", title: "ისრები და ნაბიჯები", text: "მოძრაობის მიმართულება პირდაპირ შენს ფოტოზე.", alt: "სიფონის ქანჩზე ბრუნვის მიმართულების ისარი", position: "center 52%" },
+  { image: "parts", title: "ნაწილს ფოტოზე მონიშნავს", text: "ზუსტად დაინახავ, რომელ დეტალზეა საუბარი.", alt: "დედაპლატაზე მონიშნული პროცესორის ბუდე და ბერკეტი", position: "center 30%" },
+  { image: "arrows", title: "ისრები და ნაბიჯები", text: "მოძრაობის მიმართულება პირდაპირ შენს ფოტოზე.", alt: "სიფონის ქანჩზე მეოთხედი ბრუნის ისარი", position: "center 30%" },
   { image: "tools", title: "ხელსაწყოები, მინიშნებით", text: "დადასტურებული თუ სავარაუდო — განსხვავება ყოველთვის ჩანს.", alt: "ხელსაწყოების ბარათები დადასტურებული და სავარაუდო ზომებით", position: "center 28%" },
   { image: "check", title: "ფოტოთი შემოწმება", text: "ახალი ფოტო დაგეხმარება შედეგის გადამოწმებაში.", alt: "ახალი ფოტოთი შედეგის შემოწმების ეკრანი", position: "center 20%" },
 ];
@@ -57,7 +57,7 @@ export default function Home() {
           <Fade className="relative mx-auto w-[182px] p-3 md:w-[220px] md:p-4">
             <Corners />
             <div className="rounded-[27px] border border-ink-600 bg-ink-900 p-[5px] shadow-[0_16px_80px_-24px_#2f6bff55]">
-              <Image src="/shots/parts.png" alt="NETA აპი — ფოტოზე მონიშნული ნაწილი და შეკეთების ნაბიჯი" width={1170} height={2532} priority sizes="(min-width: 768px) 176px, 146px" className="h-auto w-full rounded-[21px]" />
+              <Image src="/shots/hero.png" alt="NETA აპი — დედაპლატაზე მონიშნული ბუდის ბერკეტი, ისარი და ნაბიჯი" width={1206} height={2622} priority sizes="(min-width: 768px) 176px, 146px" className="h-auto w-full rounded-[21px]" />
             </div>
           </Fade>
         </section>
