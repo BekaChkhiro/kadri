@@ -30,36 +30,6 @@ Core principle: **the AI never pretends to know.** Anything unverified is labell
 
 Built with coding agents (Claude Code, Codex).
 
-## Run it
-
-```sh
-brew install xcodegen
-cd ios && xcodegen generate && open Kadri.xcodeproj   # scheme Kadri → iPhone simulator → Run
-```
-
-The app talks to the deployed staging Worker, so no keys are needed. Sign in with any Google account.
-On a real device you need to be in the Apple team (`ge.kadri.app`), or use the TestFlight build.
-
-Tests:
-
-```sh
-cd ios/Packages/KadriCore && swift test
-cd backend/worker && npm ci && npx vitest run      # Node 22
-```
-
-Running the backend locally: `backend/worker/.dev.vars.example` → `.dev.vars`, then `npx wrangler dev` (see [backend/worker/README.md](backend/worker/README.md)).
-
-## Repo map
-
-| Path | What |
-|---|---|
-| `ios/Kadri/Photo/` | Main flow: camera → describe → scan → steps → done |
-| `ios/Packages/KadriCore/` | Models, API client, SSE parser, session state |
-| `backend/worker/src/` | `/ai/parts`, `/ai/steps` (SSE), `/ai/ask`, `/ai/problem`, providers, validation |
-| `docs/` | Feature specs and E2E reports ([tools](docs/TOOLS_ACTIONS.md), [check photos & ask](docs/CHECK_PHOTO_ASK.md), [multi-photo](docs/MULTI_PHOTO_PROBLEM.md), [deploy](docs/DEPLOY.md)) |
-| `Camera/` | Design project (artboards, art direction) |
-| `experiments/` | Model and prompt experiments |
-
 ---
 
 Hacktoberfest 2026 · team **Hamburger** · track 03 Mobile native
