@@ -1,0 +1,6 @@
+.qa/
+.next/
+node_modules/
+.vercel/
+.env*
+*.tsbuildinfo

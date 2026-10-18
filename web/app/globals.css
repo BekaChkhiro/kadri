@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@font-face { font-family: "Inter"; src: url("/fonts/Inter-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("/fonts/Inter-Medium.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("/fonts/Inter-SemiBold.ttf") format("truetype"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("/fonts/Inter-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "NotoSansGeorgian"; src: url("/fonts/NotoSansGeorgian-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "NotoSansGeorgian"; src: url("/fonts/NotoSansGeorgian-Medium.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "NotoSansGeorgian"; src: url("/fonts/NotoSansGeorgian-SemiBold.ttf") format("truetype"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "NotoSansGeorgian"; src: url("/fonts/NotoSansGeorgian-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+
+@theme {
+  --font-sans: "Inter", "NotoSansGeorgian", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Inter", "NotoSansGeorgian", ui-monospace, monospace;
+  --color-brand-50: #eef4ff;
+  --color-brand-100: #dae6ff;
+  --color-brand-200: #bcd2ff;
+  --color-brand-300: #8eb4ff;
+  --color-brand-400: #5b8cff;
+  --color-brand-500: #2f6bff;
+  --color-brand-600: #1f52f0;
+  --color-brand-700: #1a41d6;
+  --color-brand-800: #1c37ad;
+  --color-brand-900: #1d3388;
+  --color-brand-950: #162153;
+  --color-ink-50: #f8fafc;
+  --color-ink-100: #f1f5f9;
+  --color-ink-200: #e2e8f0;
+  --color-ink-300: #cbd5e1;
+  --color-ink-400: #94a3b8;
+  --color-ink-500: #64748b;
+  --color-ink-600: #475569;
+  --color-ink-700: #334155;
+  --color-ink-800: #1e293b;
+  --color-ink-900: #0f172a;
+  --color-ink-950: #020617;
+  --color-warning-100: #fef3c7;
+  --color-warning-800: #92400e;
+  --color-danger-500: #ef4444;
+  --color-surface: #f7f7f5;
+  --radius-btn: 0.875rem;
+  --radius-card: 1.5rem;
+  --radius-field: 0.75rem;
+  --radius-pill: 9999px;
+  --shadow-card: 0 1px 2px 0 rgb(15 23 42 / 0.04), 0 8px 24px -8px rgb(15 23 42 / 0.12);
+  --shadow-pop: 0 16px 40px -12px rgb(15 23 42 / 0.28);
+}
+
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--color-surface); color: var(--color-ink-900); }
+::selection { background: var(--color-brand-200); color: var(--color-ink-950); }
+a, button { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--color-brand-400); outline-offset: 5px; }
+.screen-reel { scrollbar-color: var(--color-ink-400) var(--color-ink-200); scrollbar-width: thin; }
+.skip-link { position: absolute; top: 12px; left: 12px; z-index: 100; transform: translateY(-160%); padding: 12px 20px; border-radius: 12px; background: white; color: var(--color-ink-950); }
+.skip-link:focus { transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { scroll-behavior: auto !important; transition-property: opacity !important; }
+  [data-anim] { transform: none !important; filter: none !important; }
+  [data-anim="hero-scan"] { display: none !important; }
+}
