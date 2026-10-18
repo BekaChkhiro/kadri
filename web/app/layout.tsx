@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "NETA — ნახე. შეეხე. შეაკეთე.",
-  description: "გადაუღე ფოტო იმას, რაც გაფუჭდა. კადრი ნაწილს პირდაპირ შენს ფოტოზე მონიშნავს და ნაბიჯ-ნაბიჯ გაგიძღვება — ქართულად.",
+  description: "გადაუღე ფოტო იმას, რაც გაფუჭდა. NETA ნაწილს პირდაპირ შენს ფოტოზე მონიშნავს და ნაბიჯ-ნაბიჯ გაგიძღვება — ქართულად.",
   openGraph: {
     title: "NETA — ნახე. შეეხე. შეაკეთე.",
     description: "ნაბიჯ-ნაბიჯ, შენს ფოტოზე.",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export const viewport: Viewport = { themeColor: "#020617", colorScheme: "light" };
+export const viewport: Viewport = { themeColor: "#020617", colorScheme: "dark" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
