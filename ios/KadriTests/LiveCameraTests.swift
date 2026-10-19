@@ -67,9 +67,57 @@ final class LiveCameraTests: XCTestCase {
         XCTAssertEqual(status(.describing(text: ""), waiting: true), .steady)
         XCTAssertEqual(status(.scanning(startedAt: Date())), .recognizing)
         XCTAssertEqual(status(.parts(LiveCameraMockAPI.result), visible: 1), .tracked(1))
-        XCTAssertEqual(status(.parts(LiveCameraMockAPI.result)), .lookAgain)
+        XCTAssertEqual(status(.parts(LiveCameraMockAPI.result)), .surfaceUnavailable)
         XCTAssertEqual(status(.parts(LiveCameraMockAPI.result), visible: 1, lost: true), .lookAgain)
         XCTAssertEqual(status(.error(.timeout, retryFrom: .scan)), .failed(SessionError.timeout.localizedDescription))
+    }
+
+    func testPlacementReportSeparatesRejectionReasons() {
+        let parts = (1...6).map {
+            Part(id: "p\($0)", name: "ნაწილი", box: $0 == 5 ? [0, 0, 0, 0] : [100, 100, 400, 400])
+        }
+        let placements = zip(["p1", "p2", "p3", "p4"], [Float(0.8), 0, 0.3, .nan]).map { id, confidence in
+            PartPlacement(id: id, anchorID: UUID(), worldPosition: .zero, box: [100, 100, 400, 400],
+                          confidence: confidence, worldCorners: [], referenceCenter: .zero)
+        }
+        XCTAssertEqual(LivePlacementReport.make(parts: parts, placements: placements),
+                       LivePlacementReport(parts: 6, accepted: 1, noDepth: 2, weakDepth: 1, invalidBox: 1, noPlacement: 1))
+    }
+
+    func testLocalPlacementRetriesAreSpacedAndBounded() {
+        var retry = LivePlacementRetry()
+        XCTAssertFalse(retry.shouldAttempt(now: 10))
+        retry.begin(now: 10)
+        XCTAssertFalse(retry.shouldAttempt(now: 9))
+        for second in 10..<22 {
+            XCTAssertTrue(retry.shouldAttempt(now: Double(second)))
+            retry.didAttempt(now: Double(second))
+            XCTAssertFalse(retry.shouldAttempt(now: Double(second) + 0.9))
+        }
+        XCTAssertEqual(retry.attempts, 12)
+        XCTAssertTrue(retry.expired(now: 22))
+        XCTAssertFalse(retry.shouldAttempt(now: 30))
+        retry.begin(now: 40)
+        XCTAssertEqual(retry.attempts, 0)
+        XCTAssertTrue(retry.shouldAttempt(now: 40))
+    }
+
+    func testSurfaceSearchOffscreenAndTrackingLossHaveDistinctStatuses() {
+        func status(visible: Int = 0, searching: Bool = false, placed: Int = 0,
+                    recovery: LiveRecoveryReason? = nil) -> LiveCameraStatus {
+            LiveCameraStatus.resolve(supported: true, permissionDenied: false, needsRecognition: recovery != nil,
+                                     waitingForKeyframe: false, phase: .parts(LiveCameraMockAPI.result),
+                                     visibleCount: visible, recovery: recovery,
+                                     findingSurface: searching, placedCount: placed)
+        }
+        XCTAssertEqual(status(searching: true), .findingSurface)
+        XCTAssertEqual(status(), .surfaceUnavailable)
+        XCTAssertEqual(status(placed: 1), .outOfView)
+        XCTAssertEqual(status(visible: 1, searching: true, placed: 1), .tracked(1))
+        for reason in [LiveRecoveryReason.paused, .trackingLost, .staleFrame, .missingFrame, .viewChanged] {
+            XCTAssertEqual(status(visible: 1, placed: 1, recovery: reason), .recovery(reason))
+            XCTAssertNotEqual(LiveCameraStatus.recovery(reason).text, LiveCameraStatus.surfaceUnavailable.text)
+        }
     }
 
     @MainActor func testGeminiRecognitionStaysAtPartsWithoutStartingSteps() async {
@@ -87,6 +135,12 @@ final class LiveCameraTests: XCTestCase {
         XCTAssertEqual(calls.first?.1, .gemini)
         session.phaseChanged()
         XCTAssertEqual(session.model.phase, .parts(LiveCameraMockAPI.result))
+        XCTAssertEqual(session.placementReport.parts, 1)
+        XCTAssertEqual(session.placementReport.noPlacement, 1)
+        XCTAssertFalse(session.needsRecognition)
+        session.phaseChanged()
+        let repeatedCalls = await api.calls
+        XCTAssertEqual(repeatedCalls.count, 1)
         XCTAssertTrue(session.model.allSteps.isEmpty)
         session.stop()
         XCTAssertNil(session.model.partsResult)
@@ -108,6 +162,20 @@ final class LiveCameraTests: XCTestCase {
         XCTAssertTrue(session.needsRecognition)
     }
 
+    @MainActor func testEmptyAIResultHasItsOwnDiagnosticReason() async {
+        let api = LiveCameraMockAPI(empty: true)
+        let session = LiveCameraSession(api: api)
+        session.submit(keyframe: Data([1]))
+        await session.model.workTask?.value
+        session.phaseChanged()
+        XCTAssertEqual(session.model.phase, .error(.noParts, retryFrom: .scan))
+        XCTAssertTrue(session.diagnosticLine.contains("reason no_parts"))
+        XCTAssertTrue(session.diagnosticLine.contains("parts 0"))
+        XCTAssertFalse(session.findingSurface)
+        let calls = await api.calls
+        XCTAssertEqual(calls.count, 1)
+    }
+
     @MainActor func testSimulatorDoesNotStartAROrCallAPI() async {
         let api = LiveCameraMockAPI()
         let session = LiveCameraSession(api: api)
@@ -125,9 +193,10 @@ private actor LiveCameraMockAPI: KadriAPI {
     static let result = PartsResult(object: "ონკანი", parts: [Part(id: "p1", name: "სახელური", box: [100, 100, 400, 400])])
     nonisolated let requested = XCTestExpectation(description: "Mock parts requested")
     let delayed: Bool
+    let empty: Bool
     var calls: [(Data, AIProvider?)] = []
     private var continuation: CheckedContinuation<Void, Never>?
-    init(delayed: Bool = false) { self.delayed = delayed }
+    init(delayed: Bool = false, empty: Bool = false) { self.delayed = delayed; self.empty = empty }
 
     func parts(keyframe: Data, instructions: String, context: SessionContext?) async throws -> PartsResult {
         try await parts(keyframe: keyframe, instructions: instructions, context: context, provider: nil)
@@ -140,7 +209,7 @@ private actor LiveCameraMockAPI: KadriAPI {
                 requested.fulfill()
             }
         } else { requested.fulfill() }
-        return Self.result
+        return empty ? PartsResult(object: "ობიექტი", parts: []) : Self.result
     }
     func release() { continuation?.resume(); continuation = nil }
     nonisolated func steps(object: String, parts: [Part], instructions: String, context: SessionContext?) -> AsyncThrowingStream<StepEvent, Error> {

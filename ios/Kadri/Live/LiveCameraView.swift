@@ -90,6 +90,8 @@ private struct LiveCameraContent: View {
                 }
             }
             .clipped()
+            .onAppear { session.setViewport(proxy.size, scale: displayScale) }
+            .onChange(of: proxy.size) { _, size in session.setViewport(size, scale: displayScale) }
             .overlay(alignment: .top) {
                 Text(session.status(visibleCount: projections.count).text)
                     .font(.kadri(14, weight: .medium)).multilineTextAlignment(.center)
@@ -101,6 +103,11 @@ private struct LiveCameraContent: View {
 
     private var controls: some View {
         VStack(alignment: .leading, spacing: 12) {
+            Text(session.diagnosticLine)
+                .font(.system(size: 10, design: .monospaced))
+                .foregroundStyle(Theme.Colors.ink[600]!)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("live-camera-diagnostics")
             if let result = session.model.partsResult {
                 Text(result.object).font(.kadri(18, weight: .semibold))
                 Text("შეეხე ნაწილს მის მოსანიშნად.").font(.kadri(14))

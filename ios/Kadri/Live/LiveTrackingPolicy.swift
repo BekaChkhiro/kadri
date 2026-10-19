@@ -34,18 +34,84 @@ enum LiveTrackingPolicy {
     }
 }
 
+/// Only actual depth/raycast evidence can pass. Feature-point and fixed-distance
+/// debug fallbacks both have zero surface confidence in PartAnchors.
+struct LivePlacementReport: Equatable {
+    var parts = 0
+    var accepted = 0
+    var noDepth = 0
+    var weakDepth = 0
+    var invalidBox = 0
+    var noPlacement = 0
+
+    static func make(parts: [Part], placements: [PartPlacement]) -> Self {
+        var result = Self(parts: parts.count)
+        for part in parts {
+            guard part.hasValidBox else { result.invalidBox += 1; continue }
+            guard let placement = placements.first(where: { $0.id == part.id }) else {
+                result.noPlacement += 1; continue
+            }
+            if LiveTrackingPolicy.supportedPlacement(placement) { result.accepted += 1 }
+            else if !placement.confidence.isFinite || placement.confidence <= 0 { result.noDepth += 1 }
+            else { result.weakDepth += 1 }
+        }
+        return result
+    }
+}
+
+/// Retry local raycasts for a bounded window; never repeat the paid parts request.
+struct LivePlacementRetry {
+    private(set) var startedAt: TimeInterval?
+    private(set) var lastAttempt: TimeInterval?
+    private(set) var attempts = 0
+    var duration: TimeInterval = 12
+    var interval: TimeInterval = 1
+
+    mutating func begin(now: TimeInterval) { startedAt = now; lastAttempt = nil; attempts = 0 }
+    func expired(now: TimeInterval) -> Bool {
+        guard let startedAt else { return false }
+        return now - startedAt >= duration
+    }
+    func shouldAttempt(now: TimeInterval) -> Bool {
+        guard let startedAt, now >= startedAt, !expired(now: now) else { return false }
+        return lastAttempt.map { now - $0 >= interval } ?? true
+    }
+    mutating func didAttempt(now: TimeInterval) { lastAttempt = now; attempts += 1 }
+}
+
+enum LiveRecoveryReason: String {
+    case paused, trackingLost, staleFrame, missingFrame, viewChanged
+
+    var text: String {
+        switch self {
+        case .paused: "კამერა შეჩერდა — სცადე ხელახლა ამოცნობა"
+        case .trackingLost: "კამერის ტრეკინგი დაიკარგა — გააჩერე და სცადე ხელახლა"
+        case .staleFrame: "კამერის კადრი აღარ ახლდება — სცადე ხელახლა ამოცნობა"
+        case .missingFrame: "კამერის კადრი დაიკარგა — სცადე ხელახლა ამოცნობა"
+        case .viewChanged: "ხედი მნიშვნელოვნად შეიცვალა — სცადე ხელახლა ამოცნობა"
+        }
+    }
+}
+
 enum LiveCameraStatus: Equatable {
     case unavailable, permission, steady, recognizing, tracked(Int), lookAgain, failed(String)
+    case findingSurface, surfaceUnavailable, outOfView, recovery(LiveRecoveryReason)
 
     static func resolve(supported: Bool, permissionDenied: Bool, needsRecognition: Bool,
-                        waitingForKeyframe: Bool, phase: SessionPhase, visibleCount: Int) -> Self {
+                        waitingForKeyframe: Bool, phase: SessionPhase, visibleCount: Int,
+                        recovery: LiveRecoveryReason? = nil, findingSurface: Bool = false,
+                        placedCount: Int = 0) -> Self {
         guard supported else { return .unavailable }
         if permissionDenied { return .permission }
-        if needsRecognition { return .lookAgain }
+        if needsRecognition { return recovery.map(Self.recovery) ?? .lookAgain }
         if case .error(let error, _) = phase { return .failed(error.localizedDescription) }
         if case .scanning = phase { return .recognizing }
         if waitingForKeyframe { return .steady }
-        return visibleCount > 0 ? .tracked(visibleCount) : .lookAgain
+        if visibleCount > 0 { return .tracked(visibleCount) }
+        if findingSurface { return .findingSurface }
+        if placedCount > 0 { return .outOfView }
+        if case .parts = phase { return .surfaceUnavailable }
+        return .lookAgain
     }
 
     var text: String {
@@ -57,6 +123,10 @@ enum LiveCameraStatus: Equatable {
         case .tracked(let count): "\(count) ნაწილი"
         case .lookAgain: "ნახე თავიდან — ხელახლა ამოცნობაა საჭირო"
         case .failed(let message): message
+        case .findingSurface: "ნაწილები ამოცნობილია — ზედაპირს ვეძებ. ნელა გადაადგილე კამერა."
+        case .surfaceUnavailable: "ნაწილები ამოცნობილია, მაგრამ ზედაპირზე ვერ მივაბი. სცადე სხვა კუთხე."
+        case .outOfView: "მონიშნული ნაწილები კადრში დააბრუნე"
+        case .recovery(let reason): reason.text
         }
     }
 }
