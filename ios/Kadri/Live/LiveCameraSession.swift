@@ -10,7 +10,7 @@ private let liveLog = Logger(subsystem: "ge.kadri", category: "live-camera")
 final class LiveCameraSession: ObservableObject {
     let controller = ARSessionController()
     let anchors = PartAnchors()
-    let tracker = PartTracker()
+    let tracker = LiveContourTracker()
     let model: SessionModel
     @Published private(set) var needsRecognition = false
     @Published private(set) var permissionDenied = false
@@ -262,6 +262,7 @@ final class LiveCameraSession: ObservableObject {
             + " · invalidBox \(report.invalidBox) · noPlacement \(report.noPlacement)"
             + " · reason \(diagnosticReason) · tracking \(tracking)"
             + " · planes \(planes)/\(planeMode) · ageMs \(age) · bindTry \(placementRetry.attempts)"
+            + " · refreshOK \(tracker.refreshAccepted) · refreshReject \(tracker.refreshRejected)"
         diagnosticLine = line
         // Counts and fixed reason codes only: no image, token, user text or part labels.
         liveLog.notice("LIVE_CAMERA \(line, privacy: .public)")

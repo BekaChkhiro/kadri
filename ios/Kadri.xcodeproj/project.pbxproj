@@ -20,6 +20,7 @@
 		192F30E2CBC4A5B72BDAC499 /* NotoSansGeorgian-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A7232F6CADE38F5998CDD86B /* NotoSansGeorgian-Regular.ttf */; };
 		1BAD10810ED8DBAD455C6695 /* ARKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A050936A9DE4965679EB720 /* ARKit.framework */; };
 		1CE82AD2F4D41DFACA8AE600 /* PhotoAskSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 336E8DD6BE396AAC253C24C3 /* PhotoAskSheet.swift */; };
+		1E9EE16029CC45254AE7443E /* LiveContourTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43CB6E72924861BAD4E29A13 /* LiveContourTracker.swift */; };
 		207F06A72FB17D6F63A804D3 /* SAMEncoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 8241E2AC9AA8786BAEE982AB /* SAMEncoder.mlpackage */; };
 		2114591B28E4983666BA2145 /* Google-Material-Symbols-LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = D653BF58182B037298B7A753 /* Google-Material-Symbols-LICENSE.txt */; };
 		247480935EFF895F6D00FED6 /* SAMDecoder.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = ED5AEC7A48122B42DFDE0A46 /* SAMDecoder.mlpackage */; };
@@ -73,6 +74,7 @@
 		7E63B1D4CFDD42BE7DF2BD56 /* Glass.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5147D5C2BA088C9E501729 /* Glass.swift */; };
 		8263E4FF08D843EB2B3CF8D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6BFC1330F321F32C6012EEBF /* Assets.xcassets */; };
 		82D4EB97AFBD4777405B586E /* PhotoFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F89FAEC6BDACE10C06F57842 /* PhotoFlowView.swift */; };
+		88D52506C50D0EAFF5690C49 /* LiveContourGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3D4F2082A7FD0B2DABFC6C /* LiveContourGeometry.swift */; };
 		89EF43D89D35C3880A687D29 /* SessionPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6881E6C4A4099231DB05929E /* SessionPresentation.swift */; };
 		8AE2042BC2166447BF82367B /* PhotoDraftAttachments.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C6B48863AF852505084DF2 /* PhotoDraftAttachments.swift */; };
 		8AF92C18CC97F538606A9925 /* sink-trap.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8CE0790A844E2730486BCBD6 /* sink-trap.jpg */; };
@@ -104,6 +106,7 @@
 		BAE92A5286FCF340A455BBFF /* LiveProblemReplayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407DD6667D979A5510166AA4 /* LiveProblemReplayTests.swift */; };
 		BB29B85D82A8D591764DA7CF /* MeshWrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD4C0E74341F15D5E0088D8 /* MeshWrap.swift */; };
 		BB51ED262643A1C54A8DAEA2 /* SessionFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFA803FB41D7E1F58FD4454 /* SessionFlowView.swift */; };
+		BD172F8D712F6EB062FB9645 /* LiveContourTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F45F0C2DB71D5D0E6DA4EA /* LiveContourTests.swift */; };
 		BD67D4209D70CC5DD7C4D768 /* ARSessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0284BC4ED2FA5475C1184EE9 /* ARSessionController.swift */; };
 		BF79A765B23B9EF9349A18F4 /* PhotoProblemDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5230CCC2200BBBF0F4F9EC7 /* PhotoProblemDemo.swift */; };
 		C049AD315EE6C3F2DC4528F3 /* PhotoStepCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C59462C2DDEE650A582346E /* PhotoStepCard.swift */; };
@@ -212,6 +215,7 @@
 		3FEFCFD6A8EB1E438B0EAFD9 /* PhotoMultiRoundTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMultiRoundTests.swift; sourceTree = "<group>"; };
 		407DD6667D979A5510166AA4 /* LiveProblemReplayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveProblemReplayTests.swift; sourceTree = "<group>"; };
 		41F57B4F125EDE980214A1E6 /* PhotoRequestCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRequestCard.swift; sourceTree = "<group>"; };
+		43CB6E72924861BAD4E29A13 /* LiveContourTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveContourTracker.swift; sourceTree = "<group>"; };
 		44F8660CE0D9184EC83038C7 /* PhotoSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSnapshotTests.swift; sourceTree = "<group>"; };
 		45B6800C7C6BC6DFD3FD195E /* CoreML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreML.framework; path = System/Library/Frameworks/CoreML.framework; sourceTree = SDKROOT; };
 		4ADA8C9D26AAC7620338D783 /* TrackedMesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackedMesh.swift; sourceTree = "<group>"; };
@@ -230,6 +234,7 @@
 		5BC9A3615F9651942AE4DF2B /* KadriCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = KadriCore; path = Packages/KadriCore; sourceTree = SOURCE_ROOT; };
 		5BF721974DE7AA9474A9A606 /* NotoSansGeorgian-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "NotoSansGeorgian-SemiBold.ttf"; sourceTree = "<group>"; };
 		5C2F2663F8AA61EA2F85AFB1 /* PhotoActionOverlays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoActionOverlays.swift; sourceTree = "<group>"; };
+		5C3D4F2082A7FD0B2DABFC6C /* LiveContourGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveContourGeometry.swift; sourceTree = "<group>"; };
 		5C48F483752F0C98BE7394F2 /* car-engine.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "car-engine.jpg"; sourceTree = "<group>"; };
 		5FF12F4D98C708EE32218BCF /* MeshWrapPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrapPreview.swift; sourceTree = "<group>"; };
 		627BC6E8125430C2726FAD3D /* PhotoCaptureDraftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCaptureDraftTests.swift; sourceTree = "<group>"; };
@@ -321,6 +326,7 @@
 		F6B82F576F7554F2FC5A4507 /* PhotoToolSymbolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoToolSymbolTests.swift; sourceTree = "<group>"; };
 		F89FAEC6BDACE10C06F57842 /* PhotoFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoFlowView.swift; sourceTree = "<group>"; };
 		F8E66C7D6A0C31CC5777A9C6 /* PhotoDemo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PhotoDemo.png; sourceTree = "<group>"; };
+		F8F45F0C2DB71D5D0E6DA4EA /* LiveContourTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveContourTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -433,6 +439,7 @@
 				C715792D0B8C0680D720655E /* FlowTests.swift */,
 				F4910DAFAB764B1ABC03FDC1 /* KadriTests.swift */,
 				2E341692FFECC38CCB7090B1 /* LiveCameraTests.swift */,
+				F8F45F0C2DB71D5D0E6DA4EA /* LiveContourTests.swift */,
 				407DD6667D979A5510166AA4 /* LiveProblemReplayTests.swift */,
 				C6CB6CB0B0F28CA4F0F79D82 /* MeshWrapGeometryTests.swift */,
 				D4053B0576EC82DF04A6A97C /* MeshWrapIntegrationSnapshotTests.swift */,
@@ -568,6 +575,8 @@
 			children = (
 				E4DA2D07F65079E49CA18AE1 /* LiveCameraSession.swift */,
 				5287EFDE34122EF3D19C25F4 /* LiveCameraView.swift */,
+				5C3D4F2082A7FD0B2DABFC6C /* LiveContourGeometry.swift */,
+				43CB6E72924861BAD4E29A13 /* LiveContourTracker.swift */,
 				F6890945A33B9D7CF1DAD22D /* LiveTrackingPolicy.swift */,
 			);
 			path = Live;
@@ -867,6 +876,7 @@
 				34479821C4275CDA91184BF8 /* FlowTests.swift in Sources */,
 				ADE3F74A26977B000BF655B1 /* KadriTests.swift in Sources */,
 				185402E1165511395FF4D024 /* LiveCameraTests.swift in Sources */,
+				BD172F8D712F6EB062FB9645 /* LiveContourTests.swift in Sources */,
 				BAE92A5286FCF340A455BBFF /* LiveProblemReplayTests.swift in Sources */,
 				40A5DA33CD651B2FC3F1EB6A /* MeshWrapGeometryTests.swift in Sources */,
 				AB81C54835CCF9D4D3EB6D3A /* MeshWrapIntegrationSnapshotTests.swift in Sources */,
@@ -922,6 +932,8 @@
 				D99995671C2CD82936EFFE51 /* KeyframePicker.swift in Sources */,
 				A018584A7E1D0B0D3D5A59EE /* LiveCameraSession.swift in Sources */,
 				C4FA74CAAD995A1CEAFD0D0E /* LiveCameraView.swift in Sources */,
+				88D52506C50D0EAFF5690C49 /* LiveContourGeometry.swift in Sources */,
+				1E9EE16029CC45254AE7443E /* LiveContourTracker.swift in Sources */,
 				ECA9DFF62560910E89F7276B /* LiveSessionDependencies.swift in Sources */,
 				F3D0641C83D0D20A6E31415A /* LiveTrackingPolicy.swift in Sources */,
 				BB29B85D82A8D591764DA7CF /* MeshWrap.swift in Sources */,

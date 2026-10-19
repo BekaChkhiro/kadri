@@ -14,7 +14,7 @@ struct LiveCameraView: View {
 private struct LiveCameraContent: View {
     @ObservedObject var session: LiveCameraSession
     @ObservedObject var controller: ARSessionController
-    @ObservedObject var tracker: PartTracker
+    @ObservedObject var tracker: LiveContourTracker
     let close: () -> Void
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.displayScale) private var displayScale
@@ -65,10 +65,11 @@ private struct LiveCameraContent: View {
     private var camera: some View {
         GeometryReader { proxy in
             let projections = session.projections(viewport: proxy.size, scale: displayScale)
-            let boxes = PartTracker.boxes(projections)
+            let contours = tracker.projected(projections)
+            let boxes = Dictionary(uniqueKeysWithValues: contours.map { ($0.id, $0.referenceBox) })
             ZStack {
                 ARBackgroundView(controller: controller)
-                ContourOverlay(contours: tracker.contours, boxes: boxes,
+                ContourOverlay(contours: contours, boxes: boxes,
                                focus: Set([session.selectedID].compactMap { $0 }))
                     .allowsHitTesting(false)
                 ForEach(projections) { projection in
@@ -112,7 +113,7 @@ private struct LiveCameraContent: View {
                 Text(result.object).font(.kadri(18, weight: .semibold))
                 Text("შეეხე ნაწილს მის მოსანიშნად.").font(.kadri(14))
                 if !tracker.status.isEmpty {
-                    Text(tracker.status == "კონტურების განახლება…" ? "კონტურები მზადდება…" : "კონტური მიუწვდომელია")
+                    Text(tracker.status == "კონტურების განახლება…" ? "კონტურები მზადდება…" : tracker.status)
                         .font(.kadri(12)).foregroundStyle(Theme.Colors.ink[500]!)
                 }
             } else {
