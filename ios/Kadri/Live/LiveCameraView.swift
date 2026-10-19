@@ -13,7 +13,7 @@ struct LiveCameraView: View {
 
 private struct LiveCameraContent: View {
     @ObservedObject var session: LiveCameraSession
-    @ObservedObject var controller: ARSessionController
+    let controller: ARSessionController
     @ObservedObject var tracker: LiveContourTracker
     let close: () -> Void
     @Environment(\.scenePhase) private var scenePhase
@@ -57,44 +57,21 @@ private struct LiveCameraContent: View {
             if phase == .active { Task { await session.start() } }
             else { session.stop() }
         }
-        .onChange(of: controller.latest?.timestamp) { _, _ in session.update() }
         .onReceive(heartbeat) { _ in session.update() }
         .onChange(of: session.model.phase) { _, _ in session.phaseChanged() }
     }
 
     private var camera: some View {
         GeometryReader { proxy in
-            let projections = session.projections(viewport: proxy.size, scale: displayScale)
-            let contours = tracker.projected(projections)
-            let boxes = Dictionary(uniqueKeysWithValues: contours.map { ($0.id, $0.referenceBox) })
             ZStack {
                 ARBackgroundView(controller: controller)
-                ContourOverlay(contours: contours, boxes: boxes,
-                               focus: Set([session.selectedID].compactMap { $0 }))
-                    .allowsHitTesting(false)
-                ForEach(projections) { projection in
-                    if let part = session.model.partsResult?.parts.first(where: { $0.id == projection.id }) {
-                        Button { session.selectedID = part.id } label: {
-                            VStack(spacing: 4) {
-                                Circle().fill(Theme.Colors.brand[500]!).frame(width: 12, height: 12)
-                                    .overlay(Circle().stroke(.white, lineWidth: 2))
-                                Text(part.name).font(.kadri(12, weight: .semibold))
-                                    .lineLimit(2).multilineTextAlignment(.center)
-                                    .padding(.horizontal, 10).padding(.vertical, 7)
-                                    .background(.regularMaterial, in: Capsule())
-                            }.frame(maxWidth: 150)
-                        }.buttonStyle(.plain)
-                            .accessibilityLabel(part.name)
-                            .accessibilityAddTraits(session.selectedID == part.id ? .isSelected : [])
-                            .position(projection.center)
-                    }
-                }
+                LiveCameraOverlay(session: session)
             }
             .clipped()
             .onAppear { session.setViewport(proxy.size, scale: displayScale) }
             .onChange(of: proxy.size) { _, size in session.setViewport(size, scale: displayScale) }
             .overlay(alignment: .top) {
-                Text(session.status(visibleCount: projections.count).text)
+                Text(session.status(visibleCount: session.overlayVisibleCount).text)
                     .font(.kadri(14, weight: .medium)).multilineTextAlignment(.center)
                     .padding(12).background(.regularMaterial, in: Capsule()).padding(12)
                     .allowsHitTesting(false)

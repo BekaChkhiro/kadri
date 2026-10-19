@@ -129,6 +129,7 @@
 		D18EA55C063A29BEACCC9797 /* PhotoArrowDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD58CA3CF58F4F043340F23 /* PhotoArrowDemoTests.swift */; };
 		D3ED407E60FAF0C1D2A7C9EC /* PhotoAnswerCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2053C3CD5043169500D908 /* PhotoAnswerCard.swift */; };
 		D4B737239B370539AB196A3C /* ArrowDemoRAM.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9646DFC05D68ED27E1E9A878 /* ArrowDemoRAM.jpg */; };
+		D5376F1A2A71A00A2BA101C0 /* LiveCameraOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CBC8278830169BEE9765531 /* LiveCameraOverlay.swift */; };
 		D6C97E8C50507362CE0C7B9F /* KadriApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD5A9F0403797194A257F7D /* KadriApp.swift */; };
 		D87E546E4D732C3263D4271F /* ContourOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D28A03C9FD37FA0817DC5B /* ContourOverlay.swift */; };
 		D99995671C2CD82936EFFE51 /* KeyframePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7889B405E7EAD71436F553E6 /* KeyframePicker.swift */; };
@@ -245,6 +246,7 @@
 		6A9BCE391233E0A986DDEBC3 /* MeshWrapSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrapSnapshotTests.swift; sourceTree = "<group>"; };
 		6BFC1330F321F32C6012EEBF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6C871271F759749DF134EF13 /* Fixtures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fixtures; path = KadriTests/Fixtures; sourceTree = SOURCE_ROOT; };
+		6CBC8278830169BEE9765531 /* LiveCameraOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCameraOverlay.swift; sourceTree = "<group>"; };
 		6D1E8115C624DC0CF5C8392C /* PhotoArrowOverlays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoArrowOverlays.swift; sourceTree = "<group>"; };
 		6E25A2387B476FA585C37A43 /* APACHE-2.0.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "APACHE-2.0.txt"; sourceTree = "<group>"; };
 		71D456B427868B5B6CED0F7C /* CC-BY-4.0.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CC-BY-4.0.txt"; sourceTree = "<group>"; };
@@ -573,6 +575,7 @@
 		B3C44BD692429CFD147CE19D /* Live */ = {
 			isa = PBXGroup;
 			children = (
+				6CBC8278830169BEE9765531 /* LiveCameraOverlay.swift */,
 				E4DA2D07F65079E49CA18AE1 /* LiveCameraSession.swift */,
 				5287EFDE34122EF3D19C25F4 /* LiveCameraView.swift */,
 				5C3D4F2082A7FD0B2DABFC6C /* LiveContourGeometry.swift */,
@@ -930,6 +933,7 @@
 				C2FCE5E1F6B2224395E6B37C /* GoogleAuthController.swift in Sources */,
 				D6C97E8C50507362CE0C7B9F /* KadriApp.swift in Sources */,
 				D99995671C2CD82936EFFE51 /* KeyframePicker.swift in Sources */,
+				D5376F1A2A71A00A2BA101C0 /* LiveCameraOverlay.swift in Sources */,
 				A018584A7E1D0B0D3D5A59EE /* LiveCameraSession.swift in Sources */,
 				C4FA74CAAD995A1CEAFD0D0E /* LiveCameraView.swift in Sources */,
 				88D52506C50D0EAFF5690C49 /* LiveContourGeometry.swift in Sources */,

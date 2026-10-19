@@ -66,6 +66,8 @@ final class LiveContourTracker: ObservableObject {
         // Keep the initial binary mask as the reference, alongside its plane-space contour.
         let initialMask: Mask
         var polygons: [[CGPoint]]
+        var transition: LiveContourBlend?
+        func displayed(at now: TimeInterval) -> [[CGPoint]] { transition?.value(at: now) ?? polygons }
     }
     @Published private(set) var contours: [TrackedContour] = []
     @Published private(set) var status = ""
@@ -77,6 +79,7 @@ final class LiveContourTracker: ObservableObject {
     private var generation = 0
     private var enabled = false
     private var lastFinished: TimeInterval = 0
+    private var lastAcceptedAt: TimeInterval?
     // The old debug tracker refreshes every 30 frames. Keep the shape for at
     // least three seconds after inference; AR projection still updates every frame.
     private let refreshInterval: TimeInterval = 3
@@ -100,7 +103,7 @@ final class LiveContourTracker: ObservableObject {
     func stop() {
         enabled = false; generation += 1; task?.cancel(); task = nil
         entries = [:]; contours = []; status = ""; lastFinished = 0
-        refreshAccepted = 0; refreshRejected = 0
+        refreshAccepted = 0; refreshRejected = 0; lastAcceptedAt = nil
     }
 
     func update(snapshot: FrameSnapshot, anchors: PartAnchors) {
@@ -125,13 +128,18 @@ final class LiveContourTracker: ObservableObject {
     }
 
     /// Only visible, trusted AR projections enter this path. No fixed-screen fallback.
-    func projected(_ projections: [PartProjection]) -> [TrackedContour] {
+    func refreshAgeMilliseconds(now: TimeInterval) -> Int {
+        guard let lastAcceptedAt else { return -1 }
+        return Int(max(0, now-lastAcceptedAt)*1000)
+    }
+
+    func projected(_ projections: [PartProjection], now: TimeInterval = CACurrentMediaTime()) -> [TrackedContour] {
         projections.compactMap { projection in
             guard let entry = entries[projection.id], let warp = LiveContourWarp(quad: projection.corners),
-                  let polygons = warp.polygons(entry.polygons) else { return nil }
+                  let polygons = warp.polygons(entry.displayed(at: now)) else { return nil }
             // The existing layer renderer receives a pre-warped path with an identity box transform.
             return TrackedContour(id: projection.id,
-                                  polygons: polygons.map { ContourGeometry.simplify($0, tolerance: 0.6) },
+                                  polygons: polygons,
                                   referenceBox: CGRect(x: 0, y: 0, width: 1, height: 1), maskMs: 0)
         }
     }
@@ -143,14 +151,20 @@ final class LiveContourTracker: ObservableObject {
             do {
                 let results = try await processor.process(snapshot: snapshot, jpeg: jpeg, prompts: prompts)
                 guard let self, self.enabled, self.generation == token, !Task.isCancelled else { return }
+                let acceptedAt = CACurrentMediaTime()
                 for result in results {
                     guard let polygons = result.polygons else {
                         if result.refresh { self.refreshRejected += 1 }
                         continue // Preserve the old plane contour on disagreement.
                     }
                     if result.refresh { self.refreshAccepted += 1 }
-                    self.entries[result.id] = Entry(initialMask: self.entries[result.id]?.initialMask ?? result.mask,
-                                                    polygons: polygons)
+                    let previous = self.entries[result.id]
+                    let transition = previous.flatMap {
+                        LiveContourBlend(from: $0.displayed(at: acceptedAt), to: polygons, startedAt: acceptedAt)
+                    }
+                    self.entries[result.id] = Entry(initialMask: previous?.initialMask ?? result.mask,
+                                                    polygons: polygons, transition: transition)
+                    self.lastAcceptedAt = acceptedAt
                 }
                 self.contours = self.entries.keys.sorted().map { id in
                     TrackedContour(id: id, polygons: self.entries[id]!.polygons,

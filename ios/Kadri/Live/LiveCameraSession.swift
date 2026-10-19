@@ -34,6 +34,9 @@ final class LiveCameraSession: ObservableObject {
     private var lastTelemetryAt: TimeInterval = 0
     private var viewport: CGSize = .zero
     private var displayScale: CGFloat = 1
+    // Sampled by telemetry at 1 Hz; never publish a SwiftUI change per frame.
+    var overlayFPS: Double = 0
+    var overlayVisibleCount = 0
     private let authError: SessionError?
 
     init(api: (any KadriAPI)? = nil) {
@@ -218,7 +221,13 @@ final class LiveCameraSession: ObservableObject {
     }
 
     func projections(viewport: CGSize, scale: CGFloat, now: TimeInterval = CACurrentMediaTime()) -> [PartProjection] {
-        guard running, !needsRecognition, let snapshot = controller.latest, let keyframe,
+        guard let frame = controller.session.currentFrame else { return [] }
+        return projections(frame: frame, viewport: viewport, scale: scale, now: now)
+    }
+
+    func projections(frame: ARFrame, viewport: CGSize, scale: CGFloat, now: TimeInterval) -> [PartProjection] {
+        let snapshot = FrameSnapshot(frame: frame)
+        guard running, !needsRecognition, let keyframe,
               LiveTrackingPolicy.sameView(reference: keyframe.snapshot.frame.camera.transform,
                                           current: snapshot.frame.camera.transform) else { return [] }
         let normal: Bool
@@ -263,6 +272,7 @@ final class LiveCameraSession: ObservableObject {
             + " · reason \(diagnosticReason) · tracking \(tracking)"
             + " · planes \(planes)/\(planeMode) · ageMs \(age) · bindTry \(placementRetry.attempts)"
             + " · refreshOK \(tracker.refreshAccepted) · refreshReject \(tracker.refreshRejected)"
+            + " · overlayFPS \(Int(overlayFPS.rounded())) · refreshAgeMs \(tracker.refreshAgeMilliseconds(now: now))"
         diagnosticLine = line
         // Counts and fixed reason codes only: no image, token, user text or part labels.
         liveLog.notice("LIVE_CAMERA \(line, privacy: .public)")

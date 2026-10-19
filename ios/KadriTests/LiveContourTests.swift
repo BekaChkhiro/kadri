@@ -118,3 +118,88 @@ final class LiveContourTests: XCTestCase {
         add(attachment)
     }
 }
+
+final class LiveOverlayTests: XCTestCase {
+    func testCadenceCountsCameraFramesInsteadOfDisplayCallbacks() {
+        var cadence = LiveOverlayCadence()
+        cadence.presented(frame: nil, now: 0)
+        // A 120 Hz display presents a 60 Hz camera, each frame twice.
+        for tick in 0..<120 {
+            cadence.presented(frame: Double(tick/2)/60, now: Double(tick+1)/120)
+        }
+        XCTAssertEqual(cadence.fps, 60, accuracy: 0.001)
+        // Repeated callbacks for a frozen frame must not claim 60 fps.
+        for tick in 1...120 {
+            cadence.presented(frame: 59.0/60, now: 1+Double(tick)/120)
+        }
+        XCTAssertEqual(cadence.fps, 0)
+    }
+
+    func testCadenceRejectsFutureStaleAndMissingFrames() {
+        var cadence = LiveOverlayCadence()
+        cadence.presented(frame: 10, now: 0)
+        cadence.presented(frame: 0, now: 0.8)
+        cadence.presented(frame: nil, now: 1)
+        XCTAssertEqual(cadence.fps, 0)
+        cadence.presented(frame: 1.5, now: 1.5)
+        cadence.presented(frame: 1.5, now: 1.6)
+        cadence.presented(frame: nil, now: 2)
+        XCTAssertEqual(cadence.fps, 1)
+    }
+
+    func testAcceptedShapeBlendsWhileCameraMotionRemainsImmediate() throws {
+        let old = [LiveContourWarp.corners(CGRect(x: 0, y: 0, width: 1, height: 1))]
+        let new = old.map { $0.map { CGPoint(x: $0.x+0.1, y: $0.y) } }
+        let blend = try XCTUnwrap(LiveContourBlend(from: old, to: new, startedAt: 10))
+        XCTAssertEqual(blend.value(at: 10), old)
+        XCTAssertEqual(blend.value(at: 11), new)
+        let half = blend.value(at: 10.09)
+        XCTAssertEqual(half[0][0].x, 0.05, accuracy: 1e-6)
+        let firstPose = try XCTUnwrap(LiveContourWarp(quad: LiveContourWarp.corners(CGRect(x: 0, y: 0, width: 100, height: 100))))
+        let movedPose = try XCTUnwrap(LiveContourWarp(quad: LiveContourWarp.corners(CGRect(x: 40, y: 0, width: 100, height: 100))))
+        let a = try XCTUnwrap(firstPose.polygons(half))
+        let b = try XCTUnwrap(movedPose.polygons(half))
+        XCTAssertEqual(b[0][0].x-a[0][0].x, 40, accuracy: 1e-6)
+        XCTAssertNil(LiveContourBlend(from: old, to: [], startedAt: 10))
+    }
+
+    @MainActor func testPinAndContourMoveTogetherWithoutSwiftUIOrSAMRefresh() throws {
+        let view = LiveCameraOverlayView(frame: CGRect(x: 0, y: 0, width: 380, height: 380))
+        view.backgroundColor = .darkGray
+        let identity = CGRect(x: 0, y: 0, width: 1, height: 1)
+        func draw(offset: CGFloat) {
+            let quad = [CGPoint(x: 60+offset, y: 60), CGPoint(x: 260+offset, y: 90),
+                        CGPoint(x: 280+offset, y: 260), CGPoint(x: 40+offset, y: 230)]
+            let projection = PartProjection(id: "p1", center: CGPoint(x: 160+offset, y: 150),
+                                            corners: quad, returnErrorPixels: nil)
+            let contour = TrackedContour(id: "p1", polygons: [quad], referenceBox: identity, maskMs: 0)
+            view.apply(projections: [projection], contours: [contour], labels: ["p1": "კლავიატურა"], selectedID: "p1")
+            view.layoutIfNeeded()
+        }
+        draw(offset: 0)
+        let first = try XCTUnwrap(view.subviews.first { $0 is UIControl })
+        for offset in 1...40 { draw(offset: CGFloat(offset)) }
+        let last = try XCTUnwrap(view.subviews.first { $0 is UIControl })
+        XCTAssertTrue(first === last, "Camera motion must reuse the marker, not rebuild a SwiftUI button")
+        XCTAssertEqual(last.center.x, 200)
+        XCTAssertTrue(last.accessibilityTraits.contains(.selected))
+        let layerView = try XCTUnwrap(view.subviews.first { $0 is ContourLayerView })
+        let path = try XCTUnwrap((layerView.layer.sublayers?.first as? CAShapeLayer)?.path)
+        XCTAssertEqual(path.boundingBoxOfPath.minX, 80, accuracy: 1e-6)
+        let image = UIGraphicsImageRenderer(size: view.bounds.size).image { view.layer.render(in: $0.cgContext) }
+        let attachment = XCTAttachment(image: image)
+        attachment.name = "live-overlay-pin-and-contour"
+        attachment.lifetime = .keepAlways; add(attachment)
+        view.apply(projections: [], contours: [], labels: [:], selectedID: nil)
+        XCTAssertTrue(view.subviews.filter { $0 is UIControl }.isEmpty)
+        XCTAssertTrue(layerView.layer.sublayers?.isEmpty ?? true)
+    }
+
+    @MainActor func testNoAcceptedRefreshReportsUnknownAgeAndStopClearsContours() {
+        let tracker = LiveContourTracker()
+        XCTAssertEqual(tracker.refreshAgeMilliseconds(now: 100), -1)
+        tracker.stop()
+        XCTAssertEqual(tracker.refreshAgeMilliseconds(now: 200), -1)
+        XCTAssertTrue(tracker.contours.isEmpty)
+    }
+}

@@ -130,3 +130,28 @@ enum LiveContourGeometry {
         return smooth(old: previous, new: canonical)
     }
 }
+
+/// A short transition between already aligned, accepted plane-space shapes.
+/// It never interpolates camera pose or screen coordinates.
+struct LiveContourBlend {
+    let from: [[CGPoint]]
+    let to: [[CGPoint]]
+    let startedAt: TimeInterval
+    let duration: TimeInterval
+
+    init?(from: [[CGPoint]], to: [[CGPoint]], startedAt: TimeInterval, duration: TimeInterval = 0.18) {
+        guard !from.isEmpty, from.count == to.count,
+              zip(from, to).allSatisfy({ $0.count >= 3 && $0.count == $1.count }),
+              startedAt.isFinite, duration.isFinite, duration > 0 else { return nil }
+        self.from = from; self.to = to; self.startedAt = startedAt; self.duration = duration
+    }
+    func value(at now: TimeInterval) -> [[CGPoint]] {
+        let progress = min(1, max(0, (now-startedAt)/duration))
+        if progress <= 0 { return from }
+        if progress >= 1 { return to }
+        let t = CGFloat(progress*progress*(3-2*progress))
+        return zip(from, to).map { a, b in
+            zip(a, b).map { CGPoint(x: $0.x+($1.x-$0.x)*t, y: $0.y+($1.y-$0.y)*t) }
+        }
+    }
+}
