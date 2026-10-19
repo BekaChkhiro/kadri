@@ -9,6 +9,7 @@ struct PhotoStartView: View {
     @Binding var picked: PhotosPickerItem?
     var selectExample: (PhotoExample) -> Void
     var demo: (() -> Void)? = nil
+    @State private var liveCamera = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var appeared = false
 
@@ -44,6 +45,7 @@ struct PhotoStartView: View {
         .foregroundStyle(Theme.Colors.ink[900]!)
         .background(Theme.Colors.surface.ignoresSafeArea())
         .onAppear { appeared = true }
+        .fullScreenCover(isPresented: $liveCamera) { LiveCameraView() }
     }
 
     private var header: some View {
@@ -84,6 +86,9 @@ struct PhotoStartView: View {
 
     private var actions: some View {
         VStack(spacing: 8) {
+            Button { liveCamera = true } label: {
+                Label("ცოცხალი კამერა (ტესტი)", systemImage: "viewfinder")
+            }.buttonStyle(SessionButtonStyle(primary: false))
             Button(action: takePhoto) {
                 Label("გადაიღე ფოტო", systemImage: "camera").font(.kadri(16, weight: .semibold))
                     .frame(minHeight: 56)

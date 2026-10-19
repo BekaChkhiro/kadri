@@ -16,6 +16,7 @@
 		0EEB86E2FD46AE38E757660C /* MockKadriAPI+Ask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55AC7141975043F02452969A /* MockKadriAPI+Ask.swift */; };
 		135D1D53AEE65DD36F40A63D /* AuthControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81BAED9AF7E6D01CD2DF2D75 /* AuthControllerTests.swift */; };
 		15D7863ED2559AC4F9874683 /* PhotoExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A6F03CAD2DF669DE907FD8 /* PhotoExamples.swift */; };
+		185402E1165511395FF4D024 /* LiveCameraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E341692FFECC38CCB7090B1 /* LiveCameraTests.swift */; };
 		192F30E2CBC4A5B72BDAC499 /* NotoSansGeorgian-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A7232F6CADE38F5998CDD86B /* NotoSansGeorgian-Regular.ttf */; };
 		1BAD10810ED8DBAD455C6695 /* ARKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A050936A9DE4965679EB720 /* ARKit.framework */; };
 		1CE82AD2F4D41DFACA8AE600 /* PhotoAskSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 336E8DD6BE396AAC253C24C3 /* PhotoAskSheet.swift */; };
@@ -85,6 +86,7 @@
 		9F7E2C6A9840B46539E3C4D6 /* car-engine.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5C48F483752F0C98BE7394F2 /* car-engine.jpg */; };
 		9FB1DDE8A787F86E9301E041 /* PhotoOverlays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B190C91D1A200CF71F39219 /* PhotoOverlays.swift */; };
 		A00C7230F3B50860C993A69A /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 340983717E658514DD60A10B /* Inter-Medium.ttf */; };
+		A018584A7E1D0B0D3D5A59EE /* LiveCameraSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4DA2D07F65079E49CA18AE1 /* LiveCameraSession.swift */; };
 		A021D80B098F055B3EF12B0B /* PartAnchors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF5D91DF61E491034224AFC /* PartAnchors.swift */; };
 		A03AEF2EEC043EE877C1A3BA /* DescribeBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE6EB632B576D6674E9FB23 /* DescribeBar.swift */; };
 		A4DB14A44099C06725059BA0 /* SAMDecoderPoint.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = F5B80B22199E8789EA305100 /* SAMDecoderPoint.mlpackage */; };
@@ -110,6 +112,7 @@
 		C46E1889CEA91630E5EC3FFC /* illo-another-angle.png in Resources */ = {isa = PBXBuildFile; fileRef = AF1B1E3650C584EDDE5A2C6F /* illo-another-angle.png */; };
 		C480FA751DE36F8B229476CC /* SegmentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79684495C6B552237CE68F89 /* SegmentationTests.swift */; };
 		C4BB1A8EA49A5452698E9295 /* PhotoActionOverlays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2F2663F8AA61EA2F85AFB1 /* PhotoActionOverlays.swift */; };
+		C4FA74CAAD995A1CEAFD0D0E /* LiveCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5287EFDE34122EF3D19C25F4 /* LiveCameraView.swift */; };
 		C51E03BFED31EB5B2EA2D00C /* PhotoProblemUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BE3AF3296198BCAF9E8E7C /* PhotoProblemUITests.swift */; };
 		C5214BAAAC982579370A21A8 /* PhotoGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1512A702D1C9EDDCC4FBA982 /* PhotoGeometry.swift */; };
 		C7D940D572084E7EBB4D7FEA /* illo-done-neutral.png in Resources */ = {isa = PBXBuildFile; fileRef = 39F5E9F52D0977AF80ACE2F7 /* illo-done-neutral.png */; };
@@ -144,6 +147,7 @@
 		F1B141686FF19D53FF4EB716 /* PhotoAutopilotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1871C6CA29F7300DBC4AE016 /* PhotoAutopilotTests.swift */; };
 		F32A4ED4B9A9A7AFD3146F19 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 00F79469EF86DA06585D9B45 /* GoogleSignIn */; };
 		F3A6721520CD41B44AAC06CB /* OFL-Inter.txt in Resources */ = {isa = PBXBuildFile; fileRef = EC47E7F74A9863587D696784 /* OFL-Inter.txt */; };
+		F3D0641C83D0D20A6E31415A /* LiveTrackingPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6890945A33B9D7CF1DAD22D /* LiveTrackingPolicy.swift */; };
 		F4AAA1A1748F2F3BE3BF4AAD /* NotoSansGeorgian-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24F1F6DCECABEBE28315A574 /* NotoSansGeorgian-Bold.ttf */; };
 		F4D910D84EF7FA073CFCF0A2 /* SAMGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6545EC000C213F047CC832 /* SAMGeometry.swift */; };
 		F5DACEAE4BBA6C4BADADD714 /* PhotoSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F8660CE0D9184EC83038C7 /* PhotoSnapshotTests.swift */; };
@@ -193,6 +197,7 @@
 		2C59462C2DDEE650A582346E /* PhotoStepCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoStepCard.swift; sourceTree = "<group>"; };
 		2CD58CA3CF58F4F043340F23 /* PhotoArrowDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoArrowDemoTests.swift; sourceTree = "<group>"; };
 		2CE6EB632B576D6674E9FB23 /* DescribeBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescribeBar.swift; sourceTree = "<group>"; };
+		2E341692FFECC38CCB7090B1 /* LiveCameraTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCameraTests.swift; sourceTree = "<group>"; };
 		2E6781738FE80881F0DDED88 /* PhotoDoneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDoneView.swift; sourceTree = "<group>"; };
 		30A6F03CAD2DF669DE907FD8 /* PhotoExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoExamples.swift; sourceTree = "<group>"; };
 		317A97DEC8B919E1D5640FD6 /* OFL-NotoSansGeorgian.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OFL-NotoSansGeorgian.txt"; sourceTree = "<group>"; };
@@ -216,6 +221,7 @@
 		4F4B940D838789F515C29690 /* PhotoAnnotationSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAnnotationSelection.swift; sourceTree = "<group>"; };
 		4FE8198FFF1A8A2B445C734B /* PhotoAskTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAskTests.swift; sourceTree = "<group>"; };
 		5258E76F90EB8DE0BCE6E8EF /* CC0-1.0.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CC0-1.0.txt"; sourceTree = "<group>"; };
+		5287EFDE34122EF3D19C25F4 /* LiveCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCameraView.swift; sourceTree = "<group>"; };
 		53EEFE9395B96E4357301C79 /* KadriUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = KadriUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		543FF004E3F31262D70B1ECA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		55AC7141975043F02452969A /* MockKadriAPI+Ask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MockKadriAPI+Ask.swift"; sourceTree = "<group>"; };
@@ -301,6 +307,7 @@
 		DC6545EC000C213F047CC832 /* SAMGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SAMGeometry.swift; sourceTree = "<group>"; };
 		DDD4C0E74341F15D5E0088D8 /* MeshWrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeshWrap.swift; sourceTree = "<group>"; };
 		DFCF1D2047DA0A9AE64024B8 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		E4DA2D07F65079E49CA18AE1 /* LiveCameraSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCameraSession.swift; sourceTree = "<group>"; };
 		E79CEC0389EE50ABE9835D8B /* PhotoProblemFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoProblemFlowView.swift; sourceTree = "<group>"; };
 		E99544A02637877483716932 /* PhotoCheckPhotoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCheckPhotoTests.swift; sourceTree = "<group>"; };
 		EC47E7F74A9863587D696784 /* OFL-Inter.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OFL-Inter.txt"; sourceTree = "<group>"; };
@@ -310,6 +317,7 @@
 		F0248C421A7F6709755E1292 /* ARControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARControllerTests.swift; sourceTree = "<group>"; };
 		F4910DAFAB764B1ABC03FDC1 /* KadriTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KadriTests.swift; sourceTree = "<group>"; };
 		F5B80B22199E8789EA305100 /* SAMDecoderPoint.mlpackage */ = {isa = PBXFileReference; path = SAMDecoderPoint.mlpackage; sourceTree = "<group>"; };
+		F6890945A33B9D7CF1DAD22D /* LiveTrackingPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTrackingPolicy.swift; sourceTree = "<group>"; };
 		F6B82F576F7554F2FC5A4507 /* PhotoToolSymbolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoToolSymbolTests.swift; sourceTree = "<group>"; };
 		F89FAEC6BDACE10C06F57842 /* PhotoFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoFlowView.swift; sourceTree = "<group>"; };
 		F8E66C7D6A0C31CC5777A9C6 /* PhotoDemo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PhotoDemo.png; sourceTree = "<group>"; };
@@ -366,6 +374,7 @@
 				FEBD1F9BFC33BA0433BD23BE /* Auth */,
 				EAF36B7FB440F8813F254796 /* Design */,
 				5E66F25C962EEED5CFFBC6FA /* Flow */,
+				B3C44BD692429CFD147CE19D /* Live */,
 				C391D9D24B7014744F5FAAF4 /* Photo */,
 				FEB0235438BDD303D3660CCA /* Resources */,
 				ABF72A8CBFCE25F197A6D52A /* Segmentation */,
@@ -423,6 +432,7 @@
 				6C871271F759749DF134EF13 /* Fixtures */,
 				C715792D0B8C0680D720655E /* FlowTests.swift */,
 				F4910DAFAB764B1ABC03FDC1 /* KadriTests.swift */,
+				2E341692FFECC38CCB7090B1 /* LiveCameraTests.swift */,
 				407DD6667D979A5510166AA4 /* LiveProblemReplayTests.swift */,
 				C6CB6CB0B0F28CA4F0F79D82 /* MeshWrapGeometryTests.swift */,
 				D4053B0576EC82DF04A6A97C /* MeshWrapIntegrationSnapshotTests.swift */,
@@ -551,6 +561,16 @@
 				63BE3AF3296198BCAF9E8E7C /* PhotoProblemUITests.swift */,
 			);
 			path = KadriUITests;
+			sourceTree = "<group>";
+		};
+		B3C44BD692429CFD147CE19D /* Live */ = {
+			isa = PBXGroup;
+			children = (
+				E4DA2D07F65079E49CA18AE1 /* LiveCameraSession.swift */,
+				5287EFDE34122EF3D19C25F4 /* LiveCameraView.swift */,
+				F6890945A33B9D7CF1DAD22D /* LiveTrackingPolicy.swift */,
+			);
+			path = Live;
 			sourceTree = "<group>";
 		};
 		BA6496228E9E927EB722C759 /* Packages */ = {
@@ -846,6 +866,7 @@
 				EB68B7068C55D089DA53BC10 /* ContourTests.swift in Sources */,
 				34479821C4275CDA91184BF8 /* FlowTests.swift in Sources */,
 				ADE3F74A26977B000BF655B1 /* KadriTests.swift in Sources */,
+				185402E1165511395FF4D024 /* LiveCameraTests.swift in Sources */,
 				BAE92A5286FCF340A455BBFF /* LiveProblemReplayTests.swift in Sources */,
 				40A5DA33CD651B2FC3F1EB6A /* MeshWrapGeometryTests.swift in Sources */,
 				AB81C54835CCF9D4D3EB6D3A /* MeshWrapIntegrationSnapshotTests.swift in Sources */,
@@ -899,7 +920,10 @@
 				C2FCE5E1F6B2224395E6B37C /* GoogleAuthController.swift in Sources */,
 				D6C97E8C50507362CE0C7B9F /* KadriApp.swift in Sources */,
 				D99995671C2CD82936EFFE51 /* KeyframePicker.swift in Sources */,
+				A018584A7E1D0B0D3D5A59EE /* LiveCameraSession.swift in Sources */,
+				C4FA74CAAD995A1CEAFD0D0E /* LiveCameraView.swift in Sources */,
 				ECA9DFF62560910E89F7276B /* LiveSessionDependencies.swift in Sources */,
+				F3D0641C83D0D20A6E31415A /* LiveTrackingPolicy.swift in Sources */,
 				BB29B85D82A8D591764DA7CF /* MeshWrap.swift in Sources */,
 				79DE86C4B2CA86AA5224E15B /* MeshWrapGeometry.swift in Sources */,
 				E0038D0B516C9DAFE18CFBFC /* MeshWrapPreview.swift in Sources */,
